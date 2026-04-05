@@ -1,0 +1,131 @@
+<!-- OVERLAY -->
+@if (isOpen) {
+  <div class="fixed inset-0 bg-black/30 z-40 md:hidden" (click)="close.emit()"></div>
+}
+
+<!-- SIDEBAR -->
+<aside
+  class="fixed md:static top-0 left-0 h-full w-64 bg-[#f1f5f3] border-r border-[#c7c8c9] z-50
+         transform transition-all duration-300 ease-in-out
+         md:translate-x-0 md:w-64"
+  [class.-translate-x-full]="!isOpen"
+>
+
+  <!-- TOP -->
+  <div class="px-5 py-5">
+    <h2 class="text-lg font-bold text-gray-800">BookMyVenue</h2>
+    <p class="text-xs text-gray-500">Dashboard</p>
+  </div>
+
+  <!-- NAV -->
+  <nav class="px-3 space-y-2">
+
+    <!-- DASHBOARD -->
+    <a [routerLink]="['/dashboard']"
+       routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
+       [routerLinkActiveOptions]="{ exact: true }"
+       class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
+              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
+              transition-all duration-300 ease-in-out">
+
+      <lucide-icon [img]="icons.dashboard" size="18"
+        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
+      </lucide-icon>
+
+      Overview
+    </a>
+
+    <!-- VENUES -->
+    <a [routerLink]="['/venues']"
+       routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
+       [routerLinkActiveOptions]="{ exact: true }"
+       class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
+              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
+              transition-all duration-300 ease-in-out">
+
+      <lucide-icon [img]="icons.venues" size="18"
+        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
+      </lucide-icon>
+
+      Venues
+    </a>
+
+    <!-- USERS -->
+    <a [routerLink]="['/users']"
+       routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
+       [routerLinkActiveOptions]="{ exact: true }"
+       class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
+              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
+              transition-all duration-300 ease-in-out">
+
+      <lucide-icon [img]="icons.users" size="18"
+        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
+      </lucide-icon>
+
+      Users
+    </a>
+
+    <!-- VENDORS -->
+    <a [routerLink]="['/vendors']"
+       routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
+       [routerLinkActiveOptions]="{ exact: true }"
+       class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
+              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
+              transition-all duration-300 ease-in-out">
+
+      <lucide-icon [img]="icons.users" size="18"
+        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
+      </lucide-icon>
+
+      Vendors
+    </a>
+
+    <!-- BOOKINGS -->
+    <a [routerLink]="['/bookings']"
+       routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
+       [routerLinkActiveOptions]="{ exact: true }"
+       class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
+              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
+              transition-all duration-300 ease-in-out">
+
+      <lucide-icon [img]="icons.bookings" size="18"
+        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
+      </lucide-icon>
+
+      Bookings
+    </a>
+
+  </nav>
+
+  <!-- FOOTER -->
+  <div class="absolute bottom-0 w-full px-4 py-4 space-y-2">
+
+    <!-- HELP -->
+    <button
+      class="group flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium
+             text-gray-500 hover:bg-[#bbf7d0] hover:text-[#14532d]
+             transition-all duration-300 ease-in-out">
+
+      <lucide-icon [img]="icons.help" size="16"
+        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
+      </lucide-icon>
+
+      Help Center
+    </button>
+
+    <!-- LOGOUT -->
+    <button
+      class="group flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium
+             text-gray-500 hover:bg-[#bbf7d0] hover:text-[#14532d]
+             transition-all duration-300 ease-in-out">
+
+      <lucide-icon [img]="icons.logout" size="16"
+        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
+      </lucide-icon>
+
+      Logout
+    </button>
+
+  </div>
+
+</aside>

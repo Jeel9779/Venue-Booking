@@ -1,0 +1,28 @@
+<!-- <div class="bg-white-300 border border-gray-200 rounded-2xl p-5 shadow-sm"> -->
+<div class="bg-blue-200 border border-gray-200 rounded-2xl p-5 shadow-sm h-full">
+
+  <!-- HEADER -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800">
+      Revenue Distribution
+    </h2>
+
+    <div class="flex gap-2 text-sm">
+      <button class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+        Bookings
+      </button>
+      <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
+        Subscriptions
+      </button>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <canvas baseChart
+   class="w-full h-75"
+    [data]="chartData"
+    [options]="chartOptions"
+    [type]="'line'">
+  </canvas>
+
+</div>

@@ -1,3 +1,53 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+    {
+    path: '',
+    loadComponent: () =>
+      import('./layout/admin-layout/admin-layout')
+        .then(m => m.AdminLayout),
+
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard')
+            .then(m => m.Dashboard)
+      },
+
+      {
+        path: 'venues',
+        loadComponent: () =>
+          import('./features/venues/venues')
+            .then(m => m.Venues)
+      },
+
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./features/users/users')
+            .then(m => m.Users)
+      },
+
+      {
+        path: 'vendors',
+        loadComponent: () =>
+          import('./features/vendors/vendors')
+            .then(m => m.Vendors)
+      },
+
+      {
+        path: 'bookings',
+        loadComponent: () =>
+          import('./features/bookings/bookings')
+            .then(m => m.Bookings)
+      }
+    ]
+  }
+];

@@ -1,3 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+
+
+/* Font */
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+
+/* Sidebar */
+:root {
+  --primary: #6366f1;
+  --surface: #69eba6;
+  --border: #f46106;
+}

@@ -1,0 +1,61 @@
+<header class="h-16 bg-white border-b border-gray-300 flex items-center justify-between px-4 md:px-6">
+
+  <!-- LEFT -->
+  <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+
+    <!-- ☰ -->
+    <button
+      class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg 
+             bg-gray-100 text-gray-700 hover:bg-green-600 hover:text-white
+             transition-all duration-200 shrink-0"
+      (click)="menuClick.emit()"
+    >
+      <lucide-icon [img]="icons.menu" size="20"></lucide-icon>
+    </button>
+
+    <!-- TITLE + BADGE -->
+    <div class="flex items-center gap-2 min-w-0">
+
+      <h1 class="text-sm md:text-base font-semibold text-gray-800 truncate">
+        Platform Analytics
+      </h1>
+
+      <span class="hidden sm:inline text-[10px] font-medium text-gray-600 bg-green-200 px-2 py-0.5 rounded-full whitespace-nowrap">
+        ADMIN MODE
+      </span>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="flex items-center gap-2 sm:gap-4">
+
+    <!-- 🔔 -->
+    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition">
+      <lucide-icon [img]="icons.bell" size="18"></lucide-icon>
+      <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+    </button>
+
+    <!-- USER -->
+    <div class="flex items-center gap-2 sm:gap-3">
+
+      <!-- TEXT -->
+      <div class="text-right hidden sm:block">
+        <p class="text-sm font-medium text-gray-800">Harsh Vadukiya</p>
+        <p class="text-xs text-gray-500">Principal Admin</p>
+      </div>
+
+      <!-- AVATAR -->
+      <img
+        src="https://i.pravatar.cc/40"
+        alt="user"
+        class="w-8 h-8 rounded-full object-cover cursor-pointer
+               hover:ring-2 hover:ring-green-400 transition"
+      />
+
+    </div>
+
+  </div>
+
+</header>
