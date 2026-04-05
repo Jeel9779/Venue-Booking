@@ -1,1 +1,130 @@
-<p>vendors works!</p>
+<div class="p-4 bg-[#f8fcf9] min-h-screen">
+
+    <!-- LOADING -->
+    @if (isLoading()) {
+    <p class="text-center py-4 text-gray-500">Loading...</p>
+    }
+
+    <!-- CARD -->
+    <div class="bg-green-100 border border-gray-100 rounded-2xl shadow-md shadow-green-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
+
+        <!-- HEADER -->
+        <div class="px-5 py-4 border-b bg-green-300">
+            <h2 class="text-lg font-semibold text-gray-800">Vendor Verification</h2>
+            <p class="text-xs text-gray-500">Manage vendor approval requests</p>
+        </div>
+
+        <!-- TABLE -->
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-sm">
+
+                <!-- HEADER -->
+                <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+                    <tr>
+                        <th class="px-5 py-3 text-left">Vendor</th>
+                        <th class="px-5 py-3 text-left">Contact</th>
+                        <th class="px-5 py-3 text-left">Business</th>
+                        <th class="px-5 py-3 text-left">Gov ID</th>
+                        <th class="px-5 py-3 text-left">Status</th>
+                        <th class="px-5 py-3 text-left">Actions</th>
+                    </tr>
+                </thead>
+
+                <!-- BODY -->
+                <tbody>
+
+                    @for (v of vendors(); track v.id) {
+
+                    <tr class="border-t hover:bg-[#f1f5f9] transition-all duration-200">
+
+                        <!-- VENDOR -->
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-3">
+
+                                <!-- AVATAR -->
+                                <div
+                                    class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-semibold border-2">
+                                    {{ v.fullName.charAt(0) }}
+                                </div>
+
+                                <div>
+                                    <p class="font-medium text-gray-800">{{ v.fullName }}</p>
+                                    <p class="text-xs text-gray-500">{{ v.email }}</p>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <!-- CONTACT -->
+                        <td class="px-5 py-4 text-gray-600">
+                            {{ v.phone }}
+                        </td>
+
+                        <!-- BUSINESS -->
+                        <td class="px-5 py-4">
+                            <p class="text-gray-800">{{ v.businessName }}</p>
+                            <p class="text-xs text-gray-500 capitalize">{{ v.businessType }}</p>
+                        </td>
+
+                        <!-- GOV ID -->
+                        <td class="px-5 py-4 text-gray-500">
+                            {{ v.governmentId }}
+                        </td>
+
+                        <!-- STATUS -->
+                        <td class="px-5 py-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-medium capitalize"
+                                [class.bg-yellow-100]="v.status === 'pending'"
+                                [class.text-yellow-700]="v.status === 'pending'"
+                                [class.bg-green-200]="v.status === 'success'"
+                                [class.text-green-700]="v.status === 'success'"
+                                [class.bg-red-200]="v.status === 'cancel'" [class.text-red-700]="v.status === 'cancel'">
+                                {{ v.status }}
+                            </span>
+                        </td>
+
+                        <!-- ACTIONS (UNCHANGED LOGIC) -->
+                        <td class="px-5 py-4 flex gap-2">
+
+                            @if (v.status === 'pending') {
+
+                            <button
+                                class="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm"
+                                (click)="approve(v)">
+                                Approve
+                            </button>
+
+                            <button
+                                class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-sm"
+                                (click)="reject(v)">
+                                Reject
+                            </button>
+
+                            }
+
+                            @if (v.status !== 'pending') {
+
+                            <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                                (click)="reopen(v)">
+                                Reopen
+                            </button>
+
+                            }
+
+                        </td>
+
+                    </tr>
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
