@@ -1,1 +1,131 @@
-<p>venues works!</p>
+<div class="p-4 bg-[#f8fcf9] min-h-screen">
+
+  <!-- LOADING -->
+  @if (isLoading()) {
+    <p class="text-center py-4 text-gray-500">Loading...</p>
+  }
+
+  <!-- CARD -->
+  <div class="bg-green-100 border border-gray-100 rounded-2xl shadow-md shadow-green-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
+
+    <!-- HEADER -->
+    <div class="px-5 py-4 border-b bg-green-300">
+      <h2 class="text-lg font-semibold text-gray-800">Venue Verification</h2>
+      <p class="text-xs text-gray-600">Manage venue approval requests</p>
+    </div>
+
+    <!-- TABLE -->
+    <div class="overflow-x-auto">
+
+      <table class="w-full text-sm">
+
+        <!-- HEADER -->
+        <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+          <tr>
+            <th class="px-5 py-3 text-left">Venue</th>
+            <th class="px-5 py-3 text-left">Location</th>
+            <th class="px-5 py-3 text-left">Capacity</th>
+            <th class="px-5 py-3 text-left">Price</th>
+            <th class="px-5 py-3 text-left">Status</th>
+            <th class="px-5 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+
+        <!-- BODY -->
+        <tbody>
+
+          @for (v of venues(); track v.id) {
+
+          <tr class="border-t hover:bg-[#ecfdf5] transition-all duration-200">
+
+            <!-- VENUE (with avatar like vendor UI) -->
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+
+                <!-- AVATAR -->
+                <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-semibold border-2">
+                  {{ v.venueName.charAt(0) }}
+                </div>
+
+                <div>
+                  <p class="font-medium text-gray-800">{{ v.venueName }}</p>
+                  <p class="text-xs text-gray-500 line-clamp-1">{{ v.description }}</p>
+                </div>
+
+              </div>
+            </td>
+
+            <!-- LOCATION -->
+            <td class="px-5 py-4 text-gray-600">
+              <p>{{ v.location.city }}</p>
+              <p class="text-xs text-gray-500">{{ v.location.state }}</p>
+            </td>
+
+            <!-- CAPACITY -->
+            <td class="px-5 py-4 text-gray-700">
+              {{ v.capacity }} Guests
+            </td>
+
+            <!-- PRICE -->
+            <td class="px-5 py-4 text-gray-700 font-medium">
+              ₹{{ v.pricePerDay }}
+            </td>
+
+            <!-- STATUS -->
+            <td class="px-5 py-4">
+              <span
+                class="px-3 py-1 rounded-full text-xs font-medium capitalize"
+                [class.bg-yellow-100]="v.status === 'pending'"
+                [class.text-yellow-700]="v.status === 'pending'"
+                [class.bg-green-200]="v.status === 'approved'"
+                [class.text-green-700]="v.status === 'approved'"
+                [class.bg-red-200]="v.status === 'rejected'"
+                [class.text-red-700]="v.status === 'rejected'">
+                {{ v.status }}
+              </span>
+            </td>
+
+            <!-- ACTIONS (UNCHANGED) -->
+            <td class="px-5 py-4 flex gap-2">
+
+              @if (v.status === 'pending') {
+
+                <button
+                  class="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm"
+                  (click)="approve(v)">
+                  Approve
+                </button>
+
+                <button
+                  class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-sm"
+                  (click)="reject(v)">
+                  Reject
+                </button>
+
+              }
+
+              @if (v.status !== 'pending') {
+
+                <button
+                  class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                  (click)="reopen(v)">
+                  Reopen
+                </button>
+
+              }
+
+            </td>
+
+          </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
