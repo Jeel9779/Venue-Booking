@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 /* import { BarChart3, Building2, Calendar, HelpCircle, LayoutDashboard, LogOut, LucideAngularModule, Plus, Settings, Users } from 'lucide-angular/src/icons'; */
+import { Router } from '@angular/router';
+
 import {
   LucideAngularModule,
   LayoutDashboard,
@@ -11,7 +13,7 @@ import {
   Users,
   Plus,
   HelpCircle,
-  LogOut
+  LogOut,
 } from 'lucide-angular';
 
 @Component({
@@ -21,7 +23,6 @@ import {
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-
   icons = {
     dashboard: LayoutDashboard,
     venues: Building2,
@@ -34,11 +35,19 @@ export class Sidebar {
     logout: LogOut,
   };
 
-/*   toggle() {
+  /*   toggle() {
     this.isOpen.update((v) => !v);
   } */
 
-    @Input() isOpen: boolean = false;
+  @Input() isOpen: boolean = false;
   @Output() close = new EventEmitter<void>();
-  
+
+
+  /* Login  */
+  constructor(private router: Router) {}
+
+  logout() {
+    localStorage.removeItem('admin');
+    this.router.navigate(['/login']);
+  }
 }

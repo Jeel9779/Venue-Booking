@@ -1,53 +1,59 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth-guard';
+import { roleGuard } from './core/role-guard';
 
 export const routes: Routes = [
-    {
+  // ✅ LOGIN FIRST
+  {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
+  },
+
+  // ✅ ADMIN PANEL (PROTECTED)
+  {
     path: '',
-    loadComponent: () =>
-      import('./layout/admin-layout/admin-layout')
-        .then(m => m.AdminLayout),
+    loadComponent: () => import('./layout/admin-layout/admin-layout').then((m) => m.AdminLayout),
+
+    /* incomplate role guard  */
+    /* canActivate: [authGuard, () => roleGuard(['admin'])], */
+    canActivate: [authGuard] ,
 
     children: [
       {
         path: '',
         redirectTo: 'dashboard',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
 
       {
         path: 'dashboard',
-        loadComponent: () =>
-          import('./features/dashboard/dashboard')
-            .then(m => m.Dashboard)
+        loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
       },
 
       {
         path: 'venues',
-        loadComponent: () =>
-          import('./features/venues/venues')
-            .then(m => m.Venues)
+        loadComponent: () => import('./features/venues/venues').then((m) => m.Venues),
       },
 
       {
         path: 'users',
-        loadComponent: () =>
-          import('./features/users/users')
-            .then(m => m.Users)
+        loadComponent: () => import('./features/users/users').then((m) => m.Users),
       },
 
       {
         path: 'vendors',
-        loadComponent: () =>
-          import('./features/vendors/vendors')
-            .then(m => m.Vendors)
+        loadComponent: () => import('./features/vendors/vendors').then((m) => m.Vendors),
       },
 
       {
         path: 'bookings',
-        loadComponent: () =>
-          import('./features/bookings/bookings')
-            .then(m => m.Bookings)
-      }
-    ]
-  }
+        loadComponent: () => import('./features/bookings/bookings').then((m) => m.Bookings),
+      },
+    ],
+  },
+  // ✅ DEFAULT REDIRECT
+  {
+    path: '**',
+    redirectTo: 'login',
+  },
 ];
