@@ -1,0 +1,131 @@
+<!-- <div class="container">
+
+  <div class="card">
+    <h2>Add Vendor</h2>
+
+    <form [formGroup]="vendorForm" (ngSubmit)="submit()">
+
+      <input placeholder="Full Name" formControlName="fullName" />
+      <input placeholder="Email" formControlName="email" />
+      <input placeholder="Phone" formControlName="phone" />
+
+      <input placeholder="Business Name" formControlName="businessName" />
+
+      <select formControlName="businessType">
+        <option value="">Select Type</option>
+        <option value="banquet">Banquet</option>
+        <option value="catering">Catering</option>
+        <option value="decorator">Decorator</option>
+      </select>
+
+      <input placeholder="Government ID" formControlName="governmentId" />
+      <input placeholder="Password" formControlName="password" type="password" />
+      <input placeholder="Address" formControlName="address" />
+
+      <button type="submit">Add Vendor</button>
+
+    </form>
+  </div>
+
+</div> -->
+
+
+
+<div class="min-h-screen bg-linear-to-br from-green-10 to-blue-50 flex items-center justify-center p-6">
+
+  <div class="w-full max-w-3xl bg-gray-300 backdrop-blur-md border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+
+    <!-- HEADER -->
+    <div class="px-6 py-4 bg-linear-to-r from-green-300 to-green-400 text-blue-950">
+      <h2 class="text-lg font-semibold">Add Vendor</h2>
+      <p class="text-xs opacity-90">Fill details to add new vendor</p>
+    </div>
+
+    <!-- FORM -->
+    <form [formGroup]="vendorForm" (ngSubmit)="submit()"
+      class="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+      <!-- INPUT STYLE -->
+      
+      <!-- FULL NAME -->
+      <div>
+        <label class="text-sm text-gray-600">Full Name</label>
+        <input formControlName="fullName"
+          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      </div>
+
+      <!-- EMAIL -->
+      <div>
+        <label class="text-sm text-gray-600">Email</label>
+        <input formControlName="email"
+          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      </div>
+
+      <!-- PHONE -->
+      <div>
+        <label class="text-sm text-gray-600">Phone</label>
+        <input formControlName="phone"
+          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      </div>
+
+      <!-- BUSINESS NAME -->
+      <div>
+        <label class="text-sm text-gray-600">Business Name</label>
+        <input formControlName="businessName"
+          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      </div>
+
+      <!-- BUSINESS TYPE -->
+      <div>
+        <label class="text-sm text-gray-600">Business Type</label>
+        <select formControlName="businessType"
+          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+          <option value="">Select</option>
+          <option value="banquet">Banquet</option>
+          <option value="catering">Catering</option>
+          <option value="decorator">Decorator</option>
+        </select>
+      </div>
+
+      <!-- GOV ID -->
+      <div>
+        <label class="text-sm text-gray-600">Government ID</label>
+        <input formControlName="governmentId"
+          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      </div>
+
+      <!-- PASSWORD -->
+      <div>
+        <label class="text-sm text-gray-600">Password</label>
+        <input type="password" formControlName="password"
+          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      </div>
+
+      <!-- ADDRESS -->
+      <div>
+        <label class="text-sm text-gray-600">Address</label>
+        <input formControlName="address"
+          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="col-span-2 flex justify-end gap-3 mt-6">
+
+        <button type="button"
+          class="px-5 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition"
+          routerLink="/vendors">
+          Cancel
+        </button>
+
+        <button type="submit"
+          class="px-5 py-2 rounded-xl bg-linear-to-r from-green-500 to-green-600 text-white shadow-md hover:scale-105 transition">
+          Save Vendor
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

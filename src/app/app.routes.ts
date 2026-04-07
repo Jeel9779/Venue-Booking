@@ -44,6 +44,12 @@ export const routes: Routes = [
         path: 'vendors',
         loadComponent: () => import('./features/vendors/vendors').then((m) => m.Vendors),
       },
+       {
+        path: 'add-vendor',
+        loadComponent: () => import('./features/vendors/admin/add-vendor/add-vendor').then((m) => m.AddVendor),
+
+      
+      },
 
       {
         path: 'bookings',

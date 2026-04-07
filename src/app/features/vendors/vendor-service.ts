@@ -1,25 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Vendor } from './vendor.model';
 
-export interface Vendor {
-  id: string;
-  fullName: string;
-  email: string;
-  phone: string | null;
-  businessName: string;
-  businessType: string;
-  governmentId: string;
-  /*  status: string; */
-  status: 'pending' | 'approved' | 'rejected' | 'reopen';
-  adminMessage: string;
-  licenseDoc?: string | null ;
-  address?: string | null;
- 
-  rating?: number | null;
-  createdAt?: string | null;
-  updatedAt?: string | null;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -37,4 +20,11 @@ export class VendorService {
   updateVendor(id: string, data: Partial<Vendor>) {
     return this.http.patch(`${this.api}/${id}`, data);
   }
+
+  // Add-new vendor (offline)
+  addVendor(data: Partial<Vendor>) {
+    return this.http.post(this.api, data);
+  }
+
+  
 }

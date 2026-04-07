@@ -16,3 +16,11 @@
   --surface: #69eba6;
   --border: #f46106;
 }
+
+/* add-vendor */
+.input {
+  width: 100%;
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 6px;
+}
