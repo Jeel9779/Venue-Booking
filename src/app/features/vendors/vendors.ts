@@ -1,17 +1,19 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { VendorService , Vendor} from './vendor-service';
+import { VendorService, Vendor } from './vendor-service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-vendors',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './vendors.html',
   styleUrl: './vendors.css',
 })
 export class Vendors implements OnInit {
 
-   vendors = signal<Vendor[]>([]);
+  vendors = signal<Vendor[]>([]);
   isLoading = signal(false);
+  error = signal('');
 
   constructor(private vendorService: VendorService) {}
 
@@ -28,6 +30,7 @@ export class Vendors implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
+        this.error.set('Failed to load vendors');
         this.isLoading.set(false);
       }
     });
@@ -36,7 +39,7 @@ export class Vendors implements OnInit {
   // ✅ APPROVE
   approve(v: Vendor) {
     this.vendorService.updateVendor(v.id, {
-      status: 'success',
+      status: 'approved',
       adminMessage: 'Approved successfully'
     }).subscribe(() => this.loadVendors());
   }
@@ -44,7 +47,7 @@ export class Vendors implements OnInit {
   // ❌ REJECT
   reject(v: Vendor) {
     this.vendorService.updateVendor(v.id, {
-      status: 'cancel',
+      status: 'rejected',
       adminMessage: 'Rejected by admin'
     }).subscribe(() => this.loadVendors());
   }
@@ -57,44 +60,8 @@ export class Vendors implements OnInit {
     }).subscribe(() => this.loadVendors());
   }
 
+  // 📄 LICENSE PREVIEW
+  previewDoc(url: string) {
+    window.open(url, '_blank');
+  }
 }
-
-/* vendors = signal<Vendor[]>([]);
-  constructor(private vendorService: VendorService) {}
-
-  ngOnInit() {
-    this.loadVendors();
-  }
-
-  loadVendors() {
-    this.vendorService.getVendors().subscribe(data => {
-      this.vendors.set(data);
-    });
-  }
-
-
-  approve(vendor: Vendor) {
-    this.vendorService.updateVendor(vendor.id, {
-      status: 'success',
-      adminMessage: 'Approved successfully'
-    }).subscribe(() => {
-      this.loadVendors(); 
-    });
-  }
-
-  reject(vendor: Vendor) {
-    this.vendorService.updateVendor(vendor.id, {
-      status: 'cancel',
-      adminMessage: 'Rejected by admin'
-    }).subscribe(() => {
-      this.loadVendors();
-    });
-  }
-
-
-  reopen(vendor: { id: string; }) {
-  this.vendorService.updateVendor(vendor.id, {
-    status: 'pending',
-    adminMessage: ''
-  }).subscribe(() => this.loadVendors());
-} */

@@ -6,12 +6,19 @@ export interface Vendor {
   id: string;
   fullName: string;
   email: string;
-  phone: string;
+  phone: string | null;
   businessName: string;
   businessType: string;
   governmentId: string;
-  status: string;
+  /*  status: string; */
+  status: 'pending' | 'approved' | 'rejected' | 'reopen';
   adminMessage: string;
+  licenseDoc?: string | null ;
+  address?: string | null;
+ 
+  rating?: number | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
 }
 
 @Injectable({
