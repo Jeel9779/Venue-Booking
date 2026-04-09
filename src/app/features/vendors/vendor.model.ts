@@ -12,7 +12,7 @@ export interface Vendor {
   governmentId: string;
 
   password?: string;
-  
+
   status: VendorStatus;
   adminMessage?: string;
 
@@ -22,4 +22,7 @@ export interface Vendor {
 
   createdAt?: string;
   updatedAt?: string;
+
+  pincode?: string;
+  state?: string;
 }

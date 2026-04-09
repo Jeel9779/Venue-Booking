@@ -1,127 +1,196 @@
-<!-- <div class="container">
+<div class="min-h-screen bg-linear-to-br from-emerald-50 via-blue-50 to-white flex items-center justify-center p-4 md:p-8">
 
-  <div class="card">
-    <h2>Add Vendor</h2>
-
-    <form [formGroup]="vendorForm" (ngSubmit)="submit()">
-
-      <input placeholder="Full Name" formControlName="fullName" />
-      <input placeholder="Email" formControlName="email" />
-      <input placeholder="Phone" formControlName="phone" />
-
-      <input placeholder="Business Name" formControlName="businessName" />
-
-      <select formControlName="businessType">
-        <option value="">Select Type</option>
-        <option value="banquet">Banquet</option>
-        <option value="catering">Catering</option>
-        <option value="decorator">Decorator</option>
-      </select>
-
-      <input placeholder="Government ID" formControlName="governmentId" />
-      <input placeholder="Password" formControlName="password" type="password" />
-      <input placeholder="Address" formControlName="address" />
-
-      <button type="submit">Add Vendor</button>
-
-    </form>
-  </div>
-
-</div> -->
-
-
-
-<div class="min-h-screen bg-linear-to-br from-green-10 to-blue-50 flex items-center justify-center p-6">
-
-  <div class="w-full max-w-3xl bg-gray-300 backdrop-blur-md border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+  <div class="w-full max-w-5xl bg-green-200 backdrop-blur-lg rounded-3xl shadow-xl border border-gray-300 overflow-hidden">
 
     <!-- HEADER -->
-    <div class="px-6 py-4 bg-linear-to-r from-green-300 to-green-400 text-blue-950">
-      <h2 class="text-lg font-semibold">Add Vendor</h2>
-      <p class="text-xs opacity-90">Fill details to add new vendor</p>
+    <div class="px-8 py-6 bg-linear-to-r from-emerald-500 to-green-600 text-white">
+      <h2 class="text-2xl font-semibold">Add Vendor</h2>
+      <p class="text-sm opacity-90">Register and verify vendor details</p>
     </div>
 
-    <!-- FORM -->
-    <form [formGroup]="vendorForm" (ngSubmit)="submit()"
-      class="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+    <form [formGroup]="vendorForm" (ngSubmit)="submit()" class="p-6 md:p-8 space-y-6">
 
-      <!-- INPUT STYLE -->
-      
-      <!-- FULL NAME -->
-      <div>
-        <label class="text-sm text-gray-600">Full Name</label>
-        <input formControlName="fullName"
-          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      <!-- PERSONAL -->
+      <div class="bg-gray-50 rounded-2xl p-5 border border-gray-200">
+        <h3 class="text-sm font-semibold text-gray-700 mb-4">👤 Personal Information</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- FULL NAME -->
+          <div>
+            <label class="text-xs text-gray-500">Full Name</label>
+            <input formControlName="fullName"
+              (input)="vendorForm.get('fullName')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-emerald-400"
+              [class.border-red-500]="vendorForm.get('fullName')?.touched && vendorForm.get('fullName')?.invalid"
+            />
+            @if (vendorForm.get('fullName')?.touched && vendorForm.get('fullName')?.invalid) {
+              <p class="text-xs text-red-500 mt-1">Full name is required</p>
+            }
+          </div>
+
+          <!-- EMAIL -->
+          <div>
+            <label class="text-xs text-gray-500">Email</label>
+            <input formControlName="email"
+              (input)="vendorForm.get('email')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-emerald-400"
+              [class.border-red-500]="vendorForm.get('email')?.touched && vendorForm.get('email')?.invalid"
+            />
+            @if (vendorForm.get('email')?.touched && vendorForm.get('email')?.errors) {
+              @if (vendorForm.get('email')?.errors?.['required']) {
+                <p class="text-xs text-red-500 mt-1">Email is required</p>
+              }
+              @if (vendorForm.get('email')?.errors?.['email']) {
+                <p class="text-xs text-red-500 mt-1">Invalid email</p>
+              }
+            }
+          </div>
+
+          <!-- PHONE -->
+          <div>
+            <label class="text-xs text-gray-500">Phone</label>
+            <input formControlName="phone"
+              (input)="vendorForm.get('phone')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-emerald-400"
+              [class.border-red-500]="vendorForm.get('phone')?.touched && vendorForm.get('phone')?.invalid"
+            />
+            @if (vendorForm.get('phone')?.touched && vendorForm.get('phone')?.errors) {
+              @if (vendorForm.get('phone')?.errors?.['required']) {
+                <p class="text-xs text-red-500 mt-1">Phone is required</p>
+              }
+              @if (vendorForm.get('phone')?.errors?.['pattern']) {
+                <p class="text-xs text-red-500 mt-1">Enter valid 10 digit number</p>
+              }
+            }
+          </div>
+
+        </div>
       </div>
 
-      <!-- EMAIL -->
-      <div>
-        <label class="text-sm text-gray-600">Email</label>
-        <input formControlName="email"
-          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      <!-- BUSINESS -->
+      <div class="bg-emerald-50 rounded-2xl p-5 border border-emerald-100">
+        <h3 class="text-sm font-semibold text-emerald-700 mb-4">🏢 Business Information</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- BUSINESS NAME -->
+          <div>
+            <label class="text-xs text-gray-500">Business Name</label>
+            <input formControlName="businessName"
+              (input)="vendorForm.get('businessName')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-emerald-400"
+              [class.border-red-500]="vendorForm.get('businessName')?.touched && vendorForm.get('businessName')?.invalid"
+            />
+            @if (vendorForm.get('businessName')?.touched && vendorForm.get('businessName')?.invalid) {
+              <p class="text-xs text-red-500 mt-1">Business name is required</p>
+            }
+          </div>
+
+          <!-- BUSINESS TYPE -->
+          <div>
+            <label class="text-xs text-gray-500">Business Type</label>
+            <select formControlName="businessType"
+              (change)="vendorForm.get('businessType')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-emerald-400"
+              [class.border-red-500]="vendorForm.get('businessType')?.touched && vendorForm.get('businessType')?.invalid">
+              <option value="">Select type</option>
+              <option value="banquet">Banquet</option>
+              <option value="catering">Catering</option>
+              <option value="decorator">Decorator</option>
+            </select>
+            @if (vendorForm.get('businessType')?.touched && vendorForm.get('businessType')?.invalid) {
+              <p class="text-xs text-red-500 mt-1">Select business type</p>
+            }
+          </div>
+
+          <!-- GOVERNMENT ID -->
+          <div>
+            <label class="text-xs text-gray-500">Government ID</label>
+            <input formControlName="governmentId"
+              (input)="vendorForm.get('governmentId')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-emerald-400"
+              [class.border-red-500]="vendorForm.get('governmentId')?.touched && vendorForm.get('governmentId')?.invalid"
+            />
+            @if (vendorForm.get('governmentId')?.touched && vendorForm.get('governmentId')?.invalid) {
+              <p class="text-xs text-red-500 mt-1">Government ID is required</p>
+            }
+          </div>
+
+          <!-- PASSWORD -->
+          <div>
+            <label class="text-xs text-gray-500">Password</label>
+            <input type="password" formControlName="password"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-emerald-400" />
+          </div>
+
+        </div>
       </div>
 
-      <!-- PHONE -->
-      <div>
-        <label class="text-sm text-gray-600">Phone</label>
-        <input formControlName="phone"
-          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+      <!-- LOCATION -->
+      <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+        <h3 class="text-sm font-semibold text-blue-700 mb-4">📍 Location Details</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- ADDRESS -->
+          <div class="md:col-span-2">
+            <label class="text-xs text-gray-500">Address</label>
+            <input formControlName="address"
+              (input)="vendorForm.get('address')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-blue-400"
+              [class.border-red-500]="vendorForm.get('address')?.touched && vendorForm.get('address')?.invalid"
+            />
+            @if (vendorForm.get('address')?.touched && vendorForm.get('address')?.invalid) {
+              <p class="text-xs text-red-500 mt-1">Address is required</p>
+            }
+          </div>
+
+          <!-- PINCODE -->
+          <div>
+            <label class="text-xs text-gray-500">Pincode</label>
+            <input formControlName="pincode"
+              (input)="vendorForm.get('pincode')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-blue-400"
+              [class.border-red-500]="vendorForm.get('pincode')?.touched && vendorForm.get('pincode')?.invalid"
+            />
+            @if (vendorForm.get('pincode')?.touched && vendorForm.get('pincode')?.errors) {
+              @if (vendorForm.get('pincode')?.errors?.['required']) {
+                <p class="text-xs text-red-500 mt-1">Pincode is required</p>
+              }
+              @if (vendorForm.get('pincode')?.errors?.['pattern']) {
+                <p class="text-xs text-red-500 mt-1">Enter valid 6 digit pincode</p>
+              }
+            }
+          </div>
+
+          <!-- STATE -->
+          <div>
+            <label class="text-xs text-gray-500">State</label>
+            <input formControlName="state"
+              (input)="vendorForm.get('state')?.markAsUntouched()"
+              class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none focus:ring-2 focus:ring-blue-400"
+              [class.border-red-500]="vendorForm.get('state')?.touched && vendorForm.get('state')?.invalid"
+            />
+            @if (vendorForm.get('state')?.touched && vendorForm.get('state')?.invalid) {
+              <p class="text-xs text-red-500 mt-1">State is required</p>
+            }
+          </div>
+
+        </div>
       </div>
 
-      <!-- BUSINESS NAME -->
-      <div>
-        <label class="text-sm text-gray-600">Business Name</label>
-        <input formControlName="businessName"
-          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
-      </div>
-
-      <!-- BUSINESS TYPE -->
-      <div>
-        <label class="text-sm text-gray-600">Business Type</label>
-        <select formControlName="businessType"
-          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400">
-          <option value="">Select</option>
-          <option value="banquet">Banquet</option>
-          <option value="catering">Catering</option>
-          <option value="decorator">Decorator</option>
-        </select>
-      </div>
-
-      <!-- GOV ID -->
-      <div>
-        <label class="text-sm text-gray-600">Government ID</label>
-        <input formControlName="governmentId"
-          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
-      </div>
-
-      <!-- PASSWORD -->
-      <div>
-        <label class="text-sm text-gray-600">Password</label>
-        <input type="password" formControlName="password"
-          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
-      </div>
-
-      <!-- ADDRESS -->
-      <div>
-        <label class="text-sm text-gray-600">Address</label>
-        <input formControlName="address"
-          class="w-full mt-1 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
-      </div>
-
-      <!-- BUTTONS -->
-      <div class="col-span-2 flex justify-end gap-3 mt-6">
-
+      <!-- BUTTON -->
+      <div class="flex justify-end gap-3 pt-2">
         <button type="button"
-          class="px-5 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition"
-          routerLink="/vendors">
+          class="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition">
           Cancel
         </button>
 
         <button type="submit"
-          class="px-5 py-2 rounded-xl bg-linear-to-r from-green-500 to-green-600 text-white shadow-md hover:scale-105 transition">
+          class="px-6 py-2.5 rounded-xl bg-linear-to-r from-emerald-500 to-green-600 text-white font-medium shadow hover:shadow-lg transition">
           Save Vendor
         </button>
-
       </div>
 
     </form>

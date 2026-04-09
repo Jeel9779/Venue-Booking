@@ -5,6 +5,7 @@ import { computed } from '@angular/core';
 import { Vendor } from './vendor.model';
 import { RouterModule } from '@angular/router';
 
+
 @Component({
   selector: 'app-vendors',
   standalone: true,
@@ -128,4 +129,7 @@ export class Vendors implements OnInit {
 
     return data;
   });
+
+
+
 }

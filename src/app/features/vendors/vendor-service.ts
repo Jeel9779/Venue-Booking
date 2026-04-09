@@ -26,5 +26,14 @@ export class VendorService {
     return this.http.post(this.api, data);
   }
 
+// delete vendor
+deleteVendor(id: string) {
+  return this.http.delete(`${this.api}/${id}`);
+}
+
+getVendorById(id: string) {
+  return this.http.get<Vendor>(`${this.api}/${id}`);
+}
+
   
 }
