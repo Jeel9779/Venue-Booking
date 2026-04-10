@@ -4,8 +4,10 @@
 
     <!-- HEADER -->
     <div class="px-8 py-6 bg-linear-to-r from-emerald-500 to-green-600 text-white">
-      <h2 class="text-2xl font-semibold">Add Vendor</h2>
-      <p class="text-sm opacity-90">Register and verify vendor details</p>
+      <h2 class="text-2xl font-semibold"> {{ isEdit ? 'Edit Vendor' : 'Add Vendor' }}</h2>
+      <p class="text-sm opacity-90">
+  {{ isEdit ? 'Update vendor details' : 'Register and verify vendor details' }}
+</p>
     </div>
 
     <form [formGroup]="vendorForm" (ngSubmit)="submit()" class="p-6 md:p-8 space-y-6">
@@ -189,7 +191,7 @@
 
         <button type="submit"
           class="px-6 py-2.5 rounded-xl bg-linear-to-r from-emerald-500 to-green-600 text-white font-medium shadow hover:shadow-lg transition">
-          Save Vendor
+         {{ isEdit ? 'Update Vendor' : 'Save Vendor' }}
         </button>
       </div>
 

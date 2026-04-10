@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { VendorService } from '../../vendor-service';
 import { Vendor } from '../../vendor.model';
-import { LucideAngularModule, User, Mail, Phone, Building2, IdCard, MapPin } from 'lucide-angular';
-import { ActivatedRoute } from '@angular/router';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-add-vendor',
@@ -15,19 +14,14 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './add-vendor.css',
 })
 export class AddVendor {
- 
-  /* icon  */
-  /*   readonly User = User;
-  readonly Mail = Mail;
-  readonly Phone = Phone;
-  readonly Building2 = Building2;
-  readonly IdCard = IdCard;
-  readonly MapPin = MapPin;
- */
 
   private fb = inject(FormBuilder);
   private vendorService = inject(VendorService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  isEdit = false;
+  vendorId: string | null = null;
 
   vendorForm = this.fb.group({
     fullName: ['', Validators.required],
@@ -45,7 +39,19 @@ export class AddVendor {
     state: ['', Validators.required],
   });
 
-   submit() {
+  ngOnInit() {
+    this.vendorId = this.route.snapshot.paramMap.get('id');
+
+    if (this.vendorId) {
+      this.isEdit = true;
+
+      this.vendorService.getVendorById(this.vendorId).subscribe((data) => {
+        this.vendorForm.patchValue(data);
+      });
+    }
+  }
+
+  submit() {
     if (this.vendorForm.invalid) {
       this.vendorForm.markAllAsTouched();
       return;
@@ -53,39 +59,47 @@ export class AddVendor {
 
     const f = this.vendorForm.value;
 
-    const newVendor: Partial<Vendor> = {
-      id: Date.now().toString(),
-      fullName: f.fullName!,
-      email: f.email!,
+    // SAFE DATA (fix null issue)
+    const data: Partial<Vendor> = {
+      fullName: f.fullName || '',
+      email: f.email || '',
       phone: f.phone || null,
-      businessName: f.businessName!,
-      businessType: f.businessType!,
-      governmentId: f.governmentId!,
+
+      businessName: f.businessName || '',
+      businessType: f.businessType || '',
+      governmentId: f.governmentId || '',
+
       password: f.password || '',
+
       address: f.address || null,
+      pincode: f.pincode || '',
+      state: f.state || '',
 
-      pincode: f.pincode!,
-      state: f.state!,
-
-      status: 'pending', // ✅ FIXED TYPE
-      adminMessage: '',
-      licenseDoc: null,
-      rating: 0,
-
-      createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
-    this.vendorService.addVendor(newVendor).subscribe({
-      next: () => {
+    if (this.isEdit && this.vendorId) {
+      // ✏️ EDIT
+      this.vendorService.updateVendor(this.vendorId, data).subscribe(() => {
+        alert('Vendor Updated ✅');
+        this.router.navigate(['/vendors']);
+      });
+    } else {
+      // ➕ ADD
+      const newVendor: Partial<Vendor> = {
+        id: Date.now().toString(),
+        ...data,
+        status: 'pending',
+        adminMessage: '',
+        licenseDoc: null,
+        rating: 0,
+        createdAt: new Date().toISOString(),
+      };
+
+      this.vendorService.addVendor(newVendor).subscribe(() => {
         alert('Vendor Added ✅');
-        this.router.navigate(['/vendors']); // go back to list
-      },
-      error: (err) => console.error(err),
-    });
-  } 
-
-
-
-  
+        this.router.navigate(['/vendors']);
+      });
+    }
+  }
 }

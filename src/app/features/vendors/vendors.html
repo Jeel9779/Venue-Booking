@@ -68,7 +68,7 @@
 
 
         <!-- TABLE -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto relative">
 
             <table class="w-full text-sm">
 
@@ -89,10 +89,11 @@
                 <tbody>
 
                     <!--   @for (v of vendors(); track v.id)  -->
-                    @for (v of filteredVendors(); track v.id)
+                    @for (v of filteredVendors(); track v.id; let i = $index)
                     {
 
-                    <tr class="border-t hover:bg-[#b5d9fa] transition-all duration-200">
+
+                    <tr class="border-t hover:bg-[#b5d9fa] transition-all duration-200 relative">
 
                         <!-- VENDOR -->
                         <td class="px-5 py-4">
@@ -156,7 +157,7 @@
                         </td>
 
                         <!-- ACTIONS -->
-                          <td class="px-5 py-4 flex gap-2">
+                        <!--  <td class="px-5 py-4 flex gap-2">
 
                             @if (v.status === 'pending') {
 
@@ -183,9 +184,73 @@
 
                             }
 
-                        </td> 
+                        </td>  -->
 
-                      
+                        <td class="px-5 py-4 flex items-center gap-2 relative">
+
+                            <!-- 🟡 PENDING -->
+                            @if (v.status === 'pending') {
+
+                            <button class="bg-green-600 text-white px-3 py-1 rounded-lg" (click)="approve(v)">
+                                Approve
+                            </button>
+
+                            <button class="bg-red-500 text-white px-3 py-1 rounded-lg" (click)="openRejectModal(v)">
+                                Reject
+                            </button>
+
+                            }
+
+                            <!-- 🟢 APPROVED / 🔴 REJECTED -->
+                            @if (v.status !== 'pending') {
+
+                            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg" (click)="reopen(v)">
+                                Reopen
+                            </button>
+
+                            }
+                            <div class="relative">
+
+                                <!-- ⋮ MENU BUTTON -->
+                                <button (click)="toggleMenu($event, v.id)"
+                                    class="p-2 rounded-full hover:bg-gray-100 transition">
+                                    <lucide-angular [img]="MoreVertical" size="18"></lucide-angular>
+                                </button>
+
+                                <!-- DROPDOWN -->
+                                @if (menuOpenId() === v.id) {
+
+                                <div (click)="$event.stopPropagation()" class="absolute left-0 top-full mt-1 w-36 bg-white rounded-xl shadow-lg border border-gray-100
+         animate-fadeIn z-50" [class.top-full]="i < filteredVendors().length - 2"
+                                    [class.mt-2]="i < filteredVendors().length - 2"
+                                    [class.bottom-full]="i >= filteredVendors().length - 2"
+                                    [class.mb-2]="i >= filteredVendors().length - 2">
+
+
+                                    @if (v.status !== 'rejected') {
+                                    <button class="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-50 text-sm"
+                                        (click)="editVendor(v)">
+                                        <lucide-angular [img]="Pencil" size="16"></lucide-angular>
+                                        Edit
+                                    </button>
+                                    }
+
+
+                                    <button
+                                        class="flex items-center gap-2 w-full px-3 py-2 hover:bg-red-50 text-sm text-red-600"
+                                        (click)="deleteVendor(v.id)">
+                                        <lucide-angular [img]="Trash2" size="16"></lucide-angular>
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                                }
+                            </div>
+                        </td>
+
+
+
                     </tr>
 
                     }

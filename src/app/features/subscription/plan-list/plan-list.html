@@ -1,0 +1,43 @@
+<div class="plan-container">
+
+  <h2>Subscription Plans</h2>
+
+  <button class="add-btn">+ Add Plan</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Duration</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let plan of plans">
+        <td>{{ plan.name }}</td>
+        <td>₹ {{ plan.price }}</td>
+        <td>{{ plan.duration }} days</td>
+
+        <td>
+          <span [class.active]="plan.isActive" [class.inactive]="!plan.isActive">
+            {{ plan.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+
+        <td>
+          <button (click)="toggleStatus(plan)">
+            {{ plan.isActive ? 'Disable' : 'Enable' }}
+          </button>
+
+          <button>Edit</button>
+
+          <button (click)="deletePlan(plan.id!)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

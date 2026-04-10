@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Vendor } from './vendor.model';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -26,14 +25,12 @@ export class VendorService {
     return this.http.post(this.api, data);
   }
 
-// delete vendor
-deleteVendor(id: string) {
-  return this.http.delete(`${this.api}/${id}`);
-}
+  // for edit and delete vendor 
+  deleteVendor(id: string) {
+    return this.http.delete(`${this.api}/${id}`);
+  }
 
-getVendorById(id: string) {
-  return this.http.get<Vendor>(`${this.api}/${id}`);
-}
-
-  
+  getVendorById(id: string) {
+    return this.http.get<Vendor>(`${this.api}/${id}`);
+  }
 }

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth-guard';
 import { roleGuard } from './core/role-guard';
+import { AddVendor } from './features/vendors/admin/add-vendor/add-vendor';
 
 export const routes: Routes = [
   // ✅ LOGIN FIRST
@@ -47,9 +48,9 @@ export const routes: Routes = [
        {
         path: 'add-vendor',
         loadComponent: () => import('./features/vendors/admin/add-vendor/add-vendor').then((m) => m.AddVendor),
-
-      
       },
+
+      { path: 'edit-vendor/:id', component: AddVendor },
 
       {
         path: 'bookings',
