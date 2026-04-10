@@ -14,6 +14,7 @@ import {
   Plus,
   HelpCircle,
   LogOut,
+  ListChecks
 } from 'lucide-angular';
 
 @Component({
@@ -33,6 +34,7 @@ export class Sidebar {
     add: Plus,
     help: HelpCircle,
     logout: LogOut,
+    subscript : ListChecks
   };
 
   /*   toggle() {

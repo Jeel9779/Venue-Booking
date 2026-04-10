@@ -1,0 +1,102 @@
+<!-- Modal Overlay -->
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+  <!-- Modal Box -->
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 relative">
+
+    <!-- Close Button -->
+    <button
+      (click)="close()"
+      class="absolute top-3 right-3 text-gray-500 hover:text-black text-lg">
+      ✖
+    </button>
+
+    <!-- Title -->
+    <h2 class="text-xl font-semibold mb-6 text-gray-800">
+      Add Subscription Plan
+    </h2>
+
+    <!-- Form -->
+    <form [formGroup]="planForm"
+          (ngSubmit)="onSubmit()"
+          class="space-y-4">
+
+      <!-- Plan Name -->
+      <div>
+        <label class="text-sm text-gray-600">Plan Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="w-full border rounded-lg px-3 py-2 mt-1 focus:ring-2 focus:ring-blue-400 outline-none">
+
+        <div *ngIf="planForm.get('name')?.touched && planForm.get('name')?.invalid"
+             class="text-red-500 text-xs mt-1">
+          Name is required
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label class="text-sm text-gray-600">Price (₹)</label>
+        <input
+          type="number"
+          formControlName="price"
+          class="w-full border rounded-lg px-3 py-2 mt-1 focus:ring-2 focus:ring-blue-400 outline-none">
+
+        <div *ngIf="planForm.get('price')?.touched && planForm.get('price')?.invalid"
+             class="text-red-500 text-xs mt-1">
+          Enter valid price
+        </div>
+      </div>
+
+      <!-- Duration -->
+      <div>
+        <label class="text-sm text-gray-600">Duration (days)</label>
+        <input
+          type="number"
+          formControlName="duration"
+          class="w-full border rounded-lg px-3 py-2 mt-1 focus:ring-2 focus:ring-blue-400 outline-none">
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="text-sm text-gray-600">Description</label>
+        <textarea
+          formControlName="description"
+          rows="3"
+          class="w-full border rounded-lg px-3 py-2 mt-1 focus:ring-2 focus:ring-blue-400 outline-none"></textarea>
+
+        <div *ngIf="planForm.get('description')?.touched && planForm.get('description')?.invalid"
+             class="text-red-500 text-xs mt-1">
+          Description is required
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="flex items-center gap-2 mt-2">
+        <input type="checkbox" formControlName="isActive">
+        <label class="text-sm text-gray-600">Active Plan</label>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-3 pt-4">
+
+        <button
+          type="button"
+          (click)="close()"
+          class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow">
+          Save Plan
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>

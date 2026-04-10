@@ -17,7 +17,7 @@ export const routes: Routes = [
 
     /* incomplate role guard  */
     /* canActivate: [authGuard, () => roleGuard(['admin'])], */
-    canActivate: [authGuard] ,
+    canActivate: [authGuard],
 
     children: [
       {
@@ -45,12 +45,27 @@ export const routes: Routes = [
         path: 'vendors',
         loadComponent: () => import('./features/vendors/vendors').then((m) => m.Vendors),
       },
-       {
+      {
         path: 'add-vendor',
-        loadComponent: () => import('./features/vendors/admin/add-vendor/add-vendor').then((m) => m.AddVendor),
+        loadComponent: () =>
+          import('./features/vendors/admin/add-vendor/add-vendor').then((m) => m.AddVendor),
       },
 
       { path: 'edit-vendor/:id', component: AddVendor },
+
+      /*     {
+        path: 'plans/add',
+        loadComponent: () =>
+          import('./features/subscription/plan-form/plan-form').then((m) => m.PlanForm),
+      }, */
+      {
+        path: 'plans',
+        loadComponent: () =>
+          import('./features/subscription/plan-list/plan-list').then((m) => m.PlanList),
+        runGuardsAndResolvers: 'always'
+      },
+
+  
 
       {
         path: 'bookings',

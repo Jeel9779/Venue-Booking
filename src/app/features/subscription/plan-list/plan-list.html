@@ -1,43 +1,126 @@
-<div class="plan-container">
+<div class="p-6">
 
-  <h2>Subscription Plans</h2>
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-semibold text-gray-800">
+      Subscription Plans
+    </h2>
 
-  <button class="add-btn">+ Add Plan</button>
+    <button 
+      (click)="showForm = true"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
+      + Add Plan
+    </button>
+  </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Duration</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+  <!-- DATA -->
+  <ng-container *ngIf="plans$ | async as plans">
 
-    <tbody>
-      <tr *ngFor="let plan of plans">
-        <td>{{ plan.name }}</td>
-        <td>₹ {{ plan.price }}</td>
-        <td>{{ plan.duration }} days</td>
+    <!-- EMPTY STATE -->
+    <div *ngIf="plans.length === 0"
+         class="text-center text-gray-500 mt-10">
+      No Plans Available
+    </div>
 
-        <td>
-          <span [class.active]="plan.isActive" [class.inactive]="!plan.isActive">
-            {{ plan.isActive ? 'Active' : 'Inactive' }}
-          </span>
-        </td>
+    <!-- GRID -->
+    <div *ngIf="plans.length > 0"
+         class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <td>
-          <button (click)="toggleStatus(plan)">
-            {{ plan.isActive ? 'Disable' : 'Enable' }}
-          </button>
+      <!-- CARD -->
+      <div *ngFor="let plan of plans; let i = index"
+           class="relative w-full max-w-sm p-0.5 rounded-2xl transition-all duration-300 mx-auto"
+           [ngClass]="plan.isActive 
+            ? 'bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500 shadow-xl shadow-indigo-300/40' 
+            : 'bg-linear-to-r from-gray-400 to-gray-600 opacity-90'">
 
-          <button>Edit</button>
+        <!-- Inner -->
+        <div class="h-full w-full rounded-2xl bg-white/10 backdrop-blur-xl p-6 text-white border border-white/20">
 
-          <button (click)="deletePlan(plan.id!)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <!-- Popular -->
+          <div *ngIf="i === 1 && plan.isActive"
+               class="absolute -top-3 right-4 bg-yellow-400 text-black text-xs font-semibold px-3 py-1 rounded-full shadow">
+            ⭐ Popular
+          </div>
+
+          <!-- Name -->
+          <h5 class="mb-4 text-xl font-semibold">
+            {{ plan.name }}
+          </h5>
+
+          <!-- Price -->
+          <div class="flex items-baseline mb-3">
+            <span class="text-5xl font-extrabold">
+              ₹{{ plan.price }}
+            </span>
+            <span class="ml-2 text-sm opacity-80">
+              /month
+            </span>
+          </div>
+
+          <!-- Description -->
+          <p class="text-sm opacity-90">
+            {{ plan.description }}
+          </p>
+
+          <!-- Duration -->
+          <p class="text-xs mt-2 opacity-70">
+            {{ plan.duration }} days validity
+          </p>
+
+          <!-- Status -->
+          <div class="mt-4">
+            <span class="px-3 py-1 text-xs rounded-full bg-white/20">
+              {{ plan.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-white/20 my-5"></div>
+
+          <!-- Features -->
+          <ul class="space-y-2 text-sm">
+            <li>✔ Vendor Dashboard</li>
+            <li>✔ Listing Visibility</li>
+            <li>✔ Basic Support</li>
+            <li class="opacity-50 line-through">Priority Promotion</li>
+          </ul>
+
+          <!-- Actions -->
+          <div class="mt-6 flex gap-3">
+
+            <!-- Edit -->
+            <button
+              type="button"
+                (click)="editPlan(plan)"
+              class="flex-1 bg-white text-indigo-600 font-semibold py-2 rounded-xl
+                     hover:bg-indigo-100 transition shadow-md border border-indigo-200">
+               Edit
+            </button>
+
+            <!-- Delete -->
+            <button
+              type="button"
+              (click)="deletePlan(plan.id!)"
+              class="flex-1 bg-white text-red-500 font-semibold py-2 rounded-xl
+                     hover:bg-red-50 transition shadow-md border border-red-200">
+               Delete
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </ng-container>
+
+  <!-- FORM -->
+  <app-plan-form
+    *ngIf="showForm"
+     [planData]="selectedPlan"
+    (closeForm)="showForm = false"
+    (planAdded)="loadPlans()">
+  </app-plan-form>
 
 </div>
