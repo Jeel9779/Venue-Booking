@@ -6,9 +6,7 @@
       Subscription Plans
     </h2>
 
-    <button 
-      (click)="showForm = true"
-      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
+    <button (click)="selectedPlan = null; showForm = true" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
       + Add Plan
     </button>
   </div>
@@ -17,28 +15,25 @@
   <ng-container *ngIf="plans$ | async as plans">
 
     <!-- EMPTY STATE -->
-    <div *ngIf="plans.length === 0"
-         class="text-center text-gray-500 mt-10">
+    <div *ngIf="plans.length === 0" class="text-center text-gray-500 mt-10">
       No Plans Available
     </div>
 
     <!-- GRID -->
-    <div *ngIf="plans.length > 0"
-         class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngIf="plans.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
       <!-- CARD -->
       <div *ngFor="let plan of plans; let i = index"
-           class="relative w-full max-w-sm p-0.5 rounded-2xl transition-all duration-300 mx-auto"
-           [ngClass]="plan.isActive 
-            ? 'bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500 shadow-xl shadow-indigo-300/40' 
-            : 'bg-linear-to-r from-gray-400 to-gray-600 opacity-90'">
+        class="relative w-full max-w-sm p-0.5 rounded-2xl transition-all duration-300 mx-auto" [ngClass]="plan.isActive 
+            ? 'bg-linear-to-r from-blue-300 via-indigo-300 to-purple-300 shadow-xl shadow-indigo-300/40' 
+            : 'bg-linear-to-r from-gray-400 to-gray-500 opacity-90'">
 
         <!-- Inner -->
-        <div class="h-full w-full rounded-2xl bg-white/10 backdrop-blur-xl p-6 text-white border border-white/20">
+        <div class="h-full w-full rounded-2xl bg-white/10 backdrop-blur-xl p-6 text-black border border-white/20">
 
           <!-- Popular -->
           <div *ngIf="i === 1 && plan.isActive"
-               class="absolute -top-3 right-4 bg-yellow-400 text-black text-xs font-semibold px-3 py-1 rounded-full shadow">
+            class="absolute -top-3 right-4 bg-yellow-400 text-black text-xs font-semibold px-3 py-1 rounded-full shadow">
             ⭐ Popular
           </div>
 
@@ -68,42 +63,43 @@
           </p>
 
           <!-- Status -->
-          <div class="mt-4">
+          <!--    <div class="mt-4">
             <span class="px-3 py-1 text-xs rounded-full bg-white/20">
               {{ plan.isActive ? 'Active' : 'Inactive' }}
             </span>
-          </div>
+          </div>  -->
+           <div class="mt-4">
+            <span class="px-3 py-1 text-xs rounded-full font-medium" [ngClass]="plan.isActive 
+      ? 'bg-green-300 text-b-green-900 '
+      : 'bg-red-300 text-b-red-900'">
+              {{ plan.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </div> 
+
 
           <!-- Divider -->
           <div class="border-t border-white/20 my-5"></div>
 
           <!-- Features -->
           <ul class="space-y-2 text-sm">
-            <li>✔ Vendor Dashboard</li>
-            <li>✔ Listing Visibility</li>
-            <li>✔ Basic Support</li>
-            <li class="opacity-50 line-through">Priority Promotion</li>
+            <li *ngFor="let feature of plan.features">
+              ✔ {{ feature }}
+            </li>
           </ul>
 
           <!-- Actions -->
           <div class="mt-6 flex gap-3">
 
             <!-- Edit -->
-            <button
-              type="button"
-                (click)="editPlan(plan)"
-              class="flex-1 bg-white text-indigo-600 font-semibold py-2 rounded-xl
+            <button type="button" (click)="editPlan(plan)" class="flex-1 bg-white text-indigo-600 font-semibold py-2 rounded-xl
                      hover:bg-indigo-100 transition shadow-md border border-indigo-200">
-               Edit
+              Edit
             </button>
 
             <!-- Delete -->
-            <button
-              type="button"
-              (click)="deletePlan(plan.id!)"
-              class="flex-1 bg-white text-red-500 font-semibold py-2 rounded-xl
+            <button type="button" (click)="deletePlan(plan.id!)" class="flex-1 bg-white text-red-500 font-semibold py-2 rounded-xl
                      hover:bg-red-50 transition shadow-md border border-red-200">
-               Delete
+              Delete
             </button>
 
           </div>
@@ -116,11 +112,7 @@
   </ng-container>
 
   <!-- FORM -->
-  <app-plan-form
-    *ngIf="showForm"
-     [planData]="selectedPlan"
-    (closeForm)="showForm = false"
-    (planAdded)="loadPlans()">
+  <app-plan-form *ngIf="showForm" [planData]="selectedPlan" (closeForm)="showForm = false" (planAdded)="loadPlans()">
   </app-plan-form>
 
 </div>

@@ -27,6 +27,7 @@ export class PlanForm implements OnChanges {
     duration: [30, [Validators.required]],
     description: ['', Validators.required],
     isActive: [true],
+    features: this.fb.control<string[]>([]),
   });
   showForm: any;
 
@@ -105,9 +106,42 @@ export class PlanForm implements OnChanges {
     }
   } */
 
-  ngOnChanges(changes: SimpleChanges) {
+  /*  ngOnChanges(changes: SimpleChanges) {
     if (changes['planData'] && this.planData) {
       this.planForm.patchValue(this.planData);
     }
+  } */
+  featuresText = '';
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['planData']) {
+      if (this.planData) {
+        this.planForm.patchValue(this.planData);
+
+        // 🔥 convert array → string for input
+        this.featuresText = this.planData.features?.join(', ') || '';
+      } else {
+        // 🔥 reset for ADD mode
+        this.planForm.reset({
+          isActive: true,
+          duration: 30,
+          features: [],
+        });
+
+        this.featuresText = '';
+      }
+    }
+  }
+
+  // features field
+  onFeaturesInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+
+    const features = value
+      .split(',')
+      .map((f) => f.trim())
+      .filter((f) => f);
+
+    this.planForm.patchValue({ features });
   }
 }

@@ -27,7 +27,7 @@ export class PlanList implements OnInit {
     this.plans$ = this.planService.getPlans(); // ✅ clean
   }
 
-  deletePlan(id: number) {
+  deletePlan(id: string) {
     if (!confirm('Are you sure?')) return;
 
     this.planService.deletePlan(id).subscribe({

@@ -17,7 +17,7 @@ export class PlanService {
   }
 
   // ✅ GET single plan
-  getPlanById(id: number): Observable<Plan> {
+  getPlanById(id: string): Observable<Plan> {
     return this.http.get<Plan>(`${this.apiUrl}/${id}`);
   }
 
@@ -27,7 +27,7 @@ export class PlanService {
   }
 
   // ✅ UPDATE plan
-   updatePlan(id: number, plan: any): Observable<Plan> {
+   updatePlan(id: string, plan: any): Observable<Plan> {
     return this.http.put<Plan>(`${this.apiUrl}/${id}`, plan);
   } 
 /*  updatePlan(id: number, plan: any) {
@@ -35,7 +35,7 @@ export class PlanService {
 } */
 
   // ✅ DELETE plan
-  deletePlan(id: number): Observable<void> {
+  deletePlan(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
