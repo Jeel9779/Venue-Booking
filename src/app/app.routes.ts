@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/auth-guard';
 import { roleGuard } from './core/role-guard';
 import { AddVendor } from './features/vendors/admin/add-vendor/add-vendor';
+import { VendorSubscriptions } from './features/subscription/vendor-subscriptions/vendor-subscriptions';
 
 export const routes: Routes = [
   // ✅ LOGIN FIRST
@@ -62,10 +63,12 @@ export const routes: Routes = [
         path: 'plans',
         loadComponent: () =>
           import('./features/subscription/plan-list/plan-list').then((m) => m.PlanList),
-        runGuardsAndResolvers: 'always'
+        runGuardsAndResolvers: 'always',
       },
-
-  
+      {
+        path: 'admin/vendor-subscriptions',
+        component: VendorSubscriptions,
+      },
 
       {
         path: 'bookings',
