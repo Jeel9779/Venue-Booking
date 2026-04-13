@@ -25,11 +25,11 @@
       <!-- CARD -->
       <div *ngFor="let plan of plans; let i = index"
         class="relative w-full max-w-sm p-0.5 rounded-2xl transition-all duration-300 mx-auto" [ngClass]="plan.isActive 
-            ? 'bg-linear-to-r from-blue-300 via-indigo-300 to-purple-300 shadow-xl shadow-indigo-300/40' 
-            : 'bg-linear-to-r from-gray-400 to-gray-500 opacity-90'">
+            ? 'bg-linear-to-r from-blue-200 via-indigo-200 to-purple-200 shadow-xl shadow-indigo-300/40' 
+            : 'bg-linear-to-r from-gray-400 to-gray-300 opacity-90'" >
 
         <!-- Inner -->
-        <div class="h-full w-full rounded-2xl bg-white/10 backdrop-blur-xl p-6 text-black border border-white/20">
+        <div class="h-full w-full rounded-2xl bg-white/10 backdrop-blur-xl p-6 text-black border border-black/20">
 
           <!-- Popular -->
           <div *ngIf="i === 1 && plan.isActive"

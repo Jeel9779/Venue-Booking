@@ -1,163 +1,175 @@
 <div class="p-4 bg-[#f8fcf9] min-h-screen">
-
-    <!-- LOADING -->
-    @if (isLoading()) {
+  <!-- LOADING -->
+  @if (isLoading()) {
     <p class="text-center py-4 text-gray-500">Loading...</p>
-    }
+  }
 
-    <!-- ERROR -->
-    @if (error()) {
+  <!-- ERROR -->
+  @if (error()) {
     <p class="text-center py-4 text-red-500">{{ error() }}</p>
-    }
+  }
 
-    <!-- CARD -->
-    <div
-        class="bg-green-100 border border-gray-100 rounded-2xl shadow-md shadow-green-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
+  <!-- CARD -->
+  <div
+    class="bg-green-100 border border-gray-100 rounded-2xl shadow-md shadow-green-200 hover:shadow-xl transition-all duration-300 overflow-hidden"
+  >
+    <!-- HEADER -->
+    <div class="px-5 py-4 border-b bg-green-300">
+      <h2 class="text-lg font-semibold text-gray-800">Vendor Verification</h2>
+      <p class="text-xs text-gray-500">Manage vendor approval requests</p>
+    </div>
 
+    <!-- Add search , Filters  -->
+    <div class="flex justify-between items-center p-4">
+      <!-- FILTER -->
+      <div class="flex gap-2">
+        <button
+          class="px-3 py-1 rounded-lg border"
+          [class.bg-green-200]="filter() === 'all'"
+          (click)="filter.set('all')"
+        >
+          All
+        </button>
+
+        <button
+          class="px-3 py-1 rounded-lg border"
+          [class.bg-yellow-200]="filter() === 'pending'"
+          (click)="filter.set('pending')"
+        >
+          Pending
+        </button>
+
+        <button
+          class="px-3 py-1 rounded-lg border"
+          [class.bg-green-200]="filter() === 'approved'"
+          (click)="filter.set('approved')"
+        >
+          Approved
+        </button>
+
+        <button
+          class="px-3 py-1 rounded-lg border"
+          [class.bg-red-200]="filter() === 'rejected'"
+          (click)="filter.set('rejected')"
+        >
+          Rejected
+        </button>
+      </div>
+
+      <!-- SEARCH -->
+      <input
+        type="text"
+        placeholder="Search vendor..."
+        class="border px-3 py-1 rounded-lg text-sm"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+
+      <!-- add new vendor btn -->
+      <!--  <button class="px-4 py-2 bg-green-600 text-white rounded-lg" (click)="openAddVendor()">
+                + Add Vendor
+            </button> -->
+      <!--   <button class="px-4 py-2 bg-green-600 text-white rounded-lg" routerLink="/add-vendor">
+                + Add Vendor
+            </button> -->
+      <button
+        routerLink="/add-vendor"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
+      >
+        + Add Vendor
+      </button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="overflow-x-auto relative">
+      <table class="w-full text-sm">
         <!-- HEADER -->
-        <div class="px-5 py-4 border-b bg-green-300">
-            <h2 class="text-lg font-semibold text-gray-800">Vendor Verification</h2>
-            <p class="text-xs text-gray-500">Manage vendor approval requests</p>
-        </div>
+        <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+          <tr>
+            <th class="px-5 py-3 text-left">Vendor</th>
+            <th class="px-5 py-3 text-left">Business</th>
+            <th class="px-5 py-3 text-left">Contact</th>
+            <th class="px-5 py-3 text-left">Address</th>
+            <th class="px-5 py-3 text-left">Verification</th>
+            <th class="px-5 py-3 text-left">Status</th>
+            <th class="px-5 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
 
-        <!-- Add search , Filters  -->
-        <div class="flex justify-between items-center p-4">
+        <!-- BODY -->
+        <tbody>
+          <!--   @for (v of vendors(); track v.id)  -->
+          @for (v of filteredVendors(); track v.id; let i = $index) {
+            <tr class="border-t hover:bg-[#b5d9fa] transition-all duration-200 relative">
+              <!-- VENDOR -->
+              <td class="px-5 py-4">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-semibold border-2"
+                  >
+                    {{ v.fullName.charAt(0) }}
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">{{ v.fullName }}</p>
+                    <p class="text-xs text-gray-500">{{ v.email }}</p>
+                  </div>
+                </div>
+              </td>
 
-            <!-- FILTER -->
-            <div class="flex gap-2">
+              <!-- BUSINESS -->
+              <td class="px-5 py-4">
+                <p class="text-gray-800">{{ v.businessName }}</p>
+                <p class="text-xs text-gray-500 capitalize">{{ v.businessType }}</p>
+              </td>
 
-                <button class="px-3 py-1 rounded-lg border" [class.bg-green-200]="filter() === 'all'"
-                    (click)="filter.set('all')">
-                    All
-                </button>
+              <!-- CONTACT -->
+              <td class="px-5 py-4 text-gray-600">
+                {{ v.phone ?? 'N/A' }}
+              </td>
 
-                <button class="px-3 py-1 rounded-lg border" [class.bg-yellow-200]="filter() === 'pending'"
-                    (click)="filter.set('pending')">
-                    Pending
-                </button>
+              <!-- ADDRESS -->
+              <td class="px-5 py-4">
+                {{ v.address ?? 'N/A' }}
+              </td>
 
-                <button class="px-3 py-1 rounded-lg border" [class.bg-green-200]="filter() === 'approved'"
-                    (click)="filter.set('approved')">
-                    Approved
-                </button>
+              <!-- VERIFICATION -->
+              <td class="px-5 py-4 text-xs text-gray-600 space-y-1">
+                <p>{{ v.governmentId }}</p>
 
-                <button class="px-3 py-1 rounded-lg border" [class.bg-red-200]="filter() === 'rejected'"
-                    (click)="filter.set('rejected')">
-                    Rejected
-                </button>
+                <p>
+                  <span> License : </span>
+                  @if (v.licenseDoc) {
+                    <span
+                      (click)="previewDoc(v.licenseDoc)"
+                      class="text-blue-600 cursor-pointer underline"
+                    >
+                      Preview
+                    </span>
+                  } @else {
+                    N/A
+                  }
+                </p>
 
-            </div>
+                <p>⭐ {{ v.rating ?? 'N/A' }}</p>
+              </td>
 
-            <!-- SEARCH -->
-            <input type="text" placeholder="Search vendor..." class="border px-3 py-1 rounded-lg text-sm"
-                [value]="search()" (input)="search.set($any($event.target).value)" />
+              <!-- STATUS -->
+              <td class="px-5 py-4">
+                <span
+                  class="px-3 py-1 rounded-full text-xs font-medium capitalize"
+                  [class.bg-yellow-100]="v.status === 'pending'"
+                  [class.text-yellow-700]="v.status === 'pending'"
+                  [class.bg-green-200]="v.status === 'approved'"
+                  [class.text-green-700]="v.status === 'approved'"
+                  [class.bg-red-200]="v.status === 'rejected'"
+                  [class.text-red-700]="v.status === 'rejected'"
+                >
+                  {{ v.status }}
+                </span>
+              </td>
 
-            <!-- add new vendor btn -->
-            <!--  <button class="px-4 py-2 bg-green-600 text-white rounded-lg" (click)="openAddVendor()">
-                + Add Vendor
-            </button> -->
-            <!--   <button class="px-4 py-2 bg-green-600 text-white rounded-lg" routerLink="/add-vendor">
-                + Add Vendor
-            </button> -->
-            <button routerLink="/add-vendor"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
-                + Add Vendor
-            </button>
-
-        </div>
-
-
-        <!-- TABLE -->
-        <div class="overflow-x-auto relative">
-
-            <table class="w-full text-sm">
-
-                <!-- HEADER -->
-                <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                    <tr>
-                        <th class="px-5 py-3 text-left">Vendor</th>
-                        <th class="px-5 py-3 text-left">Business</th>
-                        <th class="px-5 py-3 text-left">Contact</th>
-                        <th class="px-5 py-3 text-left">Address</th>
-                        <th class="px-5 py-3 text-left">Verification</th>
-                        <th class="px-5 py-3 text-left">Status</th>
-                        <th class="px-5 py-3 text-left">Actions</th>
-                    </tr>
-                </thead>
-
-                <!-- BODY -->
-                <tbody>
-
-                    <!--   @for (v of vendors(); track v.id)  -->
-                    @for (v of filteredVendors(); track v.id; let i = $index)
-                    {
-
-
-                    <tr class="border-t hover:bg-[#b5d9fa] transition-all duration-200 relative">
-
-                        <!-- VENDOR -->
-                        <td class="px-5 py-4">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-semibold border-2">
-                                    {{ v.fullName.charAt(0) }}
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">{{ v.fullName }}</p>
-                                    <p class="text-xs text-gray-500">{{ v.email }}</p>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- BUSINESS -->
-                        <td class="px-5 py-4">
-                            <p class="text-gray-800">{{ v.businessName }}</p>
-                            <p class="text-xs text-gray-500 capitalize">{{ v.businessType }}</p>
-                        </td>
-
-                        <!-- CONTACT -->
-                        <td class="px-5 py-4 text-gray-600">
-                            {{ v.phone ?? 'N/A' }}
-                        </td>
-
-                        <!-- ADDRESS -->
-                        <td class="px-5 py-4">
-                            {{ v.address ?? 'N/A' }}
-                        </td>
-
-                        <!-- VERIFICATION -->
-                        <td class="px-5 py-4 text-xs text-gray-600 space-y-1">
-                            <p>{{ v.governmentId }}</p>
-
-                            <p>
-                                <span> License : </span>
-                                @if (v.licenseDoc) {
-                                <span (click)="previewDoc(v.licenseDoc)" class="text-blue-600 cursor-pointer underline">
-                                    Preview
-                                </span>
-                                } @else {
-                                N/A
-                                }
-                            </p>
-
-                            <p>⭐ {{ v.rating ?? 'N/A' }}</p>
-                        </td>
-
-                        <!-- STATUS -->
-                        <td class="px-5 py-4">
-                            <span class="px-3 py-1 rounded-full text-xs font-medium capitalize"
-                                [class.bg-yellow-100]="v.status === 'pending'"
-                                [class.text-yellow-700]="v.status === 'pending'"
-                                [class.bg-green-200]="v.status === 'approved'"
-                                [class.text-green-700]="v.status === 'approved'"
-                                [class.bg-red-200]="v.status === 'rejected'"
-                                [class.text-red-700]="v.status === 'rejected'">
-                                {{ v.status }}
-                            </span>
-                        </td>
-
-                        <!-- ACTIONS -->
-                        <!--  <td class="px-5 py-4 flex gap-2">
+              <!-- ACTIONS -->
+              <!--  <td class="px-5 py-4 flex gap-2">
 
                             @if (v.status === 'pending') {
 
@@ -186,110 +198,94 @@
 
                         </td>  -->
 
-                        <td class="px-5 py-4 flex items-center gap-2 relative">
+              <td class="px-5 py-4 flex items-center gap-2 relative">
+                <!-- 🟡 PENDING -->
+                @if (v.status === 'pending') {
+                  <button class="bg-green-600 text-white px-3 py-1 rounded-lg" (click)="approve(v)">
+                    Approve
+                  </button>
 
-                            <!-- 🟡 PENDING -->
-                            @if (v.status === 'pending') {
+                  <button
+                    class="bg-red-500 text-white px-3 py-1 rounded-lg"
+                    (click)="openRejectModal(v)"
+                  >
+                    Reject
+                  </button>
+                }
 
-                            <button class="bg-green-600 text-white px-3 py-1 rounded-lg" (click)="approve(v)">
-                                Approve
-                            </button>
+                <div class="relative">
+                  <!-- ⋮ MENU BUTTON -->
+                  <button
+                    (click)="toggleMenu($event, v.id)"
+                    class="p-2 rounded-full hover:bg-gray-100 transition"
+                  >
+                    <lucide-angular [img]="MoreVertical" size="18"></lucide-angular>
+                  </button>
 
-                            <button class="bg-red-500 text-white px-3 py-1 rounded-lg" (click)="openRejectModal(v)">
-                                Reject
-                            </button>
+                  <!-- DROPDOWN -->
+                  @if (menuOpenId() === v.id) {
+                    <div
+                      (click)="$event.stopPropagation()"
+                      class="absolute left-0 top-full mt-1 w-36 bg-white rounded-xl shadow-lg border border-gray-100 animate-fadeIn z-50"
+                      [class.top-full]="i < filteredVendors().length - 2"
+                      [class.mt-2]="i < filteredVendors().length - 2"
+                      [class.bottom-full]="i >= filteredVendors().length - 2"
+                      [class.mb-2]="i >= filteredVendors().length - 2"
+                    >
+                      @if (v.status !== 'rejected') {
+                        <button
+                          class="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-50 text-sm"
+                          (click)="editVendor(v)"
+                        >
+                          <lucide-angular [img]="Pencil" size="16"></lucide-angular>
+                          Edit
+                        </button>
+                      }
 
-                            }
-
-                    
-                            <div class="relative">
-
-                                <!-- ⋮ MENU BUTTON -->
-                                <button (click)="toggleMenu($event, v.id)"
-                                    class="p-2 rounded-full hover:bg-gray-100 transition">
-                                    <lucide-angular [img]="MoreVertical" size="18"></lucide-angular>
-                                </button>
-
-                                <!-- DROPDOWN -->
-                                @if (menuOpenId() === v.id) {
-
-                                <div (click)="$event.stopPropagation()" class="absolute left-0 top-full mt-1 w-36 bg-white rounded-xl shadow-lg border border-gray-100
-         animate-fadeIn z-50" [class.top-full]="i < filteredVendors().length - 2"
-                                    [class.mt-2]="i < filteredVendors().length - 2"
-                                    [class.bottom-full]="i >= filteredVendors().length - 2"
-                                    [class.mb-2]="i >= filteredVendors().length - 2">
-
-
-                                    @if (v.status !== 'rejected') {
-                                    <button class="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-50 text-sm"
-                                        (click)="editVendor(v)">
-                                        <lucide-angular [img]="Pencil" size="16"></lucide-angular>
-                                        Edit
-                                    </button>
-                                    }
-
-
-                                    <button
-                                        class="flex items-center gap-2 w-full px-3 py-2 hover:bg-red-50 text-sm text-red-600"
-                                        (click)="deleteVendor(v.id)">
-                                        <lucide-angular [img]="Trash2" size="16"></lucide-angular>
-                                        Delete
-                                    </button>
-
-                                </div>
-
-                                }
-                            </div>
-                        </td>
-
-
-
-                    </tr>
-
-                    }
-
-                </tbody>
-
-            </table>
-
-
-
-
-
-        </div>
-
+                      <button
+                        class="flex items-center gap-2 w-full px-3 py-2 hover:bg-red-50 text-sm text-red-600"
+                        (click)="deleteVendor(v.id)"
+                      >
+                        <lucide-angular [img]="Trash2" size="16"></lucide-angular>
+                        Delete
+                      </button>
+                    </div>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
-
+  </div>
 </div>
 
 <!-- reject popup -->
 
 @if (showRejectModal()) {
-
-<div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-
+  <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
     <div class="bg-white rounded-xl p-6 w-100 shadow-xl">
+      <h2 class="text-lg font-semibold mb-4">Reject Vendor</h2>
 
-        <h2 class="text-lg font-semibold mb-4">Reject Vendor</h2>
-
-        <textarea rows="4" placeholder="Enter rejection reason..." class="w-full border rounded-lg p-2 text-sm"
-            [value]="rejectReason()" (input)="rejectReason.set($any($event.target).value)">
+      <textarea
+        rows="4"
+        placeholder="Enter rejection reason..."
+        class="w-full border rounded-lg p-2 text-sm"
+        [value]="rejectReason()"
+        (input)="rejectReason.set($any($event.target).value)"
+      >
       </textarea>
 
-        <div class="flex justify-end gap-2 mt-4">
+      <div class="flex justify-end gap-2 mt-4">
+        <button class="px-4 py-2 bg-gray-200 rounded-lg" (click)="showRejectModal.set(false)">
+          Cancel
+        </button>
 
-            <button class="px-4 py-2 bg-gray-200 rounded-lg" (click)="showRejectModal.set(false)">
-                Cancel
-            </button>
-
-            <button class="px-4 py-2 bg-red-600 text-white rounded-lg" (click)="confirmReject()">
-                Reject
-            </button>
-
-        </div>
-
+        <button class="px-4 py-2 bg-red-600 text-white rounded-lg" (click)="confirmReject()">
+          Reject
+        </button>
+      </div>
     </div>
-
-</div>
-
+  </div>
 }
