@@ -1,6 +1,7 @@
 export type VendorStatus = 'pending' | 'approved' | 'rejected' | 'reopen';
 
 export interface Vendor {
+  
   id: string;
 
   fullName: string;
@@ -11,7 +12,8 @@ export interface Vendor {
   businessType: string;
   governmentId: string;
 
-  password?: string;
+  username?: string | null;
+  password?: string | null;
 
   status: VendorStatus;
   adminMessage?: string;

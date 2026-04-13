@@ -15,6 +15,7 @@ export class VendorSubscriptions implements OnInit {
   private service = inject(VendorSubscriptionServices);
 
   subscriptions$!: Observable<VendorSubscription[]>;
+  selected: VendorSubscription | null = null;
 
   ngOnInit(): void {
     this.load();

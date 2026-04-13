@@ -24,6 +24,7 @@ export class Vendors implements OnInit {
   isLoading = signal(false);
   error = signal('');
 
+
   constructor(
     private vendorService: VendorService,
     private router: Router,
@@ -50,13 +51,35 @@ export class Vendors implements OnInit {
 
   // ✅ APPROVE
   approve(v: Vendor) {
+    // ✅ generate credentials
+    const username = this.generateUsername(v.fullName);
+    const password = this.generatePassword();
+
     this.vendorService
       .updateVendor(v.id, {
+        ...v,
         status: 'approved',
         adminMessage: 'Approved successfully',
+        username: username,
+        password: password,
       })
-      .subscribe(() => this.loadVendors());
+      .subscribe(() => {
+        alert(`Vendor Approved ✅
+
+Username: ${username}
+Password: ${password}`);
+
+        this.loadVendors();
+      });
   }
+
+generateUsername(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, '') + Math.floor(Math.random() * 1000);
+}
+
+generatePassword(): string {
+  return Math.random().toString(36).slice(-8);
+}
 
   // ❌ REJECT
   /* reject(v: Vendor) {
@@ -66,15 +89,7 @@ export class Vendors implements OnInit {
     }).subscribe(() => this.loadVendors());
   } */
 
-  // 🔄 REOPEN
-  reopen(v: Vendor) {
-    this.vendorService
-      .updateVendor(v.id, {
-        status: 'pending',
-        adminMessage: '',
-      })
-      .subscribe(() => this.loadVendors());
-  }
+
 
   // 📄 LICENSE PREVIEW
   previewDoc(url: string) {
@@ -95,20 +110,20 @@ export class Vendors implements OnInit {
 
   // submit rejection
   confirmReject() {
-    const vendor = this.selectedVendor();
+  const vendor = this.selectedVendor();
+  if (!vendor) return;
 
-    if (!vendor) return;
-
-    this.vendorService
-      .updateVendor(vendor.id, {
-        status: 'rejected',
-        adminMessage: this.rejectReason() || 'Rejected by admin',
-      })
-      .subscribe(() => {
-        this.loadVendors();
-        this.showRejectModal.set(false);
-      });
-  }
+  this.vendorService.updateVendor(vendor.id, {
+    ...vendor,
+    status: 'rejected',
+    adminMessage: this.rejectReason() || 'Rejected by admin',
+    username: null,   
+    password: null   
+  }).subscribe(() => {
+    this.loadVendors();
+    this.showRejectModal.set(false);
+  });
+}
 
   // add filter + search ---------------------------------
   filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
@@ -165,7 +180,6 @@ export class Vendors implements OnInit {
   }
 
   isLast(index: number, total: number): boolean {
-  return index >= total - 2; // last 2 rows open upward
+    return index >= total - 2; // last 2 rows open upward
+  }
 }
-}
-

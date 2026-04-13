@@ -95,9 +95,21 @@
       Subscription Plans
     </a>
 
-    <a routerLink="/admin/vendor-subscriptions">
-  Vendor Subscriptions
-</a>
+    <!-- payment check  -->
+       <a [routerLink]="['admin/vendor-subscriptions']" routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
+      [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
+          text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
+          transition-all duration-300 ease-in-out">
+
+      <lucide-icon [img]="icons.subscript" size="18"
+        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
+      </lucide-icon>
+
+       Payment (v.s.)
+    </a>
+  <!--   <a routerLink="/admin/vendor-subscriptions">
+ 
+</a> -->
 
   </nav>
 

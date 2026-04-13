@@ -32,7 +32,7 @@ export class AddVendor {
     businessType: ['', Validators.required],
     governmentId: ['', Validators.required],
 
-    password: [''],
+    //password: [''],
 
     address: ['', Validators.required],
     pincode: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
@@ -69,7 +69,7 @@ export class AddVendor {
       businessType: f.businessType || '',
       governmentId: f.governmentId || '',
 
-      password: f.password || '',
+      //password: f.password || '',
 
       address: f.address || null,
       pincode: f.pincode || '',
@@ -102,4 +102,8 @@ export class AddVendor {
       });
     }
   }
+
+  goToVendors() {
+  this.router.navigate(['/vendors']);
+}
 }

@@ -1,115 +1,174 @@
-<div class="p-6">
+<div class="p-6 min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50">
 
-  <!-- Title -->
-  <h2 class="text-2xl font-semibold mb-6">
-    Vendor Subscriptions
+  <!-- TITLE -->
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">
+    Payment Verification
   </h2>
 
-  <!-- DATA -->
-  <ng-container *ngIf="subscriptions$ | async as subs">
+  <div class="grid grid-cols-12 gap-6">
 
-    <table class="w-full border rounded-lg overflow-hidden">
+    <!-- LEFT PANEL -->
+    <div class="col-span-4 bg-white/70 backdrop-blur-lg rounded-2xl p-4 shadow-lg border border-white/40">
 
-      <!-- HEADER -->
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-3 text-left">Vendor</th>
-          <th class="p-3 text-left">Plan</th>
-          <th class="p-3 text-left">Payment</th>
-          <th class="p-3 text-left">Status</th>
-          <th class="p-3 text-left">Expiry</th>
-          <th class="p-3 text-left">Action</th>
-        </tr>
-      </thead>
+      <h3 class="text-sm font-semibold text-gray-500 mb-4 uppercase">
+        Verification Queue
+      </h3>
 
-      <!-- BODY -->
-      <tbody>
+      <ng-container *ngIf="subscriptions$ | async as subs">
 
-        <tr *ngFor="let sub of subs"
-            class="border-t"
-            [ngClass]="sub.status === 'active' ? 'bg-green-50' : ''">
+        <div *ngFor="let sub of subs"
+             (click)="selected = sub"
+             class="p-4 mb-3 rounded-xl cursor-pointer transition-all duration-300
+                    bg-white/60 backdrop-blur border border-transparent
+                    hover:border-indigo-300 hover:shadow-md hover:-translate-y-0.5"
+             [ngClass]="selected?.id === sub.id 
+               ? 'bg-indigo-100 border-indigo-400 shadow-md' : ''">
 
-          <!-- Vendor -->
-          <td class="p-3 font-medium">
+          <p class="font-semibold text-gray-800">
             {{ sub.vendorName }}
-          </td>
+          </p>
 
-          <!-- Plan -->
-          <td class="p-3">
-            {{ sub.planName }}
-          </td>
+          <p class="text-sm text-gray-500">
+            ₹{{ sub.amount }}
+          </p>
 
-          <!-- Payment Status -->
-          <td class="p-3">
-            <span
-              class="px-2 py-1 text-xs rounded font-medium"
-              [ngClass]="
-                sub.paymentStatus === 'approved'
-                  ? 'bg-green-100 text-green-700'
-                  : sub.paymentStatus === 'failed'
-                  ? 'bg-red-100 text-red-700'
-                  : 'bg-yellow-100 text-yellow-700'
-              ">
-              {{ sub.paymentStatus | titlecase }}
-            </span>
-          </td>
+          <p class="text-xs mt-1 font-semibold"
+             [ngClass]="
+               sub.paymentStatus === 'pending'
+               ? 'text-yellow-600'
+               : sub.paymentStatus === 'approved'
+               ? 'text-green-600'
+               : 'text-red-500'
+             ">
+            {{ sub.paymentStatus | titlecase }}
+          </p>
 
-          <!-- Subscription Status -->
-          <td class="p-3">
-            <span
-              class="px-2 py-1 text-xs rounded font-medium"
-              [ngClass]="
-                sub.status === 'active'
-                  ? 'bg-green-100 text-green-700'
-                  : sub.status === 'rejected'
-                  ? 'bg-red-100 text-red-700'
-                  : 'bg-gray-100 text-gray-700'
-              ">
-              {{ sub.status | titlecase }}
-            </span>
-          </td>
+        </div>
 
-          <!-- Expiry -->
-          <td class="p-3">
-            <span *ngIf="sub.endDate">
-              {{ sub.endDate | date:'shortDate' }}
-            </span>
-            <span *ngIf="!sub.endDate" class="text-gray-400">
-              -
-            </span>
-          </td>
+      </ng-container>
 
-          <!-- Actions -->
-          <td class="p-3 space-x-2">
+    </div>
 
-            <!-- Approve -->
-            <button
-              (click)="approve(sub)"
-              [disabled]="sub.status === 'active'"
-              class="bg-green-600 text-white px-3 py-1 rounded text-sm 
-                     hover:bg-green-700 transition 
-                     disabled:opacity-50 disabled:cursor-not-allowed">
-              Approve
-            </button>
+    <!-- RIGHT PANEL -->
+    <div class="col-span-8 space-y-6">
 
-            <!-- Reject -->
-            <button
-              (click)="reject(sub)"
-              [disabled]="sub.status === 'rejected'"
-              class="bg-red-600 text-white px-3 py-1 rounded text-sm 
-                     hover:bg-red-700 transition 
-                     disabled:opacity-50 disabled:cursor-not-allowed">
-              Reject
-            </button>
+      <!-- EMPTY -->
+      <div *ngIf="!selected" class="text-gray-400 text-center mt-20">
+        Select a vendor to view details
+      </div>
 
-          </td>
+      <!-- DETAILS -->
+      <div *ngIf="selected" class="space-y-6">
 
-        </tr>
+        <!-- SUMMARY -->
+        <div class="bg-white/70 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/40">
 
-      </tbody>
+          <div class="flex justify-between items-center">
 
-    </table>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-800">
+                Transaction Summary
+              </h3>
+              <p class="text-gray-500 text-sm">
+                {{ selected.vendorName }}
+              </p>
+            </div>
 
-  </ng-container>
+            <!-- BUTTONS -->
+            <div class="flex gap-3">
+
+              <!-- Reject -->
+              <button
+                (click)="selected && reject(selected)"
+                class="px-5 py-2 rounded-xl bg-linear-to-r from-gray-200 to-gray-300
+                       text-gray-700 hover:scale-105 transition shadow">
+                Reject
+              </button>
+
+              <!-- Approve -->
+              <button
+                (click)="selected && approve(selected)"
+                class="px-6 py-2 rounded-xl text-white font-semibold
+                       bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500
+                       hover:scale-105 transition-all duration-300 shadow-lg">
+                Approve & Provision
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- INFO BOXES -->
+          <div class="grid grid-cols-4 gap-4 mt-6 text-sm">
+
+            <div class="p-4 rounded-xl bg-white/60 backdrop-blur shadow-inner border border-white/30">
+              <p class="text-xs text-gray-400 uppercase">Vendor ID</p>
+              <p class="font-semibold">{{ selected.vendorId }}</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white/60 backdrop-blur shadow-inner border border-white/30">
+              <p class="text-xs text-gray-400 uppercase">Amount</p>
+              <p class="font-semibold">₹{{ selected.amount }}</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white/60 backdrop-blur shadow-inner border border-white/30">
+              <p class="text-xs text-gray-400 uppercase">Method</p>
+              <p class="font-semibold">{{ selected.paymentMethod }}</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white/60 backdrop-blur shadow-inner border border-white/30">
+              <p class="text-xs text-gray-400 uppercase">Date</p>
+              <p class="font-semibold">
+                {{ selected.requestedAt | date:'shortDate' }}
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- BOTTOM -->
+        <div class="grid grid-cols-2 gap-6">
+
+          <!-- RECEIPT -->
+          <div class="bg-white/70 backdrop-blur-xl rounded-2xl p-5 shadow-xl border border-white/40">
+
+            <h4 class="font-semibold mb-3">Payment Receipt</h4>
+
+            <div class="h-64 bg-linear-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
+
+             <img *ngIf="selected.paymentProof"
+     [src]="selected.paymentProof">
+<span *ngIf="!selected.paymentProof" class="text-gray-400">
+  No Receipt
+</span>
+
+            </div>
+
+          </div>
+
+          <!-- SYSTEM -->
+          <div class="bg-white/70 backdrop-blur-xl rounded-2xl p-5 shadow-xl border border-white/40">
+
+            <h4 class="font-semibold mb-3">System Provisioning</h4>
+
+            <p class="text-sm text-gray-500">Vendor ID</p>
+            <p class="font-semibold mb-3">{{ selected.vendorId }}</p>
+
+            <p class="text-sm text-gray-500">Status</p>
+            <p class="font-semibold"
+               [ngClass]="selected.status === 'active' ? 'text-green-600' : 'text-red-500'">
+              {{ selected.status | titlecase }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
