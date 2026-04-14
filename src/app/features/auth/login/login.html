@@ -1,5 +1,5 @@
 <div class="min-h-screen flex items-center justify-center bg-cover bg-center"
-     style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470');">
+  style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470');">
 
   <!-- GLASS CARD -->
   <div class="w-95 backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl p-8 shadow-xl text-white">
@@ -10,25 +10,21 @@
 
       <!-- EMAIL -->
       <div>
-        <input type="email"
-          placeholder="Email"
-          formControlName="email"
+        <input type="text" placeholder="Username" formControlName="username"
           class="w-full bg-transparent border-b border-white/50 focus:outline-none py-2 placeholder-white/70" />
 
-        @if (form.controls.email.touched && form.controls.email.invalid) {
-          <p class="text-red-300 text-xs mt-1">Enter valid email</p>
+        @if (form.controls.username.touched && form.controls.username.invalid) {
+        <p class="text-red-300 text-xs mt-1">Enter valid username</p>
         }
       </div>
 
       <!-- PASSWORD -->
       <div>
-        <input type="password"
-          placeholder="Password"
-          formControlName="password"
+        <input type="password" placeholder="Password" formControlName="password"
           class="w-full bg-transparent border-b border-white/50 focus:outline-none py-2 placeholder-white/70" />
 
         @if (form.controls.password.touched && form.controls.password.invalid) {
-          <p class="text-red-300 text-xs mt-1">Min 5 characters</p>
+        <p class="text-red-300 text-xs mt-1">Min 5 characters</p>
         }
       </div>
 
@@ -44,13 +40,11 @@
 
       <!-- ERROR -->
       @if (errorMsg) {
-        <p class="text-red-400 text-sm">{{ errorMsg }}</p>
+      <p class="text-red-400 text-sm">{{ errorMsg }}</p>
       }
 
       <!-- BUTTON -->
-      <button
-        type="submit"
-        class="w-full bg-white/30 hover:bg-white/40 text-white py-2 rounded-lg transition">
+      <button type="submit" class="w-full bg-white/30 hover:bg-white/40 text-white py-2 rounded-lg transition">
         Login
       </button>
 

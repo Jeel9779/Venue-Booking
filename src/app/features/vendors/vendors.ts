@@ -17,13 +17,13 @@ import { MoreVertical, Pencil, Trash2, LucideAngularModule, LucideIconData } fro
 })
 export class Vendors implements OnInit {
 
-MoreVertical = Pencil;
-Pencil = Pencil;
-Trash2 = Trash2;
+  MoreVertical = MoreVertical;
+  Pencil = Pencil;
+  Trash2 = Trash2;
 
-previewDoc(arg0: string) {
-throw new Error('Method not implemented.');
-}
+  previewDoc(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
   vendors = signal<Vendor[]>([]);
   isLoading = signal(false);
   error = signal('');
@@ -43,10 +43,10 @@ throw new Error('Method not implemented.');
   constructor(
     private vendorService: VendorService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
-     localStorage.setItem('adminId', '69dcdf5382261495d01985fe');
+    //localStorage.setItem('adminId', '69dcdf5382261495d01985fe');
     this.loadVendors();
   }
 
@@ -72,8 +72,8 @@ throw new Error('Method not implemented.');
     // filter
     if (this.filter() !== 'all') {
       list = list.filter(
-  v => v.status?.toLowerCase().trim() === this.filter()
-);
+        v => v.status?.toLowerCase().trim() === this.filter()
+      );
     }
 
     // search
@@ -96,7 +96,13 @@ throw new Error('Method not implemented.');
 
     if (!username || !password) return;
 
-    const adminId = localStorage.getItem('adminId') || '';
+    // ✅ ADD THIS
+    const adminId = localStorage.getItem('adminId');
+
+    if (!adminId) {
+      alert('Admin not logged in');
+      return;
+    }
 
     this.vendorService
       .approveVendor(v._id, username, password, adminId)
@@ -113,11 +119,18 @@ throw new Error('Method not implemented.');
     this.showRejectModal.set(true);
   }
 
+
   confirmReject() {
     const vendor = this.selectedVendor();
     if (!vendor) return;
 
-    const adminId = localStorage.getItem('adminId') || '';
+    // ✅ ADD THIS
+    const adminId = localStorage.getItem('adminId');
+
+    if (!adminId) {
+      alert('Admin not logged in');
+      return;
+    }
 
     this.vendorService
       .rejectVendor(vendor._id, adminId, this.rejectReason())
@@ -132,7 +145,6 @@ throw new Error('Method not implemented.');
         }
       });
   }
-
   // ✅ MENU
   toggleMenu(event: Event, id: string) {
     event.stopPropagation();

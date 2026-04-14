@@ -12,9 +12,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Login {
   ngOnInit() {
-    const admin = localStorage.getItem('admin');
 
-    if (admin) {
+    const adminId = localStorage.getItem('adminId');
+
+    if (adminId) {
       this.router.navigate(['/dashboard']); // already logged in
     }
   }
@@ -26,27 +27,34 @@ export class Login {
   errorMsg = '';
 
   form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(5)]],
+    username: ['', [Validators.required]],
+    password: ['', [Validators.required]],
     remember: [false],
   });
 
   login() {
+    console.log('LOGIN CLICKED');
+
     if (this.form.invalid) return;
 
-    const { email, password } = this.form.value;
+    const { username, password } = this.form.value;
 
-    this.http
-      .get<any[]>(`http://localhost:3000/admins?email=${email}&password=${password}`)
-      .subscribe((res) => {
-        console.log(res); // 🔥 CHECK THIS
+    this.http.post<any>('http://192.168.1.13:3000/admin/login', {
+      username,
+      password
+    }).subscribe({
+      next: (res) => {
+        console.log('LOGIN RESPONSE:', res);
 
-        if (res.length > 0) {
-          localStorage.setItem('admin', JSON.stringify(res[0]));
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.errorMsg = 'Invalid email or password';
-        }
-      });
+        // 🔥 IMPORTANT
+        localStorage.setItem('adminId', res.admin._id);
+
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMsg = 'Invalid username or password';
+      }
+    });
   }
 }

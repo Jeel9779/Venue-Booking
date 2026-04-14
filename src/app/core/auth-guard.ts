@@ -4,7 +4,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   return true;
 }; */
 
-import { inject } from '@angular/core';
+/* import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 export const authGuard = (p0: unknown) => {
@@ -19,7 +19,21 @@ export const authGuard = (p0: unknown) => {
 
   
   return router.parseUrl('/login'); 
-}; 
+};  */
 
-/* router.navigate(['/login']);
-  return false; */
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+
+export const authGuard = () => {
+  const router = inject(Router);
+
+  // 🔥 FIX HERE
+  const adminId = localStorage.getItem('adminId');
+
+  if (adminId) {
+    return true;
+  }
+
+  return router.parseUrl('/login');
+};
+

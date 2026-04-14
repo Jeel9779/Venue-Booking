@@ -34,7 +34,7 @@ export class Sidebar {
     add: Plus,
     help: HelpCircle,
     logout: LogOut,
-    subscript : ListChecks
+    subscript: ListChecks
   };
 
   /*   toggle() {
@@ -46,10 +46,10 @@ export class Sidebar {
 
 
   /* Login  */
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   logout() {
-    localStorage.removeItem('admin');
+    localStorage.removeItem('adminId');
     this.router.navigate(['/login']);
   }
 }
