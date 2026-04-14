@@ -113,8 +113,11 @@
 
                         <!-- VERIFICATION -->
                         <td class="px-5 py-4 text-xs text-gray-600 space-y-1">
-                            <p>{{ v.governmentId }}</p>
-
+                            <!--<img [src]="'http://192.168.1.13:3000/' + v.governmentId"
+                                class="w-20 h-20 object-cover rounded-lg border shadow" /> -->
+                            <img [src]="v.governmentId"
+                                class="w-20 h-20 object-cover rounded-lg border shadow hover:scale-105 transition cursor-pointer"
+                                (click)="previewDoc(v.governmentId)" />
                             <p>
                                 <span> License : </span>
                                 @if (v.licenseDoc) {
@@ -143,9 +146,9 @@
                         </td>
 
                         <!-- 🔴 ADD THIS TEMP DEBUG -->
-<td style="color:red;">
-  {{ v.status }}
-</td>
+                        <td style="color:red;">
+                            {{ v.status }}
+                        </td>
                         <!-- ACTIONS -->
                         <!--  <td class="px-5 py-4 flex gap-2">
 

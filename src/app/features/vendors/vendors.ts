@@ -21,13 +21,14 @@ export class Vendors implements OnInit {
   Pencil = Pencil;
   Trash2 = Trash2;
 
-  previewDoc(arg0: string) {
-    throw new Error('Method not implemented.');
-  }
   vendors = signal<Vendor[]>([]);
   isLoading = signal(false);
   error = signal('');
 
+  previewDoc(path: string) {
+    /* const url = 'http://192.168.1.13:3000/' + path; */
+    window.open(path, '_blank');
+  }
   // ✅ FILTER + SEARCH
   filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
   search = signal('');
