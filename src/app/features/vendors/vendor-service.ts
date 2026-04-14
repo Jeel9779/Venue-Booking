@@ -8,8 +8,8 @@ import { Vendor } from './vendor.model';
 })
 export class VendorService {
   private http = inject(HttpClient);
-  /* private api = 'http://localhost:3000/vendors';  */ 
-  private api = 'http://192.168.1.13:3000/vendors';  
+  /* private api = 'http://localhost:3000/vendors';  */
+  private api = 'http://192.168.1.13:3000/vendors';
 
   // GET all vendors
   getVendors(): Observable<Vendor[]> {
@@ -26,12 +26,32 @@ export class VendorService {
     return this.http.post(this.api, data);
   }
 
-  // for edit and delete vendor 
+  // for edit and delete vendor
   deleteVendor(id: string) {
     return this.http.delete(`${this.api}/${id}`);
   }
 
   getVendorById(id: string) {
     return this.http.get<Vendor>(`${this.api}/${id}`);
+  }
+
+  approveVendor(id: string, username: string, password: string, adminId: string) {
+    return this.http.put(
+      `${this.api}/approve/${id}`,
+      { username, password },
+      {
+        headers: { adminId },
+      },
+    );
+  }
+
+  rejectVendor(id: string, adminId: string, reason?: string) {
+    return this.http.put(
+      `${this.api}/reject/${id}`,
+      { message: reason },
+      {
+        headers: { adminId },
+      },
+    );
   }
 }

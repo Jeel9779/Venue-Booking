@@ -6,7 +6,7 @@ import { computed } from '@angular/core';
 import { Vendor } from './vendor.model';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
-import { MoreVertical, Pencil, Trash2, LucideAngularModule } from 'lucide-angular';
+import { MoreVertical, Pencil, Trash2, LucideAngularModule, LucideIconData } from 'lucide-angular';
 
 @Component({
   selector: 'app-vendors',
@@ -16,21 +16,37 @@ import { MoreVertical, Pencil, Trash2, LucideAngularModule } from 'lucide-angula
   styleUrl: './vendors.css',
 })
 export class Vendors implements OnInit {
-  // icon
-  readonly MoreVertical = MoreVertical;
-  readonly Pencil = Pencil;
-  readonly Trash2 = Trash2;
+
+MoreVertical = Pencil;
+Pencil = Pencil;
+Trash2 = Trash2;
+
+previewDoc(arg0: string) {
+throw new Error('Method not implemented.');
+}
   vendors = signal<Vendor[]>([]);
   isLoading = signal(false);
   error = signal('');
 
+  // ✅ FILTER + SEARCH
+  filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  search = signal('');
+
+  // ✅ DROPDOWN MENU
+  menuOpenId = signal<string | null>(null);
+
+  // ✅ REJECT MODAL
+  selectedVendor = signal<Vendor | null>(null);
+  showRejectModal = signal(false);
+  rejectReason = signal('');
 
   constructor(
     private vendorService: VendorService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
+     localStorage.setItem('adminId', '69dcdf5382261495d01985fe');
     this.loadVendors();
   }
 
@@ -49,137 +65,92 @@ export class Vendors implements OnInit {
     });
   }
 
+  // ✅ FILTERED LIST
+  filteredVendors = computed(() => {
+    let list = this.vendors();
+
+    // filter
+    if (this.filter() !== 'all') {
+      list = list.filter(
+  v => v.status?.toLowerCase().trim() === this.filter()
+);
+    }
+
+    // search
+    if (this.search()) {
+      const s = this.search().toLowerCase();
+      list = list.filter(v =>
+        v.fullName.toLowerCase().includes(s) ||
+        v.email.toLowerCase().includes(s) ||
+        v.businessName.toLowerCase().includes(s)
+      );
+    }
+
+    return list;
+  });
+
   // ✅ APPROVE
   approve(v: Vendor) {
-    // ✅ generate credentials
-    const username = this.generateUsername(v.fullName);
-    const password = this.generatePassword();
+    const username = prompt('Enter Username');
+    const password = prompt('Enter Password');
+
+    if (!username || !password) return;
+
+    const adminId = localStorage.getItem('adminId') || '';
 
     this.vendorService
-      .updateVendor(v.id, {
-        ...v,
-        status: 'approved',
-        adminMessage: 'Approved successfully',
-        username: username,
-        password: password,
-      })
-      .subscribe(() => {
-        alert(`Vendor Approved ✅
-
-Username: ${username}
-Password: ${password}`);
-
-        this.loadVendors();
+      .approveVendor(v._id, username, password, adminId)
+      .subscribe({
+        next: () => this.loadVendors(),
+        error: (err) => console.error(err)
       });
   }
 
-generateUsername(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '') + Math.floor(Math.random() * 1000);
-}
-
-generatePassword(): string {
-  return Math.random().toString(36).slice(-8);
-}
-
-  // ❌ REJECT
-  /* reject(v: Vendor) {
-    this.vendorService.updateVendor(v.id, {
-      status: 'rejected',
-      adminMessage: 'Rejected by admin'
-    }).subscribe(() => this.loadVendors());
-  } */
-
-
-
-  // 📄 LICENSE PREVIEW
-  previewDoc(url: string) {
-    window.open(url, '_blank');
-  }
-
-  // Reject pop up ----------------------------
-  showRejectModal = signal(false);
-  selectedVendor = signal<Vendor | null>(null);
-  rejectReason = signal('');
-
-  // update above reject()
+  // ✅ REJECT FLOW
   openRejectModal(v: Vendor) {
     this.selectedVendor.set(v);
     this.rejectReason.set('');
     this.showRejectModal.set(true);
   }
 
-  // submit rejection
   confirmReject() {
-  const vendor = this.selectedVendor();
-  if (!vendor) return;
+    const vendor = this.selectedVendor();
+    if (!vendor) return;
 
-  this.vendorService.updateVendor(vendor.id, {
-    ...vendor,
-    status: 'rejected',
-    adminMessage: this.rejectReason() || 'Rejected by admin',
-    username: null,   
-    password: null   
-  }).subscribe(() => {
-    this.loadVendors();
-    this.showRejectModal.set(false);
-  });
-}
+    const adminId = localStorage.getItem('adminId') || '';
 
-  // add filter + search ---------------------------------
-  filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
-  search = signal('');
-
-  filteredVendors = computed(() => {
-    let data = this.vendors();
-
-    // FILTER
-    if (this.filter() !== 'all') {
-      data = data.filter((v) => v.status === this.filter());
-    }
-
-    // SEARCH
-    if (this.search()) {
-      const term = this.search().toLowerCase();
-
-      data = data.filter(
-        (v) =>
-          v.fullName.toLowerCase().includes(term) ||
-          v.email.toLowerCase().includes(term) ||
-          v.businessName.toLowerCase().includes(term) ||
-          v.businessType.toLowerCase().includes(term) ||
-          v.phone?.includes(term),
-      );
-    }
-
-    return data;
-  });
-
-  // reopen
-  deleteVendor(id: string) {
-    if (confirm('Delete this vendor?')) {
-      this.vendorService.deleteVendor(id).subscribe(() => {
-        this.loadVendors();
+    this.vendorService
+      .rejectVendor(vendor._id, adminId, this.rejectReason())
+      .subscribe({
+        next: () => {
+          this.showRejectModal.set(false);
+          this.loadVendors();
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Reject failed');
+        }
       });
-    }
   }
 
-  editVendor(v: Vendor) {
-    this.router.navigate(['/edit-vendor', v.id]);
-  }
-
-  menuOpenId = signal<string | null>(null);
-
+  // ✅ MENU
   toggleMenu(event: Event, id: string) {
     event.stopPropagation();
     this.menuOpenId.set(this.menuOpenId() === id ? null : id);
   }
 
-  @HostListener('document:click')
-  closeMenu() {
-    this.menuOpenId.set(null);
+  // ✅ DELETE
+  deleteVendor(id: string) {
+    if (!confirm('Delete vendor?')) return;
+
+    this.vendorService.deleteVendor(id).subscribe({
+      next: () => this.loadVendors(),
+      error: (err) => console.error(err)
+    });
   }
 
-  isLast(index: number, total: number): boolean {
-    return index >= total - 2; // last 2 rows open upward
+  // ✅ EDIT
+  editVendor(v: Vendor) {
+    this.router.navigate(['/edit-vendor', v._id]);
   }
 }

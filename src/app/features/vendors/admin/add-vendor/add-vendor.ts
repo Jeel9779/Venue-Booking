@@ -87,7 +87,7 @@ export class AddVendor {
     } else {
       // ➕ ADD
       const newVendor: Partial<Vendor> = {
-        id: Date.now().toString(),
+        _id: Date.now().toString(),
         ...data,
         status: 'pending',
         adminMessage: '',
