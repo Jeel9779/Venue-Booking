@@ -1,4 +1,4 @@
-import { HostListener } from '@angular/core';
+
 import { Component, OnInit, signal } from '@angular/core';
 import { VendorService } from './vendor-service';
 import { CommonModule } from '@angular/common';
@@ -17,29 +17,26 @@ import { MoreVertical, Pencil, Trash2, LucideAngularModule, LucideIconData } fro
 })
 export class Vendors implements OnInit {
 
-  MoreVertical = MoreVertical;
-  Pencil = Pencil;
-  Trash2 = Trash2;
-
   vendors = signal<Vendor[]>([]);
   isLoading = signal(false);
   error = signal('');
 
-  previewDoc(path: string) {
-    /* const url = 'http://192.168.1.13:3000/' + path; */
-    window.open(path, '_blank');
-  }
   // ✅ FILTER + SEARCH
   filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
   search = signal('');
 
-  // ✅ DROPDOWN MENU
-  menuOpenId = signal<string | null>(null);
+  // ✅ SELECTED
+  selectedVendor = signal<Vendor | null>(null);
+
+  // ✅ DETAILS MODAL
+  showDetailsModal = signal(false);
 
   // ✅ REJECT MODAL
-  selectedVendor = signal<Vendor | null>(null);
   showRejectModal = signal(false);
   rejectReason = signal('');
+
+  // ✅ IMAGE MODAL
+  previewImage = signal<string | null>(null);
 
   constructor(
     private vendorService: VendorService,
@@ -47,7 +44,6 @@ export class Vendors implements OnInit {
   ) { }
 
   ngOnInit() {
-    //localStorage.setItem('adminId', '69dcdf5382261495d01985fe');
     this.loadVendors();
   }
 
@@ -66,18 +62,16 @@ export class Vendors implements OnInit {
     });
   }
 
-  // ✅ FILTERED LIST
+  // ✅ FILTER
   filteredVendors = computed(() => {
     let list = this.vendors();
 
-    // filter
     if (this.filter() !== 'all') {
       list = list.filter(
         v => v.status?.toLowerCase().trim() === this.filter()
       );
     }
 
-    // search
     if (this.search()) {
       const s = this.search().toLowerCase();
       list = list.filter(v =>
@@ -90,6 +84,26 @@ export class Vendors implements OnInit {
     return list;
   });
 
+  // ✅ OPEN DETAILS
+  openDetails(v: Vendor) {
+    this.selectedVendor.set(v);
+    this.showDetailsModal.set(true);
+  }
+
+  // ✅ CLOSE DETAILS
+  closeDetails() {
+    this.showDetailsModal.set(false);
+  }
+
+  // ✅ IMAGE MODAL
+  openModal(img: string) {
+    this.previewImage.set(img);
+  }
+
+  closeModal() {
+    this.previewImage.set(null);
+  }
+
   // ✅ APPROVE
   approve(v: Vendor) {
     const username = prompt('Enter Username');
@@ -97,7 +111,6 @@ export class Vendors implements OnInit {
 
     if (!username || !password) return;
 
-    // ✅ ADD THIS
     const adminId = localStorage.getItem('adminId');
 
     if (!adminId) {
@@ -113,19 +126,17 @@ export class Vendors implements OnInit {
       });
   }
 
-  // ✅ REJECT FLOW
+  // ✅ REJECT
   openRejectModal(v: Vendor) {
     this.selectedVendor.set(v);
     this.rejectReason.set('');
     this.showRejectModal.set(true);
   }
 
-
   confirmReject() {
     const vendor = this.selectedVendor();
     if (!vendor) return;
 
-    // ✅ ADD THIS
     const adminId = localStorage.getItem('adminId');
 
     if (!adminId) {
@@ -140,30 +151,14 @@ export class Vendors implements OnInit {
           this.showRejectModal.set(false);
           this.loadVendors();
         },
-        error: (err) => {
-          console.error(err);
-          alert('Reject failed');
-        }
+        error: () => alert('Reject failed')
       });
   }
-  // ✅ MENU
-  toggleMenu(event: Event, id: string) {
-    event.stopPropagation();
-    this.menuOpenId.set(this.menuOpenId() === id ? null : id);
-  }
 
-  // ✅ DELETE
-  deleteVendor(id: string) {
-    if (!confirm('Delete vendor?')) return;
+  // ✅ IMAGE URL FIX (🔥 MUST HAVE)
+  /*  getImageUrl(path: string) {
+     return 'http://localhost:3000/' + path.replace(/\\/g, '/');
+   } */
 
-    this.vendorService.deleteVendor(id).subscribe({
-      next: () => this.loadVendors(),
-      error: (err) => console.error(err)
-    });
-  }
 
-  // ✅ EDIT
-  editVendor(v: Vendor) {
-    this.router.navigate(['/edit-vendor', v._id]);
-  }
 }

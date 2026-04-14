@@ -1,9 +1,10 @@
 export type VendorStatus = 'pending' | 'approved' | 'rejected' | 'reopen';
 
 export interface Vendor {
-  
+
   _id: string;
 
+  vendorId: string;
   fullName: string;
   email: string;
   phone?: string | null;
