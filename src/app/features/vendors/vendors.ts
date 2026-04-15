@@ -13,6 +13,15 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './vendors.css',
 })
 export class Vendors implements OnInit {
+  venues() {
+    throw new Error('Method not implemented.');
+  }
+  reject(_t18: any) {
+    throw new Error('Method not implemented.');
+  }
+  reopen(_t18: any) {
+    throw new Error('Method not implemented.');
+  }
 
   // ================= TOAST =================
   toast = signal<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -32,8 +41,13 @@ export class Vendors implements OnInit {
   selectedVendor = signal<Vendor | null>(null);
 
   showDetailsModal = signal(false);
+
+  // ✅ NEW MODALS
+  showApproveModal = signal(false);
   showRejectModal = signal(false);
 
+  // FORM DATA
+  credentials = signal({ username: '', password: '' });
   rejectReason = signal('');
 
   previewImage = signal<string | null>(null);
@@ -44,7 +58,6 @@ export class Vendors implements OnInit {
     this.loadVendors();
   }
 
-  // ================= LOAD =================
   loadVendors() {
     this.isLoading.set(true);
 
@@ -81,7 +94,17 @@ export class Vendors implements OnInit {
 
     return list;
   });
+  // ================= COUNTS =================
+  counts = computed(() => {
+    const list = this.vendors();
 
+    return {
+      all: list.length,
+      pending: list.filter(v => v.status?.toLowerCase().trim() === 'pending').length,
+      approved: list.filter(v => v.status?.toLowerCase().trim() === 'approved').length,
+      rejected: list.filter(v => v.status?.toLowerCase().trim() === 'rejected').length,
+    };
+  });
   // ================= DETAILS =================
   openDetails(v: Vendor) {
     this.selectedVendor.set(v);
@@ -94,7 +117,8 @@ export class Vendors implements OnInit {
   }
 
   // ================= IMAGE =================
-  openModal(img: string) {
+  openModal(img?: string) {
+    if (!img) return;
     this.previewImage.set(img);
   }
 
@@ -104,28 +128,31 @@ export class Vendors implements OnInit {
 
   // ================= APPROVE =================
   approve(v: Vendor) {
-    const username = prompt('Enter Username');
-    const password = prompt('Enter Password');
+    this.selectedVendor.set(v);
+    this.credentials.set({ username: '', password: '' });
+    this.showApproveModal.set(true);
+  }
 
-    if (!username || !password) return;
+  confirmApprove() {
+    const vendor = this.selectedVendor();
+    const { username, password } = this.credentials();
+
+    if (!vendor || !vendor._id || !username || !password) {
+      this.showToast('Fill all fields', 'error');
+      return;
+    }
 
     const adminId = localStorage.getItem('adminId');
-
     if (!adminId) {
       this.showToast('Admin not logged in', 'error');
       return;
     }
 
-    // ✅ FIX: ensure _id exists
-    if (!v._id) {
-      this.showToast('Invalid vendor ID', 'error');
-      return;
-    }
-
     this.vendorService
-      .approveVendor(v._id, username, password, adminId)
+      .approveVendor(vendor._id, username, password, adminId)
       .subscribe({
         next: () => {
+          this.showApproveModal.set(false);
           this.showToast('Vendor Approved ✅');
           this.loadVendors();
         },
@@ -143,13 +170,12 @@ export class Vendors implements OnInit {
   confirmReject() {
     const vendor = this.selectedVendor();
 
-    if (!vendor || !vendor._id) {
-      this.showToast('Invalid vendor', 'error');
+    if (!vendor || !vendor._id || !this.rejectReason()) {
+      this.showToast('Enter reject reason', 'error');
       return;
     }
 
     const adminId = localStorage.getItem('adminId');
-
     if (!adminId) {
       this.showToast('Admin not logged in', 'error');
       return;

@@ -51,9 +51,7 @@
 <div class="flex h-screen overflow-hidden">
 
   <!-- SIDEBAR -->
-  <app-sidebar 
-  [isOpen]="isSidebarOpen" 
-  (close)="toggleSidebar()"></app-sidebar>
+  <app-sidebar [isOpen]="isSidebarOpen" (close)="toggleSidebar()"></app-sidebar>
 
   <!-- MAIN -->
   <div class="flex-1 flex flex-col w-full">
@@ -61,7 +59,7 @@
     <!-- HEADER -->
     <app-header (menuClick)="toggleSidebar()"></app-header>
 
-    <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+    <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-200">
       <router-outlet></router-outlet>
     </main>
 

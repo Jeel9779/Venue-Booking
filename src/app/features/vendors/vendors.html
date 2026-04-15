@@ -1,186 +1,573 @@
-<div class="p-6 min-h-screen bg-linear-to-br from-slate-50 to-indigo-50">
+<div class="p-4 sm:p-8 min-h-screen bg-slate-200 font-sans text-zinc-900 flex flex-col">
 
-    <!-- TITLE -->
-    <h2 class="text-3xl font-bold mb-6 text-gray-800">
-        Vendor Verification
-    </h2>
+    <!-- HEADER SECTION -->
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900">
+                Vendor Verification
+            </h2>
+            <p class="text-sm text-zinc-500 mt-1">Review and manage vendor applications and documents.</p>
+        </div>
+    </div>
 
-    <!-- LOADING -->
+    <!-- search and filter  -->
+
+    <div class="flex flex-col sm:flex-row gap-3 mb-6">
+
+        <!-- 🔍 SEARCH -->
+        <div class="flex-1 relative">
+            <input type="text" placeholder="Search by name, email, business..."
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none text-sm"
+                [value]="search()" (input)="search.set($any($event.target).value)" />
+
+            <!-- ICON -->
+            <svg class="w-4 h-4 absolute left-3 top-3 text-zinc-400" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z">
+                </path>
+            </svg>
+        </div>
+
+        <!-- 🎯 FILTER -->
+        <!--  <div class="flex gap-2 flex-wrap">
+            <button (click)="filter.set('all')" [class]="filter() === 'all'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-white text-zinc-600 border border-zinc-200'"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition">
+                All
+            </button>
+
+            <button (click)="filter.set('pending')" [class]="filter() === 'pending'
+                ? 'bg-amber-500 text-white'
+                : 'bg-white text-zinc-600 border border-zinc-200'"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition">
+                Pending
+            </button>
+
+            <button (click)="filter.set('approved')" [class]="filter() === 'approved'
+                ? 'bg-emerald-600 text-white'
+                : 'bg-white text-zinc-600 border border-zinc-200'"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition">
+                Approved
+            </button>
+
+            <button (click)="filter.set('rejected')" [class]="filter() === 'rejected'
+                ? 'bg-rose-600 text-white'
+                : 'bg-white text-zinc-600 border border-zinc-200'"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition">
+                Rejected
+            </button>
+        </div> -->
+        <!-- ================= FILTER WITH COUNTS ================= -->
+        <div class="flex flex-wrap gap-3">
+
+            <!-- ALL -->
+            <button (click)="filter.set('all')"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition" [ngClass]="filter() === 'all'
+      ? 'bg-indigo-600 text-white border-indigo-600 shadow'
+      : 'bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50'">
+
+                All
+                <span class="px-2 py-0.5 text-xs rounded-full bg-white/20"
+                    [ngClass]="filter() !== 'all' ? 'bg-zinc-100 text-zinc-600' : ''">
+                    {{ counts().all }}
+                </span>
+            </button>
+
+            <!-- PENDING -->
+            <button (click)="filter.set('pending')"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition" [ngClass]="filter() === 'pending'
+      ? 'bg-amber-500 text-white border-amber-500 shadow'
+      : 'bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50'">
+
+                Pending
+                <span class="px-2 py-0.5 text-xs rounded-full bg-white/20"
+                    [ngClass]="filter() !== 'pending' ? 'bg-amber-100 text-amber-700' : ''">
+                    {{ counts().pending }}
+                </span>
+            </button>
+
+            <!-- APPROVED -->
+            <button (click)="filter.set('approved')"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition" [ngClass]="filter() === 'approved'
+      ? 'bg-emerald-600 text-white border-emerald-600 shadow'
+      : 'bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50'">
+
+                Approved
+                <span class="px-2 py-0.5 text-xs rounded-full bg-white/20"
+                    [ngClass]="filter() !== 'approved' ? 'bg-emerald-100 text-emerald-700' : ''">
+                    {{ counts().approved }}
+                </span>
+            </button>
+
+            <!-- REJECTED -->
+            <button (click)="filter.set('rejected')"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition" [ngClass]="filter() === 'rejected'
+      ? 'bg-rose-600 text-white border-rose-600 shadow'
+      : 'bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50'">
+
+                Rejected
+                <span class="px-2 py-0.5 text-xs rounded-full bg-white/20"
+                    [ngClass]="filter() !== 'rejected' ? 'bg-rose-100 text-rose-700' : ''">
+                    {{ counts().rejected }}
+                </span>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- LOADING STATE -->
     @if (isLoading()) {
-    <div class="p-10 text-center text-gray-400">
-        Loading vendors...
+    <div
+        class="flex flex-col items-center justify-center p-20 text-indigo-400 space-y-4 bg-white rounded-3xl border border-zinc-100 shadow-sm mx-auto w-full max-w-2xl mt-8">
+        <svg class="w-8 h-8 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+        </svg>
+        <span class="text-sm font-medium">Loading vendors...</span>
     </div>
     }
 
-    <!-- EMPTY -->
+    <!-- EMPTY STATE -->
     @if (!isLoading() && filteredVendors().length === 0) {
-    <div class="p-10 text-center text-gray-400">
-        No vendors found
+    <div
+        class="flex flex-col items-center justify-center p-20 text-zinc-400 bg-white rounded-3xl border border-zinc-100 shadow-sm transition-all mt-8">
+        <div class="w-16 h-16 mb-4 rounded-full bg-zinc-50 flex items-center justify-center ring-8 ring-zinc-50/50">
+            <svg class="w-8 h-8 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                </path>
+            </svg>
+        </div>
+        <span class="text-base font-medium text-zinc-600">No vendors found</span>
+        <p class="text-sm text-zinc-400 mt-1">There are currently no vendor applications to review.</p>
     </div>
     }
 
     <!-- TABLE -->
+    <!-- ================= PRO TABLE ================= -->
     @if (!isLoading() && filteredVendors().length > 0) {
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <!-- hover:shadow-2xl transition-all duration-300 border-indigo-200  -->
 
-        <table class="w-full text-sm">
+    <div class="bg-white/70 backdrop-blur-xl p-4 rounded-2xl shadow-xl  overflow-hidden ">
 
-            <!-- HEADER -->
-            <thead class="bg-gray-100 text-gray-600">
-                <tr>
-                    <th class="p-4 text-left">Name</th>
-                    <th class="p-4 text-left">Business</th>
-                    <th class="p-4 text-left">Type</th>
-                    <th class="p-4 text-left">Phone</th>
-                    <th class="p-4 text-left">State</th>
-                    <th class="p-4 text-left">Status</th>
-                </tr>
-            </thead>
+        <!-- TOP BAR -->
+        <div class="flex justify-between items-center px-6 py-4 border-b bg-zinc-50">
+            <h3 class="text-sm font-semibold text-zinc-700">
+                Total Vendors: <span class="text-indigo-600 font-bold">{{ filteredVendors().length }}</span>
+            </h3>
 
-            <!-- BODY -->
-            <tbody>
-                @for (v of filteredVendors(); track v._id) {
-                <tr (click)="openDetails(v)"
-                    class="border-b hover:bg-indigo-50 hover:scale-[1.01] transition cursor-pointer">
+            <span class="text-xs text-zinc-500">
+                Showing filtered results
+            </span>
+        </div>
 
-                    <td class="p-4 font-medium">{{ v.fullName }}</td>
-                    <td class="p-4">{{ v.businessName }}</td>
-                    <td class="p-4">{{ v.businessType }}</td>
-                    <td class="p-4">{{ v.phone }}</td>
-                    <td class="p-4">{{ v.state }}</td>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
 
-                    <td class="p-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
-                'bg-yellow-100 text-yellow-700': v.status === 'pending',
-                'bg-green-100 text-green-700': v.status === 'approved',
-                'bg-red-100 text-red-600': v.status === 'rejected'
+                <!-- HEADER -->
+                <thead class="bg-linear-to-r from-indigo-100 to-indigo-200 text-indigo-900">
+                    <tr class="text-xs uppercase tracking-wider">
+                        <th class="px-6 py-4 text-left">Vendor</th>
+                        <th class="px-6 py-4 text-left">Business</th>
+                        <th class="px-6 py-4 text-left">Contact</th>
+                        <th class="px-6 py-4 text-left">Location</th>
+                        <th class="px-6 py-4 text-left">Status</th>
+                        <th class="px-6 py-4 text-right">Action</th>
+                    </tr>
+                </thead>
+
+                <!-- BODY -->
+                <tbody class="divide-y divide-zinc-100">
+
+                    @for (v of filteredVendors(); track v._id) {
+                    <tr (click)="openDetails(v)"
+                        class="group hover:bg-indigo-100/60 transition-all duration-200 cursor-pointer">
+
+                        <!-- VENDOR -->
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-zinc-900">{{ v.fullName }}</span>
+                                <span class="text-xs text-zinc-500">{{ v.email }}</span>
+                            </div>
+                        </td>
+
+                        <!-- BUSINESS -->
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span class="text-zinc-700 font-medium">{{ v.businessName }}</span>
+                                <span class="text-xs text-zinc-500">{{ v.businessType }}</span>
+                            </div>
+                        </td>
+
+                        <!-- CONTACT -->
+                        <td class="px-6 py-4 text-zinc-600">
+                            {{ v.phone }}
+                        </td>
+
+                        <!-- LOCATION -->
+                        <td class="px-6 py-4 text-zinc-600">
+                            {{ v.state }}
+                        </td>
+
+                        <!-- STATUS -->
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full" [ngClass]="{
+                'bg-amber-100 text-amber-700': v.status.toLowerCase().trim() === 'pending',
+                'bg-emerald-100 text-emerald-700': v.status.toLowerCase().trim() === 'approved',
+                'bg-rose-100 text-rose-700': v.status.toLowerCase().trim() === 'rejected'
               }">
-                            {{ v.status }}
-                        </span>
-                    </td>
+                                {{ v.status }}
+                            </span>
+                        </td>
 
-                </tr>
-                }
-            </tbody>
+                        <!-- ACTION -->
+                        <td class="px-6 py-4 text-right">
+                            <button
+                                class="text-indigo-600 font-medium hover:underline flex items-center gap-1 justify-end w-full">
 
-        </table>
+                                View
+
+                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+
+                            </button>
+                        </td>
+
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
     </div>
+
     }
 
     <!-- ================= DETAILS MODAL ================= -->
+    <!-- ================= MODERN DETAILS MODAL ================= -->
     @if (showDetailsModal()) {
-    <div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur">
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
 
-        <div class="bg-white rounded-3xl w-[95%] max-w-6xl p-8 relative shadow-2xl">
-
-            <!-- CLOSE -->
-            <button (click)="closeDetails()"
-                class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100">
-                ✕
-            </button>
+        <div
+            class="w-full max-w-5xl bg-linear-to-br from-white via-indigo-50 to-purple-50 rounded-3xl shadow-2xl border border-white/30 overflow-hidden animate-fadeScale">
 
             <!-- HEADER -->
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h2 class="text-2xl font-bold">{{ selectedVendor()?.fullName }}</h2>
-                    <p class="text-gray-500 text-sm">{{ selectedVendor()?.email }}</p>
+            <div class="flex justify-between items-start gap-4 px-8 py-6 border-b border-zinc-200">
+
+                <!-- LEFT -->
+                <div class="flex items-start gap-4">
+
+                    <!-- AVATAR -->
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-linear-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-lg shadow-lg">
+                        {{ selectedVendor()?.fullName?.charAt(0) }}
+                    </div>
+
+                    <!-- NAME -->
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-2xl font-bold text-zinc-900">
+                                {{ selectedVendor()?.fullName }}
+                            </h2>
+
+                            <!-- STATUS -->
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full shadow-sm" [ngClass]="{
+                'bg-linear-to-r from-amber-100 to-yellow-100 text-amber-700': selectedVendor()?.status === 'pending',
+                'bg-linear-to-r from-emerald-100 to-green-100 text-emerald-700': selectedVendor()?.status === 'approved',
+                'bg-linear-to-r from-rose-100 to-red-100 text-rose-700': selectedVendor()?.status === 'rejected'
+              }">
+                                {{ selectedVendor()?.status }}
+                            </span>
+                        </div>
+
+                        <p class="text-sm text-zinc-500 mt-1">
+                            {{ selectedVendor()?.email }}
+                        </p>
+                    </div>
+
                 </div>
 
-                <span class="px-3 py-1 rounded-full text-sm font-medium" [ngClass]="{
-            'bg-yellow-100 text-yellow-700': selectedVendor()?.status === 'pending',
-            'bg-green-100 text-green-700': selectedVendor()?.status === 'approved',
-            'bg-red-100 text-red-600': selectedVendor()?.status === 'rejected'
-          }">
-                    {{ selectedVendor()?.status }}
-                </span>
+                <!-- ACTIONS -->
+                <div class="flex items-center gap-3">
+
+                    <!-- REJECT -->
+                    <button (click)="openRejectModal(selectedVendor()!)"
+                        class="px-4 py-2 rounded-xl bg-linear-to-r from-rose-400 to-red-400 text-white font-medium hover:scale-105 transition shadow-sm flex items-center gap-2">
+
+                        <!-- ICON -->
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M6 6l12 12M6 18L18 6" />
+                        </svg>
+
+                        Reject
+                    </button>
+
+                    <!-- APPROVE -->
+                    <button (click)="approve(selectedVendor()!)"
+                        class="px-4 py-2 rounded-xl bg-linear-to-r from-indigo-600 to-purple-600 text-white font-medium hover:scale-105 transition shadow-md flex items-center gap-2">
+
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+
+                        Approve
+                    </button>
+
+                    <!-- CLOSE -->
+                    <button (click)="closeDetails()"
+                        class="w-10 h-10 rounded-xl bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center transition">
+
+                        <svg class="w-5 h-5 text-zinc-600" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+
+                    </button>
+
+                </div>
             </div>
 
-            <!-- DETAILS GRID -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
+            <!-- BODY -->
+            <div class="p-8">
 
-                <div>
-                    <span class="text-gray-400">Phone</span><br>
-                    <b>{{ selectedVendor()?.phone }}</b>
+                <!-- INFO GRID -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-8">
+
+                    <!-- PHONE -->
+                    <div
+                        class="p-4 rounded-2xl bg-linear-to-br from-white to-indigo-100 border border-indigo-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 active:scale-95">
+
+                        <p class="text-xs text-zinc-500 mb-1 flex items-center gap-2">
+                            <!-- ICON -->
+                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M22 16.92V19a2 2 0 01-2.18 2A19.79 19.79 0 013 5.18 2 2 0 015 3h2.09a2 2 0 012 1.72c.12.81.37 1.6.72 2.34a2 2 0 01-.45 2.11L8.91 10.09a16 16 0 006 6l.92-.45a2 2 0 012.11.45c.74.35 1.53.6 2.34.72A2 2 0 0122 16.92z" />
+                            </svg>
+                            Phone
+                        </p>
+
+                        <p class="font-semibold text-zinc-800">
+                            {{ selectedVendor()?.phone }}
+                        </p>
+                    </div>
+
+                    <!-- BUSINESS -->
+                    <div
+                        class="p-4 rounded-2xl bg-linear-to-br from-white to-indigo-50 border border-indigo-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 active:scale-95">
+
+                        <p class="text-xs text-zinc-500 mb-1 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M3 21h18M9 8h6M9 12h6M9 16h6M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14" />
+                            </svg>
+                            Business
+                        </p>
+
+                        <p class="font-semibold text-zinc-800">
+                            {{ selectedVendor()?.businessName }}
+                        </p>
+                    </div>
+
+                    <!-- TYPE -->
+                    <div
+                        class="p-4 rounded-2xl bg-linear-to-br from-white to-indigo-50 border border-indigo-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 active:scale-95">
+
+                        <p class="text-xs text-zinc-500 mb-1 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
+                            </svg>
+                            Type
+                        </p>
+
+                        <p class="font-semibold text-zinc-800">
+                            {{ selectedVendor()?.businessType }}
+                        </p>
+                    </div>
+
+                    <!-- STATE -->
+                    <div
+                        class="p-4 rounded-2xl bg-linear-to-br from-white to-indigo-50 border border-indigo-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 active:scale-95">
+
+                        <p class="text-xs text-zinc-500 mb-1 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z" />
+                            </svg>
+                            State
+                        </p>
+
+                        <p class="font-semibold text-zinc-800">
+                            {{ selectedVendor()?.state }}
+                        </p>
+                    </div>
+
+                    <!-- PINCODE -->
+                    <div
+                        class="p-4 rounded-2xl bg-linear-to-br from-white to-indigo-50 border border-indigo-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 active:scale-95">
+
+                        <p class="text-xs text-zinc-500 mb-1 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M4 7h16M4 12h16M4 17h16" />
+                            </svg>
+                            Pincode
+                        </p>
+
+                        <p class="font-semibold text-zinc-800">
+                            {{ selectedVendor()?.pincode }}
+                        </p>
+                    </div>
+
+                    <!-- ADDRESS -->
+                    <div
+                        class="p-4 rounded-2xl bg-linear-to-br from-white to-indigo-50 border border-indigo-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 active:scale-95">
+
+                        <p class="text-xs text-zinc-500 mb-1 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M3 12h18M3 6h18M3 18h18" />
+                            </svg>
+                            Address
+                        </p>
+
+                        <p class="font-semibold text-zinc-800 truncate">
+                            {{ selectedVendor()?.address }}
+                        </p>
+                    </div>
+
                 </div>
 
-                <div>
-                    <span class="text-gray-400">Business</span><br>
-                    <b>{{ selectedVendor()?.businessName }}</b>
+                <!-- DIVIDER -->
+                <div class="border-t border-zinc-200 my-6"></div>
+
+                <!-- DOCUMENTS -->
+                <h3 class="text-lg font-semibold text-zinc-800 mb-4">
+                    Documents
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                    <!-- GOV ID -->
+                    <div (click)="openModal(selectedVendor()?.governmentId!)"
+                        class="group cursor-pointer rounded-2xl overflow-hidden shadow hover:shadow-lg transition">
+
+                        <img [src]="selectedVendor()?.governmentId"
+                            class="w-full h-44 object-cover group-hover:scale-105 transition duration-300" />
+
+                        <div class="p-3 text-sm font-medium text-zinc-700 bg-white">
+                            Government ID
+                        </div>
+                    </div>
+
+                    <!-- LICENSE -->
+                    <div (click)="openModal(selectedVendor()?.licenseDoc!)"
+                        class="group cursor-pointer rounded-2xl overflow-hidden shadow hover:shadow-lg transition">
+
+                        <img [src]="selectedVendor()?.licenseDoc"
+                            class="w-full h-44 object-cover group-hover:scale-105 transition duration-300" />
+
+                        <div class="p-3 text-sm font-medium text-zinc-700 bg-white">
+                            License Document
+                        </div>
+                    </div>
+
                 </div>
-
-                <div>
-                    <span class="text-gray-400">Type</span><br>
-                    <b>{{ selectedVendor()?.businessType }}</b>
-                </div>
-
-                <div>
-                    <span class="text-gray-400">State</span><br>
-                    <b>{{ selectedVendor()?.state }}</b>
-                </div>
-
-                <div>
-                    <span class="text-gray-400">Pincode</span><br>
-                    <b>{{ selectedVendor()?.pincode }}</b>
-                </div>
-
-                <div class="col-span-2">
-                    <span class="text-gray-400">Address</span><br>
-                    <b>{{ selectedVendor()?.address }}</b>
-                </div>
-
-            </div>
-
-            <!-- DOCUMENT IMAGES -->
-            <div class="mt-6 flex gap-4 flex-wrap">
-
-                <img [src]="selectedVendor()?.governmentId" (click)="openModal(selectedVendor()?.governmentId!)"
-                    class="h-40 w-60 object-cover rounded-xl border cursor-pointer hover:scale-105 transition" />
-
-                <img [src]="selectedVendor()?.licenseDoc" (click)="openModal(selectedVendor()?.licenseDoc!)"
-                    class="h-40 w-60 object-cover rounded-xl border cursor-pointer hover:scale-105 transition" />
-
-            </div>
-
-            <!-- ACTIONS -->
-            <div class="flex gap-4 mt-8">
-
-                <button (click)="approve(selectedVendor()!)"
-                    class="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition">
-                    Approve
-                </button>
-
-                <button (click)="openRejectModal(selectedVendor()!)"
-                    class="flex-1 py-3 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition">
-                    Reject
-                </button>
 
             </div>
 
         </div>
     </div>
+
+
     }
+
 
     <!-- ================= IMAGE PREVIEW ================= -->
     @if (previewImage()) {
-    <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur">
+    <div
+        class="fixed inset-0 z-60 flex items-center justify-center p-4 bg-zinc-950/90 backdrop-blur-xl transition-opacity">
 
-        <button (click)="closeModal()" class="absolute top-5 right-5 text-white text-3xl hover:scale-110 transition">
-            ✕
+        <button (click)="closeModal()"
+            class="absolute top-6 right-6 p-3 text-white/70 bg-white/10 rounded-xl hover:bg-white/20 hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/50 backdrop-blur-md">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
         </button>
 
-        <img [src]="previewImage()" class="max-w-[90%] max-h-[90%] rounded-xl shadow-2xl" />
+        <img [src]="previewImage()"
+            class="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl ring-1 ring-white/10" />
 
     </div>
     }
 
     <!-- ================= TOAST ================= -->
     @if (toast()) {
-    <div class="fixed bottom-5 right-5 px-5 py-3 rounded-xl shadow-xl text-white" [ngClass]="{
-      'bg-green-600': toast()?.type === 'success',
-      'bg-red-600': toast()?.type === 'error'
+    <div class="fixed bottom-6 right-6 px-6 py-4 rounded-2xl shadow-xl text-white font-medium flex items-center gap-3 z-70 animation-fade-scale"
+        [ngClass]="{
+      'bg-zinc-900 border border-zinc-700': toast()?.type === 'success',
+      'bg-rose-600 border border-rose-500': toast()?.type === 'error'
     }">
+        @if (toast()?.type === 'success') {
+        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        } @else {
+        <svg class="w-5 h-5 text-rose-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        }
         {{ toast()?.message }}
     </div>
     }
 
 </div>
+
+@if (showApproveModal()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+
+    <div class="bg-white rounded-2xl p-6 w-[380px] shadow-xl">
+
+        <h2 class="text-lg font-semibold mb-4 text-gray-800">
+            Approve Vendor
+        </h2>
+
+        <!-- USERNAME -->
+        <input type="text" placeholder="Enter Username" class="w-full border rounded-lg p-2 mb-3 text-sm"
+            [value]="credentials().username" (input)="credentials.set({
+        ...credentials(),
+        username: $any($event.target).value
+      })" />
+
+        <!-- PASSWORD -->
+        <input type="password" placeholder="Enter Password" class="w-full border rounded-lg p-2 mb-3 text-sm"
+            [value]="credentials().password" (input)="credentials.set({
+        ...credentials(),
+        password: $any($event.target).value
+      })" />
+
+        <!-- ACTIONS -->
+        <div class="flex justify-end gap-2 mt-4">
+            <button class="px-4 py-2 bg-gray-200 rounded-lg" (click)="showApproveModal.set(false)">
+                Cancel
+            </button>
+
+            <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg" (click)="confirmApprove()">
+                Approve
+            </button>
+        </div>
+
+    </div>
+</div>
+}
