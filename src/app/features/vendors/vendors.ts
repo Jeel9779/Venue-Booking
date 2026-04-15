@@ -1,12 +1,9 @@
-
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { VendorService } from './vendor-service';
 import { CommonModule } from '@angular/common';
-import { computed } from '@angular/core';
 import { Vendor } from './vendor.model';
 import { RouterModule } from '@angular/router';
-import { Router } from '@angular/router';
-import { MoreVertical, Pencil, Trash2, LucideAngularModule, LucideIconData } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-vendors',
@@ -17,36 +14,37 @@ import { MoreVertical, Pencil, Trash2, LucideAngularModule, LucideIconData } fro
 })
 export class Vendors implements OnInit {
 
+  // ================= TOAST =================
+  toast = signal<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  showToast(message: string, type: 'success' | 'error' = 'success') {
+    this.toast.set({ message, type });
+    setTimeout(() => this.toast.set(null), 3000);
+  }
+
+  // ================= STATE =================
   vendors = signal<Vendor[]>([]);
   isLoading = signal(false);
-  error = signal('');
 
-  // ✅ FILTER + SEARCH
   filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
   search = signal('');
 
-  // ✅ SELECTED
   selectedVendor = signal<Vendor | null>(null);
 
-  // ✅ DETAILS MODAL
   showDetailsModal = signal(false);
-
-  // ✅ REJECT MODAL
   showRejectModal = signal(false);
+
   rejectReason = signal('');
 
-  // ✅ IMAGE MODAL
   previewImage = signal<string | null>(null);
 
-  constructor(
-    private vendorService: VendorService,
-    private router: Router
-  ) { }
+  constructor(private vendorService: VendorService) { }
 
   ngOnInit() {
     this.loadVendors();
   }
 
+  // ================= LOAD =================
   loadVendors() {
     this.isLoading.set(true);
 
@@ -56,46 +54,46 @@ export class Vendors implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.error.set('Failed to load vendors');
+        this.showToast('Failed to load vendors', 'error');
         this.isLoading.set(false);
       },
     });
   }
 
-  // ✅ FILTER
+  // ================= FILTER =================
   filteredVendors = computed(() => {
     let list = this.vendors();
 
     if (this.filter() !== 'all') {
       list = list.filter(
-        v => v.status?.toLowerCase().trim() === this.filter()
+        v => v.status?.toLowerCase()?.trim() === this.filter()
       );
     }
 
     if (this.search()) {
       const s = this.search().toLowerCase();
       list = list.filter(v =>
-        v.fullName.toLowerCase().includes(s) ||
-        v.email.toLowerCase().includes(s) ||
-        v.businessName.toLowerCase().includes(s)
+        (v.fullName || '').toLowerCase().includes(s) ||
+        (v.email || '').toLowerCase().includes(s) ||
+        (v.businessName || '').toLowerCase().includes(s)
       );
     }
 
     return list;
   });
 
-  // ✅ OPEN DETAILS
+  // ================= DETAILS =================
   openDetails(v: Vendor) {
     this.selectedVendor.set(v);
     this.showDetailsModal.set(true);
   }
 
-  // ✅ CLOSE DETAILS
   closeDetails() {
     this.showDetailsModal.set(false);
+    this.selectedVendor.set(null);
   }
 
-  // ✅ IMAGE MODAL
+  // ================= IMAGE =================
   openModal(img: string) {
     this.previewImage.set(img);
   }
@@ -104,7 +102,7 @@ export class Vendors implements OnInit {
     this.previewImage.set(null);
   }
 
-  // ✅ APPROVE
+  // ================= APPROVE =================
   approve(v: Vendor) {
     const username = prompt('Enter Username');
     const password = prompt('Enter Password');
@@ -114,19 +112,28 @@ export class Vendors implements OnInit {
     const adminId = localStorage.getItem('adminId');
 
     if (!adminId) {
-      alert('Admin not logged in');
+      this.showToast('Admin not logged in', 'error');
+      return;
+    }
+
+    // ✅ FIX: ensure _id exists
+    if (!v._id) {
+      this.showToast('Invalid vendor ID', 'error');
       return;
     }
 
     this.vendorService
       .approveVendor(v._id, username, password, adminId)
       .subscribe({
-        next: () => this.loadVendors(),
-        error: (err) => console.error(err)
+        next: () => {
+          this.showToast('Vendor Approved ✅');
+          this.loadVendors();
+        },
+        error: () => this.showToast('Approval Failed ❌', 'error')
       });
   }
 
-  // ✅ REJECT
+  // ================= REJECT =================
   openRejectModal(v: Vendor) {
     this.selectedVendor.set(v);
     this.rejectReason.set('');
@@ -135,12 +142,16 @@ export class Vendors implements OnInit {
 
   confirmReject() {
     const vendor = this.selectedVendor();
-    if (!vendor) return;
+
+    if (!vendor || !vendor._id) {
+      this.showToast('Invalid vendor', 'error');
+      return;
+    }
 
     const adminId = localStorage.getItem('adminId');
 
     if (!adminId) {
-      alert('Admin not logged in');
+      this.showToast('Admin not logged in', 'error');
       return;
     }
 
@@ -149,16 +160,10 @@ export class Vendors implements OnInit {
       .subscribe({
         next: () => {
           this.showRejectModal.set(false);
+          this.showToast('Vendor Rejected ❌', 'error');
           this.loadVendors();
         },
-        error: () => alert('Reject failed')
+        error: () => this.showToast('Reject failed', 'error')
       });
   }
-
-  // ✅ IMAGE URL FIX (🔥 MUST HAVE)
-  /*  getImageUrl(path: string) {
-     return 'http://localhost:3000/' + path.replace(/\\/g, '/');
-   } */
-
-
 }
