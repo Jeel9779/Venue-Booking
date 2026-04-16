@@ -1,109 +1,123 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { VendorService } from '../../vendor-service';
-import { Vendor } from '../../vendor.model';
-import { LucideAngularModule } from 'lucide-angular';
+import { FormsModule, NgForm } from '@angular/forms';
+
 
 @Component({
   selector: 'app-add-vendor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [FormsModule],
   templateUrl: './add-vendor.html',
   styleUrl: './add-vendor.css',
 })
 export class AddVendor {
 
-  private fb = inject(FormBuilder);
-  private vendorService = inject(VendorService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
-  isEdit = false;
-  vendorId: string | null = null;
+  vendor: any = {
+    fullName: '',
+    email: '',
+    phone: '',
+    businessName: '',
+    businessType: '',
+    state: '',
+    pincode: '',
+    address: ''
+  };
 
-  vendorForm = this.fb.group({
-    fullName: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
 
-    businessName: ['', Validators.required],
-    businessType: ['', Validators.required],
-    governmentId: ['', Validators.required],
 
-    //password: [''],
+  // ✅ FILE STORAGE
+  selectedGovFile!: File;
+  selectedLicenseFile!: File;
 
-    address: ['', Validators.required],
-    pincode: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
-    state: ['', Validators.required],
-  });
+  // ✅ UI STATES
+  showSuccess = false;
+  isLoading = false;
+  errorMsg = '';
 
-  ngOnInit() {
-    this.vendorId = this.route.snapshot.paramMap.get('id');
+  // ✅ FILE NAMES (UX)
+  govFileName = '';
+  licenseFileName = '';
 
-    if (this.vendorId) {
-      this.isEdit = true;
+  constructor(
+    private vendorService: VendorService,
+    private router: Router
+  ) { }
 
-      this.vendorService.getVendorById(this.vendorId).subscribe((data) => {
-        this.vendorForm.patchValue(data);
-      });
+  // ✅ FILE HANDLERS
+  onGovFile(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedGovFile = file;
+      this.govFileName = file.name;
     }
   }
 
-  submit() {
-    if (this.vendorForm.invalid) {
-      this.vendorForm.markAllAsTouched();
+  onLicenseFile(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedLicenseFile = file;
+      this.licenseFileName = file.name;
+    }
+  }
+
+  // ✅ SUBMIT (PRO VERSION)
+  submit(form: NgForm) {
+
+    if (form.invalid || !this.selectedGovFile || !this.selectedLicenseFile) {
+      this.errorMsg = 'Please fill all fields and upload required documents';
       return;
     }
 
-    const f = this.vendorForm.value;
+    this.isLoading = true;
+    this.errorMsg = '';
 
-    // SAFE DATA (fix null issue)
-    const data: Partial<Vendor> = {
-      fullName: f.fullName || '',
-      email: f.email || '',
-      phone: f.phone || null,
+    const formData = new FormData();
 
-      businessName: f.businessName || '',
-      businessType: f.businessType || '',
-      governmentId: f.governmentId || '',
+    // ✅ append text fields
+    Object.keys(this.vendor).forEach((key: any) => {
+      formData.append(key, this.vendor[key]);
+    });
 
-      //password: f.password || '',
+    // ✅ append files
+    formData.append('governmentId', this.selectedGovFile);
+    formData.append('licenseDoc', this.selectedLicenseFile);
 
-      address: f.address || null,
-      pincode: f.pincode || '',
-      state: f.state || '',
+    this.vendorService.addVendor(formData).subscribe({
+      next: () => {
+        this.isLoading = false;
 
-      updatedAt: new Date().toISOString(),
-    };
+        // ✅ SHOW SUCCESS UI (instead of alert)
+        this.showSuccess = true;
 
-    if (this.isEdit && this.vendorId) {
-      // ✏️ EDIT
-      this.vendorService.updateVendor(this.vendorId, data).subscribe(() => {
-        alert('Vendor Updated ✅');
-        this.router.navigate(['/vendors']);
-      });
-    } else {
-      // ➕ ADD
-      const newVendor: Partial<Vendor> = {
-        _id: Date.now().toString(),
-        ...data,
-        status: 'pending',
-        adminMessage: '',
-        licenseDoc: null,
-        rating: 0,
-        createdAt: new Date().toISOString(),
-      };
+        setTimeout(() => {
+          this.showSuccess = false;
 
-      this.vendorService.addVendor(newVendor).subscribe(() => {
-        alert('Vendor Added ✅');
-        this.router.navigate(['/vendors']);
-      });
-    }
+          // ✅ RESET FORM
+          form.resetForm();
+          this.govFileName = '';
+          this.licenseFileName = '';
+
+          // ✅ NAVIGATE AFTER SUCCESS
+          this.router.navigate(['/admin/vendors']);
+        }, 1800);
+      },
+
+      error: (err) => {
+        this.isLoading = false;
+
+        // ✅ SMART ERROR HANDLING
+        if (err.status === 400) {
+          this.errorMsg = err?.error?.message || 'Invalid data provided';
+        } else if (err.status === 500) {
+          this.errorMsg = 'Server error. Please try again later';
+        } else {
+          this.errorMsg = 'Something went wrong. Please retry';
+        }
+
+        console.error(err);
+      }
+    });
   }
-
-  goToVendors() {
-  this.router.navigate(['/vendors']);
-}
 }

@@ -22,8 +22,12 @@ export class VendorService {
   }
 
   // Add-new vendor (offline)
-  addVendor(data: Partial<Vendor>) {
-    return this.http.post(this.api, data);
+  /*  addVendor(data: Partial<Vendor>) {
+     return this.http.post(this.api, data);
+   } */
+
+  addVendor(data: FormData) {
+    return this.http.post(`${this.api}/register`, data);
   }
 
   // for edit and delete vendor

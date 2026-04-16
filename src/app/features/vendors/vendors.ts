@@ -2,7 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { VendorService } from './vendor-service';
 import { CommonModule } from '@angular/common';
 import { Vendor } from './vendor.model';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -13,6 +13,15 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './vendors.css',
 })
 export class Vendors implements OnInit {
+
+  constructor(
+    private router: Router,
+    private vendorService: VendorService
+  ) { }
+  goToAddVendor() {
+    this.router.navigate(['/add-vendor']);
+  }
+
   venues() {
     throw new Error('Method not implemented.');
   }
@@ -52,7 +61,7 @@ export class Vendors implements OnInit {
 
   previewImage = signal<string | null>(null);
 
-  constructor(private vendorService: VendorService) { }
+
 
   ngOnInit() {
     this.loadVendors();
