@@ -1,123 +1,378 @@
-<div class="p-4 bg-[#f8fcf9] min-h-screen">
+<div class="venues-page">
 
-  <!-- LOADING -->
-  @if (isLoading()) {
-  <p class="text-center py-4 text-gray-500">Loading...</p>
-  }
-
-  <!-- CARD -->
-  <div
-    class="bg-green-100 border border-gray-200 rounded-2xl shadow-md shadow-green-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
-
-    <!-- HEADER -->
-    <div class="px-5 py-4 border-b bg-green-300">
-      <h2 class="text-lg font-semibold text-gray-800">Venue Verification</h2>
-      <p class="text-xs text-gray-600">Manage venue approval requests</p>
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9,22 9,12 15,12 15,22" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="page-title">Venue Verification</h1>
+        <p class="page-subtitle">Review and manage venue listings</p>
+      </div>
     </div>
+
+    <!-- <div class="header-stats">
+      <div class="stat-chip pending">
+        <span class="stat-dot"></span>
+        {{ counts().pending }} Pending
+      </div>
+      <div class="stat-chip approved">
+        <span class="stat-dot"></span>
+        {{ counts().approved }} Approved
+      </div>
+      <div class="stat-chip rejected">
+        <span class="stat-dot"></span>
+        {{ counts().rejected }} Rejected
+      </div>
+    </div>
+  </div> -->
+    <div class="header-stats">
+      <div class="stat-chip all" [class.active]="filter() === 'all'" (click)="filter.set('all')">
+        <span class="stat-dot"></span>
+        {{ counts().all }} All
+      </div>
+      <div class="stat-chip pending" [class.active]="filter() === 'pending'" (click)="filter.set('pending')">
+        <span class="stat-dot"></span>
+        {{ counts().pending }} Pending
+      </div>
+      <div class="stat-chip approved" [class.active]="filter() === 'approved'" (click)="filter.set('approved')">
+        <span class="stat-dot"></span>
+        {{ counts().approved }} Approved
+      </div>
+      <div class="stat-chip rejected" [class.active]="filter() === 'rejected'" (click)="filter.set('rejected')">
+        <span class="stat-dot"></span>
+        {{ counts().rejected }} Rejected
+      </div>
+
+    </div>
+
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input type="text" class="search-input" placeholder="Search by name, city, type..." [value]="search()"
+          (input)="search.set($any($event.target).value)" />
+        @if (search()) {
+        <button class="search-clear" (click)="search.set('')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+        }
+      </div>
+
+      <!--  <div class="filter-tabs">
+      <button class="filter-tab" [class.active]="filter() === 'all'" (click)="filter.set('all')">
+        All <span class="tab-count">{{ counts().all }}</span>
+      </button>
+      <button class="filter-tab pending" [class.active]="filter() === 'pending'" (click)="filter.set('pending')">
+        Pending <span class="tab-count">{{ counts().pending }}</span>
+      </button>
+      <button class="filter-tab approved" [class.active]="filter() === 'approved'" (click)="filter.set('approved')">
+        Approved <span class="tab-count">{{ counts().approved }}</span>
+      </button>
+      <button class="filter-tab rejected" [class.active]="filter() === 'rejected'" (click)="filter.set('rejected')">
+        Rejected <span class="tab-count">{{ counts().rejected }}</span>
+      </button>
+    </div> -->
+
+    </div>
+
+    <!-- LOADING -->
+    @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading venues…</p>
+    </div>
+    }
+
+    <!-- EMPTY STATE -->
+    @if (!isLoading() && filteredVenues().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9,22 9,12 15,12 15,22" />
+        </svg>
+      </div>
+      <h3>No venues found</h3>
+      <p>Try adjusting your search or filter criteria.</p>
+      <button class="btn-reset" (click)="search.set(''); filter.set('all')">Reset filters</button>
+    </div>
+    }
 
     <!-- TABLE -->
-    <div class="overflow-x-auto">
+    @if (!isLoading() && filteredVenues().length > 0) {
+    <div class="table-card">
+      <div class="table-meta">
+        <span>Showing <strong>{{ filteredVenues().length }}</strong> of {{ counts().all }} venues</span>
+      </div>
 
-      <table class="w-full text-sm">
-
-        <!-- HEADER -->
-        <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-          <tr>
-            <th class="px-5 py-3 text-left">Venue</th>
-            <th class="px-5 py-3 text-left">Location</th>
-            <th class="px-5 py-3 text-left">Capacity</th>
-            <th class="px-5 py-3 text-left">Price</th>
-            <th class="px-5 py-3 text-left">Status</th>
-            <th class="px-5 py-3 text-left">Actions</th>
-          </tr>
-        </thead>
-
-        <!-- BODY -->
-        <tbody>
-
-          @for (v of venues(); track v.id) {
-
-          <tr class="border-t hover:bg-[#ecfdf5] transition-all duration-200">
-
-            <!-- VENUE -->
-            <td class="px-5 py-4">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-semibold border-2">
-                  {{ v.venueName.charAt(0) }}
+      <div class="table-wrap">
+        <table class="venues-table">
+          <thead>
+            <tr>
+              <th>Venue</th>
+              <th>Type</th>
+              <th>Capacity</th>
+              <th>Price / Day</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (v of filteredVenues(); track v._id) {
+            <tr (click)="openDetails(v)" class="venue-row">
+              <td>
+                <div class="venue-name-cell">
+                  <div class="venue-avatar">{{ v.name.charAt(0) }}</div>
+                  <div>
+                    <div class="venue-name">{{ v.name }}</div>
+                    <div class="venue-location">{{ v.city }}, {{ v.state }}</div>
+                  </div>
                 </div>
-
-                <div>
-                  <p class="font-medium text-gray-800">{{ v.venueName }}</p>
-                  <p class="text-xs text-gray-500 line-clamp-1">{{ v.description }}</p>
-                </div>
-              </div>
-            </td>
-
-            <!-- LOCATION -->
-            <td class="px-5 py-4 text-gray-600">
-              <p>{{ v.location.city }}</p>
-              <p class="text-xs text-gray-500">{{ v.location.state }}</p>
-            </td>
-
-            <!-- CAPACITY -->
-            <td class="px-5 py-4 text-gray-700">
-              {{ v.capacity }} Guests
-            </td>
-
-            <!-- PRICE -->
-            <td class="px-5 py-4 text-gray-700 font-medium">
-              ₹{{ v.pricePerDay }}
-            </td>
-
-            <!-- STATUS -->
-            <td class="px-5 py-4">
-              <span class="px-3 py-1 rounded-full text-xs font-medium capitalize"
-                [class.bg-yellow-100]="v.status === 'pending'" [class.text-yellow-700]="v.status === 'pending'"
-                [class.bg-green-200]="v.status === 'approved'" [class.text-green-700]="v.status === 'approved'"
-                [class.bg-red-200]="v.status === 'rejected'" [class.text-red-700]="v.status === 'rejected'">
-                {{ v.status }}
-              </span>
-            </td>
-
-            <!-- ACTIONS -->
-            <td class="px-5 py-4 flex gap-2">
-
-              @if (v.status === 'pending') {
-
-              <button class="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm"
-                (click)="$event.stopPropagation(); approve(v)">
-                Approve
-              </button>
-
-              <button class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-sm"
-                (click)="$event.stopPropagation(); openRejectModal(v)">
-                Reject
-              </button>
-
-              }
-
-              @if (v.status !== 'pending') {
-
-              <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
-                (click)="$event.stopPropagation(); reopen(v)">
-                Reopen
-              </button>
-
-              }
-
-            </td>
-
-          </tr>
-
-          }
-
-        </tbody>
-
-      </table>
-
+              </td>
+              <td><span class="type-badge">{{ v.type }}</span></td>
+              <td class="text-muted">{{ v.capacity | number }}</td>
+              <td class="price-cell">₹{{ v.pricePerDay | number }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="v.status">{{ v.status }}</span>
+              </td>
+              <td class="text-muted text-sm">{{ v.createdAt | date:'d MMM y' }}</td>
+              <td>
+                <span class="view-arrow">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </span>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
+    }
 
   </div>
 
-</div>
+
+  <!-- ═══════════════════════════ DETAIL MODAL ═══════════════════════════ -->
+  @if (showDetailsModal() && selectedVenue()) {
+  <div class="modal-backdrop" (click)="closeDetails()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+      <!-- MODAL HEADER -->
+      <div class="modal-header">
+        <div class="modal-venue-info">
+          <div class="modal-avatar">{{ selectedVenue()?.name?.charAt(0) }}</div>
+          <div>
+            <div class="modal-venue-name">
+              {{ selectedVenue()?.name }}
+              <span class="status-badge" [ngClass]="selectedVenue()?.status">{{ selectedVenue()?.status }}</span>
+            </div>
+            <div class="modal-venue-sub">{{ selectedVenue()?.city }}, {{ selectedVenue()?.state }}</div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          @if (selectedVenue()?.status !== 'rejected') {
+          <button class="btn btn-reject" [disabled]="isSubmitting()" (click)="openRejectModal()">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+            Reject
+          </button>
+          }
+          @if (selectedVenue()?.status !== 'approved') {
+          <button class="btn btn-approve" [disabled]="isSubmitting()" (click)="confirmApprove()">
+            @if (isSubmitting()) {
+            <span class="btn-spinner"></span>
+            } @else {
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            }
+            {{ isSubmitting() ? 'Approving…' : 'Approve' }}
+          </button>
+          }
+          <button class="btn-close" (click)="closeDetails()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="modal-body">
+
+        <!-- INFO GRID -->
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </div>
+            <div>
+              <div class="info-label">Type</div>
+              <div class="info-value">{{ selectedVenue()?.type }}</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div>
+              <div class="info-label">Capacity</div>
+              <div class="info-value">{{ selectedVenue()?.capacity | number }} guests</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </div>
+            <div>
+              <div class="info-label">Price / Day</div>
+              <div class="info-value">₹{{ selectedVenue()?.pricePerDay | number }}</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <div>
+              <div class="info-label">Location</div>
+              <div class="info-value">{{ selectedVenue()?.city }}, {{ selectedVenue()?.state }} {{ selectedVenue()?.zip
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        @if (selectedVenue()?.description) {
+        <div class="section">
+          <h4 class="section-title">Description</h4>
+          <p class="description-text">{{ selectedVenue()?.description }}</p>
+        </div>
+        }
+
+        <!-- AMENITIES -->
+        @if (selectedVenue()?.amenities?.length) {
+        <div class="section">
+          <h4 class="section-title">Amenities</h4>
+          <div class="amenities-list">
+            @for (a of selectedVenue()?.amenities; track a) {
+            <span class="amenity-tag">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+              {{ a }}
+            </span>
+            }
+          </div>
+        </div>
+        }
+
+        <!-- GALLERY -->
+        @if (selectedVenue()?.mediaFiles?.length) {
+        <div class="section">
+          <h4 class="section-title">Gallery <span class="gallery-count">{{ selectedVenue()?.mediaFiles?.length }}
+              photos</span></h4>
+          <div class="gallery-grid">
+            @for (img of selectedVenue()?.mediaFiles || []; track img) {
+            <div class="gallery-item" (click)="$event.stopPropagation(); openImage(img)">
+              <img [src]="getImageUrl(img)" alt="Venue image" />
+              <div class="gallery-overlay">
+                <svg width="20" height="20" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                </svg>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        }
+
+      </div>
+    </div>
+  </div>
+  }
+
+
+  <!-- ═══════════════════════════ REJECT REASON MODAL ═══════════════════════════ -->
+  @if (showRejectModal()) {
+  <div class="modal-backdrop" (click)="closeRejectModal()">
+    <div class="reject-modal" (click)="$event.stopPropagation()">
+      <h3 class="reject-title">Reject Venue</h3>
+      <p class="reject-sub">Provide a reason so the owner knows what to fix.</p>
+      <textarea class="reject-textarea" rows="4"
+        placeholder="e.g. Incomplete address, blurry images, missing capacity info…"
+        [(ngModel)]="rejectReason"></textarea>
+      <div class="reject-actions">
+        <button class="btn btn-ghost" (click)="closeRejectModal()">Cancel</button>
+        <button class="btn btn-reject" [disabled]="!rejectReason.trim() || isSubmitting()" (click)="submitReject()">
+          @if (isSubmitting()) { <span class="btn-spinner"></span> }
+          {{ isSubmitting() ? 'Rejecting…' : 'Confirm Reject' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+
+  <!-- ═══════════════════════════ APPROVE CONFIRM MODAL ═══════════════════════════ -->
+  @if (showApproveModal()) {
+  <div class="modal-backdrop" (click)="showApproveModal.set(false)">
+    <div class="reject-modal" (click)="$event.stopPropagation()">
+      <h3 class="reject-title">Approve Venue?</h3>
+      <p class="reject-sub">
+        <strong>{{ selectedVenue()?.name }}</strong> will be listed publicly. This can be undone by rejecting later.
+      </p>
+      <div class="reject-actions">
+        <button class="btn btn-ghost" (click)="showApproveModal.set(false)">Cancel</button>
+        <button class="btn btn-approve" [disabled]="isSubmitting()" (click)="submitApprove()">
+          @if (isSubmitting()) { <span class="btn-spinner"></span> }
+          {{ isSubmitting() ? 'Approving…' : 'Yes, Approve' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+
+  <!-- ═══════════════════════════ IMAGE PREVIEW ═══════════════════════════ -->
+  @if (previewImage()) {
+  <div class="image-preview-backdrop" (click)="closeImage()">
+    <button class="image-close" (click)="closeImage()">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
+    <img [src]="previewImage()" (click)="$event.stopPropagation()" />
+  </div>
+  }
