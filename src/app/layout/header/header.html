@@ -1,59 +1,178 @@
-<header class="h-16 bg-white border-b border-gray-300 flex items-center justify-between px-4 md:px-6">
+<header id="main-header" role="banner"
+  class="sticky top-0 z-50 h-[72px] bg-white/85 backdrop-blur-2xl border-b border-gray-300 flex items-center justify-between px-4 md:px-6 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.04)] transition-all duration-300 w-full">
 
-  <!-- LEFT -->
-  <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+  <!-- LEFT SECTION -->
+  <div class="flex items-center gap-3 sm:gap-6 min-w-0">
 
-    <!-- ☰ -->
+    <!-- Mobile Menu Button -->
     <button
-      class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg 
-             bg-gray-100 text-gray-700 hover:bg-green-600 hover:text-white
-             transition-all duration-200 shrink-0"
-      (click)="menuClick.emit()"
-    >
-      <lucide-icon [img]="icons.menu" size="20"></lucide-icon>
+      class="md:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50/80 border border-gray-100 text-gray-600 hover:bg-green-500 hover:text-white hover:border-green-500 hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 shrink-0 focus:outline-none focus:ring-2 focus:ring-green-500/50"
+      (click)="menuClick.emit()" aria-label="Toggle Navigation Menu" aria-expanded="false">
+      <lucide-icon [img]="icons.menu" size="20" class="transition-transform duration-300 active:scale-90"></lucide-icon>
     </button>
 
-    <!-- TITLE + BADGE -->
-    <div class="flex items-center gap-2 min-w-0">
-
-      <h1 class="text-sm md:text-base font-semibold text-gray-800 truncate">
-        Platform Analytics
-      </h1>
-
-      <span class="hidden sm:inline text-[10px] font-medium text-gray-600 bg-green-200 px-2 py-0.5 rounded-full whitespace-nowrap">
-        ADMIN MODE
-      </span>
-
+    <!-- TITLE & BRANDING -->
+    <div class="flex flex-col min-w-0 justify-center group cursor-pointer" aria-label="Platform Analytics Dashboard">
+      <div class="flex items-center gap-2.5">
+        <h1
+          class="text-[1.1rem] md:text-lg font-extrabold text-gray-900 tracking-tight truncate leading-none bg-clip-text bg-linear-to-r from-gray-900 to-gray-700">
+          BookMyVenue
+        </h1>
+        <span
+          class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-linear-to-r from-green-200 to-emerald-200 border border-green-200/60 text-[0.65rem] font-bold text-green-700 tracking-widest uppercase shadow-sm">
+          <lucide-icon [img]="icons.sparkles" size="10" class="text-green-600"></lucide-icon>
+          Admin
+        </span>
+      </div>
+      <p
+        class="hidden sm:block text-xs text-gray-500 font-medium tracking-wide mt-1 truncate group-hover:text-gray-700 transition-colors">
+        Analytics & Management
+      </p>
     </div>
 
   </div>
 
-  <!-- RIGHT -->
-  <div class="flex items-center gap-2 sm:gap-4">
+  <!-- CENTER DESKTOP NAVIGATION (Cosmetic/Semantic) -->
+  <nav aria-label="Quick Navigation"
+    class="hidden lg:flex items-center gap-1 px-2 py-1 mx-4 bg-gray-50/80 border border-gray-200/60 rounded-full shadow-[inset_0_1px_4px_rgba(0,0,0,0.02)]">
 
-    <!-- 🔔 -->
-    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition">
-      <lucide-icon [img]="icons.bell" size="18"></lucide-icon>
-      <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+
+    <button tabindex="0"
+      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-green-500">
+      Overview</button>
+
+    <button tabindex="0"
+      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-green-500">Reports</button>
+    <button tabindex="0"
+      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-green-500">Audit
+      Logs</button>
+  </nav>
+
+  <!-- RIGHT SECTION -->
+  <div class="flex items-center gap-2 sm:gap-4 lg:gap-5">
+
+    <!-- Action Dropdown: Create New -->
+    <div class="hidden md:block relative group z-50">
+      <button
+        class="flex items-center gap-1.5 px-3 py-2 bg-gray-200 hover:bg-emerald-300 text-gray-700 text-sm font-medium rounded-xl shadow-md hover:shadow-xl hover:shadow-green-900/20 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+        aria-haspopup="true">
+        <lucide-icon [img]="icons.plus" size="16"></lucide-icon>
+        <span class="hidden xl:inline">New</span>
+      </button>
+      <!-- Dropdown Menu -->
+      <div
+        class="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.08)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out transform origin-top-right scale-95 group-hover:scale-100 flex flex-col py-2">
+        <a tabindex="0"
+          class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">New
+          Venue</a>
+        <a tabindex="0"
+          class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">New
+          Vendor</a>
+      </div>
+    </div>
+
+    <!-- Global Search -->
+
+
+    <div class="hidden lg:flex items-center relative group">
+      <div
+        class="absolute left-3 text-gray-400 group-focus-within:text-green-500 transition-colors pointer-events-none">
+        <lucide-icon [img]="icons.search" size="16"></lucide-icon>
+      </div>
+      <input type="text" placeholder="Search..." aria-label="Global Search" class="h-10 w-48 xl:w-64 pl-9 pr-4 rounded-xl bg-gray-50/80 border border-transparent 
+           hover:border-green-500 hover:ring-1 hover:ring-green-500 
+           hover:bg-gray-200 focus:bg-white focus:border-green-400 
+           focus:ring-4 focus:ring-green-400/10 
+           text-sm text-gray-800 placeholder-gray-400 
+           transition-all duration-300 outline-none">
+      <div class="absolute right-2.5 flex items-center pointer-events-none">
+        <kbd
+          class="hidden xl:inline-block px-1.5 py-0.5 text-[0.65rem] font-mono font-medium text-gray-400 bg-white border border-gray-200 rounded shadow-xs">⌘K</kbd>
+      </div>
+    </div>
+
+    <!-- Quick action: Search Mobile-->
+    <button aria-label="Search"
+      class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-200">
+      <lucide-icon [img]="icons.search" size="18"></lucide-icon>
     </button>
 
-    <!-- USER -->
-    <div class="flex items-center gap-2 sm:gap-3">
+    <!-- Notification Bell -->
+    <button aria-label="View notifications"
+      class="relative flex items-center justify-center w-10 h-10 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all focus:outline-none focus:ring-2 focus:ring-gray-200 group">
+      <lucide-icon [img]="icons.bell" size="18"
+        class="group-hover:-rotate-12 transition-transform duration-300 origin-top"></lucide-icon>
+      <span class="absolute top-2.5 right-2.5 flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500 ring-2 ring-white"></span>
+      </span>
+    </button>
 
-      <!-- TEXT -->
-      <div class="text-right hidden sm:block">
-        <p class="text-sm font-medium text-gray-800">Harsh Vadukiya</p>
-        <p class="text-xs text-gray-500">Principal Admin</p>
+    <div class="hidden sm:block w-px h-6 bg-gray-400 mx-1"></div>
+
+    <!-- User Profile Multi-level Dropdown (CSS Hover based) -->
+    <div class="relative group z-50">
+      <div tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="User menu"
+        class="flex items-center gap-2 sm:gap-3 pl-1 py-1 rounded-full cursor-pointer hover:bg-gray-50 sm:pr-3 transition-colors border border-transparent hover:border-gray-200/60 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-400">
+
+        <!-- Avatar with online status -->
+        <div class="relative shrink-0">
+          <img src="https://i.pravatar.cc/150?u=a04258" alt="Harsh Vadukiya Avatar"
+            class="w-9 h-9 rounded-full object-cover shadow-sm ring-1 ring-gray-200 group-hover:ring-green-500 group-focus:ring-green-500 transition-all duration-300" />
+          <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full ring-2 ring-white shadow-sm">
+          </div>
+        </div>
+
+        <!-- Text details -->
+        <div class="hidden md:flex flex-col items-start justify-center min-w-0 pr-1">
+          <p class="text-sm font-bold text-gray-900 leading-tight truncate">Jeel Vadukiya</p>
+          <p class="text-[0.65rem] text-gray-500 font-semibold mt-0.5 truncate uppercase tracking-widest">Principal
+            Admin</p>
+        </div>
+
+        <lucide-icon [img]="icons.chevronDown" size="14"
+          class="hidden sm:block text-gray-400 shrink-0 group-hover:text-gray-700 transition-colors duration-200"></lucide-icon>
+
       </div>
 
-      <!-- AVATAR -->
-      <img
-        src="https://i.pravatar.cc/40"
-        alt="user"
-        class="w-8 h-8 rounded-full object-cover cursor-pointer
-               hover:ring-2 hover:ring-green-400 transition"
-      />
+      <!-- Sophisticated Profile Dropdown Menu -->
+      <div
+        class="absolute right-0 top-[calc(100%+0.5rem)] w-60 bg-white/95 backdrop-blur-2xl border border-gray-100 rounded-2xl shadow-[0_16px_40px_-5px_rgba(0,0,0,0.1)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out transform origin-top-right scale-95 group-hover:scale-100 flex flex-col py-2">
 
+        <!-- Dropdown Header -->
+        <div class="px-4 py-3 border-b border-gray-100/80 mb-1">
+          <p class="text-sm font-semibold text-gray-900">Harsh Vadukiya</p>
+          <p class="text-xs text-gray-500 truncate mt-0.5" aria-label="Email">jeel@bookmyvenue.com</p>
+        </div>
+
+        <!-- Menu Links -->
+        <a tabindex="0"
+          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
+          <lucide-icon [img]="icons.user" size="16" class="text-gray-400"></lucide-icon>
+          My Profile
+        </a>
+        <a tabindex="0"
+          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
+          <lucide-icon [img]="icons.settings" size="16" class="text-gray-400"></lucide-icon>
+          Account Settings
+        </a>
+        <a tabindex="0"
+          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
+          <lucide-icon [img]="icons.lifeBuoy" size="16" class="text-gray-400"></lucide-icon>
+          Help Center
+        </a>
+
+        <div class="border-t border-gray-100/80 my-1"></div>
+
+        <!-- Logout Action -->
+        <button tabindex="0"
+          class="flex items-center gap-3 w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50/80 cursor-pointer transition-colors focus:bg-red-50 focus:outline-none group/logout">
+          <lucide-icon [img]="icons.logOut" size="16"
+            class="text-red-500 group-hover/logout:-translate-x-0.5 transition-transform"></lucide-icon>
+          Secure Sign Out
+        </button>
+
+      </div>
     </div>
 
   </div>

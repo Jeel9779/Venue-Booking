@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { LucideAngularModule, Bell , Menu } from 'lucide-angular';
-
+import { LucideAngularModule, Bell, Menu, Search, ChevronDown, Settings, User, LogOut, LifeBuoy, Plus, Sparkles } from 'lucide-angular';
 @Component({
   selector: 'app-header',
   imports: [LucideAngularModule],
@@ -11,6 +10,14 @@ export class Header {
    @Output() menuClick = new EventEmitter<void>();
     icons = {
     bell: Bell,
-    menu: Menu 
+    menu: Menu,
+    search: Search,
+    chevronDown: ChevronDown,
+    settings: Settings,
+    user: User,
+    logOut: LogOut,
+    lifeBuoy: LifeBuoy,
+    plus: Plus,
+    sparkles: Sparkles
   };
 }
