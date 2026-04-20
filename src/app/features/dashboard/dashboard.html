@@ -1,26 +1,5 @@
-<!-- <div class="p-4 md:p-6 space-y-6">
+<!--  Overview Page  -->
 
-
-  <div class="bg-white border border-gray-200 rounded-2xl shadow-sm">
-    <app-table [data]="tableData"></app-table>
-  </div>
-
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-
-    <div class="lg:col-span-2">
-      <app-revenue-chart></app-revenue-chart>
-    </div>
-
-
-    <div class="bg-green-900 text-white rounded-2xl p-6 shadow-lg">
-   
-    </div>
-
-  </div>
-
-</div> -->
 
 <div class="p-4 md:p-6 space-y-6">
 
@@ -28,13 +7,9 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
     @for (item of stats(); track item.title) {
-      <app-stat-card
-        [title]="item.title"
-        [value]="item.value"
-        [change]="item.change"
-        [icon]="item.icon"
-        [highlight]="item.highlight ?? false">
-      </app-stat-card>
+    <app-stat-card [title]="item.title" [value]="item.value" [change]="item.change" [icon]="item.icon"
+      [highlight]="item.highlight ?? false">
+    </app-stat-card>
     }
 
   </div>

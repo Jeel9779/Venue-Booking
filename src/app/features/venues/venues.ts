@@ -36,7 +36,8 @@ type FilterState = 'all' | 'pending' | 'approved' | 'rejected';
 export class Venues implements OnInit {
 
 
-  private baseUrl = 'http://192.168.1.13:3000/';
+  /*  private baseUrl = 'http://192.168.1.13:3000/'; */
+  private baseUrl = 'http://192.168.1.11:3000/venues';
 
   constructor(private venueService: VenueService) { }
 

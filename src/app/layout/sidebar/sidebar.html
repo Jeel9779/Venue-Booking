@@ -1,143 +1,248 @@
-<!-- OVERLAY -->
+<!-- OVERLAY (mobile) -->
 @if (isOpen) {
-<div class="fixed inset-0 bg-black/30 z-40 md:hidden" (click)="close.emit()"></div>
+<div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+  (click)="close.emit()"></div>
 }
 
 <!-- SIDEBAR -->
-<aside class="fixed md:static top-0 left-0 h-full w-64 bg-[#f1f5f3] border-r border-[#c7c8c9] z-50
-         transform transition-all duration-300 ease-in-out
-         md:translate-x-0 md:w-64" [class.-translate-x-full]="!isOpen">
+<aside class="fixed md:static top-0 left-0 h-full bg-white/95 backdrop-blur-xl 
+  border-r border-gray-300 z-50 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)]
+  transition-all duration-300 ease-in-out
+  md:translate-x-0" [class.-translate-x-full]="!isOpen" [class.w-[280px]]="!collapsed()"
+  [class.w-[84px]]="collapsed()">
 
-  <!-- TOP -->
-  <div class="px-5 py-5">
-    <h2 class="text-lg font-bold text-gray-800">BookMyVenue</h2>
-    <p class="text-xs text-gray-500">Dashboard</p>
+  <!-- Desktop Toggle Sidebar Button -->
+  <button (click)="toggleSidebar()"
+    class="hidden md:flex absolute -right-1 top-8 bg-white border border-gray-200 shadow-sm rounded-full p-1.5 text-gray-400 hover:text-green-600 transition-colors z-50 focus:outline-none hover:bg-green-200 ">
+    <svg [class.rotate-180]="collapsed()" class="w-3.5 h-3.5 transition-transform duration-300" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+
+  <!-- HEADER -->
+  <div
+    class="py-7 border-b border-gray-100/80 flex flex-col items-start gap-1 relative overflow-hidden shrink-0 min-h-[90px]"
+    [class.px-6]="!collapsed()" [class.px-0]="collapsed()">
+    <div class="flex items-center gap-3 w-full" [class.justify-center]="collapsed()">
+      <div
+        class="w-8 h-8 shrink-0 rounded-xl bg-linear-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/20 text-white font-bold text-lg">
+        B
+      </div>
+      @if (!collapsed()) {
+      <h2
+        class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-gray-900 to-gray-600 truncate">
+        BookMyVenue
+      </h2>
+      }
+    </div>
+    @if (!collapsed()) {
+    <span class="text-[0.65rem] font-semibold text-gray-400 uppercase tracking-widest mt-1 ml-11 truncate">Admin
+      System</span>
+    }
+
+    <!-- Mobile Close Button -->
+    <button (click)="close.emit()"
+      class="absolute top-7 right-4 md:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus:outline-none transition-colors">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
   </div>
 
   <!-- NAV -->
-  <nav class="px-3 space-y-2">
+  <nav class="flex-1 py-6 space-y-6 overflow-y-auto custom-scrollbar" [class.px-4]="!collapsed()"
+    [class.px-3]="collapsed()">
 
-    <!-- DASHBOARD -->
-    <a [routerLink]="['/dashboard']" routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
-      [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
-              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
-              transition-all duration-300 ease-in-out">
+    <!-- SECTION: MAIN -->
+    <div>
+      @if (!collapsed()) {
+      <button (click)="toggleGroup('main')"
+        class="w-full flex items-center justify-between px-2 mb-2 cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-green-400 rounded-md">
+        <p
+          class="text-[0.7rem] font-semibold text-gray-500 uppercase tracking-wider group-hover:text-gray-600 transition-colors">
+          Main Workspace
+        </p>
+        <svg [class.rotate-180]="openGroup() === 'main'" class="w-4 h-4 text-gray-400 transition-transform duration-300"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      }
 
-      <lucide-icon [img]="icons.dashboard" size="18"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
+      <div class="space-y-1 overflow-hidden transition-all duration-300 ease-in-out"
+        [class.max-h-0]="openGroup() !== 'main' && !collapsed()"
+        [class.opacity-0]="openGroup() !== 'main' && !collapsed()"
+        [class.max-h-[300px]]="openGroup() === 'main' || collapsed()"
+        [class.opacity-100]="openGroup() === 'main' || collapsed()">
 
-      Overview
-    </a>
+        <div class="pt-1 space-y-1">
+          <!-- ITEM -->
+          <a [routerLink]="['/dashboard']"
+            routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]"
+            [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm font-medium
+             text-gray-500 hover:bg-gray-50 hover:text-gray-900
+             transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400/50"
+            [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+            <lucide-icon [img]="icons.dashboard" size="18"
+              class="shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:text-green-600">
+            </lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Overview</span> }
+          </a>
 
-    <!-- VENUES -->
-    <a [routerLink]="['/venues']" routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
-      [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
-              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
-              transition-all duration-300 ease-in-out">
+          <a [routerLink]="['/venues']"
+            routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm font-medium
+             text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+            [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+            <lucide-icon [img]="icons.venues" size="18"
+              class="shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:text-green-600"></lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Venues</span> }
+          </a>
 
-      <lucide-icon [img]="icons.venues" size="18"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
+          <a [routerLink]="['/users']" routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]"
+            class="group flex items-center gap-3 py-2.5 rounded-lg text-sm font-medium
+             text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+            [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+            <lucide-icon [img]="icons.users" size="18"
+              class="shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:text-green-600"></lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Users</span> }
+          </a>
+        </div>
+      </div>
+    </div>
 
-      Venues Verification
-    </a>
+    <!-- MANAGEMENT SECTION -->
+    <div>
+      @if (!collapsed()) {
+      <button (click)="toggleGroup('management')"
+        class="w-full flex items-center justify-between px-2 mb-2 cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-green-400 rounded-md">
+        <p
+          class="text-[0.7rem] font-semibold text-gray-500 uppercase tracking-wider group-hover:text-gray-600 transition-colors">
+          Management
+        </p>
+        <svg [class.rotate-180]="openGroup() === 'management'"
+          class="w-4 h-4 text-gray-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      }
 
-    <!-- USERS -->
-    <a [routerLink]="['/users']" routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
-      [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
-              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
-              transition-all duration-300 ease-in-out">
+      <div class="space-y-1 overflow-hidden transition-all duration-300 ease-in-out"
+        [class.max-h-0]="openGroup() !== 'management' && !collapsed()"
+        [class.opacity-0]="openGroup() !== 'management' && !collapsed()"
+        [class.max-h-[300px]]="openGroup() === 'management' || collapsed()"
+        [class.opacity-100]="openGroup() === 'management' || collapsed()">
 
-      <lucide-icon [img]="icons.users" size="18"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
+        <div class="pt-1 space-y-1">
+          <a [routerLink]="['/vendors']"
+            routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm font-medium
+             text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+            [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+            <lucide-icon [img]="icons.users" size="18"
+              class="shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:text-green-600"></lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Vendors</span> }
+          </a>
 
-      Users Management
-    </a>
+          <a [routerLink]="['/bookings']"
+            routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm font-medium
+             text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+            [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+            <lucide-icon [img]="icons.bookings" size="18"
+              class="shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:text-green-600"></lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Bookings</span> }
+          </a>
+        </div>
+      </div>
+    </div>
 
-    <!-- VENDORS -->
-    <a [routerLink]="['/vendors']" routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
-      [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
-              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
-              transition-all duration-300 ease-in-out">
+    <!-- BILLING -->
+    <div>
+      @if (!collapsed()) {
+      <button (click)="toggleGroup('billing')"
+        class="w-full flex items-center justify-between px-2 mb-2 cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-green-400 rounded-md">
+        <p
+          class="text-[0.7rem] font-semibold text-gray-500 uppercase tracking-wider group-hover:text-gray-600 transition-colors">
+          Financials
+        </p>
+        <svg [class.rotate-180]="openGroup() === 'billing'"
+          class="w-4 h-4 text-gray-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      }
 
-      <lucide-icon [img]="icons.users" size="18"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
+      <div class="space-y-1 overflow-hidden transition-all duration-300 ease-in-out"
+        [class.max-h-0]="openGroup() !== 'billing' && !collapsed()"
+        [class.opacity-0]="openGroup() !== 'billing' && !collapsed()"
+        [class.max-h-[300px]]="openGroup() === 'billing' || collapsed()"
+        [class.opacity-100]="openGroup() === 'billing' || collapsed()">
 
-      Vendors Verification
-    </a>
+        <div class="pt-1 space-y-1">
+          <a [routerLink]="['/plans']" routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]"
+            class="group flex items-center gap-3 py-2.5 rounded-lg text-sm font-medium
+             text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+            [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+            <lucide-icon [img]="icons.subscript" size="18"
+              class="shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:text-green-600"></lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Plans</span> }
+          </a>
 
-    <!-- BOOKINGS -->
-    <a [routerLink]="['/bookings']" routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
-      [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
-              text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
-              transition-all duration-300 ease-in-out">
-
-      <lucide-icon [img]="icons.bookings" size="18"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
-
-      Bookings
-    </a>
-
-    <!-- SUBSCRIPTION PLANS -->
-    <a [routerLink]="['/plans']" routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
-      [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
-          text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
-          transition-all duration-300 ease-in-out">
-
-      <lucide-icon [img]="icons.subscript" size="18"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
-
-      Subscription Plans
-    </a>
-
-    <!-- payment check  -->
-    <a [routerLink]="['admin/vendor-subscriptions']" routerLinkActive="bg-[#86efac] text-[#14532d] shadow-sm"
-      [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium
-          text-gray-600 hover:bg-[#bbf7d0] hover:text-[#14532d]
-          transition-all duration-300 ease-in-out">
-
-      <lucide-icon [img]="icons.subscript" size="18"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
-
-      Payment (v.s.)
-    </a>
-    <!--   <a routerLink="/admin/vendor-subscriptions">
- 
-</a> -->
+          <a [routerLink]="['admin/vendor-subscriptions']"
+            routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm font-medium
+             text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+            [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+            <lucide-icon [img]="icons.subscript" size="18"
+              class="shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:text-green-600"></lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Payments</span> }
+          </a>
+        </div>
+      </div>
+    </div>
 
   </nav>
 
+  <!-- ACCOUNT QUICK ACCESS -->
+  <!--  <div
+    class="p-3.5 mb-4 mt-auto rounded-xl bg-linear-to-br from-gray-50 to-gray-100/80 border border-gray-200/60 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 cursor-pointer hover:border-gray-300/60 transition-colors focus-within:ring-2 focus-within:ring-green-400"
+    [class.mx-4]="!collapsed()" [class.mx-2]="collapsed()" [class.px-2]="collapsed()"
+    [class.justify-center]="collapsed()">
+    <div
+      class="w-9 h-9 shrink-0 rounded-full bg-linear-to-tr from-gray-800 to-gray-700 flex items-center justify-center text-white shadow-md">
+      <span class="text-xs font-bold leading-none">AD</span>
+    </div>
+    @if (!collapsed()) {
+    <div class="flex-1 min-w-0">
+      <p class="text-sm font-semibold text-gray-900 truncate">Admin User</p>
+      <p class="text-[0.65rem] text-gray-500 truncate mt-0.5">admin@bookmy.com</p>
+    </div>
+    }
+  </div> -->
+
   <!-- FOOTER -->
-  <div class="absolute bottom-0 w-full px-4 py-4 space-y-2">
+  <div class="py-4 border-t border-gray-100/80 bg-white space-y-2 relative" [class.px-4]="!collapsed()"
+    [class.px-3]="collapsed()">
 
-    <!-- HELP -->
-    <button class="group flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium
-             text-gray-500 hover:bg-[#bbf7d0] hover:text-[#14532d]
-             transition-all duration-300 ease-in-out">
-
-      <lucide-icon [img]="icons.help" size="16"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
-
-      Help Center
+    <button
+      class="group flex items-center gap-3 w-full py-2.5 rounded-lg text-sm font-medium
+      text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-gray-200"
+      [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+      <lucide-icon [img]="icons.help" size="18"
+        class="shrink-0 text-gray-400 group-hover:text-gray-600 transition-colors"></lucide-icon>
+      @if (!collapsed()) { <span class="tracking-wide">Help Center</span> }
     </button>
 
-    <!-- LOGOUT -->
-    <button (click)="logout()" class="group flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium
-             text-gray-500 hover:bg-[#f87b7b] hover:text-[#14532d]
-             transition-all duration-300 ease-in-out">
-
-      <lucide-icon [img]="icons.logout" size="16"
-        class="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110">
-      </lucide-icon>
-
-      Logout
+    <button (click)="logout()"
+      class="group relative flex items-center gap-3 w-full py-2.5 rounded-lg text-sm font-medium
+      text-red-500 hover:text-red-500 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-red-400 overflow-hidden"
+      [class.px-3]="!collapsed()" [class.justify-center]="collapsed()">
+      <div
+        class="absolute inset-0 bg-red-200 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out z-0">
+      </div>
+      <lucide-icon [img]="icons.logout" size="18"
+        class="shrink-0 relative z-10 transition-transform duration-300 group-hover:-translate-x-1"></lucide-icon>
+      @if (!collapsed()) { <span class="relative z-10 tracking-wide font-semibold">Secure Logout</span> }
     </button>
 
   </div>

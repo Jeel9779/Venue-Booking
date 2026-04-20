@@ -9,8 +9,8 @@ export class VenueService {
 
   private http = inject(HttpClient);
 
-
-  private api = 'http://192.168.1.13:3000/venues';
+  private api = 'http://192.168.1.11:3000/venues';
+  /*   private api = 'http://localhost:5000/venues';  */
 
   getVenues() {
     return this.http.get<any[]>(this.api);

@@ -24,6 +24,14 @@ import {
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
+
+  @Input() isOpen: boolean = true;
+  @Output() close = new EventEmitter<void>();
+
+  collapsed = signal(false);
+  openGroup = signal<string | null>('main');
+
+  // icon 
   icons = {
     dashboard: LayoutDashboard,
     venues: Building2,
@@ -37,17 +45,17 @@ export class Sidebar {
     subscript: ListChecks
   };
 
-  /*   toggle() {
-    this.isOpen.update((v) => !v);
-  } */
-
-  @Input() isOpen: boolean = false;
-  @Output() close = new EventEmitter<void>();
-
-
-  /* Login  */
   constructor(private router: Router) { }
 
+  toggleSidebar() {
+    this.collapsed.update(v => !v);
+  }
+
+  toggleGroup(name: string) {
+    this.openGroup.update(v => v === name ? null : name);
+  }
+
+  /* log out  */
   logout() {
     localStorage.removeItem('adminId');
     this.router.navigate(['/login']);

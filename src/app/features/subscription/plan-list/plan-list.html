@@ -3,10 +3,11 @@
   <!-- Header -->
   <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-semibold text-gray-800">
-      Subscription Plans
+      Subscription Plans list
     </h2>
 
-    <button (click)="selectedPlan = null; showForm = true" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
+    <button (click)="selectedPlan = null; showForm = true"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
       + Add Plan
     </button>
   </div>
@@ -26,7 +27,7 @@
       <div *ngFor="let plan of plans; let i = index"
         class="relative w-full max-w-sm p-0.5 rounded-2xl transition-all duration-300 mx-auto" [ngClass]="plan.isActive 
             ? 'bg-linear-to-r from-blue-200 via-indigo-200 to-purple-200 shadow-xl shadow-indigo-300/40' 
-            : 'bg-linear-to-r from-gray-400 to-gray-300 opacity-90'" >
+            : 'bg-linear-to-r from-gray-400 to-gray-300 opacity-90'">
 
         <!-- Inner -->
         <div class="h-full w-full rounded-2xl bg-white/10 backdrop-blur-xl p-6 text-black border border-black/20">
@@ -68,13 +69,13 @@
               {{ plan.isActive ? 'Active' : 'Inactive' }}
             </span>
           </div>  -->
-           <div class="mt-4">
+          <div class="mt-4">
             <span class="px-3 py-1 text-xs rounded-full font-medium" [ngClass]="plan.isActive 
       ? 'bg-green-300 text-b-green-900 '
       : 'bg-red-300 text-b-red-900'">
               {{ plan.isActive ? 'Active' : 'Inactive' }}
             </span>
-          </div> 
+          </div>
 
 
           <!-- Divider -->
