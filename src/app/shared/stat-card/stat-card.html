@@ -1,49 +1,13 @@
-<div
-  class="relative rounded-2xl p-5 transition-all duration-300 cursor-pointer
-         border border-[#207425]
-         bg-green-200
-         hover:shadow-xl hover:-translate-y-1
-         overflow-hidden"
-
-  [class.bg-[#f0fdf4]]="!highlight()"
-  [class.bg-gradient-to-br]="highlight()"
-  [class.from-[#064e3b]]="highlight()"
-  [class.to-[#022c22]]="highlight()"
-  [class.text-white]="highlight()"
->
-
-  <!-- ICON -->
-  <div class="flex justify-between items-center mb-3">
-
-    <div class="text-2xl">
-      {{ icon() }}
-    </div>
-
-    @if (change()) {
-      <span class="text-xs font-medium"
-            [class.text-green-600]="!highlight()"
-            [class.text-green-300]="highlight()">
-        {{ change() }}
-      </span>
-    }
-
+<div class="bg-white p-5 rounded-xl shadow-sm">
+  <div class="flex justify-between mb-3">
+    <div [ngClass]="bg"></div>
+    <span class="text-xs font-bold" [ngClass]="text">{{change}}</span>
   </div>
 
-  <!-- TITLE -->
-  <p class="text-xs uppercase tracking-wide opacity-70">
-    {{ title() }}
-  </p>
+  <p class="text-gray-500 text-xs uppercase">{{title}}</p>
+  <h2 class="text-2xl font-bold">{{value}}</h2>
 
-  <!-- VALUE -->
-  <h3 class="text-xl md:text-2xl font-bold mt-2">
-    {{ value() }}
-  </h3>
-
-  <!-- BADGE -->
-  @if (highlight()) {
-    <span class="absolute top-4 right-4 text-[10px] bg-green-500 px-2 py-1 rounded-full">
-      URGENT
-    </span>
-  }
-
+  <div class="h-1 bg-gray-200 mt-3 rounded-full">
+    <div class="h-1 rounded-full" [ngClass]="bar"></div>
+  </div>
 </div>

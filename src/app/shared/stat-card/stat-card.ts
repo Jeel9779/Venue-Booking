@@ -1,15 +1,25 @@
-import { Component, input,  } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-stat-card',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './stat-card.html',
   styleUrl: './stat-card.css',
 })
 export class StatCard {
-  title = input<string>();
-  value = input<string>();
-  change = input<string>();
-  icon = input<string>();
-  highlight = input<boolean>(false);
+  @Input() title!: string;
+  @Input() value!: any;
+  @Input() change!: string;
+  @Input() color!: string;
+
+  get bg() {
+    return `bg-${this.color}-100 p-2 rounded-lg`;
+  }
+  get text() {
+    return this.color === 'red' ? 'text-red-500' : 'text-green-600';
+  }
+  get bar() {
+    return `bg-${this.color}-500 w-3/4`;
+  }
 }
