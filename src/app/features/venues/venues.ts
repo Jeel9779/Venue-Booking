@@ -214,13 +214,23 @@ export class Venues implements OnInit {
   closeImage() {
     this.previewImage.set(null);
   }
+  /*  getImageUrl(img?: string): string {
+     if (!img) return '';
+ 
+     
+     if (img.startsWith('http')) return img;
+ 
+     return this.baseUrl + img.replace(/^\/+/, '');
+   } */
+
   getImageUrl(img?: string): string {
     if (!img) return '';
 
-    // if already full URL
     if (img.startsWith('http')) return img;
 
-    return this.baseUrl + img.replace(/^\/+/, '');
+    const root = this.baseUrl.replace('/venues', '');
+
+    return root + '/' + img.replace(/^\/+/, '');
   }
 
 }

@@ -1,4 +1,8 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { DashboardResponse } from './dashboard.model';
+import { Observable, shareReplay } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +20,9 @@ export class DashboardService {
     { name: 'Skyline Hub', bookings: 28, revenue: 8900, img: 'https://picsum.photos/50?2' }
   ]);
 
-  // 🔥 Future API
+
   loadDashboard() {
-    // this.http.get(...);
+
   }
+
 }
