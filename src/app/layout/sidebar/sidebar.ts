@@ -1,8 +1,6 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-/* import { BarChart3, Building2, Calendar, HelpCircle, LayoutDashboard, LogOut, LucideAngularModule, Plus, Settings, Users } from 'lucide-angular/src/icons'; */
 import { Router } from '@angular/router';
-
 import {
   LucideAngularModule,
   LayoutDashboard,
@@ -25,13 +23,11 @@ import {
 })
 export class Sidebar {
 
-  @Input() isOpen: boolean = true;
-  @Output() close = new EventEmitter<void>();
+  // icon-only on mobile & tablet, full on desktop
+  collapsed = signal(window.innerWidth < 1024);
 
-  collapsed = signal(false);
   openGroup = signal<string | null>('main');
 
-  // icon 
   icons = {
     dashboard: LayoutDashboard,
     venues: Building2,
@@ -45,7 +41,12 @@ export class Sidebar {
     subscript: ListChecks
   };
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    // update collapsed state on resize
+    window.addEventListener('resize', () => {
+      this.collapsed.set(window.innerWidth < 1024);
+    });
+  }
 
   toggleSidebar() {
     this.collapsed.update(v => !v);
@@ -55,7 +56,6 @@ export class Sidebar {
     this.openGroup.update(v => v === name ? null : name);
   }
 
-  /* log out  */
   logout() {
     localStorage.removeItem('adminId');
     this.router.navigate(['/login']);
