@@ -1,156 +1,164 @@
-<div class="venues-page">
+<div class="venues-page max-w-[1500px] mx-auto my-6 px-4">
 
   <!-- HEADER -->
-  <div class="page-header">
-    <div class="header-left">
-      <div class="header-icon">
+  <div class="page-header flex items-center justify-between flex-wrap gap-4 mb-3">
+    <div class="header-left flex items-center gap-3.5">
+      <div class="w-[46px] h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
           <polyline points="9,22 9,12 15,12 15,22" />
         </svg>
       </div>
       <div>
-        <h1 class="page-title">Venue Verification</h1>
-        <p class="page-subtitle">Review and manage venue listings</p>
+        <h1 class="text-2xl font-bold tracking-tight m-0 leading-tight">Venue Verification</h1>
+        <p class="text-[0.8125rem] text-slate-500 mt-0.5 mb-0">Review and manage venue listings</p>
       </div>
     </div>
 
-    <!-- <div class="header-stats">
-      <div class="stat-chip pending">
-        <span class="stat-dot"></span>
-        {{ counts().pending }} Pending
-      </div>
-      <div class="stat-chip approved">
-        <span class="stat-dot"></span>
-        {{ counts().approved }} Approved
-      </div>
-      <div class="stat-chip rejected">
-        <span class="stat-dot"></span>
-        {{ counts().rejected }} Rejected
-      </div>
-    </div>
-  </div> -->
-    <div class="header-stats">
-      <div class="stat-chip all" [class.active]="filter() === 'all'" (click)="filter.set('all')">
-        <span class="stat-dot"></span>
+    <div class="header-stats flex gap-2 flex-wrap">
+      <div
+        class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-sky-100 text-sky-700 border-blue-300"
+        [class.ring-2]="filter() === 'all'" [class.ring-sky-400]="filter() === 'all'" (click)="filter.set('all')">
+        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().all }} All
       </div>
-      <div class="stat-chip pending" [class.active]="filter() === 'pending'" (click)="filter.set('pending')">
-        <span class="stat-dot"></span>
+      <div
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-amber-100 text-amber-800 border-amber-300"
+        [class.ring-2]="filter() === 'pending'" [class.ring-amber-400]="filter() === 'pending'"
+        (click)="filter.set('pending')">
+        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().pending }} Pending
       </div>
-      <div class="stat-chip approved" [class.active]="filter() === 'approved'" (click)="filter.set('approved')">
-        <span class="stat-dot"></span>
+      <div
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-emerald-100 text-emerald-800 border-emerald-300"
+        [class.ring-2]="filter() === 'approved'" [class.ring-emerald-400]="filter() === 'approved'"
+        (click)="filter.set('approved')">
+        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().approved }} Approved
       </div>
-      <div class="stat-chip rejected" [class.active]="filter() === 'rejected'" (click)="filter.set('rejected')">
-        <span class="stat-dot"></span>
+      <div
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-red-100 text-red-800 border-red-300"
+        [class.ring-2]="filter() === 'rejected'" [class.ring-red-400]="filter() === 'rejected'"
+        (click)="filter.set('rejected')">
+        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().rejected }} Rejected
       </div>
-
     </div>
 
 
     <!-- TOOLBAR -->
-    <div class="toolbar">
-      <div class="search-wrap">
-        <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-          viewBox="0 0 24 24">
+    <div class="toolbar flex gap-3 flex-wrap mb-3 items-center w-full">
+      <div class="relative flex-1 min-w-[220px]">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" width="16" height="16"
+          fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.35-4.35" />
         </svg>
-        <input type="text" class="search-input" placeholder="Search by name, city, type..." [value]="search()"
+        <input type="text"
+          class="w-full py-2.5 pl-9 pr-9 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 box-border"
+          placeholder="Search by name, city, type..." [value]="search()"
           (input)="search.set($any($event.target).value)" />
         @if (search()) {
-        <button class="search-clear" (click)="search.set('')">
+        <button
+          class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-slate-400 flex p-1 rounded hover:text-slate-700"
+          (click)="search.set('')">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         </button>
         }
       </div>
-
-      <!--  <div class="filter-tabs">
-      <button class="filter-tab" [class.active]="filter() === 'all'" (click)="filter.set('all')">
-        All <span class="tab-count">{{ counts().all }}</span>
-      </button>
-      <button class="filter-tab pending" [class.active]="filter() === 'pending'" (click)="filter.set('pending')">
-        Pending <span class="tab-count">{{ counts().pending }}</span>
-      </button>
-      <button class="filter-tab approved" [class.active]="filter() === 'approved'" (click)="filter.set('approved')">
-        Approved <span class="tab-count">{{ counts().approved }}</span>
-      </button>
-      <button class="filter-tab rejected" [class.active]="filter() === 'rejected'" (click)="filter.set('rejected')">
-        Rejected <span class="tab-count">{{ counts().rejected }}</span>
-      </button>
-    </div> -->
-
     </div>
 
     <!-- LOADING -->
     @if (isLoading()) {
-    <div class="loading-state">
-      <div class="spinner"></div>
+    <div class="flex flex-col items-center justify-center py-20 text-slate-400 gap-3.5 text-sm w-full">
+      <div class="w-8 h-8 border-[3px] border-slate-200 border-t-indigo-600 rounded-full animate-spin">
+      </div>
       <p>Loading venues…</p>
     </div>
     }
 
     <!-- EMPTY STATE -->
     @if (!isLoading() && filteredVenues().length === 0) {
-    <div class="empty-state">
-      <div class="empty-icon">
+    <div class="flex flex-col items-center justify-center py-20 gap-3 text-center w-full">
+      <div class="w-[72px] h-[72px] rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-1">
         <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
           <polyline points="9,22 9,12 15,12 15,22" />
         </svg>
       </div>
-      <h3>No venues found</h3>
-      <p>Try adjusting your search or filter criteria.</p>
-      <button class="btn-reset" (click)="search.set(''); filter.set('all')">Reset filters</button>
+      <h3 class="text-lg font-semibold m-0">No venues found</h3>
+      <p class="text-slate-500 text-sm m-0">Try adjusting your search or filter criteria.</p>
+      <button
+        class="mt-2 px-5 py-2 bg-indigo-600 text-white border-none rounded-xl text-sm font-semibold cursor-pointer transition hover:bg-indigo-700"
+        (click)="search.set(''); filter.set('all')">Reset filters</button>
     </div>
     }
 
     <!-- TABLE -->
     @if (!isLoading() && filteredVenues().length > 0) {
-    <div class="table-card">
-      <div class="table-meta">
-        <span>Showing <strong>{{ filteredVenues().length }}</strong> of {{ counts().all }} venues</span>
+    <div class="bg-white border border-slate-300 rounded-[18px] shadow-lg backdrop-blur-lg w-full p-4">
+      <div class="px-5 py-3.5 border-b border-slate-200 text-[0.8125rem] text-slate-500 bg-[#fafafa]">
+        <span>Showing <strong class="text-indigo-600">{{ filteredVenues().length }}</strong> of {{ counts().all }}
+          venues</span>
       </div>
 
-      <div class="table-wrap">
-        <table class="venues-table">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-sm">
           <thead>
-            <tr>
-              <th>Venue</th>
-              <th>Type</th>
-              <th>Capacity</th>
-              <th>Price / Day</th>
-              <th>Status</th>
-              <th>Created</th>
-              <th></th>
+            <tr class="bg-slate-50">
+              <th
+                class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
+                Venue</th>
+              <th
+                class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
+                Type</th>
+              <th
+                class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
+                Capacity</th>
+              <th
+                class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
+                Price / Day</th>
+              <th
+                class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
+                Status</th>
+              <th
+                class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
+                Created</th>
+              <th class="px-[18px] py-[11px] border-b border-slate-200"></th>
             </tr>
           </thead>
           <tbody>
             @for (v of filteredVenues(); track v._id) {
-            <tr (click)="openDetails(v)" class="venue-row">
-              <td>
-                <div class="venue-name-cell">
-                  <div class="venue-avatar">{{ v.name.charAt(0) }}</div>
+            <tr (click)="openDetails(v)"
+              class="border-b border-slate-200 last:border-b-0 transition-colors cursor-pointer hover:bg-indigo-50 venue-row">
+              <td class="p-3.5">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-9 h-9 rounded-lg bg-linear-to-br from-emerald-500 to-green-500 text-white font-bold text-sm flex items-center justify-center shrink-0">
+                    {{ v.name.charAt(0) }}</div>
                   <div>
-                    <div class="venue-name">{{ v.name }}</div>
-                    <div class="venue-location">{{ v.city }}, {{ v.state }}</div>
+                    <div class="font-semibold text-slate-900 leading-snug">{{ v.name }}</div>
+                    <div class="text-xs text-slate-500 mt-0.5">{{ v.city }}, {{ v.state }}</div>
                   </div>
                 </div>
               </td>
-              <td><span class="type-badge">{{ v.type }}</span></td>
-              <td class="text-muted">{{ v.capacity | number }}</td>
-              <td class="price-cell">₹{{ v.pricePerDay | number }}</td>
-              <td>
-                <span class="status-badge" [ngClass]="v.status">{{ v.status }}</span>
+              <td class="p-3.5">
+                <span
+                  class="inline-block px-2.5 py-0.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-semibold">{{
+                  v.type }}</span>
               </td>
-              <td class="text-muted text-sm">{{ v.createdAt | date:'d MMM y' }}</td>
-              <td>
-                <span class="view-arrow">
+              <td class="p-3.5 text-slate-500">{{ v.capacity | number }}</td>
+              <td class="p-3.5 font-semibold text-slate-900">₹{{ v.pricePerDay | number }}</td>
+              <td class="p-3.5">
+                <span
+                  class="status-badge inline-flex items-center px-2.5 py-1 rounded-full text-[0.72rem] font-bold capitalize tracking-wide"
+                  [ngClass]="v.status">{{ v.status }}</span>
+              </td>
+              <td class="p-3.5 text-slate-500 text-[0.8125rem]">{{ v.createdAt | date:'d MMM y' }}</td>
+              <td class="p-3.5">
+                <span class="view-arrow flex justify-end text-slate-400 transition-all group-hover:text-indigo-600">
                   <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M9 18l6-6-6-6" />
                   </svg>
@@ -169,35 +177,51 @@
 
   <!-- ═══════════════════════════ DETAIL MODAL ═══════════════════════════ -->
   @if (showDetailsModal() && selectedVenue()) {
-  <div class="modal-backdrop" (click)="closeDetails()">
-    <div class="modal" (click)="$event.stopPropagation()">
+  <div
+    class="fixed inset-0 z-9000 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.18s_ease]"
+    (click)="closeDetails()">
+    <div
+      class="w-full max-w-[860px] max-h-[92vh] bg-white rounded-[24px] shadow-2xl flex flex-col overflow-hidden animate-[slideUp_0.22s_ease]"
+      (click)="$event.stopPropagation()">
 
       <!-- MODAL HEADER -->
-      <div class="modal-header">
-        <div class="modal-venue-info">
-          <div class="modal-avatar">{{ selectedVenue()?.name?.charAt(0) }}</div>
+      <div class="flex items-start justify-between gap-4 px-6 py-[22px] border-b border-slate-200 shrink-0">
+        <div class="flex items-center gap-3.5">
+          <div
+            class="w-[50px] h-[50px] rounded-xl bg-linear-to-br from-indigo-600 to-violet-600 text-white text-xl font-bold flex items-center justify-center shrink-0">
+            {{ selectedVenue()?.name?.charAt(0) }}</div>
           <div>
-            <div class="modal-venue-name">
+            <div class="text-lg font-bold flex items-center gap-2.5 flex-wrap">
               {{ selectedVenue()?.name }}
-              <span class="status-badge" [ngClass]="selectedVenue()?.status">{{ selectedVenue()?.status }}</span>
+              <span
+                class="status-badge inline-flex items-center px-2.5 py-1 rounded-full text-[0.72rem] font-bold capitalize tracking-wide"
+                [ngClass]="selectedVenue()?.status">{{ selectedVenue()?.status }}</span>
             </div>
-            <div class="modal-venue-sub">{{ selectedVenue()?.city }}, {{ selectedVenue()?.state }}</div>
+            <div class="text-[0.8125rem] text-slate-500 mt-0.5">{{ selectedVenue()?.city }}, {{ selectedVenue()?.state
+              }}</div>
           </div>
         </div>
 
-        <div class="modal-actions">
+        <div class="flex items-center gap-2 shrink-0">
           @if (selectedVenue()?.status !== 'rejected') {
-          <button class="btn btn-reject" [disabled]="isSubmitting()" (click)="openRejectModal()">
+          <button
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-red-500 text-white transition hover:bg-red-700 disabled:opacity-55 disabled:cursor-not-allowed active:scale-[0.97]"
+            [disabled]="isSubmitting()" (click)="openRejectModal()">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
             Reject
           </button>
+
+
+
           }
           @if (selectedVenue()?.status !== 'approved') {
-          <button class="btn btn-approve" [disabled]="isSubmitting()" (click)="confirmApprove()">
+          <button
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-indigo-600 text-white transition hover:bg-indigo-700 disabled:opacity-55 disabled:cursor-not-allowed active:scale-[0.97]"
+            [disabled]="isSubmitting()" (click)="confirmApprove()">
             @if (isSubmitting()) {
-            <span class="btn-spinner"></span>
+            <span class="inline-block w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
             } @else {
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M20 6L9 17l-5-5" />
@@ -206,7 +230,9 @@
             {{ isSubmitting() ? 'Approving…' : 'Approve' }}
           </button>
           }
-          <button class="btn-close" (click)="closeDetails()">
+          <button
+            class="w-[34px] h-[34px] flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-pointer transition hover:bg-slate-200 hover:text-slate-700 shrink-0"
+            (click)="closeDetails()">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
@@ -215,79 +241,94 @@
       </div>
 
       <!-- MODAL BODY -->
-      <div class="modal-body">
+      <div class="overflow-y-auto p-6 flex-1">
 
         <!-- INFO GRID -->
-        <div class="info-grid">
-          <div class="info-card">
-            <div class="info-icon">
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(190px,1fr))] gap-3 mb-6">
+          <div
+            class="flex items-center gap-3 p-3.5 bg-white border border-slate-300 rounded-xl shadow-lg backdrop-blur-lg ">
+            <div
+              class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </div>
             <div>
-              <div class="info-label">Type</div>
-              <div class="info-value">{{ selectedVenue()?.type }}</div>
+              <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Type</div>
+              <div class="font-bold text-[0.9375rem] text-slate-900">{{ selectedVenue()?.type }}</div>
             </div>
           </div>
 
-          <div class="info-card">
-            <div class="info-icon">
+          <div
+            class="flex items-center gap-3 p-3.5  bg-white border border-slate-300 rounded-xl shadow-lg backdrop-blur-lg">
+            <div
+              class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path
                   d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </div>
             <div>
-              <div class="info-label">Capacity</div>
-              <div class="info-value">{{ selectedVenue()?.capacity | number }} guests</div>
+              <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Capacity</div>
+              <div class="font-bold text-[0.9375rem] text-slate-900">{{ selectedVenue()?.capacity | number }} guests
+              </div>
             </div>
           </div>
 
-          <div class="info-card">
-            <div class="info-icon">
+          <div
+            class="flex items-center gap-3 p-3.5  bg-white border border-slate-300 rounded-xl shadow-lg backdrop-blur-lg">
+            <div
+              class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <line x1="12" y1="1" x2="12" y2="23" />
                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
               </svg>
             </div>
             <div>
-              <div class="info-label">Price / Day</div>
-              <div class="info-value">₹{{ selectedVenue()?.pricePerDay | number }}</div>
+              <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Price / Day</div>
+              <div class="font-bold text-[0.9375rem] text-slate-900">₹{{ selectedVenue()?.pricePerDay | number }}</div>
             </div>
           </div>
 
-          <div class="info-card">
-            <div class="info-icon">
+          <div
+            class="flex items-center gap-3 p-3.5  bg-white border border-slate-300 rounded-xl shadow-lg backdrop-blur-lg">
+            <div
+              class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
             </div>
             <div>
-              <div class="info-label">Location</div>
-              <div class="info-value">{{ selectedVenue()?.city }}, {{ selectedVenue()?.state }} {{ selectedVenue()?.zip
-                }}
-              </div>
+              <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Location</div>
+              <div class="font-bold text-[0.9375rem] text-slate-900">{{ selectedVenue()?.city }}, {{
+                selectedVenue()?.state }} {{ selectedVenue()?.zip }}</div>
             </div>
           </div>
         </div>
 
         <!-- DESCRIPTION -->
         @if (selectedVenue()?.description) {
-        <div class="section">
-          <h4 class="section-title">Description</h4>
-          <p class="description-text">{{ selectedVenue()?.description }}</p>
+        <div class="mb-6">
+          <h4
+            class="text-[0.8125rem] font-bold uppercase tracking-wider text-slate-500 m-0 mb-3 flex items-center gap-2">
+            Description</h4>
+          <p
+            class="text-[0.9rem] leading-relaxed text-slate-900 bg-white border border-slate-300 rounded-xl shadow-lg backdrop-blur-lgrounded-xl px-4 py-3.5 m-0">
+            {{ selectedVenue()?.description }}</p>
         </div>
         }
 
         <!-- AMENITIES -->
         @if (selectedVenue()?.amenities?.length) {
-        <div class="section">
-          <h4 class="section-title">Amenities</h4>
-          <div class="amenities-list">
+        <div class="mb-6">
+          <h4
+            class="text-[0.8125rem] font-bold uppercase tracking-wider text-slate-500 m-0 mb-3 flex items-center gap-2">
+            Amenities</h4>
+          <div class="flex flex-wrap gap-2">
             @for (a of selectedVenue()?.amenities; track a) {
-            <span class="amenity-tag">
+            <span
+              class="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-200 text-indigo-600 rounded-full text-[0.775rem] font-semibold">
               <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path d="M20 6L9 17l-5-5" />
               </svg>
@@ -300,14 +341,20 @@
 
         <!-- GALLERY -->
         @if (selectedVenue()?.mediaFiles?.length) {
-        <div class="section">
-          <h4 class="section-title">Gallery <span class="gallery-count">{{ selectedVenue()?.mediaFiles?.length }}
-              photos</span></h4>
-          <div class="gallery-grid">
+        <div class="mb-6">
+          <h4
+            class="text-[0.8125rem] font-bold uppercase tracking-wider text-slate-500 m-0 mb-3 flex items-center gap-2">
+            Gallery <span class="font-medium normal-case tracking-normal text-indigo-600 text-xs">{{
+              selectedVenue()?.mediaFiles?.length }} photos</span>
+          </h4>
+          <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
             @for (img of selectedVenue()?.mediaFiles || []; track img) {
-            <div class="gallery-item" (click)="$event.stopPropagation(); openImage(img)">
-              <img [src]="getImageUrl(img)" alt="Venue image" />
-              <div class="gallery-overlay">
+            <div class="relative rounded-xl overflow-hidden cursor-pointer aspect-4/3 bg-slate-200 group"
+              (click)="$event.stopPropagation(); openImage(img)">
+              <img [src]="getImageUrl(img)" alt="Venue image"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 block" />
+              <div
+                class="absolute inset-0 bg-indigo-600/55 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                 <svg width="20" height="20" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
                 </svg>
@@ -326,17 +373,28 @@
 
   <!-- ═══════════════════════════ REJECT REASON MODAL ═══════════════════════════ -->
   @if (showRejectModal()) {
-  <div class="modal-backdrop" (click)="closeRejectModal()">
-    <div class="reject-modal" (click)="$event.stopPropagation()">
-      <h3 class="reject-title">Reject Venue</h3>
-      <p class="reject-sub">Provide a reason so the owner knows what to fix.</p>
-      <textarea class="reject-textarea" rows="4"
-        placeholder="e.g. Incomplete address, blurry images, missing capacity info…"
+  <div
+    class="fixed inset-0 z-9000 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.18s_ease]"
+    (click)="closeRejectModal()">
+    <div class="w-full max-w-[440px] bg-white rounded-[24px] shadow-2xl p-7 animate-[slideUp_0.2s_ease]"
+      (click)="$event.stopPropagation()">
+      <h3 class="text-lg font-bold m-0 mb-1.5">Reject Venue</h3>
+      <p class="text-sm text-slate-500 m-0 mb-[18px] leading-relaxed">Provide a reason so the owner knows what to fix.
+      </p>
+      <textarea
+        class="w-full border border-slate-200 rounded-xl p-3 text-sm font-[inherit] resize-y outline-none box-border text-slate-900 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+        rows="4" placeholder="e.g. Incomplete address, blurry images, missing capacity info…"
         [(ngModel)]="rejectReason"></textarea>
-      <div class="reject-actions">
-        <button class="btn btn-ghost" (click)="closeRejectModal()">Cancel</button>
-        <button class="btn btn-reject" [disabled]="!rejectReason.trim() || isSubmitting()" (click)="submitReject()">
-          @if (isSubmitting()) { <span class="btn-spinner"></span> }
+      <div class="flex justify-end gap-2 mt-4">
+        <button
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-slate-100 text-slate-500 transition hover:bg-slate-200"
+          (click)="closeRejectModal()">Cancel</button>
+        <button
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-red-500 text-white transition hover:bg-red-600 disabled:opacity-55 disabled:cursor-not-allowed active:scale-[0.97]"
+          [disabled]="!rejectReason.trim() || isSubmitting()" (click)="submitReject()">
+          @if (isSubmitting()) {
+          <span class="inline-block w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
+          }
           {{ isSubmitting() ? 'Rejecting…' : 'Confirm Reject' }}
         </button>
       </div>
@@ -347,16 +405,25 @@
 
   <!-- ═══════════════════════════ APPROVE CONFIRM MODAL ═══════════════════════════ -->
   @if (showApproveModal()) {
-  <div class="modal-backdrop" (click)="showApproveModal.set(false)">
-    <div class="reject-modal" (click)="$event.stopPropagation()">
-      <h3 class="reject-title">Approve Venue?</h3>
-      <p class="reject-sub">
+  <div
+    class="fixed inset-0 z-9000 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.18s_ease]"
+    (click)="showApproveModal.set(false)">
+    <div class="w-full max-w-[440px] bg-white rounded-[24px] shadow-2xl p-7 animate-[slideUp_0.2s_ease]"
+      (click)="$event.stopPropagation()">
+      <h3 class="text-lg font-bold m-0 mb-1.5">Approve Venue?</h3>
+      <p class="text-sm text-slate-500 m-0 mb-[18px] leading-relaxed">
         <strong>{{ selectedVenue()?.name }}</strong> will be listed publicly. This can be undone by rejecting later.
       </p>
-      <div class="reject-actions">
-        <button class="btn btn-ghost" (click)="showApproveModal.set(false)">Cancel</button>
-        <button class="btn btn-approve" [disabled]="isSubmitting()" (click)="submitApprove()">
-          @if (isSubmitting()) { <span class="btn-spinner"></span> }
+      <div class="flex justify-end gap-2 mt-4">
+        <button
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-slate-100 text-slate-500 transition hover:bg-slate-200"
+          (click)="showApproveModal.set(false)">Cancel</button>
+        <button
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-indigo-600 text-white transition hover:bg-indigo-700 disabled:opacity-55 disabled:cursor-not-allowed active:scale-[0.97]"
+          [disabled]="isSubmitting()" (click)="submitApprove()">
+          @if (isSubmitting()) {
+          <span class="inline-block w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
+          }
           {{ isSubmitting() ? 'Approving…' : 'Yes, Approve' }}
         </button>
       </div>
@@ -367,12 +434,66 @@
 
   <!-- ═══════════════════════════ IMAGE PREVIEW ═══════════════════════════ -->
   @if (previewImage()) {
-  <div class="image-preview-backdrop" (click)="closeImage()">
-    <button class="image-close" (click)="closeImage()">
+  <div class="fixed inset-0 z-10000 bg-black/92 flex items-center justify-center animate-[fadeIn_0.2s_ease]"
+    (click)="closeImage()">
+    <button
+      class="absolute top-5 right-5 w-[38px] h-[38px] bg-white/10 border border-white/20 text-white rounded-full flex items-center justify-center cursor-pointer transition hover:bg-white/20"
+      (click)="closeImage()">
       <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M18 6L6 18M6 6l12 12" />
       </svg>
     </button>
-    <img [src]="previewImage()" (click)="$event.stopPropagation()" />
+    <img [src]="previewImage()" (click)="$event.stopPropagation()"
+      class="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl object-contain" />
   </div>
   }
+</div>
+
+
+<!-- ═══════════════════════════ Minimal residual CSS ═══════════════════════════ -->
+<!-- Only for: status-badge color variants (ngClass-driven), keyframe animations, hover row arrow -->
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Status badge variants — driven by [ngClass] so must stay in CSS */
+  .status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-badge.approved {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .status-badge.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  /* Row hover arrow shift — requires adjacent sibling context */
+  .venue-row:hover .view-arrow {
+    color: #4f46e5;
+    transform: translateX(2px);
+  }
+</style>
