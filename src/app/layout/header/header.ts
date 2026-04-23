@@ -1,14 +1,15 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { LucideAngularModule, Bell, Menu, Search, ChevronDown, Settings, User, LogOut, LifeBuoy, Plus, Sparkles } from 'lucide-angular';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-header',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class Header {
-   @Output() menuClick = new EventEmitter<void>();
-    icons = {
+  @Output() menuClick = new EventEmitter<void>();
+  icons = {
     bell: Bell,
     menu: Menu,
     search: Search,

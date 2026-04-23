@@ -1,4 +1,19 @@
+<!-- <button
+    class="inline-flex items-center  gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition cursor-pointer border-none"
+    routerLink="/add-vendor" (click)="goToAddVendor()">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+    </svg>
+    Add Vendor
+</button> -->
+
+
+
+
+
 <div class="max-w-[1500px] mx-auto my-6 px-4">
+
+    <!-- ADD VENDOR BUTTON -->
 
     <!-- ═══════════════════════ HEADER ═══════════════════════ -->
     <div class="flex items-center justify-between flex-wrap gap-4 mb-3">
@@ -21,9 +36,9 @@
         </div>
 
         <!-- RIGHT: filter chips + Add button -->
-        <div class="flex items-center gap-2 flex-wrap">
+        <!--  <div class="flex items-center gap-2 flex-wrap">
 
-            <!-- FILTER CHIPS -->
+          
             <div class="flex gap-2 flex-wrap">
                 <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-sky-100 text-sky-700 border-blue-300"
                     [class.ring-2]="filter() === 'all'" [class.ring-sky-400]="filter() === 'all'"
@@ -51,15 +66,120 @@
                 </div>
             </div>
 
-            <!-- ADD VENDOR BUTTON -->
-            <button
-                class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition cursor-pointer border-none"
-                routerLink="/add-vendor" (click)="goToAddVendor()">
+           
+
+            <button class="inline-flex items-center gap-1.5 px-3 py-1.5 
+           bg-indigo-600 text-white rounded-xl text-sm font-semibold 
+           hover:bg-indigo-700 transition cursor-pointer border-none 
+           shadow-md active:scale-95" routerLink="/add-vendor" (click)="goToAddVendor()">
+
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path d="M12 5v14M5 12h14" />
                 </svg>
+
                 Add Vendor
             </button>
+
+        </div> -->
+        <!--    <div class="flex flex-col gap-3">
+
+       
+            <button class="inline-flex items-center gap-1.5 px-3 py-1.5 
+       bg-indigo-600 text-white rounded-xl text-sm font-semibold 
+       hover:bg-indigo-700 transition cursor-pointer border-none 
+       shadow-md active:scale-95 w-fit" routerLink="/add-vendor" (click)="goToAddVendor()">
+
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12h14" />
+                </svg>
+
+                Add Vendor
+            </button>
+
+            <div class="flex items-center gap-2 flex-wrap">
+
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-sky-100 text-sky-700 border-blue-300"
+                    [class.ring-2]="filter() === 'all'" [class.ring-sky-400]="filter() === 'all'"
+                    (click)="filter.set('all')">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {{ counts().all }} All
+                </div>
+
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-amber-100 text-amber-800 border-amber-300"
+                    [class.ring-2]="filter() === 'pending'" [class.ring-amber-400]="filter() === 'pending'"
+                    (click)="filter.set('pending')">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {{ counts().pending }} Pending
+                </div>
+
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-emerald-100 text-emerald-800 border-emerald-300"
+                    [class.ring-2]="filter() === 'approved'" [class.ring-emerald-400]="filter() === 'approved'"
+                    (click)="filter.set('approved')">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {{ counts().approved }} Approved
+                </div>
+
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-red-100 text-red-800 border-red-300"
+                    [class.ring-2]="filter() === 'rejected'" [class.ring-red-400]="filter() === 'rejected'"
+                    (click)="filter.set('rejected')">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {{ counts().rejected }} Rejected
+                </div>
+
+            </div>
+
+        </div> -->
+        <div class="flex flex-col gap-3">
+
+            <!-- BUTTON ROW (RIGHT SIDE) -->
+            <div class="flex justify-end">
+                <button class="inline-flex items-center gap-1.5 px-3 py-1.5 
+            bg-indigo-600 text-white rounded-xl text-sm font-semibold 
+            hover:bg-indigo-700 transition cursor-pointer border-none 
+            shadow-md active:scale-95" routerLink="/add-vendor" (click)="goToAddVendor()">
+
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                        viewBox="0 0 24 24">
+                        <path d="M12 5v14M5 12h14" />
+                    </svg>
+
+                    Add Vendor
+                </button>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="flex items-center gap-2 flex-wrap">
+
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-sky-100 text-sky-700 border-blue-300"
+                    [class.ring-2]="filter() === 'all'" [class.ring-sky-400]="filter() === 'all'"
+                    (click)="filter.set('all')">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {{ counts().all }} All
+                </div>
+
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-amber-100 text-amber-800 border-amber-300"
+                    [class.ring-2]="filter() === 'pending'" [class.ring-amber-400]="filter() === 'pending'"
+                    (click)="filter.set('pending')">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {{ counts().pending }} Pending
+                </div>
+
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-emerald-100 text-emerald-800 border-emerald-300"
+                    [class.ring-2]="filter() === 'approved'" [class.ring-emerald-400]="filter() === 'approved'"
+                    (click)="filter.set('approved')">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {{ counts().approved }} Approved
+                </div>
+
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-red-100 text-red-800 border-red-300"
+                    [class.ring-2]="filter() === 'rejected'" [class.ring-red-400]="filter() === 'rejected'"
+                    (click)="filter.set('rejected')">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    {{ counts().rejected }} Rejected
+                </div>
+
+            </div>
+
         </div>
     </div>
 
@@ -565,3 +685,9 @@
         transform: translateX(2px);
     }
 </style>
+
+
+
+
+
+<!-- •	Multiple vendor management (J)  -->

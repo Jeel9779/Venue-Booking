@@ -74,6 +74,8 @@ export const routes: Routes = [
         path: 'bookings',
         loadComponent: () => import('./features/bookings/bookings').then((m) => m.Bookings),
       },
+
+
     ],
   },
   // ✅ DEFAULT REDIRECT

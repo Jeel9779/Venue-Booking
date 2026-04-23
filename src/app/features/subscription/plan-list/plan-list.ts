@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlanService } from '../service/plan.service';
 import { Plan } from '../models/plan.model';
-import { Observable } from 'rxjs';
+import { Observable, finalize } from 'rxjs';
 import { PlanForm } from '../plan-form/plan-form';
 
 @Component({
@@ -15,34 +15,40 @@ import { PlanForm } from '../plan-form/plan-form';
 export class PlanList implements OnInit {
   private planService = inject(PlanService);
 
-  plans$!: Observable<Plan[]>; // ✅ BACK TO OBSERVABLE
-
+  plans$!: Observable<Plan[]>;
   showForm = false;
+  selectedPlan: Plan | null = null;
+  isDeleting = false;
 
   ngOnInit(): void {
     this.loadPlans();
   }
 
   loadPlans() {
-    this.plans$ = this.planService.getPlans(); // ✅ clean
+    this.plans$ = this.planService.getPlans();
   }
 
-  deletePlan(id: string) {
-    if (!confirm('Are you sure?')) return;
-
-    this.planService.deletePlan(id).subscribe({
-      next: () => {
-        console.log('Deleted');
-        this.loadPlans(); // ✅ refresh observable
-        
-      },
-    });
+  openAddForm() {
+    this.selectedPlan = null;
+    this.showForm = true;
   }
 
-  // edit
-  selectedPlan: Plan | null = null;
   editPlan(plan: Plan) {
     this.selectedPlan = plan;
     this.showForm = true;
+  }
+
+  deletePlan(id: string | undefined) {
+    if (!confirm('Are you sure you want to delete this plan? This action cannot be undone.')) return;
+
+    this.isDeleting = true;
+    this.planService.deletePlan(id!).pipe(
+      finalize(() => this.isDeleting = false)
+    ).subscribe({
+      next: () => {
+        console.log('Plan removed successfully');
+        this.loadPlans();
+      }
+    });
   }
 }
