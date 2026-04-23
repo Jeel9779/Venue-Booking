@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Plan } from '../models/plan.model';
-import { PlanService } from '../service/plan.service';
+import { Plan } from '@core/models/plan.model';
+import { PlanService } from '@core/services/plan.service';
 
 @Component({
   selector: 'app-plan-form',

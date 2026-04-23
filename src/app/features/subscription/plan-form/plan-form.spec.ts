@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlanForm } from './plan-form';
+import { PlanForm } from '@features/subscription/plan-form/plan-form';
 
 describe('PlanForm', () => {
   let component: PlanForm;

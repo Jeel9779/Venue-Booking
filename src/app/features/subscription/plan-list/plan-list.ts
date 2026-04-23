@@ -1,9 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlanService } from '../service/plan.service';
-import { Plan } from '../models/plan.model';
+import { PlanService } from '@core/services/plan.service';
+import { Plan } from '@core/models/plan.model';
 import { Observable, finalize } from 'rxjs';
-import { PlanForm } from '../plan-form/plan-form';
+import { PlanForm } from '@features/subscription/plan-form/plan-form';
 
 @Component({
   selector: 'app-plan-list',

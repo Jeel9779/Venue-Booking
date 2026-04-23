@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VendorSubscriptions } from './vendor-subscriptions';
+import { VendorSubscriptions } from '@features/subscription/vendor-subscriptions/vendor-subscriptions';
 
 describe('VendorSubscriptions', () => {
   let component: VendorSubscriptions;

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VendorSubscriptionServices } from '../service/vendor-subscription.services';
-import { VendorSubscription } from '../models/vendor-subscription.model';
+import { VendorSubscriptionServices } from '@core/services/vendor-subscription.service';
+import { VendorSubscription } from '@core/models/vendor-subscription.model';
 import { Observable } from 'rxjs';
 
 @Component({

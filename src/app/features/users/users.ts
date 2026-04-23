@@ -1,5 +1,5 @@
 import { Component, computed, OnInit, signal } from '@angular/core';
-import { UserService, User } from './user-service';
+import { UserService, User } from '@core/services/user.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({

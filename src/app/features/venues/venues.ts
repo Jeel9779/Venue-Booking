@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VenueService } from './venue-service';
+import { VenueService } from '@core/services/venue.service';
 
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -29,6 +29,7 @@ type FilterState = 'all' | 'pending' | 'approved' | 'rejected';
 
 @Component({
   selector: 'app-venues',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './venues.html',
   styleUrl: './venues.css',

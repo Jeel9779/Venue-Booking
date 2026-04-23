@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
-import { VendorService } from './vendor-service';
+import { VendorService } from '@core/services/vendor.service';
 import { CommonModule } from '@angular/common';
-import { Vendor } from './vendor.model';
+import { Vendor } from '@core/models/vendor.model';
 import { RouterModule, Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 

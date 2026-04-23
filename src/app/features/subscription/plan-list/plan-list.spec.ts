@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlanList } from './plan-list';
+import { PlanList } from '@features/subscription/plan-list/plan-list';
 
 describe('PlanList', () => {
   let component: PlanList;
