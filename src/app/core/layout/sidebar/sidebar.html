@@ -137,6 +137,17 @@
             @if (!collapsed()) { <span class="tracking-wide">Vendors</span> }
           </a>
 
+          <a [routerLink]="['/partners']"
+            routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+            font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900
+            transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
+            [class.py-3]="collapsed()">
+            <lucide-icon [img]="icons.users" size="20" class="shrink-0 transition-transform duration-300
+              group-hover:scale-110 group-hover:text-green-600">
+            </lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Partners</span> }
+          </a>
+
           <a [routerLink]="['/bookings']"
             routerLinkActive="bg-green-50/80 text-green-700 shadow-[inset_3px_0_0_0_#10b981]" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900
@@ -238,3 +249,60 @@
   </div>
 
 </aside>
+
+
+
+
+<!-- need improve  -->
+<!--  Mobile dropdown will not work -->
+<!-- <div class="relative group">
+  <button class="... hover:bg-gray-100 cursor-pointer">Your Name</button> -->
+
+<!-- Mobile = CSS hover only (won't work on touch) -->
+<!--   <div class="hidden group-hover:block absolute ...">Logout</div>
+</div> -->
+
+<!--  Right way -->
+<!-- <div class="relative">
+  <button (click)="toggleDropdown()" class="...">Your Name</button> -->
+
+<!--   <div *ngIf="isOpen" class="absolute ...">
+    <a (click)="logout()">Logout</a>
+  </div>
+</div> -->
+
+<!-- Memory leak (resize listener)
+Remove window.addEventListener manually OR use @HostListener
+Auth storage consistency
+Use one key only (admin OR adminId, not both)
+Proper logout handling
+Clear correct storage (localStorage.clear() or consistent key) 
+
+Use Angular way for resize
+Replace manual listener with @HostListener
+Role-based menu
+Show/hide menu based on user role (admin/vendor)
+
+Add route exact matching
+
+Use:
+[routerLinkActiveOptions]="{ exact: true }"
+Avoid hardcoded values
+Replace 1024 with constant (e.g. BREAKPOINT)
+Move icons to separate file
+Keep component clean
+Create AuthService
+Move login/logout logic out of component
+Centralize user data
+Store { id, role, token } in one object
+Add logout confirmation
+Prevent accidental logout
+Improve responsive behavior
+Better mobile handling (overlay sidebar)
+Add loading/active states
+For better user feedback
+Debounce resize event
+Prevent too many updates
+Keyboard navigation support
+Ensure focus + tab works
+-->

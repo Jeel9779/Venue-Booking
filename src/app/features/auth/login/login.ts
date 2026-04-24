@@ -53,8 +53,19 @@ export class Login {
       },
       error: (err) => {
         console.error(err);
-        this.errorMsg = 'Invalid username or password';
+        /*   this.errorMsg = 'Invalid username or password'; */
+        this.errorMsg = err?.error?.message || 'Login failed';
       }
     });
   }
 }
+
+
+// Must improve:
+/* Use token instead of only adminId
+Use single storage structure
+Move API URL to environment
+Add loading state
+Improve validation
+Improve guards
+Add logout */

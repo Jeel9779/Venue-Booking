@@ -27,16 +27,16 @@ export class AddVendor {
 
 
 
-  // ✅ FILE STORAGE
+  //  FILE STORAGE
   selectedGovFile!: File;
   selectedLicenseFile!: File;
 
-  // ✅ UI STATES
+  //  UI STATES
   showSuccess = false;
   isLoading = false;
   errorMsg = '';
 
-  // ✅ FILE NAMES (UX)
+  // FILE NAMES (UX)
   govFileName = '';
   licenseFileName = '';
 
@@ -45,7 +45,7 @@ export class AddVendor {
     private router: Router
   ) { }
 
-  // ✅ FILE HANDLERS
+  //  FILE HANDLERS
   onGovFile(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -62,7 +62,7 @@ export class AddVendor {
     }
   }
 
-  // ✅ SUBMIT (PRO VERSION)
+  //  SUBMIT (PRO VERSION)
   submit(form: NgForm) {
 
     if (form.invalid || !this.selectedGovFile || !this.selectedLicenseFile) {
@@ -75,12 +75,12 @@ export class AddVendor {
 
     const formData = new FormData();
 
-    // ✅ append text fields
+    //  append text fields
     Object.keys(this.vendor).forEach((key: any) => {
       formData.append(key, this.vendor[key]);
     });
 
-    // ✅ append files
+    //  append files
     formData.append('governmentId', this.selectedGovFile);
     formData.append('licenseDoc', this.selectedLicenseFile);
 
@@ -88,18 +88,18 @@ export class AddVendor {
       next: () => {
         this.isLoading = false;
 
-        // ✅ SHOW SUCCESS UI (instead of alert)
+        // SHOW SUCCESS UI (instead of alert)
         this.showSuccess = true;
 
         setTimeout(() => {
           this.showSuccess = false;
 
-          // ✅ RESET FORM
+          // RESET FORM
           form.resetForm();
           this.govFileName = '';
           this.licenseFileName = '';
 
-          // ✅ NAVIGATE AFTER SUCCESS
+          //  NAVIGATE AFTER SUCCESS
           this.router.navigate(['/admin/vendors']);
         }, 1800);
       },
@@ -121,3 +121,30 @@ export class AddVendor {
     });
   }
 }
+
+
+
+
+
+/* Using localStorage adminId (weak auth)
+ No unsubscribe (memory risk)
+ Business logic inside component (should move to service)
+ No error detail handling */
+/* Replace any with model
+Move logic to service
+Add validation (form + file)
+Improve auth (token)
+Handle unsubscribe */
+
+/*  better structure:
+
+auth.service.ts  ← login/logout + user data
+vendor.service.ts ← API calls
+add-vendor.component.ts ← form UI only
+
+Add guards for routes
+Add proper error logging
+UseRxJS for subscriptions
+
+Use enums for status fields
+Update to use models (Vendor, VendorSubscription, etc.) */

@@ -24,10 +24,11 @@ import {
 export class Sidebar {
 
   // icon-only on mobile & tablet, full on desktop
+  // signals used for collapse and expand
   collapsed = signal(window.innerWidth < 1024);
-
   openGroup = signal<string | null>('main');
 
+  //icon
   icons = {
     dashboard: LayoutDashboard,
     venues: Building2,
@@ -41,6 +42,7 @@ export class Sidebar {
     subscript: ListChecks
   };
 
+  //constructor for router and window resize
   constructor(private router: Router) {
     // update collapsed state on resize
     window.addEventListener('resize', () => {
@@ -48,14 +50,18 @@ export class Sidebar {
     });
   }
 
+
+  //expand/collapse sidebar
   toggleSidebar() {
     this.collapsed.update(v => !v);
   }
 
+  // Open/close sections (Main, Management, etc.)
   toggleGroup(name: string) {
     this.openGroup.update(v => v === name ? null : name);
   }
 
+  // logout
   logout() {
     localStorage.removeItem('adminId');
     this.router.navigate(['/login']);

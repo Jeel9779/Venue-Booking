@@ -1,10 +1,10 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VenueService } from '@core/services/venue.service';
+import { VenueService } from '../../core/services/venue.service';
 
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// ─── Types 
 
 export interface Venue {
   _id: string;
@@ -96,7 +96,7 @@ export class Venues implements OnInit {
     this.loadVenues();
   }
 
-  // ── Data ───────────────────────────────────────────────────────────────────
+  // ── Data Loading ─────────────────────────────────────────────────────────────────
 
   loadVenues() {
     this.isLoading.set(true);
@@ -215,15 +215,9 @@ export class Venues implements OnInit {
   closeImage() {
     this.previewImage.set(null);
   }
-  /*  getImageUrl(img?: string): string {
-     if (!img) return '';
- 
-     
-     if (img.startsWith('http')) return img;
- 
-     return this.baseUrl + img.replace(/^\/+/, '');
-   } */
 
+
+  // image url..  Converts relative path → full URL
   getImageUrl(img?: string): string {
     if (!img) return '';
 
@@ -235,3 +229,11 @@ export class Venues implements OnInit {
   }
 
 }
+
+
+
+/*  No unsubscribe
+Business logic in component
+No auth token
+Hardcoded API URL
+No error UI*/

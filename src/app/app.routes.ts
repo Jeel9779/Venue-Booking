@@ -5,13 +5,13 @@ import { AddVendor } from '@features/vendors/add-vendor/add-vendor';
 import { VendorSubscriptions } from '@features/subscription/vendor-subscriptions/vendor-subscriptions';
 
 export const routes: Routes = [
-  // ✅ LOGIN FIRST
+  //  LOGIN FIRST
   {
     path: 'login',
     loadComponent: () => import('@features/auth/login/login').then((m) => m.Login),
   },
 
-  // ✅ ADMIN PANEL (PROTECTED)
+  //  ADMIN PANEL (PROTECTED)
   {
     path: '',
     loadComponent: () => import('@core/layout/admin-layout/admin-layout').then((m) => m.AdminLayout),
@@ -63,7 +63,7 @@ export const routes: Routes = [
         path: 'plans',
         loadComponent: () =>
           import('@features/subscription/plan-list/plan-list').then((m) => m.PlanList),
-        runGuardsAndResolvers: 'always',
+        runGuardsAndResolvers: 'always', // 
       },
       {
         path: 'admin/vendor-subscriptions',
@@ -75,12 +75,16 @@ export const routes: Routes = [
         loadComponent: () => import('@features/bookings/bookings').then((m) => m.Bookings),
       },
 
+      {
+        path: 'partners',
+        loadComponent: () => import('@features/partners/partners').then(m => m.Partners)
+      }
 
     ],
   },
-  // ✅ DEFAULT REDIRECT
+  //  DEFAULT REDIRECT
   {
-    path: '**',
+    path: '**', // wildcard route  
     redirectTo: 'login',
   },
 ];

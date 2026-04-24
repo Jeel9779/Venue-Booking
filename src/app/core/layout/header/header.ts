@@ -21,4 +21,12 @@ export class Header {
     plus: Plus,
     sparkles: Sparkles
   };
+
+
+
+  // not done yet logout
+  /*   logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  } */
 }

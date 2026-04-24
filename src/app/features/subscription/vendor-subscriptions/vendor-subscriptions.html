@@ -1,186 +1,251 @@
-<div class="p-4 sm:p-6 min-h-screen bg-gray-300">
+<!-- <div class="p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50/50"> -->
 
-  <!-- TITLE -->
-  <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">
-    Payment Verification
+<!-- Header -->
+<div class="mb-8">
+  <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+    Payment <span class="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 to-violet-600">Verification</span>
   </h2>
+  <p class="text-gray-500 mt-1 font-medium">Review and process vendor subscription payments.</p>
+</div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-    <!-- LEFT PANEL -->
-    <div
-      class="lg:col-span-4 bg-indigo-300/60 backdrop-blur-xl rounded-2xl p-4 shadow-md border border-white/40 max-h-[80vh] overflow-y-auto">
+  <!-- LEFT PANEL: Verification Queue -->
+  <div
+    class="lg:col-span-4 flex flex-col bg-white rounded-3xl border border-gray-300 shadow-sm overflow-hidden h-[calc(100vh-140px)] min-h-[500px]">
 
-      <h3 class="text-xs font-semibold text-gray-600 mb-4 uppercase tracking-wide">
+    <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+      <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider">
         Verification Queue
       </h3>
+      <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-0.5 rounded-full">Queue</span>
+    </div>
 
+    <div class="overflow-y-auto custom-scrollbar p-3 flex-1">
       @if (subscriptions$ | async; as subs) {
 
       @if (subs.length === 0) {
-      <p class="text-gray-400 text-center">No Data</p>
+      <div class="flex flex-col items-center justify-center h-40 text-center px-4">
+        <svg class="w-10 h-10 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+        <p class="text-gray-500 font-medium text-sm">No pending verifications</p>
+      </div>
       }
 
       @for (sub of subs; track sub.id) {
+      <div (click)="selected = sub"
+        class="relative p-4 mb-2 rounded-2xl cursor-pointer transition-all duration-200 group border" [ngClass]="{
+                'bg-indigo-50/50 border-indigo-200 shadow-sm': selected?.id === sub.id,
+                'bg-white border-transparent hover:bg-gray-50 hover:border-gray-200': selected?.id !== sub.id
+              }">
 
-      <div (click)="selected = sub" class="relative p-4 mb-3 rounded-xl cursor-pointer transition-all duration-300
-                   bg-white/70 backdrop-blur border border-white/50
-                   hover:shadow-lg hover:-translate-y-1 hover:border-indigo-300">
-
-        <!-- ACTIVE LEFT BORDER -->
-        <div class="absolute left-0 top-0 h-full w-1 rounded-l-xl bg-indigo-500 transition-all duration-300"
+        <!-- ACTIVE INDICATOR -->
+        <div
+          class="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded-r-full bg-indigo-600 transition-all duration-300"
           [class.opacity-100]="selected?.id === sub.id" [class.opacity-0]="selected?.id !== sub.id">
         </div>
 
-        <p class="font-semibold text-gray-800">
-          {{ sub.vendorName }}
-        </p>
-
-        <p class="text-sm text-gray-500">
-          ₹{{ sub.amount }}
-        </p>
-
-        <span class="text-xs px-2 py-1 rounded-full mt-1 inline-block" [ngClass]="{
-                'bg-yellow-100 text-yellow-700': sub.paymentStatus === 'pending',
-                'bg-green-100 text-green-700': sub.paymentStatus === 'approved',
-                'bg-red-100 text-red-600': sub.paymentStatus === 'failed'
-              }">
-          {{ sub.paymentStatus | titlecase }}
-        </span>
-
-      </div>
-
-      }
-
-      }
-
-    </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="lg:col-span-8 space-y-6">
-
-      @if (!selected) {
-      <div class="text-gray-400 text-center mt-20">
-        Select a vendor
-      </div>
-      }
-
-      @if (selected) {
-
-      <!-- SUMMARY -->
-      <div
-        class="bg-rose-300/60 backdrop-blur-xl rounded-2xl p-4 sm:p-6 shadow-lg border border-white/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-
-        <div class="flex flex-col md:flex-row justify-between gap-4">
-
+        <div class="flex justify-between items-start pl-2">
           <div>
-            <h3 class="text-lg font-semibold text-gray-800">
-              Transaction Summary
-            </h3>
-            <p class="text-sm text-gray-600">
-              {{ selected.vendorName }}
+            <p class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
+              {{ sub.vendorName }}
+            </p>
+            <p class="text-sm font-medium text-gray-500 mt-0.5">
+              ₹{{ sub.amount }}
             </p>
           </div>
-
-          <div class="flex flex-col sm:flex-row gap-3">
-
-            <button (click)="reject(selected)"
-              class="px-5 py-2 rounded-xl bg-red-100 text-red-600 hover:bg-red-200 hover:scale-105 transition">
-              Reject
-            </button>
-
-            <button (click)="approve(selected)" class="px-6 py-2 rounded-xl text-white font-semibold
-                       bg-linear-to-r from-indigo-500 to-purple-500
-                       hover:scale-105 hover:shadow-lg transition-all duration-300">
-              Approve
-            </button>
-
-          </div>
-
+          <span class="text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider" [ngClass]="{
+                    'bg-yellow-100 text-yellow-700': sub.paymentStatus === 'pending',
+                    'bg-green-100 text-green-700': sub.paymentStatus === 'approved',
+                    'bg-red-100 text-red-700': sub.paymentStatus === 'failed'
+                  }">
+            {{ sub.paymentStatus }}
+          </span>
         </div>
-
-        <!-- INFO BOXES -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 text-sm ">
-
-          <div class="p-4 rounded-xl bg-white/70 backdrop-blur shadow-sm hover:shadow-md transition">
-            <p class="text-xs text-gray-400">Vendor ID</p>
-            <p class="font-semibold">{{ selected.vendorId }}</p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-white/70 backdrop-blur shadow-sm hover:shadow-md transition">
-            <p class="text-xs text-gray-400">Amount</p>
-            <p class="font-semibold">₹{{ selected.amount }}</p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-white/70 backdrop-blur shadow-sm hover:shadow-md transition">
-            <p class="text-xs text-gray-400">Method</p>
-            <p class="font-semibold">{{ selected.paymentMethod }}</p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-white/70 backdrop-blur shadow-sm hover:shadow-md transition">
-            <p class="text-xs text-gray-400">Date</p>
-            <p class="font-semibold">
-              {{ selected.requestedAt | date:'shortDate' }}
-            </p>
-          </div>
-
-        </div>
-
       </div>
-
-      <!-- BOTTOM -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <!-- RECEIPT -->
-        <div
-          class="bg-green-300/60 backdrop-blur-xl rounded-2xl p-5 shadow-lg border border-white/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-
-          <h4 class="font-semibold mb-3 text-gray-700">Payment Receipt</h4>
-
-          <div class="h-64 sm:h-72 bg-blue-50 rounded-xl flex items-center justify-center p-3">
-
-            @if (selected.paymentProof) {
-            <img [src]="selected.paymentProof" (click)="openModal(selected.paymentProof)"
-              class="w-full h-full object-contain rounded-lg cursor-zoom-in transition hover:scale-105" />
-            } @else {
-            <span class="text-gray-400">No Receipt</span>
-            }
-
-          </div>
-
-        </div>
-
-        <!-- SYSTEM -->
-        <div
-          class="bg-blue-300/60 backdrop-blur-xl rounded-2xl p-5 shadow-lg border border-white/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-
-          <h4 class="font-semibold mb-3 text-gray-700">System Provisioning</h4>
-
-          <p class="text-sm text-gray-500">Vendor ID</p>
-          <p class="font-semibold mb-3">{{ selected.vendorId }}</p>
-
-          <p class="text-sm text-gray-500">Status</p>
-          <p class="font-semibold text-green-600">
-            {{ selected.status | titlecase }}
-          </p>
-
-        </div>
-
-      </div>
-
       }
+
+      } @else {
+      <div class="flex justify-center items-center py-10">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: Details -->
+  <div class="lg:col-span-8 flex flex-col space-y-6">
+
+    @if (!selected) {
+    <div
+      class="flex-1 flex flex-col items-center justify-center bg-white rounded-3xl border border-gray-300 border-dashed min-h-[500px]">
+      <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mb-4 text-gray-400">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-gray-900">No vendor selected</h3>
+      <p class="text-gray-500 mt-1">Select a transaction from the queue to view details.</p>
+    </div>
+    }
+
+    @if (selected) {
+    <!-- SUMMARY CARD -->
+    <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-300">
+
+      <div
+        class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 border-b border-gray-100 pb-6">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-14 h-14 bg-linear-to-br from-indigo-100 to-violet-100 text-indigo-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+            {{ selected.vendorName.charAt(0) | uppercase }}
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">{{ selected.vendorName }}</h3>
+            <p class="text-sm font-medium text-gray-500 flex items-center gap-2 mt-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+              </svg>
+              ID: {{ selected.vendorId }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 w-full md:w-auto">
+          <button (click)="reject(selected)"
+            class="flex-1 md:flex-none px-6 py-2.5 rounded-xl bg-white border border-red-200 text-red-600 font-semibold hover:bg-red-50 hover:border-red-300 transition-colors focus:ring-4 focus:ring-red-100">
+            Reject
+          </button>
+          <button (click)="approve(selected)"
+            class="flex-1 md:flex-none px-6 py-2.5 rounded-xl text-white font-semibold bg-gray-900 hover:bg-indigo-600 transition-all shadow-md hover:shadow-indigo-500/30 focus:ring-4 focus:ring-indigo-100">
+            Approve Payment
+          </button>
+        </div>
+      </div>
+
+      <!-- INFO GRID -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-2xl bg-gray-50 border border-gray-300">
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Amount Paid</p>
+          <p class="text-xl font-black text-gray-900">₹{{ selected.amount }}</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-gray-50 border border-gray-300">
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Method</p>
+          <p class="text-lg font-bold text-gray-900 capitalize">{{ selected.paymentMethod }}</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-gray-50 border border-gray-300">
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Date Requested</p>
+          <p class="text-lg font-bold text-gray-900">{{ selected.requestedAt | date:'mediumDate' }}</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-gray-50 border border-gray-300">
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Current Status</p>
+          <p class="text-lg font-bold capitalize" [ngClass]="{
+                  'text-yellow-600': selected.paymentStatus === 'pending',
+                  'text-green-600': selected.paymentStatus === 'approved',
+                  'text-red-600': selected.paymentStatus === 'failed'
+                }">
+            {{ selected.paymentStatus }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- RECEIPT VIEWER -->
+      <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-300 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Payment Proof</h4>
+          <button *ngIf="selected.paymentProof" (click)="openModal(selected.paymentProof)"
+            class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+            </svg>
+            Expand
+          </button>
+        </div>
+
+        <div
+          class="flex-1 bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-center p-2 min-h-[250px] overflow-hidden group">
+          @if (selected.paymentProof) {
+          <img [src]="selected.paymentProof" (click)="openModal(selected.paymentProof)"
+            class="max-h-full max-w-full object-contain rounded-xl cursor-zoom-in transition-transform duration-300 group-hover:scale-[1.02]"
+            alt="Payment Receipt" />
+          } @else {
+          <div class="text-center">
+            <svg class="w-12 h-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-gray-400 font-medium text-sm">No receipt uploaded</span>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- SYSTEM PROVISIONING -->
+      <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-300">
+        <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wide mb-6">System Provisioning</h4>
+
+        <div class="space-y-6">
+          <div class="flex items-start gap-4">
+            <div
+              class="mt-1 w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-500">Account Reference</p>
+              <p class="font-bold text-gray-900 mt-0.5">{{ selected.vendorId }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="mt-1 w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-green-500 shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-500">Subscription Access</p>
+              <p class="font-bold text-gray-900 mt-0.5 capitalize">{{ selected.status || 'Inactive' }}</p>
+              <p class="text-xs text-gray-400 mt-1">Approving will automatically activate the requested tier for this
+                vendor account.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
 
     </div>
 
-  </div>
-
-  <!-- IMAGE MODAL -->
-  @if (previewImage) {
-  <div class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-sm" (click)="closeModal()">
-
-    <img [src]="previewImage" class="max-w-[90%] max-h-[90%] rounded-xl shadow-2xl" />
+    }
 
   </div>
-  }
 
 </div>
+
+<!-- IMAGE MODAL (Lightbox) -->
+@if (previewImage) {
+<div class="fixed inset-0 bg-gray-900/90 flex items-center justify-center z-100 p-4 backdrop-blur-sm"
+  (click)="closeModal()">
+  <button (click)="closeModal()"
+    class="absolute top-6 right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <img [src]="previewImage" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+    (click)="$event.stopPropagation()" />
+</div>
+}
+
+<!-- </div> -->

@@ -18,18 +18,10 @@ export class Vendors implements OnInit {
     private router: Router,
     private vendorService: VendorService
   ) { }
+
+  // go to Add Vendor page
   goToAddVendor() {
     this.router.navigate(['/add-vendor']);
-  }
-
-  venues() {
-    throw new Error('Method not implemented.');
-  }
-  reject(_t18: any) {
-    throw new Error('Method not implemented.');
-  }
-  reopen(_t18: any) {
-    throw new Error('Method not implemented.');
   }
 
   // ================= TOAST =================
@@ -41,17 +33,15 @@ export class Vendors implements OnInit {
   }
 
   // ================= STATE =================
-  vendors = signal<Vendor[]>([]);
+  vendors = signal<Vendor[]>([]); // Stores vendor list
   isLoading = signal(false);
 
   filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
   search = signal('');
 
   selectedVendor = signal<Vendor | null>(null);
-
+  //  NEW MODALS
   showDetailsModal = signal(false);
-
-  // ✅ NEW MODALS
   showApproveModal = signal(false);
   showRejectModal = signal(false);
 
@@ -59,17 +49,22 @@ export class Vendors implements OnInit {
   credentials = signal({ username: '', password: '' });
   rejectReason = signal('');
 
+
+  //Image preview
   previewImage = signal<string | null>(null);
 
 
-
+  // Fetch data automatically
   ngOnInit() {
     this.loadVendors();
   }
 
+
+  //api call to get all vendors
   loadVendors() {
     this.isLoading.set(true);
 
+    // Observable (async data)
     this.vendorService.getVendors().subscribe({
       next: (data) => {
         this.vendors.set(data);
@@ -103,6 +98,8 @@ export class Vendors implements OnInit {
 
     return list;
   });
+
+
   // ================= COUNTS =================
   counts = computed(() => {
     const list = this.vendors();
@@ -114,23 +111,29 @@ export class Vendors implements OnInit {
       rejected: list.filter(v => v.status?.toLowerCase().trim() === 'rejected').length,
     };
   });
+
+
   // ================= DETAILS =================
+  //open modal
   openDetails(v: Vendor) {
     this.selectedVendor.set(v);
     this.showDetailsModal.set(true);
   }
 
+  // close modal
   closeDetails() {
     this.showDetailsModal.set(false);
     this.selectedVendor.set(null);
   }
 
   // ================= IMAGE =================
+  // show img
   openModal(img?: string) {
     if (!img) return;
     this.previewImage.set(img);
   }
 
+  // close img
   closeModal() {
     this.previewImage.set(null);
   }
@@ -162,6 +165,9 @@ export class Vendors implements OnInit {
       .subscribe({
         next: () => {
           this.showApproveModal.set(false);
+
+          this.showDetailsModal.set(false); // ✅ ADD THIS
+          this.selectedVendor.set(null);    // ✅ ADD THIS
           this.showToast('Vendor Approved ✅');
           this.loadVendors();
         },
@@ -195,6 +201,11 @@ export class Vendors implements OnInit {
       .subscribe({
         next: () => {
           this.showRejectModal.set(false);
+          this.showDetailsModal.set(false); // ✅ ADD THIS
+          this.selectedVendor.set(null);    // ✅ ADD THIS
+
+          // Force UI refresh (important)
+          this.rejectReason.set('');
           this.showToast('Vendor Rejected ❌', 'error');
           this.loadVendors();
         },
@@ -202,3 +213,17 @@ export class Vendors implements OnInit {
       });
   }
 }
+
+/* Improvements (important)
+ Move business logic to service
+ Use token instead of adminId
+ Add unsubscribe handling
+ Remove unused methods
+ improve:
+
+Unsubscribe handling
+Central modal management
+Auth (JWT instead of adminId)
+Error handling (global)
+Form validation
+ */
