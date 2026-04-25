@@ -9,8 +9,8 @@ import { Vendor } from '@core/models/vendor.model';
 export class VendorService {
   private http = inject(HttpClient);
 
-  private api = 'http://192.168.1.11:3000/vendors';
-
+  /* private api = 'http://192.168.1.11:3000/vendors'; */
+  private api = 'http://192.168.29.122:3000/vendors';
 
   // GET all vendors
   getVendors(): Observable<Vendor[]> {

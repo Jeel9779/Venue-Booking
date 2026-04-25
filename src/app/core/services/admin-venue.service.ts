@@ -7,7 +7,9 @@ import { Venue } from '../models/venue-types.modal';
 })
 export class AdminVenueService {
   private http = inject(HttpClient);
-  private api = 'http://192.168.1.11:3000/admin/venues';
+  /*  private api = 'http://192.168.1.11:3000/admin/venues'; */
+  private api = 'http://localhost:3000/admin/venues';
+
 
   approveVenue(id: string) {
     return this.http.patch<Venue>(`${this.api}/${id}/approve`, {});
