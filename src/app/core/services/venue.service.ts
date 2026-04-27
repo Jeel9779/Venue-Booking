@@ -8,8 +8,8 @@ import { Venue } from '../models/venue-types.modal';
 export class VenueService {
 
   private http = inject(HttpClient);
-  /*  private api = 'http://192.168.1.11:3000/venues'; */
-  private api = 'http://192.168.29.122:3000/venues';
+    private api = 'http://192.168.1.11:3000/venues'; 
+/*   private api = 'http://192.168.29.122:3000/venues'; */
 
 
 

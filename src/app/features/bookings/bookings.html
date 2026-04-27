@@ -1,1 +1,446 @@
-<p>bookings works!</p>
+<div class="bookings-page min-h-screen bg- max-w-[1600px] mx-auto py-6 px-4 sm:px-6">
+
+  <!-- HEADER -->
+  <div class="page-header mb-6">
+    <div class="flex items-center gap-3.5 mb-4">
+      <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-3xl font-bold tracking-tight m-0 leading-tight">Booking Management</h1>
+        <p class="text-[0.8125rem] text-slate-500 mt-0.5 mb-0">Monitor and manage all venue bookings</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ ERROR BANNER (was missing entirely) -->
+  @if (error()) {
+    <div class="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5 text-sm">
+      <svg width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 8v4m0 4h.01"/>
+      </svg>
+      <span class="text-red-700 flex-1">{{ error() }}</span>
+      <button
+        class="px-3 py-1 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition"
+        (click)="retry()">
+        Retry
+      </button>
+    </div>
+  }
+
+  <!-- KPI CARDS -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+
+    <!-- Total Bookings -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-lg transition-all duration-200">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[0.75rem] font-bold uppercase tracking-wider text-slate-500">Total Bookings</span>
+        <div class="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-slate-900">{{ stats().totalBookings }}</div>
+      <p class="text-[0.75rem] text-slate-500 mt-1">Total venue bookings</p>
+    </div>
+
+    <!-- Total Revenue -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-lg transition-all duration-200">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[0.75rem] font-bold uppercase tracking-wider text-slate-500">Total Revenue</span>
+        <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-slate-900">{{ formatCurrency(stats().totalRevenue) }}</div>
+      <p class="text-[0.75rem] text-slate-500 mt-1">From approved bookings</p>
+    </div>
+
+    <!-- Approved -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-lg transition-all duration-200">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[0.75rem] font-bold uppercase tracking-wider text-slate-500">Approved</span>
+        <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-emerald-600">{{ stats().approvedCount }}</div>
+      <!-- ✅ pct() guards division by zero (was NaN when totalBookings = 0) -->
+      <p class="text-[0.75rem] text-slate-500 mt-1">{{ pct(stats().approvedCount, stats().totalBookings) }}% of total</p>
+    </div>
+
+    <!-- Rejected -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-lg transition-all duration-200">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[0.75rem] font-bold uppercase tracking-wider text-slate-500">Rejected</span>
+        <div class="w-9 h-9 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-red-600">{{ stats().rejectedCount }}</div>
+      <p class="text-[0.75rem] text-slate-500 mt-1">{{ pct(stats().rejectedCount, stats().totalBookings) }}% of total</p>
+    </div>
+
+    <!-- Pending -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-lg transition-all duration-200">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[0.75rem] font-bold uppercase tracking-wider text-slate-500">Pending</span>
+        <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-amber-600">{{ stats().pendingCount }}</div>
+      <p class="text-[0.75rem] text-slate-500 mt-1">Awaiting action</p>
+    </div>
+
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar flex gap-3 flex-wrap mb-6 items-center w-full">
+
+    <!-- Search — ✅ uses typed handler, no $any() cast -->
+    <div class="relative flex-1 min-w-55">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+        width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <input
+        type="text"
+        class="w-full py-2.5 pl-9 pr-9 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 box-border"
+        placeholder="Search bookings..."
+        [value]="search()"
+        (input)="onSearchInput($event)" />
+      @if (search()) {
+        <button
+          class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-slate-400 flex p-1 rounded hover:text-slate-700"
+          (click)="search.set('')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      }
+    </div>
+
+    <!-- Status Filter — ✅ fixed: was [(ngModel)]="statusFilter" which is broken with signals -->
+    <select
+      class="py-2.5 px-3 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
+      [value]="statusFilter()"
+      (change)="statusFilter.set($any($event.target).value)">
+      <option value="all">All Status</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+      <option value="pending">Pending</option>
+    </select>
+
+  </div>
+
+  <!-- ✅ REMOVED: isLoading spinner block — toSignal handles this internally -->
+
+  <!-- EMPTY STATE — ✅ removed isLoading() check -->
+  @if (filteredBookings().length === 0 && !error()) {
+    <div class="flex flex-col items-center justify-center py-20 gap-3 text-center w-full">
+      <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mb-1">
+        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold m-0">No bookings found</h3>
+      <p class="text-slate-500 text-sm m-0">Try adjusting your search or filter criteria.</p>
+      <button
+        class="mt-2 px-5 py-2 bg-purple-600 text-white rounded-xl text-sm font-semibold cursor-pointer transition-all duration-200 hover:bg-purple-700"
+        (click)="search.set(''); statusFilter.set('all')">
+        Reset filters
+      </button>
+    </div>
+  }
+
+  <!-- BOOKINGS TABLE — ✅ removed isLoading() check -->
+  @if (filteredBookings().length > 0) {
+    <div class="mb-6">
+      <div class="bg-white border border-slate-200 rounded-3xl shadow-sm p-5 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr>
+                <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">User</th>
+                <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Vendor</th>
+                <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Venue</th>
+                <th
+                  class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-50 transition"
+                  (click)="toggleSort('date')">
+                  <div class="flex items-center gap-1.5">
+                    Booking Date
+                    @if (sortBy() === 'date') {
+                      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"
+                        viewBox="0 0 24 24" [class.rotate-180]="sortOrder() === 'desc'">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    }
+                  </div>
+                </th>
+                <th
+                  class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-50 transition"
+                  (click)="toggleSort('cost')">
+                  <div class="flex items-center gap-1.5">
+                    Cost
+                    @if (sortBy() === 'cost') {
+                      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"
+                        viewBox="0 0 24 24" [class.rotate-180]="sortOrder() === 'desc'">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    }
+                  </div>
+                </th>
+                <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Status</th>
+                <th class="px-4 py-3 border-b border-slate-200 text-right"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (booking of filteredBookings(); track booking._id) {
+                <tr class="border-b border-slate-100 transition hover:bg-slate-50/50">
+                  <td class="px-4 py-3.5">
+                    <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.userId.name || 'N/A' }}</div>
+                    <div class="text-[0.75rem] text-slate-500">{{ booking.userId.email || 'N/A' }}</div>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.vendorId.name || 'N/A' }}</div>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.venueId.name || 'N/A' }}</div>
+                    <div class="text-[0.75rem] text-slate-500">{{ booking.venueId.location || 'N/A' }}</div>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <div class="text-sm font-semibold text-slate-600">{{ formatDate(booking.date) }}</div>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <div class="text-sm font-bold text-slate-900">{{ formatCurrency(booking.cost) }}</div>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <span [class]="'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold border ' + getStatusColor(booking.status)">
+                      <span class="w-1.5 h-1.5 rounded-full"
+                        [class.bg-emerald-600]="booking.status === 'approved'"
+                        [class.bg-red-600]="booking.status === 'rejected'"
+                        [class.bg-amber-600]="booking.status === 'pending'">
+                      </span>
+                      {{ booking.status | titlecase }}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3.5 text-right">
+                    <button
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.75rem] font-semibold border-none cursor-pointer bg-purple-100 text-purple-600 transition hover:bg-purple-200"
+                      (click)="openStatusModal(booking)">
+                      Change Status
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Revenue by Vendor -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
+        <h3 class="text-base font-bold m-0 mb-4 text-slate-900">Revenue by Vendor</h3>
+        <div class="space-y-3">
+          @for (item of vendorRevenue(); track item.vendor) {
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-slate-900">{{ item.vendor }}</span>
+                <span class="text-sm font-bold text-slate-600">{{ formatCurrency(item.revenue) }}</span>
+              </div>
+              <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-purple-600 to-pink-600 rounded-full transition-all duration-500"
+                  [style.width.%]="pct(item.revenue, vendorRevenue()[0]?.revenue || 1)">
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Bookings by Venue -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
+        <h3 class="text-base font-bold m-0 mb-4 text-slate-900">Bookings by Venue</h3>
+        <div class="space-y-3">
+          @for (item of venueBookings(); track item.venue) {
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-slate-900">{{ item.venue }}</span>
+                <span class="text-sm font-bold text-slate-600">{{ item.count }} bookings</span>
+              </div>
+              <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full transition-all duration-500"
+                  [style.width.%]="pct(item.count, venueBookings()[0]?.count || 1)">
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- ✅ Monthly Revenue (was computed but NEVER shown in the original template) -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
+        <h3 class="text-base font-bold m-0 mb-4 text-slate-900">Monthly Revenue</h3>
+        <div class="space-y-3">
+          @for (item of monthlyRevenue(); track item.month) {
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-slate-900">{{ item.month }}</span>
+                <span class="text-sm font-bold text-slate-600">{{ formatCurrency(item.revenue) }}</span>
+              </div>
+              <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500"
+                  [style.width.%]="pct(item.revenue, monthlyRevenue()[monthlyRevenue().length - 1]?.revenue || 1)">
+                </div>
+              </div>
+            </div>
+          }
+          @if (monthlyRevenue().length === 0) {
+            <p class="text-sm text-slate-400 text-center py-4">No revenue data yet</p>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>
+
+<!-- ═══════════════════════ STATUS UPDATE MODAL ═══════════════════════ -->
+@if (showStatusModal()) {
+  <div
+    class="fixed inset-0 z-40 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4"
+    (click)="closeStatusModal()">
+    <div
+      class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-7"
+      (click)="$event.stopPropagation()">
+
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between gap-4 pb-5 border-b border-slate-200 mb-5">
+        <div>
+          <h3 class="text-lg font-bold m-0 mb-1">Update Booking Status</h3>
+          <p class="text-sm text-slate-500 m-0">Change the status of this booking</p>
+        </div>
+        <button
+          class="w-9 h-9 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-pointer transition hover:bg-slate-200"
+          (click)="closeStatusModal()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Booking Details -->
+      <div class="bg-slate-50 rounded-2xl p-4 mb-5 space-y-2">
+        <div class="flex justify-between text-sm">
+          <span class="text-slate-500">User</span>
+          <span class="font-semibold text-slate-900">{{ selectedBooking()!.userId.name }}</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-slate-500">Venue</span>
+          <span class="font-semibold text-slate-900">{{ selectedBooking()!.venueId.name }}</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-slate-500">Date</span>
+          <span class="font-semibold text-slate-900">{{ formatDate(selectedBooking()!.date) }}</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-slate-500">Cost</span>
+          <span class="font-semibold text-slate-900">{{ formatCurrency(selectedBooking()!.cost) }}</span>
+        </div>
+      </div>
+
+      <!-- Status Selection — ✅ fixed: was [(ngModel)]="newStatus" which is broken with signals -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-slate-700 mb-3">New Status</label>
+        <div class="space-y-2">
+
+          <label
+            class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition"
+            [class.border-emerald-500]="newStatus() === 'approved'"
+            [class.bg-emerald-50]="newStatus() === 'approved'"
+            [class.border-slate-200]="newStatus() !== 'approved'">
+            <input type="radio" value="approved"
+              [checked]="newStatus() === 'approved'"
+              (change)="newStatus.set('approved')"
+              class="w-4 h-4 accent-purple-600" />
+            <span class="font-semibold text-slate-900">Approved</span>
+          </label>
+
+          <label
+            class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition"
+            [class.border-red-500]="newStatus() === 'rejected'"
+            [class.bg-red-50]="newStatus() === 'rejected'"
+            [class.border-slate-200]="newStatus() !== 'rejected'">
+            <input type="radio" value="rejected"
+              [checked]="newStatus() === 'rejected'"
+              (change)="newStatus.set('rejected')"
+              class="w-4 h-4 accent-purple-600" />
+            <span class="font-semibold text-slate-900">Rejected</span>
+          </label>
+
+          <label
+            class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition"
+            [class.border-amber-500]="newStatus() === 'pending'"
+            [class.bg-amber-50]="newStatus() === 'pending'"
+            [class.border-slate-200]="newStatus() !== 'pending'">
+            <input type="radio" value="pending"
+              [checked]="newStatus() === 'pending'"
+              (change)="newStatus.set('pending')"
+              class="w-4 h-4 accent-purple-600" />
+            <span class="font-semibold text-slate-900">Pending</span>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-2 pt-4 border-t border-slate-200">
+        <button
+          class="px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-slate-100 text-slate-500 transition hover:bg-slate-200"
+          (click)="closeStatusModal()">
+          Cancel
+        </button>
+        <button
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-purple-600 text-white transition hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.97]"
+          [disabled]="isSubmitting()"
+          (click)="submitStatusUpdate()">
+          @if (isSubmitting()) {
+            <span class="inline-block w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
+          }
+          {{ isSubmitting() ? 'Updating…' : 'Update Status' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

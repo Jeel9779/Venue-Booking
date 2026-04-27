@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,9 +12,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Login {
   ngOnInit() {
-
     const adminId = localStorage.getItem('adminId');
-
     if (adminId) {
       this.router.navigate(['/dashboard']); // already logged in
     }
@@ -25,6 +23,7 @@ export class Login {
   http = inject(HttpClient);
 
   errorMsg = '';
+  isLoading = signal(false);
 
   form = this.fb.group({
     username: ['', [Validators.required]],
@@ -33,39 +32,25 @@ export class Login {
   });
 
   login() {
-    console.log('LOGIN CLICKED');
-
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.isLoading()) return;
 
     const { username, password } = this.form.value;
+    this.isLoading.set(true);
+    this.errorMsg = '';
 
     this.http.post<any>('http://192.168.1.11:3000/admin/login', {
       username,
       password
     }).subscribe({
       next: (res) => {
-        console.log('LOGIN RESPONSE:', res);
-
-        // 🔥 IMPORTANT
         localStorage.setItem('adminId', res.admin._id);
-
+        this.isLoading.set(false);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.error(err);
-        /*   this.errorMsg = 'Invalid username or password'; */
-        this.errorMsg = err?.error?.message || 'Login failed';
+        this.errorMsg = err?.error?.message || 'Login failed. Please try again.';
+        this.isLoading.set(false);
       }
     });
   }
 }
-
-
-// Must improve:
-/* Use token instead of only adminId
-Use single storage structure
-Move API URL to environment
-Add loading state
-Improve validation
-Improve guards
-Add logout */

@@ -11,7 +11,7 @@
 
 
 
-<div class="max-w-[1500px] mx-auto my-6 px-4">
+<div class="max-w-[1500px] mx-auto py-6 px-4 sm:px-6 min-h-screen bg-gray-300">
 
     <!-- ADD VENDOR BUTTON -->
 
@@ -41,8 +41,8 @@
             <!-- BUTTON ROW (RIGHT SIDE) -->
             <div class="flex justify-end">
                 <button class="inline-flex items-center gap-1.5 px-3 py-1.5 
-            bg-indigo-600 text-white rounded-xl text-sm font-semibold 
-            hover:bg-indigo-700 transition cursor-pointer border-none 
+            bg-[#6C63FF] text-white rounded-xl text-sm font-semibold 
+            hover:bg-[#574fcc] transition-all duration-200 cursor-pointer border-none 
             shadow-md active:scale-95" routerLink="/add-vendor" (click)="goToAddVendor()">
 
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -142,7 +142,7 @@
 
     <!-- ═══════════════════════ TABLE ═══════════════════════ -->
     @if (!isLoading() && filteredVendors().length > 0) {
-    <div class="bg-white border border-slate-200 rounded-[18px] shadow-sm w-full p-4">
+    <div class="bg-white border border-gray-200 rounded-[24px] shadow-sm w-full p-5 transition-all duration-200 hover:shadow-md">
         <div class="px-5 py-3.5 border-b border-slate-200 text-[0.8125rem] text-slate-500 bg-[#fafafa]">
             <span>Showing <strong class="text-indigo-600">{{ filteredVendors().length }}</strong> of {{ counts().all }}
                 vendors</span>

@@ -1,5 +1,5 @@
 <header id="main-header" role="banner"
-  class="sticky top-0 z-50 h-[72px] bg-white/85 backdrop-blur-2xl border-b border-gray-300 flex items-center justify-between px-4 md:px-6 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.04)] transition-all duration-300 w-full">
+  class="sticky top-0 z-50 h-[72px] bg-[#F5F6F8] border-b border-gray-300 flex items-center justify-between px-4 md:px-6 shadow-sm transition-all duration-300 w-full">
 
   <!-- LEFT SECTION -->
   <div class="flex items-center gap-3 sm:gap-6 min-w-0">
@@ -14,8 +14,8 @@
           BookMyVenue
         </h1>
         <span
-          class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-linear-to-r from-green-200 to-emerald-200 border border-green-200/60 text-[0.65rem] font-bold text-green-700 tracking-widest uppercase shadow-sm">
-          <lucide-icon [img]="icons.sparkles" size="10" class="text-green-600"></lucide-icon>
+          class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#E8E9FF] border border-[#D6D9FF] text-[0.65rem] font-bold text-[#4E4CFF] tracking-widest uppercase shadow-sm">
+          <lucide-icon [img]="icons.sparkles" size="10" class="text-[#6C63FF]"></lucide-icon>
           Admin
         </span>
       </div>
@@ -29,7 +29,7 @@
 
   <!-- CENTER DESKTOP NAVIGATION (Cosmetic/Semantic) -->
   <nav aria-label="Quick Navigation"
-    class="hidden lg:flex items-center gap-1 px-2 py-1 mx-4 bg-gray-50/80 border border-gray-200/60 rounded-full shadow-[inset_0_1px_4px_rgba(0,0,0,0.02)]">
+    class="hidden lg:flex items-center gap-1 px-2 py-1 mx-4 bg-white border border-gray-200 rounded-full shadow-sm">
 
 
     <button tabindex="0"
@@ -37,9 +37,9 @@
       Overview</button>
 
     <button tabindex="0"
-      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-green-500">Reports</button>
+      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-[#6C63FF]/40">Reports</button>
     <button tabindex="0"
-      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-green-500">Audit
+      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-[#6C63FF]/40">Audit
       Logs</button>
   </nav>
 
@@ -49,7 +49,7 @@
     <!-- Action Dropdown: Create New -->
     <div class="hidden md:block relative group z-50">
       <button
-        class="flex items-center gap-1.5 px-3 py-2 bg-gray-200 hover:bg-emerald-300 text-gray-700 text-sm font-medium rounded-xl shadow-md hover:shadow-xl hover:shadow-green-900/20 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+        class="flex items-center gap-1.5 px-3 py-2 bg-[#EAECF0] hover:bg-[#D9DBE1] text-gray-700 text-sm font-medium rounded-xl shadow-md hover:shadow-xl shadow-[#6C63FF]/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/40"
         aria-haspopup="true">
         <lucide-icon [img]="icons.plus" size="16"></lucide-icon>
         <span class="hidden xl:inline">New</span>
@@ -58,13 +58,13 @@
       <div
         class="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.08)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out transform origin-top-right scale-95 group-hover:scale-100 flex flex-col py-2">
         <a tabindex="0"
-          class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">New
+          class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[#6C63FF] cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">New
           Venue</a>
         <!--     <a tabindex="0" 
-          class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">New
+          class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[#6C63FF] cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">New
           Vendor</a>  -->
         <a routerLink="/add-vendor" tabindex="0" class="px-4 py-2 text-sm font-medium text-gray-700 
-   hover:bg-gray-50 hover:text-green-600 cursor-pointer 
+   hover:bg-gray-50 hover:text-[#6C63FF] cursor-pointer 
    transition-colors focus:bg-gray-50 focus:outline-none">
 
           New Vendor
@@ -81,12 +81,11 @@
         class="absolute left-3 text-gray-400 group-focus-within:text-green-500 transition-colors pointer-events-none">
         <lucide-icon [img]="icons.search" size="16"></lucide-icon>
       </div>
-      <input type="text" placeholder="Search..." aria-label="Global Search" class="h-10 w-48 xl:w-64 pl-9 pr-4 rounded-xl bg-gray-50/80 border border-transparent 
-           hover:border-green-500 hover:ring-1 hover:ring-green-500 
-           hover:bg-gray-200 focus:bg-white focus:border-green-400 
-           focus:ring-4 focus:ring-green-400/10 
+      <input type="text" placeholder="Search..." aria-label="Global Search" class="h-10 w-48 xl:w-64 pl-9 pr-4 rounded-xl bg-white border border-gray-200 
+           focus:bg-white focus:border-[#6C63FF] 
+           focus:ring-4 focus:ring-[#6C63FF]/10 
            text-sm text-gray-800 placeholder-gray-400 
-           transition-all duration-300 outline-none">
+           transition-all duration-200 ease-in-out outline-none">
       <div class="absolute right-2.5 flex items-center pointer-events-none">
         <kbd
           class="hidden xl:inline-block px-1.5 py-0.5 text-[0.65rem] font-mono font-medium text-gray-400 bg-white border border-gray-200 rounded shadow-xs">⌘K</kbd>
@@ -115,12 +114,12 @@
     <!-- User Profile Multi-level Dropdown (CSS Hover based) -->
     <div class="relative group z-50">
       <div tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="User menu"
-        class="flex items-center gap-2 sm:gap-3 pl-1 py-1 rounded-full cursor-pointer hover:bg-gray-50 sm:pr-3 transition-colors border border-transparent hover:border-gray-200/60 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-400">
+        class="flex items-center gap-2 sm:gap-3 pl-1 py-1 rounded-full cursor-pointer hover:bg-gray-50 sm:pr-3 transition-colors border border-transparent hover:border-gray-200/60 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/40">
 
         <!-- Avatar with online status -->
         <div class="relative shrink-0">
           <img src="https://i.pravatar.cc/150?u=a04258" alt="Harsh Vadukiya Avatar"
-            class="w-9 h-9 rounded-full object-cover shadow-sm ring-1 ring-gray-200 group-hover:ring-green-500 group-focus:ring-green-500 transition-all duration-300" />
+            class="w-9 h-9 rounded-full object-cover shadow-sm ring-1 ring-gray-200 group-hover:ring-[#6C63FF] group-focus:ring-[#6C63FF] transition-all duration-300" />
           <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full ring-2 ring-white shadow-sm">
           </div>
         </div>
@@ -149,17 +148,17 @@
 
         <!-- Menu Links -->
         <a tabindex="0"
-          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
+          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-[#6C63FF] cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
           <lucide-icon [img]="icons.user" size="16" class="text-gray-400"></lucide-icon>
           My Profile
         </a>
         <a tabindex="0"
-          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
+          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-[#6C63FF] cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
           <lucide-icon [img]="icons.settings" size="16" class="text-gray-400"></lucide-icon>
           Account Settings
         </a>
         <a tabindex="0"
-          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-green-600 cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
+          class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50/80 hover:text-[#6C63FF] cursor-pointer transition-colors focus:bg-gray-50 focus:outline-none">
           <lucide-icon [img]="icons.lifeBuoy" size="16" class="text-gray-400"></lucide-icon>
           Help Center
         </a>

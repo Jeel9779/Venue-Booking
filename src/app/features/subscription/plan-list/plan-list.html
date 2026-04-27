@@ -1,4 +1,4 @@
-<div class="w-full max-w-6xl mx-auto py-1">
+<div class="w-full max-w-6xl mx-auto bg-gray-300 min-h-screen py-6 px-4 sm:px-6">
   <!-- ── Header ── -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
     <div>
@@ -6,7 +6,7 @@
       <p class="text-sm text-gray-500 mt-1">Manage pricing tiers and limits for your vendor ecosystem.</p>
     </div>
     <button (click)="openAddForm()"
-      class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md">
+      class="inline-flex items-center gap-2 bg-[#6C63FF] hover:bg-[#574fcc] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
       </svg>
@@ -40,7 +40,7 @@
 
       <div *ngFor="let plan of plans; let i = index"
         class="relative flex flex-col rounded-3xl transition-all duration-300" [ngClass]="{
-          'bg-gray-900 text-white shadow-2xl shadow-gray-900/20 ring-1 ring-gray-800 scale-100 lg:scale-105 z-10': plan.isActive && i === 1,
+          'bg-[#6C63FF] text-white shadow-2xl shadow-[#6C63FF]/20 ring-1 ring-[#6C63FF] scale-100 lg:scale-105 z-10': plan.isActive && i === 1,
           'bg-white text-gray-900 shadow-xl shadow-gray-200/40 border border-gray-200': !(plan.isActive && i === 1)
         }">
 
@@ -114,9 +114,9 @@
           <button (click)="editPlan(plan)"
             class="w-full flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-4 rounded-xl transition-all duration-200 mb-8"
             [ngClass]="{
-              'bg-white text-gray-900 hover:bg-gray-100 shadow-sm': plan.isActive && i === 1,
-              'bg-indigo-50 text-indigo-700 hover:bg-indigo-100': plan.isActive && i !== 1,
-              'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100': !plan.isActive
+            'bg-white text-gray-900 hover:bg-[#F5F6F8] shadow-sm': plan.isActive && i === 1,
+            'bg-indigo-50 text-indigo-700 hover:bg-indigo-100': plan.isActive && i !== 1,
+            'bg-[#EAECF0] text-[#0F1117] border border-gray-200 hover:bg-[#D9DBE1]': !plan.isActive
             }">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"

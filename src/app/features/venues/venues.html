@@ -1,4 +1,4 @@
-<div class="venues-page max-w-[1500px] mx-auto my-6 px-4">
+<div class="venues-page min-h-screen bg-gray-300 max-w-[1500px] mx-auto py-6 px-4 sm:px-6">
 
   <!-- HEADER -->
   <div class="page-header flex items-center justify-between flex-wrap gap-4 mb-3">
@@ -91,14 +91,14 @@
       <h3 class="text-lg font-semibold m-0">No venues found</h3>
       <p class="text-slate-500 text-sm m-0">Try adjusting your search or filter criteria.</p>
       <button
-        class="mt-2 px-5 py-2 bg-indigo-600 text-white border-none rounded-xl text-sm font-semibold cursor-pointer transition hover:bg-indigo-700"
+            class="mt-2 px-5 py-2 bg-[#6C63FF] text-white rounded-xl text-sm font-semibold cursor-pointer transition-all duration-200 hover:bg-[#574fcc]"
         (click)="search.set(''); filter.set('all')">Reset filters</button>
     </div>
     }
 
     <!-- TABLE -->
     @if (!isLoading() && filteredVenues().length > 0) {
-    <div class="bg-white border border-slate-300 rounded-[18px] shadow-lg backdrop-blur-lg w-full p-4">
+    <div class="bg-white border border-gray-200 rounded-[24px] shadow-sm w-full p-5 transition-all duration-200 hover:shadow-md">
       <div class="px-5 py-3.5 border-b border-slate-200 text-[0.8125rem] text-slate-500 bg-[#fafafa]">
         <span>Showing <strong class="text-indigo-600">{{ filteredVenues().length }}</strong> of {{ counts().all }}
           venues</span>
@@ -313,8 +313,7 @@
           <h4
             class="text-[0.8125rem] font-bold uppercase tracking-wider text-slate-500 m-0 mb-3 flex items-center gap-2">
             Description</h4>
-          <p
-            class="text-[0.9rem] leading-relaxed text-slate-900 bg-white border border-slate-300 rounded-xl shadow-lg backdrop-blur-lgrounded-xl px-4 py-3.5 m-0">
+          <p class="text-[0.9rem] leading-relaxed text-slate-900 bg-white border border-slate-300 rounded-xl shadow-lg backdrop-blur-lg px-4 py-3.5 m-0">
             {{ selectedVenue()?.description }}</p>
         </div>
         }
