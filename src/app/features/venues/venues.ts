@@ -2,30 +2,9 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VenueService } from '../../core/services/venue.service';
-
-
-// ─── Types 
-
-export interface Venue {
-  _id: string;
-  name: string;
-  city: string;
-  state: string;
-  zip: string;
-  type: string;
-  capacity: number;
-  pricePerDay: number;
-  status: 'pending' | 'approved' | 'rejected';
-  description: string;
-  amenities: string[];
-  mediaFiles: string[];
-  createdAt: string;
-  adminDescription?: string;
-}
+import { Venue } from '../../core/models/venue.model';
 
 type FilterState = 'all' | 'pending' | 'approved' | 'rejected';
-
-// ─── Component ───────────────────────────────────────────────────────────────
 
 @Component({
   selector: 'app-venues',
@@ -35,12 +14,10 @@ type FilterState = 'all' | 'pending' | 'approved' | 'rejected';
   styleUrl: './venues.css',
 })
 export class Venues implements OnInit {
-
-
-  /*  private baseUrl = 'http://192.168.1.13:3000/'; */
+  
   private baseUrl = 'http://192.168.1.11:3000/venues';
 
-  constructor(private venueService: VenueService) { }
+  constructor(private venueService: VenueService) {}
 
   // ── State ──────────────────────────────────────────────────────────────────
 
@@ -65,15 +42,16 @@ export class Venues implements OnInit {
     let list = this.venues();
 
     if (this.filter() !== 'all') {
-      list = list.filter(v => v.status === this.filter());
+      list = list.filter((v) => v.status === this.filter());
     }
 
     const s = this.search().toLowerCase().trim();
     if (s) {
-      list = list.filter(v =>
-        v.name.toLowerCase().includes(s) ||
-        v.city.toLowerCase().includes(s) ||
-        v.type.toLowerCase().includes(s)
+      list = list.filter(
+        (v) =>
+          v.name.toLowerCase().includes(s) ||
+          v.city.toLowerCase().includes(s) ||
+          v.type.toLowerCase().includes(s),
       );
     }
 
@@ -84,9 +62,9 @@ export class Venues implements OnInit {
     const list = this.venues();
     return {
       all: list.length,
-      pending: list.filter(v => v.status === 'pending').length,
-      approved: list.filter(v => v.status === 'approved').length,
-      rejected: list.filter(v => v.status === 'rejected').length,
+      pending: list.filter((v) => v.status === 'pending').length,
+      approved: list.filter((v) => v.status === 'approved').length,
+      rejected: list.filter((v) => v.status === 'rejected').length,
     };
   });
 
@@ -103,7 +81,7 @@ export class Venues implements OnInit {
 
     this.venueService.getVenues().subscribe({
       next: (data) => {
-        const venues: Venue[] = data.map(v => ({
+        const venues: Venue[] = data.map((v) => ({
           ...v,
           amenities: this.parseAmenities(v.amenities),
         }));
@@ -124,12 +102,20 @@ export class Venues implements OnInit {
     if (Array.isArray(raw)) {
       // Backend sometimes wraps the JSON array inside a single-element array
       if (raw.length === 1 && typeof raw[0] === 'string') {
-        try { return JSON.parse(raw[0]); } catch { return []; }
+        try {
+          return JSON.parse(raw[0]);
+        } catch {
+          return [];
+        }
       }
       return raw.filter((x): x is string => typeof x === 'string');
     }
     if (typeof raw === 'string') {
-      try { return JSON.parse(raw); } catch { return []; }
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return [];
+      }
     }
     return [];
   }
@@ -189,21 +175,23 @@ export class Venues implements OnInit {
 
     this.isSubmitting.set(true);
 
-    this.venueService.updateVenue(venue._id, {
-      status: 'rejected',
-      adminDescription: this.rejectReason.trim(),
-    }).subscribe({
-      next: () => {
-        this.isSubmitting.set(false);
-        this.showRejectModal.set(false);
-        this.closeDetails();
-        this.loadVenues();
-      },
-      error: (err) => {
-        console.error('Reject failed:', err);
-        this.isSubmitting.set(false);
-      },
-    });
+    this.venueService
+      .updateVenue(venue._id, {
+        status: 'rejected',
+        adminDescription: this.rejectReason.trim(),
+      })
+      .subscribe({
+        next: () => {
+          this.isSubmitting.set(false);
+          this.showRejectModal.set(false);
+          this.closeDetails();
+          this.loadVenues();
+        },
+        error: (err) => {
+          console.error('Reject failed:', err);
+          this.isSubmitting.set(false);
+        },
+      });
   }
 
   // ── Image preview ──────────────────────────────────────────────────────────
@@ -216,7 +204,6 @@ export class Venues implements OnInit {
     this.previewImage.set(null);
   }
 
-
   // image url..  Converts relative path → full URL
   getImageUrl(img?: string): string {
     if (!img) return '';
@@ -227,10 +214,7 @@ export class Venues implements OnInit {
 
     return root + '/' + img.replace(/^\/+/, '');
   }
-
 }
-
-
 
 /*  No unsubscribe
 Business logic in component

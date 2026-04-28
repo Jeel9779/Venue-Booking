@@ -1,8 +1,8 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VenueStoreService } from '../../core/store/venue-store.service';
-import { AdminVenueService } from '../../core/services/admin-venue.service';
-import { Venue } from '../../core/models/venue-types.modal';
+import { VenueStoreService } from '../../core/store/venue-store.service'; // venue-store store 
+import { AdminVenueService } from '../../core/services/admin-venue.service';  // admin-venue service
+import { Venue } from '../../core/models/venue-types.modal';  // Interface
 
 @Component({
   selector: 'app-partners',

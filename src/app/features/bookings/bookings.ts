@@ -1,8 +1,8 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Subject, switchMap, startWith, catchError, of } from 'rxjs';
-import { BookingService, Booking } from '../../core/services/booking.service';
+import { Subject, switchMap, startWith, catchError, of } from 'rxjs';  // rxjs
+import { BookingService, Booking } from '../../core/services/booking.service';  // booking servcice + interface
 
 type SortField   = 'date' | 'cost' | 'createdAt';
 type SortOrder   = 'asc' | 'desc';

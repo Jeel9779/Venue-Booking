@@ -1,4 +1,24 @@
 export interface Venue {
+  _id: string;
+  name: string;
+  city: string;
+  state: string;
+  zip: string;
+  type: string;
+  capacity: number;
+  pricePerDay: number;
+  status: 'pending' | 'approved' | 'rejected';
+  description: string;
+  amenities: string[];
+  mediaFiles: string[];
+  createdAt: string;
+  adminDescription?: string;
+}
+
+type FilterState = 'all' | 'pending' | 'approved' | 'rejected';
+
+
+/*  export interface Venue {
     _id: string;
     name: string;
     type: string;
@@ -15,4 +35,7 @@ export interface Venue {
     mediaFiles?: string[];
     status: string;
     createdAt: string;
-}
+} 
+
+
+ */
