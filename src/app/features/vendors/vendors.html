@@ -1,596 +1,307 @@
-<!-- <button
-    class="inline-flex items-center  gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition cursor-pointer border-none"
-    routerLink="/add-vendor" (click)="goToAddVendor()">
-    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path d="M12 5v14M5 12h14" />
+<div class="vendors-page min-h-screen bg-gray-300 max-w-[1500px] mx-auto py-6 px-4 sm:px-6">
+
+  <!-- ── TOASTS ─────────────────────────────────────────────────────────── -->
+  @if (error()) {
+  <div class="fixed top-5 right-5 z-[10001] flex items-center gap-3 bg-white border border-red-200
+              text-red-600 px-5 py-3 rounded-2xl shadow-xl text-sm font-semibold
+              animate-[slideDown_0.25s_ease]">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
     </svg>
-    Add Vendor
-</button> -->
-
-<div class="max-w-[1500px] mx-auto py-6 px-4 sm:px-6 min-h-screen bg-gray-300">
-
-    <!-- ADD VENDOR BUTTON -->
-
-    <!-- ═══════════════════════ HEADER ═══════════════════════ -->
-    <div class="flex items-center justify-between flex-wrap gap-4 mb-3">
-
-        <!-- LEFT: title + Add Vendor -->
-        <div class="flex items-center gap-3.5">
-            <div
-                class="w-[46px] h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-            </div>
-            <div>
-                <h1 class="text-2xl font-bold tracking-tight m-0 leading-tight">Vendor Verification</h1>
-                <p class="text-[0.8125rem] text-slate-500 mt-0.5 mb-0">Review and manage vendor applications and
-                    documents</p>
-            </div>
-        </div>
-
-        <!-- RIGHT: filter chips + Add button -->
-        <div class="flex flex-col gap-3">
-
-            <!-- BUTTON ROW (RIGHT SIDE) -->
-            <div class="flex justify-end">
-                <button class="inline-flex items-center gap-1.5 px-3 py-1.5 
-            bg-[#6C63FF] text-white rounded-xl text-sm font-semibold 
-            hover:bg-[#574fcc] transition-all duration-200 cursor-pointer border-none 
-            shadow-md active:scale-95" routerLink="/add-vendor" (click)="goToAddVendor()">
-
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M12 5v14M5 12h14" />
-                    </svg>
-
-                    Add Vendor
-                </button>
-            </div>
-
-            <!-- FILTERS -->
-            <div class="flex items-center gap-2 flex-wrap">
-
-                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-sky-100 text-sky-700 border-blue-300"
-                    [class.ring-2]="filter() === 'all'" [class.ring-sky-400]="filter() === 'all'"
-                    (click)="filter.set('all')">
-                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-                    {{ counts().all }} All
-                </div>
-
-                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-amber-100 text-amber-800 border-amber-300"
-                    [class.ring-2]="filter() === 'pending'" [class.ring-amber-400]="filter() === 'pending'"
-                    (click)="filter.set('pending')">
-                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-                    {{ counts().pending }} Pending
-                </div>
-
-                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-emerald-100 text-emerald-800 border-emerald-300"
-                    [class.ring-2]="filter() === 'approved'" [class.ring-emerald-400]="filter() === 'approved'"
-                    (click)="filter.set('approved')">
-                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-                    {{ counts().approved }} Approved
-                </div>
-
-                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-red-100 text-red-800 border-red-300"
-                    [class.ring-2]="filter() === 'rejected'" [class.ring-red-400]="filter() === 'rejected'"
-                    (click)="filter.set('rejected')">
-                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-                    {{ counts().rejected }} Rejected
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ═══════════════════════ TOOLBAR (search) ═══════════════════════ -->
-    <div class="flex gap-3 flex-wrap mb-3 items-center">
-        <div class="relative flex-1 min-w-[220px]">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" width="16"
-                height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-            </svg>
-            <input type="text"
-                class="w-full py-2.5 pl-9 pr-9 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 box-border"
-                placeholder="Search by name, email, business..." [value]="search()"
-                (input)="search.set($any($event.target).value)" />
-            @if (search()) {
-            <button
-                class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-slate-400 flex p-1 rounded hover:text-slate-700"
-                (click)="search.set('')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-            </button>
-            }
-        </div>
-    </div>
-
-    <!-- ═══════════════════════ LOADING ═══════════════════════ -->
-    @if (isLoading()) {
-    <div class="flex flex-col items-center justify-center py-20 text-slate-400 gap-3.5 text-sm w-full">
-        <div class="w-8 h-8 border-[3px] border-slate-200 border-t-indigo-600 rounded-full animate-spin"></div>
-        <p>Loading vendors…</p>
-    </div>
-    }
-
-    <!-- ═══════════════════════ EMPTY STATE ═══════════════════════ -->
-    @if (!isLoading() && filteredVendors().length === 0) {
-    <div class="flex flex-col items-center justify-center py-20 gap-3 text-center w-full">
-        <div class="w-[72px] h-[72px] rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-1">
-            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-        </div>
-        <h3 class="text-lg font-semibold m-0">No vendors found</h3>
-        <p class="text-slate-500 text-sm m-0">Try adjusting your search or filter criteria.</p>
-        <button
-            class="mt-2 px-5 py-2 bg-indigo-600 text-white border-none rounded-xl text-sm font-semibold cursor-pointer transition hover:bg-indigo-700"
-            (click)="search.set(''); filter.set('all')">Reset filters</button>
-    </div>
-    }
-
-    <!-- ═══════════════════════ TABLE ═══════════════════════ -->
-    @if (!isLoading() && filteredVendors().length > 0) {
-    <div class="bg-white border border-gray-200 rounded-[24px] shadow-sm w-full p-5 transition-all duration-200 hover:shadow-md">
-        <div class="px-5 py-3.5 border-b border-slate-200 text-[0.8125rem] text-slate-500 bg-[#fafafa]">
-            <span>Showing <strong class="text-indigo-600">{{ filteredVendors().length }}</strong> of {{ counts().all }}
-                vendors</span>
-        </div>
-
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse text-sm">
-                <thead>
-                    <tr class="bg-slate-200">
-                        <th
-                            class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
-                            Vendor</th>
-                        <th
-                            class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
-                            Business</th>
-                        <th
-                            class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
-                            Contact</th>
-                        <th
-                            class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
-                            Location</th>
-                        <th
-                            class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
-                            Status</th>
-                        <th
-                            class="px-[18px] py-[11px] text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">
-                            Created</th>
-                        <th class="px-[18px] py-[11px] border-b border-slate-200"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (v of filteredVendors(); track v._id) {
-                    <tr (click)="openDetails(v)"
-                        class="border-b border-slate-200 last:border-b-0 transition-colors cursor-pointer hover:bg-indigo-50 vendor-row">
-                        <td class="p-3.5">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-9 h-9 rounded-lg bg-linear-to-br from-emerald-500 to-green-500 text-white font-bold text-sm flex items-center justify-center shrink-0">
-                                    {{ v.fullName.charAt(0) }}</div>
-                                <div>
-                                    <div class="font-semibold text-slate-900 leading-snug">{{ v.fullName }}</div>
-                                    <div class="text-xs text-slate-500 mt-0.5">{{ v.email }}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="p-3.5">
-                            <div class="font-medium text-slate-700 leading-snug">{{ v.businessName }}</div>
-                            <div class="text-xs text-slate-500 mt-0.5">{{ v.businessType }}</div>
-                        </td>
-                        <td class="p-3.5 text-slate-500">{{ v.phone }}</td>
-                        <td class="p-3.5 text-slate-500">{{ v.state }}</td>
-                        <td class="p-3.5">
-                            <span
-                                class="status-badge inline-flex items-center px-2.5 py-1 rounded-full text-[0.72rem] font-bold capitalize tracking-wide"
-                                [ngClass]="v.status">{{ v.status }}</span>
-                        </td>
-                        <td class="p-3.5 text-slate-500 text-[0.8125rem]">{{ v.createdAt | date:'d MMM y' }}</td>
-                        <td class="p-3.5">
-                            <span class="view-arrow flex justify-end text-slate-400 transition-all">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M9 18l6-6-6-6" />
-                                </svg>
-                            </span>
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    }
-
-</div><!-- end page wrapper -->
-
-
-<!-- ═══════════════════════════ DETAIL MODAL ═══════════════════════════ -->
-@if (showDetailsModal() && selectedVendor()) {
-<div class="fixed inset-0 z-9000 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.18s_ease]"
-    (click)="closeDetails()">
-    <div class="w-full max-w-[860px] max-h-[92vh] bg-white rounded-[24px] shadow-2xl flex flex-col overflow-hidden animate-[slideUp_0.22s_ease]"
-        (click)="$event.stopPropagation()">
-
-        <!-- MODAL HEADER -->
-        <div class="flex items-start justify-between gap-4 px-6 py-[22px] border-b border-slate-200 shrink-0">
-            <div class="flex items-center gap-3.5">
-                <div
-                    class="w-[50px] h-[50px] rounded-xl bg-linear-to-br from-indigo-600 to-violet-600 text-white text-xl font-bold flex items-center justify-center shrink-0">
-                    {{ selectedVendor()?.fullName?.charAt(0) }}</div>
-                <div>
-                    <div class="text-lg font-bold flex items-center gap-2.5 flex-wrap">
-                        {{ selectedVendor()?.fullName }}
-                        <span
-                            class="status-badge inline-flex items-center px-2.5 py-1 rounded-full text-[0.72rem] font-bold capitalize tracking-wide"
-                            [ngClass]="selectedVendor()?.status">{{ selectedVendor()?.status }}</span>
-                    </div>
-                    <div class="text-[0.8125rem] text-slate-500 mt-0.5">{{ selectedVendor()?.email }}</div>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2 shrink-0">
-                <!-- REJECT -->
-                @if (selectedVendor()?.status !== 'rejected') {
-                <button
-                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-red-500 text-white transition hover:bg-red-600 active:scale-[0.97]"
-                    (click)="openRejectModal(selectedVendor()!)">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                    Reject
-                </button>
-                }
-                <!-- APPROVE -->
-                @if (selectedVendor()?.status !== 'approved') {
-                <button
-                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-indigo-600 text-white transition hover:bg-indigo-700 active:scale-[0.97]"
-                    (click)="approve(selectedVendor()!)">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                    Approve
-                </button>
-                }
-                <!-- CLOSE -->
-                <button
-                    class="w-[34px] h-[34px] flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-pointer transition hover:bg-slate-200 hover:text-slate-700 shrink-0"
-                    (click)="closeDetails()">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- MODAL BODY -->
-        <div class="overflow-y-auto p-6 flex-1">
-
-            <!-- INFO GRID -->
-            <div class="grid grid-cols-[repeat(auto-fill,minmax(190px,1fr))] gap-3 mb-6">
-
-                <!-- PHONE -->
-                <div class="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl bg-[#fafafa]">
-                    <div
-                        class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M22 16.92V19a2 2 0 01-2.18 2A19.79 19.79 0 013 5.18 2 2 0 015 3h2.09a2 2 0 012 1.72c.12.81.37 1.6.72 2.34a2 2 0 01-.45 2.11L8.91 10.09a16 16 0 006 6l.92-.45a2 2 0 012.11.45c.74.35 1.53.6 2.34.72A2 2 0 0122 16.92z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Phone
-                        </div>
-                        <div class="font-bold text-[0.9375rem] text-slate-900">{{ selectedVendor()?.phone }}</div>
-                    </div>
-                </div>
-
-                <!-- BUSINESS NAME -->
-                <div class="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl bg-[#fafafa]">
-                    <div
-                        class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M3 21h18M9 8h6M9 12h6M9 16h6M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Business
-                        </div>
-                        <div class="font-bold text-[0.9375rem] text-slate-900">{{ selectedVendor()?.businessName }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BUSINESS TYPE -->
-                <div class="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl bg-[#fafafa]">
-                    <div
-                        class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Type
-                        </div>
-                        <div class="font-bold text-[0.9375rem] text-slate-900">{{ selectedVendor()?.businessType }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STATE -->
-                <div class="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl bg-[#fafafa]">
-                    <div
-                        class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
-                            <circle cx="12" cy="10" r="3" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">State
-                        </div>
-                        <div class="font-bold text-[0.9375rem] text-slate-900">{{ selectedVendor()?.state }}</div>
-                    </div>
-                </div>
-
-                <!-- PINCODE -->
-                <div class="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl bg-[#fafafa]">
-                    <div
-                        class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M4 7h16M4 12h16M4 17h16" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Pincode
-                        </div>
-                        <div class="font-bold text-[0.9375rem] text-slate-900">{{ selectedVendor()?.pincode }}</div>
-                    </div>
-                </div>
-
-                <!-- ADDRESS -->
-                <div class="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl bg-[#fafafa]">
-                    <div
-                        class="w-[34px] h-[34px] rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M3 12h18M3 6h18M3 18h18" />
-                        </svg>
-                    </div>
-                    <div class="min-w-0">
-                        <div class="text-[0.7rem] uppercase tracking-wider text-slate-500 font-semibold mb-0.5">Address
-                        </div>
-                        <div class="font-bold text-[0.9375rem] text-slate-900 truncate">{{ selectedVendor()?.address }}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- DOCUMENTS -->
-            <div class="mb-6">
-                <h4
-                    class="text-[0.8125rem] font-bold uppercase tracking-wider text-slate-500 m-0 mb-3 flex items-center gap-2">
-                    Documents
-                </h4>
-                <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
-
-                    <!-- GOV ID -->
-                    <div class="relative rounded-xl overflow-hidden cursor-pointer aspect-4/3 bg-slate-200 group"
-                        (click)="openModal(selectedVendor()?.governmentId!)">
-                        <img [src]="selectedVendor()?.governmentId" alt="Government ID"
-                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 block" />
-                        <div
-                            class="absolute inset-0 bg-indigo-600/55 flex flex-col items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100 gap-1">
-                            <svg width="20" height="20" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                            </svg>
-                            <span class="text-white text-xs font-semibold">Government ID</span>
-                        </div>
-                    </div>
-
-                    <!-- LICENSE DOC -->
-                    @if (selectedVendor()?.licenseDoc) {
-                    <div class="relative rounded-xl overflow-hidden cursor-pointer aspect-4/3 bg-slate-200 group"
-                        (click)="openModal(selectedVendor()?.licenseDoc!)">
-                        <img [src]="selectedVendor()?.licenseDoc" alt="License Document"
-                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 block" />
-                        <div
-                            class="absolute inset-0 bg-indigo-600/55 flex flex-col items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100 gap-1">
-                            <svg width="20" height="20" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                            </svg>
-                            <span class="text-white text-xs font-semibold">License Document</span>
-                        </div>
-                    </div>
-                    }
-
-                </div>
-            </div>
-
-        </div><!-- end modal body -->
-    </div>
-</div>
-}
-
-
-<!-- ═══════════════════════════ APPROVE MODAL (username + password) ═══════════════════════════ -->
-@if (showApproveModal()) {
-<div class="fixed inset-0 z-9000 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.18s_ease]"
-    (click)="showApproveModal.set(false)">
-    <div class="w-full max-w-[440px] bg-white rounded-[24px] shadow-2xl p-7 animate-[slideUp_0.2s_ease]"
-        (click)="$event.stopPropagation()">
-        <h3 class="text-lg font-bold m-0 mb-1.5">Approve Vendor</h3>
-        <p class="text-sm text-slate-500 m-0 mb-5 leading-relaxed">
-            Create login credentials for <strong>{{ selectedVendor()?.fullName }}</strong>.
-        </p>
-
-        <!-- USERNAME -->
-        <input type="text" placeholder="Enter Username"
-            class="w-full border border-slate-200 rounded-xl px-3 py-2.5 mb-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 box-border"
-            [value]="credentials().username"
-            (input)="credentials.set({ ...credentials(), username: $any($event.target).value })" />
-
-        <!-- PASSWORD -->
-        <input type="password" placeholder="Enter Password"
-            class="w-full border border-slate-200 rounded-xl px-3 py-2.5 mb-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 box-border"
-            [value]="credentials().password"
-            (input)="credentials.set({ ...credentials(), password: $any($event.target).value })" />
-
-        <div class="flex justify-end gap-2 mt-4">
-            <button
-                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-slate-100 text-slate-500 transition hover:bg-slate-200"
-                (click)="showApproveModal.set(false)">Cancel</button>
-            <button
-                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-indigo-600 text-white transition hover:bg-indigo-700 disabled:opacity-55 disabled:cursor-not-allowed active:scale-[0.97]"
-                [disabled]="!credentials().username.trim() || !credentials().password.trim()"
-                (click)="confirmApprove()">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M20 6L9 17l-5-5" />
-                </svg>
-                Approve
-            </button>
-        </div>
-    </div>
-</div>
-}
-
-
-<!-- ═══════════════════════════ REJECT REASON MODAL ═══════════════════════════ -->
-@if (showRejectModal()) {
-<div class="fixed inset-0 z-9000 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.18s_ease]"
-    (click)="showRejectModal.set(false)">
-    <div class="w-full max-w-[440px] bg-white rounded-[24px] shadow-2xl p-7 animate-[slideUp_0.2s_ease]"
-        (click)="$event.stopPropagation()">
-        <h3 class="text-lg font-bold m-0 mb-1.5">Reject Vendor</h3>
-        <p class="text-sm text-slate-500 m-0 mb-[18px] leading-relaxed">Provide a reason so the vendor knows what to
-            fix.</p>
-        <textarea
-            class="w-full border border-slate-200 rounded-xl p-3 text-sm font-[inherit] resize-y outline-none box-border text-slate-900 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
-            rows="4" placeholder="e.g. Incomplete documents, blurry images, missing license…" [value]="rejectReason()"
-            (input)="rejectReason.set($any($event.target).value)"></textarea>
-        <div class="flex justify-end gap-2 mt-4">
-            <button
-                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-slate-100 text-slate-500 transition hover:bg-slate-200"
-                (click)="showRejectModal.set(false)">Cancel</button>
-            <button
-                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-red-500 text-white transition hover:bg-red-600 disabled:opacity-55 disabled:cursor-not-allowed active:scale-[0.97]"
-                [disabled]="!rejectReason().trim()" (click)="confirmReject()">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-                Confirm Reject
-            </button>
-        </div>
-    </div>
-</div>
-}
-
-
-<!-- ═══════════════════════════ IMAGE PREVIEW ═══════════════════════════ -->
-@if (previewImage()) {
-<div class="fixed inset-0 z-10000 bg-black/92 flex items-center justify-center animate-[fadeIn_0.2s_ease]"
-    (click)="closeModal()">
-    <button
-        class="absolute top-5 right-5 w-[38px] h-[38px] bg-white/10 border border-white/20 text-white rounded-full flex items-center justify-center cursor-pointer transition hover:bg-white/20"
-        (click)="closeModal()">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+    {{ error() }}
+    <button (click)="dismissError()" class="ml-1 opacity-60 hover:opacity-100">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
     </button>
-    <img [src]="previewImage()" (click)="$event.stopPropagation()"
-        class="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl object-contain" />
-</div>
-}
+  </div>
+  }
 
+  <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
+  <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-indigo-200">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight m-0 text-slate-900">Vendor Management</h1>
+        <p class="text-[0.8125rem] text-slate-500 mt-0.5 m-0">Review and moderate partner applications</p>
+      </div>
+    </div>
 
-<!-- ═══════════════════════════ TOAST ═══════════════════════════ -->
-@if (toast()) {
-<div class="fixed bottom-6 right-6 px-6 py-4 rounded-2xl shadow-xl text-white font-medium flex items-center gap-3 z-10001 animate-[slideUp_0.2s_ease]"
-    [ngClass]="{
-    'bg-zinc-900 border border-zinc-700': toast()?.type === 'success',
-    'bg-rose-600 border border-rose-500': toast()?.type === 'error'
-  }">
-    @if (toast()?.type === 'success') {
-    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-    </svg>
+    <app-button routerLink="/add-vendor" customClass="shadow-lg shadow-indigo-100">
+      <svg class="mr-2" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      Add New Vendor
+    </app-button>
+  </div>
+
+  <!-- ── FILTERS ────────────────────────────────────────────────────────── -->
+  <div class="flex items-center justify-between flex-wrap gap-4 mb-5">
+    <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
+                  bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
+           [class.ring-2]="filter() === 'all'" [class.ring-indigo-500]="filter() === 'all'" [class.border-indigo-500]="filter() === 'all'"
+           (click)="filter.set('all')">
+        {{ counts().all }} All
+      </div>
+      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
+                  bg-white text-amber-600 border-slate-200 hover:border-amber-300"
+           [class.ring-2]="filter() === 'pending'" [class.ring-amber-500]="filter() === 'pending'" [class.border-amber-500]="filter() === 'pending'"
+           (click)="filter.set('pending')">
+        {{ counts().pending }} Pending
+      </div>
+      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
+                  bg-white text-emerald-600 border-slate-200 hover:border-emerald-300"
+           [class.ring-2]="filter() === 'approved'" [class.ring-emerald-500]="filter() === 'approved'" [class.border-emerald-500]="filter() === 'approved'"
+           (click)="filter.set('approved')">
+        {{ counts().approved }} Approved
+      </div>
+    </div>
+
+    <div class="relative w-full sm:w-80">
+      <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text"
+             class="w-full py-2.5 pl-10 pr-4 border border-slate-200 rounded-xl bg-white text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+             placeholder="Search vendors..."
+             [value]="search()"
+             (input)="search.set($any($event.target).value)"/>
+    </div>
+  </div>
+
+  <!-- ── MAIN TABLE ────────────────────────────────────────────────────── -->
+  <app-card [padding]="false" customClass="shadow-xl shadow-slate-200/50">
+    @if (isLoading()) {
+      <div class="flex flex-col items-center justify-center py-20 text-slate-400 gap-3">
+        <div class="w-10 h-10 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
+        <p class="font-medium animate-pulse">Fetching vendor list...</p>
+      </div>
+    } @else if (filteredVendors().length === 0) {
+      <div class="flex flex-col items-center justify-center py-24 text-center">
+        <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-4 text-slate-300">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 m-0">No vendors found</h3>
+        <p class="text-slate-500 text-sm mt-1 max-w-[280px]">We couldn't find any vendors matching your current filters.</p>
+        <app-button variant="secondary" customClass="mt-4" (onClick)="search.set(''); filter.set('all')">Clear Filters</app-button>
+      </div>
     } @else {
-    <svg class="w-5 h-5 text-rose-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-    </svg>
+      <app-table [columns]="['Business', 'Owner', 'Phone', 'Type', 'Status', 'Joined', '']">
+        @for (v of filteredVendors(); track v._id) {
+          <tr (click)="openDetails(v)" class="group hover:bg-slate-50/80 transition-colors border-b border-slate-100 last:border-0 cursor-pointer">
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold shrink-0">
+                  {{ v.businessName.charAt(0) }}
+                </div>
+                <div>
+                  <div class="font-bold text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">{{ v.businessName }}</div>
+                  <div class="text-[0.7rem] text-slate-400 mt-0.5 uppercase tracking-wider font-bold">{{ v.state }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-5 py-4 text-sm text-slate-600">
+              <div class="font-medium text-slate-900">{{ v.fullName }}</div>
+              <div class="text-[0.75rem] text-slate-400">{{ v.email }}</div>
+            </td>
+            <td class="px-5 py-4 text-sm text-slate-600 font-medium">
+              {{ v.phone }}
+            </td>
+            <td class="px-5 py-4">
+              <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-[0.7rem] font-bold uppercase tracking-wider">
+                {{ v.businessType }}
+              </span>
+            </td>
+            <td class="px-5 py-4">
+              <span [class]="'px-2.5 py-1 rounded-lg text-[0.7rem] font-black uppercase tracking-widest border ' + 
+                            (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 
+                             v.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-100' : 
+                             'bg-amber-50 text-amber-700 border-amber-100')">
+                {{ v.status }}
+              </span>
+            </td>
+            <td class="px-5 py-4 text-sm text-slate-400">
+              {{ v.createdAt | date:'MMM d, y' }}
+            </td>
+            <td class="px-5 py-4 text-right">
+              <div class="flex items-center justify-end gap-2 transition-opacity" (click)="$event.stopPropagation()">
+                <app-button variant="ghost" size="sm" (onClick)="openDetails(v)">
+                  View Details
+                </app-button>
+                <button (click)="deleteVendor(v)" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </app-table>
     }
-    {{ toast()?.message }}
+  </app-card>
+
+  <!-- ── VENDOR DETAILS MODEL ─────────────────────────────────────────── -->
+  @if (showDetailsModel() && selectedVendor()) {
+    <app-model [title]="'Review Application'" maxWidth="lg" (onClose)="closeDetails()" [hasFooter]="true">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 m-0 flex items-center gap-2">
+            <span class="w-1 h-1 rounded-full bg-indigo-500"></span>
+            Business Information
+          </h4>
+          <div class="bg-white rounded-2xl p-5 border border-slate-300 shadow-sm transition-all hover:border-indigo-200">
+            <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Business Name</div>
+            <div class="font-extrabold text-slate-900 text-lg leading-tight">{{ selectedVendor()?.businessName }}</div>
+            
+            <div class="mt-5">
+              <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Category</div>
+              <div class="font-bold text-slate-800">{{ selectedVendor()?.businessType }}</div>
+            </div>
+            
+            <div class="mt-5">
+              <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Address</div>
+              <div class="text-[0.9rem] text-slate-600 leading-relaxed font-medium">
+                {{ selectedVendor()?.address }}<br>
+                {{ selectedVendor()?.state }} - {{ selectedVendor()?.pincode }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 m-0 flex items-center gap-2">
+            <span class="w-1 h-1 rounded-full bg-indigo-500"></span>
+            Contact Details
+          </h4>
+          <div class="bg-white rounded-2xl p-5 border border-slate-300 shadow-sm transition-all hover:border-indigo-200">
+            <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Owner Name</div>
+            <div class="font-extrabold text-slate-900 text-lg leading-tight">{{ selectedVendor()?.fullName }}</div>
+            
+            <div class="mt-5">
+              <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Email</div>
+              <div class="font-bold text-slate-800 break-all">{{ selectedVendor()?.email }}</div>
+            </div>
+            
+            <div class="mt-5">
+              <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Phone</div>
+              <div class="font-bold text-slate-900 text-lg">{{ selectedVendor()?.phone }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 space-y-4">
+          <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 m-0 flex items-center gap-2">
+            <span class="w-1 h-1 rounded-full bg-indigo-500"></span>
+            Verification Documents
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button (click)="openImageViewer(selectedVendor()?.governmentId); $event.stopPropagation()"
+               class="flex items-center gap-4 p-4 bg-white border border-slate-300 rounded-2xl hover:border-indigo-500 hover:shadow-md transition-all group w-full text-left">
+              <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-[0.95rem] font-extrabold text-slate-900">Government ID</div>
+                <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-[0.1em] mt-0.5">Click to preview</div>
+              </div>
+            </button>
+            <button (click)="openImageViewer(selectedVendor()?.licenseDoc); $event.stopPropagation()"
+               class="flex items-center gap-4 p-4 bg-white border border-slate-300 rounded-2xl hover:border-emerald-500 hover:shadow-md transition-all group w-full text-left">
+              <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-[0.95rem] font-extrabold text-slate-900">Business License</div>
+                <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-[0.1em] mt-0.5">Click to preview</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div footer class="flex items-center justify-between w-full">
+        @if (selectedVendor()?.status === 'pending') {
+          <div class="flex gap-3">
+            <app-button variant="danger" (onClick)="openRejectModel()">Reject</app-button>
+            <app-button variant="success" (onClick)="openApproveModel()">Approve Partner</app-button>
+          </div>
+        } @else {
+          <div [class]="'text-sm font-bold ' + (selectedVendor()?.status === 'approved' ? 'text-emerald-600' : 'text-rose-600')">
+            Status: {{ selectedVendor()?.status | uppercase }}
+          </div>
+        }
+      </div>
+    </app-model>
+  }
+
+  <!-- ── APPROVE MODEL ─────────────────────────────────────────────────── -->
+  @if (showApproveModel()) {
+    <app-model [title]="'Set Credentials'" maxWidth="sm" (onClose)="showApproveModel.set(false)" [hasFooter]="true">
+      <div class="space-y-4">
+        <p class="text-sm text-slate-600">Provide login credentials for <strong>{{ selectedVendor()?.businessName }}</strong>. These will be emailed to the vendor.</p>
+        <app-form-input label="Username" placeholder="e.g. vendor123" 
+                        [ngModel]="approveData().username" (ngModelChange)="approveData.set({...approveData(), username: $event})"></app-form-input>
+        <app-form-input label="Password" type="password" placeholder="••••••••" 
+                        [ngModel]="approveData().password" (ngModelChange)="approveData.set({...approveData(), password: $event})"></app-form-input>
+      </div>
+      <div footer>
+        <app-button variant="secondary" (onClick)="showApproveModel.set(false)">Cancel</app-button>
+        <app-button variant="success" (onClick)="submitApprove()" [disabled]="!approveData().username || !approveData().password">Confirm Approval</app-button>
+      </div>
+    </app-model>
+  }
+
+  <!-- ── REJECT MODEL ─────────────────────────────────────────────────── -->
+  @if (showRejectModel()) {
+    <app-model [title]="'Rejection Reason'" maxWidth="sm" (onClose)="showRejectModel.set(false)" [hasFooter]="true">
+      <div class="space-y-4">
+        <p class="text-sm text-slate-600">Please provide a reason for rejecting this application.</p>
+        <app-form-input label="Reason" type="textarea" placeholder="e.g. Invalid license..." [rows]="4"
+                        [ngModel]="rejectReason()" (ngModelChange)="rejectReason.set($event)"></app-form-input>
+      </div>
+      <div footer>
+        <app-button variant="secondary" (onClick)="showRejectModel.set(false)">Cancel</app-button>
+        <app-button variant="danger" (onClick)="submitReject()" [disabled]="!rejectReason().trim()">Submit Rejection</app-button>
+      </div>
+    </app-model>
+  }
+
+  <!-- ── IMAGE PREVIEW (Venues Style) ── -->
+  @if (viewingImageUrl()) {
+    <div class="fixed inset-0 z-[10001] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease]"
+         (click)="closeImageViewer()">
+      <button
+        class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all border border-white/10 backdrop-blur-md shadow-2xl">
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="relative max-w-5xl max-h-[90vh] flex flex-col items-center gap-4" (click)="$event.stopPropagation()">
+        <img [src]="viewingImageUrl()"
+             class="max-h-[90vh] max-w-full rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.4)] object-contain border border-white/10 animate-[scaleIn_0.3s_ease]"
+             alt="Full screen preview" />
+      </div>
+    </div>
+  }
+
 </div>
-}
 
-
-<!-- ═══════════════════════════ Minimal residual CSS ═══════════════════════════ -->
 <style>
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes slideUp {
-        from {
-            transform: translateY(20px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    /* Status badge variants — driven by [ngClass] so must stay in CSS */
-    .status-badge.pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .status-badge.approved {
-        background: #d1fae5;
-        color: #065f46;
-    }
-
-    .status-badge.rejected {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-
-    /* Row hover arrow */
-    .vendor-row:hover .view-arrow {
-        color: #4f46e5;
-        transform: translateX(2px);
-    }
+  @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 </style>
-
-
-
-
-
-<!-- •	Multiple vendor management (J)  -->

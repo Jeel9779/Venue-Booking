@@ -1,15 +1,41 @@
-@keyframes fadeScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.vendors-page {
+  animation: fadeIn 0.4s ease-out;
 }
 
-.animate-fadeScale {
-  animation: fadeScale 0.25s ease;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Status Badges */
+.approved {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border-color: #10b981 !important;
+}
+
+.pending {
+  background: #fffbeb !important;
+  color: #d97706 !important;
+  border-color: #f59e0b !important;
+}
+
+.rejected {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+  border-color: #ef4444 !important;
+}
+
+/* Modal styling overrides if needed */
+:host ::ng-deep app-model .bg-white {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

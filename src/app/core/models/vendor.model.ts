@@ -1,31 +1,25 @@
-export type VendorStatus = 'pending' | 'approved' | 'rejected' | 'reopen';
-
 export interface Vendor {
-
   _id: string;
-
-  vendorId: string;
   fullName: string;
   email: string;
-  phone?: string | null;
-
+  phone: string;
   businessName: string;
   businessType: string;
-  governmentId: string;
-
-  username?: string | null;
-  password?: string | null;
-
-  status: VendorStatus;
+  state: string;
+  pincode: string;
+  address: string;
+  governmentId: string; // Matches backend
+  licenseDoc: string;   // Matches backend
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  updatedAt: string;
+  username?: string;
+  password?: string;
   adminMessage?: string;
+}
 
-  licenseDoc?: string | null;
-  address?: string | null;
-  rating?: number | null;
-
-  createdAt?: string;
-  updatedAt?: string;
-
-  pincode?: string;
-  state?: string;
+export interface VendorState {
+  vendors: Vendor[];
+  isLoading: boolean;
+  error: string | null;
 }

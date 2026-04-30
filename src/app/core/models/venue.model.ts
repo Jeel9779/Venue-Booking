@@ -1,41 +1,25 @@
 export interface Venue {
   _id: string;
+  vendorId: string | { _id: string; fullName: string; email: string; };
   name: string;
+  type: string;
+  capacity: number;
+  description: string;
+  pricePerDay: number;
+  address: string;
   city: string;
   state: string;
   zip: string;
-  type: string;
-  capacity: number;
-  pricePerDay: number;
-  status: 'pending' | 'approved' | 'rejected';
-  description: string;
+  country: string;
+  lat: string;
+  lng: string;
   amenities: string[];
+  availableFrom: string;
   mediaFiles: string[];
+  status: 'pending' | 'approved' | 'rejected';
+  adminDescription: string;
   createdAt: string;
-  adminDescription?: string;
+  updatedAt: string;
 }
 
-type FilterState = 'all' | 'pending' | 'approved' | 'rejected';
-
-
-/*  export interface Venue {
-    _id: string;
-    name: string;
-    type: string;
-    city: string;
-    state: string;
-    country: string;
-    zip: string;
-    capacity: number;
-    pricePerDay: number;
-
-
-    amenities: string[];
-
-    mediaFiles?: string[];
-    status: string;
-    createdAt: string;
-} 
-
-
- */
+export type FilterState = 'all' | 'pending' | 'approved' | 'rejected';

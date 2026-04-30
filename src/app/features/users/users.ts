@@ -1,8 +1,15 @@
-// users/users.ts
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserService, User, UpdateUserPayload } from '../../core/services/user.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { UserService } from '../../core/services/user.service';
+import { UsersStore } from '../../core/store/users.store';
+import { User, UpdateUserPayload } from '../../core/models/user.model';
+import { Button } from '../../shared/components/button/button';
+import { Card } from '../../shared/components/card/card';
+import { Table } from '../../shared/components/table/table';
+import { Model } from '../../shared/components/model/model';
+import { FormInput } from '../../shared/components/form-input/form-input';
 
 type SortField = 'name' | 'email' | 'createdAt';
 type SortOrder = 'asc' | 'desc';
@@ -10,39 +17,32 @@ type SortOrder = 'asc' | 'desc';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
 export class Users implements OnInit {
-  constructor(private userService: UserService) {}
+  private readonly userService = inject(UserService);
+  private readonly usersStore = inject(UsersStore);
 
-  // ── Signals ────────────────────────────────────────────────────────────────
-  users       = signal<User[]>([]);
-  isLoading   = signal(false);
-  isSubmitting= signal(false);
-  errorMsg    = signal('');
-  successMsg  = signal('');
+  // ── State (Reactive) ───────────────────────────────────────────────────────
+  readonly users = toSignal(this.usersStore.users$, { initialValue: [] });
+  readonly isLoading = toSignal(this.usersStore.isLoading$, { initialValue: false });
+  readonly error = toSignal(this.usersStore.error$, { initialValue: null });
 
-  search      = signal('');
-  filter      = signal<'all' | 'verified' | 'unverified'>('all');
-  sortBy      = signal<SortField>('createdAt');
-  sortOrder   = signal<SortOrder>('desc');
+  // ── UI State ───────────────────────────────────────────────────────────────
+  search = signal('');
+  filter = signal<'all' | 'verified' | 'unverified'>('all');
+  sortBy = signal<SortField>('createdAt');
+  sortOrder = signal<SortOrder>('desc');
 
-  selectedUser     = signal<User | null>(null);
-  showEditModal    = signal(false);
-  showDeleteModal  = signal(false);
+  selectedUser = signal<User | null>(null);
+  showEditModel = signal(false);
+  showDeleteModel = signal(false);
 
-
-  // ── FIX: Plain object (not a signal) for [(ngModel)] two-way binding ───────
-  // Signals are immutable — [(ngModel)]="signal().field" binds to a copy and
-  // changes are lost. Using a plain object means ngModel mutates it directly.
   editFormData: UpdateUserPayload = {
     name: '', email: '', phone: '', address: '', city: '', pinCode: ''
   };
-
-
-
 
   // ── Computed ───────────────────────────────────────────────────────────────
   filteredUsers = computed(() => {
@@ -52,9 +52,9 @@ export class Users implements OnInit {
     const q = this.search().toLowerCase().trim();
     if (q) {
       result = result.filter(u =>
-        u.name.toLowerCase().includes(q)  ||
+        u.name.toLowerCase().includes(q) ||
         u.email.toLowerCase().includes(q) ||
-        (u.city  || '').toLowerCase().includes(q) ||
+        (u.city || '').toLowerCase().includes(q) ||
         (u.phone || '').includes(q)
       );
     }
@@ -78,7 +78,7 @@ export class Users implements OnInit {
         bVal = String(bVal ?? '').toLowerCase();
       }
       if (aVal < bVal) return this.sortOrder() === 'asc' ? -1 : 1;
-      if (aVal > bVal) return this.sortOrder() === 'asc' ?  1 : -1;
+      if (aVal > bVal) return this.sortOrder() === 'asc' ? 1 : -1;
       return 0;
     });
 
@@ -86,109 +86,63 @@ export class Users implements OnInit {
   });
 
   counts = computed(() => {
-    const all        = this.users().length;
-    const verified   = this.users().filter(u => u.profilePhoto && u.address && u.city).length;
-    const unverified = all - verified;
-    return { all, verified, unverified };
+    const list = this.users();
+    const verified = list.filter(u => u.profilePhoto && u.address && u.city).length;
+    return {
+      all: list.length,
+      verified,
+      unverified: list.length - verified
+    };
   });
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
-  ngOnInit() { this.loadUsers(); }
-
-  // ── Load ───────────────────────────────────────────────────────────────────
-  loadUsers() {
-    this.isLoading.set(true);
-    this.errorMsg.set('');
-    this.userService.getUsers().subscribe({
-      next: (data) => { this.users.set(data); this.isLoading.set(false); },
-      error: (err)  => {
-        this.errorMsg.set(err?.error?.message || 'Failed to load users.');
-        this.isLoading.set(false);
-      }
-    });
+  ngOnInit() {
+    this.userService.loadAll();
   }
 
-  // ── Edit Modal ─────────────────────────────────────────────────────────────
-  openEditModal(user: User) {
+  // ── Actions ────────────────────────────────────────────────────────────────
+  openEditModel(user: User) {
     this.selectedUser.set(user);
-    // FIX: assign to plain object — ngModel will mutate this directly
     this.editFormData = {
-      name:    user.name,
-      email:   user.email,
-      phone:   user.phone    || '',
-      address: user.address  || '',
-      city:    user.city     || '',
-      pinCode: user.pinCode  || '',
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '',
+      address: user.address || '',
+      city: user.city || '',
+      pinCode: user.pinCode || '',
     };
-    this.showEditModal.set(true);
+    this.showEditModel.set(true);
   }
 
-  closeEditModal() {
-    this.showEditModal.set(false);
+  closeEditModel() {
+    this.showEditModel.set(false);
     this.selectedUser.set(null);
   }
 
   submitEdit() {
-    if (!this.selectedUser()) return;
-    this.isSubmitting.set(true);
-    // FIX: updateUser now builds FormData internally (multer requirement)
-    this.userService.updateUser(this.selectedUser()!._id, this.editFormData).subscribe({
-      next: () => {
-        this.showSuccess('User updated successfully!');
-        this.loadUsers();
-        this.closeEditModal();
-        this.isSubmitting.set(false);
-      },
-      error: (err) => {
-        this.errorMsg.set(err?.error?.message || 'Failed to update user.');
-        this.isSubmitting.set(false);
-      }
-    });
+    const user = this.selectedUser();
+    if (!user) return;
+    this.userService.update(user._id, this.editFormData);
+    this.closeEditModel();
   }
 
-  // ── Delete Modal ───────────────────────────────────────────────────────────
-  openDeleteModal(user: User) {
+  openDeleteModel(user: User) {
     this.selectedUser.set(user);
-    this.showDeleteModal.set(true);
+    this.showDeleteModel.set(true);
   }
 
-  closeDeleteModal() {
-    this.showDeleteModal.set(false);
+  closeDeleteModel() {
+    this.showDeleteModel.set(false);
     this.selectedUser.set(null);
   }
 
   submitDelete() {
-    if (!this.selectedUser()) return;
-    this.isSubmitting.set(true);
-    // ⚠️ Backend DELETE route not yet added — will 404 until backend implements it
-    this.userService.deleteUser(this.selectedUser()!._id).subscribe({
-      next: () => {
-        this.showSuccess('User deleted.');
-        this.loadUsers();
-        this.closeDeleteModal();
-        this.isSubmitting.set(false);
-      },
-      error: (err) => {
-        this.errorMsg.set(
-          err.status === 404
-            ? 'Delete route not yet available on backend.'
-            : (err?.error?.message || 'Failed to delete user.')
-        );
-        this.isSubmitting.set(false);
-        this.closeDeleteModal();
-      }
-    });
+    const user = this.selectedUser();
+    if (!user) return;
+    this.userService.delete(user._id);
+    this.closeDeleteModel();
   }
 
-
-
-  
-
-
-
- 
-
-  // ── Helpers ────────────────────────────────────────────────────────────────
   getImageUrl(path: string | null | undefined): string {
     return this.userService.getPhotoUrl(path);
   }
@@ -202,201 +156,7 @@ export class Users implements OnInit {
     }
   }
 
-  showSuccess(msg: string) {
-    this.successMsg.set(msg);
-    setTimeout(() => this.successMsg.set(''), 3500);
-  }
-
-  dismissError() { this.errorMsg.set(''); }
-}
-
-
-
-/* import { Component, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { UserService, User } from '../../core/services/user.service';
-
-type SortField = 'name' | 'email' | 'createdAt';
-type SortOrder = 'asc' | 'desc';
-
-@Component({
-  selector: 'app-users',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './users.html',
-  styleUrl: './users.css',
-})
-export class Users implements OnInit {
-  constructor(private userService: UserService) {}
-
-  // ── State ──────────────────────────────────────────────────────────────────
-  users = signal<User[]>([]);
-  isLoading = signal(false);
-  isSubmitting = signal(false);
-  search = signal('');
-  filter = signal<'all' | 'verified' | 'unverified'>('all');
-  sortBy = signal<SortField>('createdAt');
-  sortOrder = signal<SortOrder>('desc');
-  
-  selectedUser = signal<User | null>(null);
-  showEditModal = signal(false);
-  showDeleteModal = signal(false);
-  editFormData = signal({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    pinCode: '',
-  });
-
-  
-  filteredUsers = computed(() => {
-    let result = this.users();
-
-   
-    const searchTerm = this.search().toLowerCase();
-    if (searchTerm) {
-      result = result.filter(
-        u =>
-          u.name.toLowerCase().includes(searchTerm) ||
-          u.email.toLowerCase().includes(searchTerm) ||
-          u.city.toLowerCase().includes(searchTerm) ||
-          u.phone?.includes(searchTerm)
-      );
-    }
-
-   
-    if (this.filter() === 'verified') {
-      result = result.filter(u => u.profilePhoto && u.address && u.city);
-    } else if (this.filter() === 'unverified') {
-      result = result.filter(u => !u.profilePhoto || !u.address || !u.city);
-    }
-
- 
-    result.sort((a, b) => {
-      let aVal: any = a[this.sortBy()];
-      let bVal: any = b[this.sortBy()];
-
-      if (this.sortBy() === 'createdAt') {
-        aVal = new Date(aVal).getTime();
-        bVal = new Date(bVal).getTime();
-      } else {
-        aVal = String(aVal).toLowerCase();
-        bVal = String(bVal).toLowerCase();
-      }
-
-      if (aVal < bVal) return this.sortOrder() === 'asc' ? -1 : 1;
-      if (aVal > bVal) return this.sortOrder() === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-    return result;
-  });
-
-  counts = computed(() => {
-    const all = this.users().length;
-    const verified = this.users().filter(u => u.profilePhoto && u.address && u.city).length;
-    const unverified = all - verified;
-    return { all, verified, unverified };
-  });
-
- 
-  ngOnInit() {
-    this.loadUsers();
-  }
-
-  
-  loadUsers() {
-    this.isLoading.set(true);
-    this.userService.getUsers().subscribe({
-      next: (data) => {
-        this.users.set(data);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Failed to load users:', error);
-        this.isLoading.set(false);
-      },
-    });
-  }
-
-  openEditModal(user: User) {
-    this.selectedUser.set(user);
-    this.editFormData.set({
-      name: user.name,
-      email: user.email,
-      phone: user.phone || '',
-      address: user.address || '',
-      city: user.city || '',
-      pinCode: user.pinCode || '',
-    });
-    this.showEditModal.set(true);
-  }
-
-  closeEditModal() {
-    this.showEditModal.set(false);
-    this.selectedUser.set(null);
-  }
-
-  submitEdit() {
-    if (!this.selectedUser()) return;
-    this.isSubmitting.set(true);
-
-    this.userService.updateUser(this.selectedUser()!._id, this.editFormData()).subscribe({
-      next: () => {
-        this.loadUsers();
-        this.closeEditModal();
-        this.isSubmitting.set(false);
-      },
-      error: (error) => {
-        console.error('Failed to update user:', error);
-        this.isSubmitting.set(false);
-      },
-    });
-  }
-
-  openDeleteModal(user: User) {
-    this.selectedUser.set(user);
-    this.showDeleteModal.set(true);
-  }
-
-  closeDeleteModal() {
-    this.showDeleteModal.set(false);
-    this.selectedUser.set(null);
-  }
-
-  submitDelete() {
-    if (!this.selectedUser()) return;
-    this.isSubmitting.set(true);
-
-    this.userService.deleteUser(this.selectedUser()!._id).subscribe({
-      next: () => {
-        this.loadUsers();
-        this.closeDeleteModal();
-        this.isSubmitting.set(false);
-      },
-      error: (error) => {
-        console.error('Failed to delete user:', error);
-        this.isSubmitting.set(false);
-      },
-    });
-  }
-
-  getImageUrl(path: string): string {
-    if (!path) return 'https://via.placeholder.com/400?text=No+Photo';
-    if (path.startsWith('http')) return path;
-    return `http://192.168.29.122:3000/${path}`;
-  }
-
-  toggleSort(field: SortField) {
-    if (this.sortBy() === field) {
-      this.sortOrder.set(this.sortOrder() === 'asc' ? 'desc' : 'asc');
-    } else {
-      this.sortBy.set(field);
-      this.sortOrder.set('asc');
-    }
+  dismissError() {
+    this.usersStore.setError(null);
   }
 }
- */

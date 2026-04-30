@@ -1,203 +1,157 @@
-<!-- <div class="min-h-screen flex items-start justify-center p-4 md:p-10 bg-slate-50"> -->
-<div
-  class="w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl shadow-slate-400/60 border border-slate-300 overflow-hidden">
+<div class="add-vendor-page min-h-screen bg-gray-300 max-w-[1200px] mx-auto py-8 px-4 sm:px-6">
 
-  <div class="px-8 py-6 bg-white border-b border-slate-300 flex items-center justify-between">
-    <div class="flex items-center gap-4">
-      <div class="p-3 bg-emerald-600 rounded-2xl shadow-lg shadow-emerald-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-        </svg>
-      </div>
-      <div>
-        <h2 class="text-2xl font-bold text-slate-800">Add New Vendor</h2>
-        <p class="text-sm text-slate-500">Register a new partner to the system</p>
-      </div>
+  <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
+  <div class="flex items-center gap-4 mb-8">
+    <button routerLink="/vendors" class="w-10 h-10 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+    </button>
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight m-0 text-slate-900">Partner Registration</h1>
+      <p class="text-xs text-slate-500 mt-0.5 m-0 font-medium">Onboard a new vendor to the platform</p>
     </div>
   </div>
 
-  <form #vendorForm="ngForm" (ngSubmit)="submit(vendorForm)" class="p-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-
-      <div class="space-y-8">
-
-        <section>
-          <div class="flex items-center gap-2 mb-5">
-            <span class="h-1 w-6 bg-indigo-500 rounded-full"></span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Personal Information</h3>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- ── FORM SECTION ──────────────────────────────────────────────────── -->
+    <div class="lg:col-span-2 space-y-8">
+      <app-card title="Business Information" customClass="shadow-xl shadow-slate-200/50">
+        <div class="flex flex-col gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50/50 rounded-2xl border border-slate-300 shadow-sm">
+            <app-form-input label="Business Name" placeholder="e.g. Grand Plaza Hotels" 
+                            [ngModel]="vendorData().businessName" (ngModelChange)="updateField('businessName', $event)"
+                            [error]="errors()['businessName']"></app-form-input>
+            
+            <app-form-input label="Business Type" placeholder="e.g. Hotel, Resort, Banquet" 
+                            [ngModel]="vendorData().businessType" (ngModelChange)="updateField('businessType', $event)"
+                            [error]="errors()['businessType']"></app-form-input>
+          </div>
+          
+          <div class="p-5 bg-slate-50/50 rounded-2xl border border-slate-300 shadow-sm">
+            <app-form-input label="Full Address" type="textarea" placeholder="Street, landmark, area..." [rows]="3"
+                            [ngModel]="vendorData().address" (ngModelChange)="updateField('address', $event)"
+                            [error]="errors()['address']"></app-form-input>
           </div>
 
-          <div class="space-y-4">
-            <div class="relative">
-              <label class="text-xs font-medium text-slate-500 ml-1 mb-1 block">Full Name</label>
-              <div
-                class="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
-                <input [(ngModel)]="vendor.fullName" name="fullName" required placeholder="John Doe"
-                  class="w-full bg-transparent outline-none text-slate-700 text-sm placeholder:text-slate-400" />
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="relative">
-                <label class="text-xs font-medium text-slate-500 ml-1 mb-1 block">Email</label>
-                <div
-                  class="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
-                  <input [(ngModel)]="vendor.email" name="email" required placeholder="email@company.com"
-                    class="w-full bg-transparent outline-none text-sm text-slate-700" />
-                </div>
-              </div>
-              <div class="relative">
-                <label class="text-xs font-medium text-slate-500 ml-1 mb-1 block">Phone</label>
-                <div
-                  class="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
-                  <input [(ngModel)]="vendor.phone" name="phone" required placeholder="+1 234..."
-                    class="w-full bg-transparent outline-none text-sm text-slate-700" />
-                </div>
-              </div>
-            </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50/50 rounded-2xl border border-slate-300 shadow-sm">
+            <app-form-input label="State" placeholder="e.g. Gujarat" 
+                            [ngModel]="vendorData().state" (ngModelChange)="updateField('state', $event)"
+                            [error]="errors()['state']"></app-form-input>
+            
+            <app-form-input label="Pincode" placeholder="6-digit code" 
+                            [ngModel]="vendorData().pincode" (ngModelChange)="updateField('pincode', $event)"
+                            [error]="errors()['pincode']"></app-form-input>
           </div>
-        </section>
-
-        <section>
-          <div class="flex items-center gap-2 mb-5">
-            <span class="h-1 w-6 bg-purple-500 rounded-full"></span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Business Details</h3>
-          </div>
-
-          <div class="space-y-4">
-            <div class="relative">
-              <label class="text-xs font-medium text-slate-500 ml-1 mb-1 block">Company Name</label>
-              <div
-                class="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-purple-500/20 focus-within:border-purple-500 transition-all">
-                <input [(ngModel)]="vendor.businessName" name="businessName" required placeholder="Acme Corp"
-                  class="w-full bg-transparent outline-none text-sm text-slate-700" />
-              </div>
-            </div>
-            <div class="relative">
-              <label class="text-xs font-medium text-slate-500 ml-1 mb-1 block">Industry/Type</label>
-              <div
-                class="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-purple-500/20 focus-within:border-purple-500 transition-all">
-                <input [(ngModel)]="vendor.businessType" name="businessType" required placeholder="Logistics"
-                  class="w-full bg-transparent outline-none text-sm text-slate-700" />
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <div class="space-y-8">
-
-        <section>
-          <div class="flex items-center gap-2 mb-5">
-            <span class="h-1 w-6 bg-blue-500 rounded-full"></span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Location</h3>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="relative">
-              <label class="text-xs font-medium text-slate-500 ml-1 mb-1 block">State</label>
-              <input [(ngModel)]="vendor.state" name="state" placeholder="State"
-                class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" />
-            </div>
-            <div class="relative">
-              <label class="text-xs font-medium text-slate-500 ml-1 mb-1 block">Zip Code</label>
-              <input [(ngModel)]="vendor.pincode" name="pincode" placeholder="000000"
-                class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all" />
-            </div>
-          </div>
-          <div class="relative">
-            <label class="text-xs font-medium text-slate-500 ml-1 mb-1 block">Street Address</label>
-            <textarea [(ngModel)]="vendor.address" name="address" rows="3" placeholder="Full address details..."
-              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all"></textarea>
-          </div>
-        </section>
-
-        <section>
-          <div class="flex items-center gap-2 mb-5">
-            <span class="h-1 w-6 bg-emerald-500 rounded-full"></span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Required Documents</h3>
-          </div>
-
-          <div class="space-y-3">
-            <div
-              class="flex items-center justify-between p-4 border border-slate-300 rounded-2xl bg-slate-50/50 hover:bg-white hover:shadow-md transition-all group">
-              <div class="flex items-center gap-3">
-                <div
-                  class="p-2 bg-white rounded-lg border border-slate-300 text-slate-400 group-hover:text-indigo-600 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-slate-700 leading-none">Government ID</p>
-                  <span class="text-[10px] text-slate-400 uppercase font-bold">{{ govFileName || 'Missing' }}</span>
-                </div>
-              </div>
-              <label
-                class="cursor-pointer bg-white border border-slate-300 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg hover:bg-slate-50 transition shadow-sm">
-                Upload
-                <input type="file" (change)="onGovFile($event)" class="hidden" />
-              </label>
-            </div>
-
-            <div
-              class="flex items-center justify-between p-4 border border-slate-300 rounded-2xl bg-slate-50/50 hover:bg-white hover:shadow-md transition-all group">
-              <div class="flex items-center gap-3">
-                <div
-                  class="p-2 bg-white rounded-lg border border-slate-300 text-slate-400 group-hover:text-purple-600 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-slate-700 leading-none">Business License</p>
-                  <span class="text-[10px] text-slate-400 uppercase font-bold">{{ licenseFileName || 'Missing'
-                    }}</span>
-                </div>
-              </div>
-              <label
-                class="cursor-pointer bg-white border border-slate-300 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg hover:bg-slate-50 transition shadow-sm">
-                Upload
-                <input type="file" (change)="onLicenseFile($event)" class="hidden" />
-              </label>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-
-    <div class="mt-12 pt-8 border-t border-slate-300">
-      <button [disabled]="vendorForm.invalid || isLoading"
-        class="w-full relative group overflow-hidden bg-indigo-600 disabled:bg-slate-300 text-white py-4 rounded-2xl font-bold transition-all duration-300 hover:shadow-xl hover:shadow-indigo-200 active:scale-[0.98]">
-        <span class="relative z-10 flex items-center justify-center gap-2">
-          @if (!isLoading) {
-          Complete Registration
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-          } @else {
-          <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-            </path>
-          </svg>
-          Processing...
-          }
-        </span>
-        <div
-          class="absolute inset-0 bg-linear-to-r from-indigo-600 to-violet-600 opacity-100 group-hover:opacity-90 transition-opacity">
         </div>
-      </button>
+      </app-card>
+
+      <app-card title="Owner Details" customClass="shadow-xl shadow-slate-200/50">
+        <div class="flex flex-col gap-3">
+          <div class="p-5 bg-slate-50/50 rounded-2xl border border-slate-300 shadow-sm">
+            <app-form-input label="Full Name of Owner" placeholder="e.g. John Doe" 
+                            [ngModel]="vendorData().fullName" (ngModelChange)="updateField('fullName', $event)"
+                            [error]="errors()['fullName']"></app-form-input>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50/50 rounded-2xl border border-slate-300 shadow-sm">
+            <app-form-input label="Email Address" type="email" placeholder="john@example.com" 
+                            [ngModel]="vendorData().email" (ngModelChange)="updateField('email', $event)"
+                            [error]="errors()['email']"></app-form-input>
+            
+            <app-form-input label="Phone Number" placeholder="10-digit mobile number" 
+                            [ngModel]="vendorData().phone" (ngModelChange)="updateField('phone', $event)"
+                            [error]="errors()['phone']"></app-form-input>
+          </div>
+        </div>
+      </app-card>
     </div>
-  </form>
+
+    <!-- ── SIDEBAR SECTION ───────────────────────────────────────────────── -->
+    <div class="space-y-8">
+      <app-card title="Verification" customClass="shadow-xl shadow-slate-200/50">
+        <p class="text-xs text-slate-500 mb-6 leading-relaxed font-medium">Please upload clear scanned copies of the following documents for verification.</p>
+
+        <!-- Gov ID Upload -->
+        <div class="mb-5">
+          <label class="block text-[0.7rem] font-black text-slate-700 uppercase tracking-widest mb-2">Government ID</label>
+          <div class="relative group">
+            <input type="file" (change)="onFileSelected($event, 'gov')" 
+                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"/>
+            <div [class]="'border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center gap-2 transition-all ' + 
+                         (isSubmitted() && !selectedGovFile() ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300 group-hover:border-indigo-400 group-hover:bg-indigo-50/30')">
+              <div [class]="'w-12 h-12 rounded-xl flex items-center justify-center transition-colors ' + 
+                           (selectedGovFile() ? 'bg-emerald-100 text-emerald-600' : 
+                            (isSubmitted() && !selectedGovFile() ? 'bg-rose-100 text-rose-600' : 'bg-slate-50 text-slate-400'))">
+                @if (selectedGovFile()) {
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M20 6L9 17l-5-5"/>
+                  </svg>
+                } @else {
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                }
+              </div>
+              <span class="text-xs font-bold text-slate-600 text-center line-clamp-1 px-2">{{ selectedGovFile() ? selectedGovFile()?.name : 'Choose File' }}</span>
+              <span class="text-[0.6rem] text-slate-400 uppercase font-black tracking-tighter">Aadhar or PAN</span>
+            </div>
+          </div>
+          @if (isSubmitted() && !selectedGovFile()) {
+            <p class="mt-1.5 text-[0.65rem] font-bold text-rose-500 uppercase tracking-tight flex items-center gap-1">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+              </svg>
+              ID Document is required
+            </p>
+          }
+        </div>
+
+        <!-- License Upload -->
+        <div class="mb-6">
+          <label class="block text-[0.7rem] font-black text-slate-700 uppercase tracking-widest mb-2">Business License</label>
+          <div class="relative group">
+            <input type="file" (change)="onFileSelected($event, 'license')" 
+                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"/>
+            <div [class]="'border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center gap-2 transition-all ' + 
+                         (isSubmitted() && !selectedLicenseFile() ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300 group-hover:border-emerald-400 group-hover:bg-emerald-50/30')">
+              <div [class]="'w-12 h-12 rounded-xl flex items-center justify-center transition-colors ' + 
+                           (selectedLicenseFile() ? 'bg-emerald-100 text-emerald-600' : 
+                            (isSubmitted() && !selectedLicenseFile() ? 'bg-rose-100 text-rose-600' : 'bg-slate-50 text-slate-400'))">
+                @if (selectedLicenseFile()) {
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M20 6L9 17l-5-5"/>
+                  </svg>
+                } @else {
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                }
+              </div>
+              <span class="text-xs font-bold text-slate-600 text-center line-clamp-1 px-2">{{ selectedLicenseFile() ? selectedLicenseFile()?.name : 'Choose File' }}</span>
+              <span class="text-[0.6rem] text-slate-400 uppercase font-black tracking-tighter">Valid License</span>
+            </div>
+          </div>
+          @if (isSubmitted() && !selectedLicenseFile()) {
+            <p class="mt-1.5 text-[0.65rem] font-bold text-rose-500 uppercase tracking-tight flex items-center gap-1">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+              </svg>
+              License is required
+            </p>
+          }
+        </div>
+
+        <app-button [fullWidth]="true" size="lg" (onClick)="onSubmit()" [loading]="isLoading()" [disabled]="isSubmitted() && !isFormValid()">
+          Submit Application
+        </app-button>
+        
+        <p class="text-[0.65rem] text-center text-slate-400 mt-4 leading-relaxed font-medium">
+          By submitting, you agree to our <span class="underline">Terms of Service</span> and <span class="underline">Partner Guidelines</span>.
+        </p>
+      </app-card>
+    </div>
+  </div>
+
 </div>
-<!-- </div> -->

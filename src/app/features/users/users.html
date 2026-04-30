@@ -1,26 +1,14 @@
 <div class="users-page min-h-screen bg-gray-300 max-w-[1500px] mx-auto py-6 px-4 sm:px-6">
 
-  <!-- ── SUCCESS TOAST ─────────────────────────────────────────────────── -->
-  @if (successMsg()) {
-  <div class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-white border border-emerald-200
-              text-emerald-700 px-5 py-3 rounded-2xl shadow-xl text-sm font-semibold
-              animate-[slideDown_0.25s_ease]">
-    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-      <path d="M20 6L9 17l-5-5"/>
-    </svg>
-    {{ successMsg() }}
-  </div>
-  }
-
-  <!-- ── ERROR TOAST ───────────────────────────────────────────────────── -->
-  @if (errorMsg()) {
-  <div class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-white border border-red-200
+  <!-- ── TOASTS ─────────────────────────────────────────────────────────── -->
+  @if (error()) {
+  <div class="fixed top-5 right-5 z-[10001] flex items-center gap-3 bg-white border border-red-200
               text-red-600 px-5 py-3 rounded-2xl shadow-xl text-sm font-semibold
               animate-[slideDown_0.25s_ease]">
     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
     </svg>
-    {{ errorMsg() }}
+    {{ error() }}
     <button (click)="dismissError()" class="ml-1 opacity-60 hover:opacity-100">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M18 6L6 18M6 6l12 12"/>
@@ -45,7 +33,7 @@
       </div>
     </div>
 
-    <!-- Stat chips + Invite button -->
+    <!-- Stat chips -->
     <div class="flex items-center gap-2 flex-wrap">
       <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
                   bg-sky-50 text-sky-700 border-sky-200 hover:ring-2 hover:ring-sky-300 transition"
@@ -68,8 +56,6 @@
         <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
         {{ counts().unverified }} Incomplete
       </div>
-
-    
     </div>
   </div>
 
@@ -83,7 +69,7 @@
       <input type="text"
              class="w-full py-2.5 pl-9 pr-9 border border-slate-200 rounded-xl bg-white text-sm
                     text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2
-                    focus:ring-blue-400/20"
+                    focus:ring-blue-400/20 shadow-sm"
              placeholder="Search by name, email, city, phone…"
              [value]="search()"
              (input)="search.set($any($event.target).value)"/>
@@ -98,206 +84,122 @@
     </div>
   </div>
 
-  <!-- ── LOADING ────────────────────────────────────────────────────────── -->
-  @if (isLoading()) {
-  <div class="flex flex-col items-center justify-center py-20 text-slate-400 gap-3 text-sm">
-    <div class="w-8 h-8 border-[3px] border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
-    <p class="m-0">Loading users…</p>
-  </div>
-  }
-
-  <!-- ── EMPTY STATE ────────────────────────────────────────────────────── -->
-  @if (!isLoading() && filteredUsers().length === 0) {
-  <div class="flex flex-col items-center justify-center py-20 gap-3 text-center">
-    <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1">
-      <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-      </svg>
+  <!-- ── MAIN CONTENT ──────────────────────────────────────────────────── -->
+  <app-card [padding]="false" customClass="shadow-xl shadow-slate-200/50">
+    <div header-actions class="text-[0.75rem] font-medium text-slate-400">
+      Showing <span class="text-indigo-600 font-bold">{{ filteredUsers().length }}</span> users
     </div>
-    <h3 class="text-lg font-semibold m-0 text-slate-800">No users found</h3>
-    <p class="text-slate-400 text-sm m-0">Try adjusting your search or filter criteria.</p>
-    <button (click)="search.set(''); filter.set('all')"
-            class="mt-2 px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold
-                   hover:bg-blue-700 transition active:scale-95">
-      Reset filters
-    </button>
-  </div>
-  }
 
-  <!-- ── TABLE ─────────────────────────────────────────────────────────── -->
-  @if (!isLoading() && filteredUsers().length > 0) {
-  <div class="bg-white border border-gray-200 rounded-3xl shadow-sm p-5 hover:shadow-md transition-shadow">
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr>
-            <!-- Sortable: Name -->
-            <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-400
-                       border-b border-slate-100 whitespace-nowrap cursor-pointer hover:bg-slate-50 transition"
-                (click)="toggleSort('name')">
-              <div class="flex items-center gap-1.5">
-                Name
-                @if (sortBy() === 'name') {
-                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3"
-                     viewBox="0 0 24 24" [class.rotate-180]="sortOrder() === 'desc'">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-                }
-              </div>
-            </th>
-            <!-- Sortable: Email -->
-            <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-400
-                       border-b border-slate-100 whitespace-nowrap cursor-pointer hover:bg-slate-50 transition"
-                (click)="toggleSort('email')">
-              <div class="flex items-center gap-1.5">
-                Email
-                @if (sortBy() === 'email') {
-                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3"
-                     viewBox="0 0 24 24" [class.rotate-180]="sortOrder() === 'desc'">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-                }
-              </div>
-            </th>
-            <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-400
-                       border-b border-slate-100 whitespace-nowrap">Location</th>
-            <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-400
-                       border-b border-slate-100 whitespace-nowrap">Status</th>
-            <!-- Sortable: Joined -->
-            <th class="px-4 py-3 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-400
-                       border-b border-slate-100 whitespace-nowrap cursor-pointer hover:bg-slate-50 transition"
-                (click)="toggleSort('createdAt')">
-              <div class="flex items-center gap-1.5">
-                Joined
-                @if (sortBy() === 'createdAt') {
-                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3"
-                     viewBox="0 0 24 24" [class.rotate-180]="sortOrder() === 'desc'">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-                }
-              </div>
-            </th>
-            <th class="px-4 py-3 border-b border-slate-100 w-[90px]"></th>
-          </tr>
-        </thead>
+    <!-- LOADING -->
+    @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center py-20 text-slate-400 gap-3 text-sm">
+      <div class="w-8 h-8 border-[3px] border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
+      <p class="animate-pulse">Loading users…</p>
+    </div>
+    }
 
-        <tbody>
-          @for (user of filteredUsers(); track user._id) {
-          <tr class="border-b border-slate-50 hover:bg-slate-50/60 transition-colors group">
+    <!-- EMPTY STATE -->
+    @if (!isLoading() && filteredUsers().length === 0 && !error()) {
+    <div class="flex flex-col items-center justify-center py-20 gap-4 text-center">
+      <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-1">
+        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold m-0 text-slate-900">No users found</h3>
+      <p class="text-slate-500 text-sm m-0">Try adjusting your search or filter criteria.</p>
+      <app-button variant="secondary" (onClick)="search.set(''); filter.set('all')" customClass="mt-2">
+        Reset filters
+      </app-button>
+    </div>
+    }
 
-            <!-- Name + Avatar -->
-            <td class="px-4 py-3.5">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-gradient-to-br
-                            from-blue-600 to-indigo-600 flex items-center justify-center">
-                  @if (getImageUrl(user.profilePhoto)) {
-                  <img [src]="getImageUrl(user.profilePhoto)" [alt]="user.name"
-                       class="w-full h-full object-cover"/>
-                  } @else {
-                  <span class="text-white text-sm font-bold">
-                    {{ user.name.charAt(0).toUpperCase() }}
-                  </span>
-                  }
-                </div>
-                <div>
-                  <div class="font-semibold text-[0.9rem] text-slate-900 leading-tight">{{ user.name }}</div>
-                  <div class="text-xs text-slate-400 mt-0.5">{{ user.phone || 'No phone' }}</div>
-                </div>
-              </div>
-            </td>
-
-            <!-- Email -->
-            <td class="px-4 py-3.5">
-              <span class="text-sm text-slate-600">{{ user.email }}</span>
-            </td>
-
-            <!-- Location -->
-            <td class="px-4 py-3.5">
-              <span class="text-sm text-slate-600">
-                {{ (user.city || '—') }}{{ user.pinCode ? ', ' + user.pinCode : '' }}
-              </span>
-            </td>
-
-            <!-- Status badge -->
-            <td class="px-4 py-3.5">
-              @if (user.profilePhoto && user.address && user.city) {
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700
-                           rounded-full text-xs font-semibold border border-emerald-100">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                Verified
-              </span>
+    <!-- TABLE -->
+    @if (!isLoading() && filteredUsers().length > 0) {
+    <app-table [columns]="['Name', 'Email', 'Location', 'Status', 'Joined', '']">
+      @for (user of filteredUsers(); track user._id) {
+      <tr class="group transition-all hover:bg-slate-50 border-b border-slate-100 last:border-0">
+        <td class="px-5 py-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-gradient-to-br
+                        from-indigo-600 to-violet-600 flex items-center justify-center">
+              @if (getImageUrl(user.profilePhoto)) {
+              <img [src]="getImageUrl(user.profilePhoto)" [alt]="user.name"
+                   class="w-full h-full object-cover"/>
               } @else {
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-700
-                           rounded-full text-xs font-semibold border border-amber-100">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                Incomplete
+              <span class="text-white text-sm font-bold">
+                {{ user.name.charAt(0).toUpperCase() }}
               </span>
               }
-            </td>
-
-            <!-- Join date -->
-            <td class="px-4 py-3.5">
-              <span class="text-sm text-slate-400">{{ user.createdAt | date: 'MMM d, yyyy' }}</span>
-            </td>
-
-            <!-- Actions -->
-            <td class="px-4 py-3.5">
-              <div class="flex items-center justify-end gap-1.5">
-                <button (click)="openEditModal(user)" title="Edit"
-                        class="w-8 h-8 flex items-center justify-center bg-slate-100 border border-slate-200
-                               rounded-lg text-slate-400 transition hover:bg-blue-50 hover:text-blue-600
-                               hover:border-blue-200">
-                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                </button>
-                <button (click)="openDeleteModal(user)" title="Delete"
-                        class="w-8 h-8 flex items-center justify-center bg-slate-100 border border-slate-200
-                               rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600
-                               hover:border-red-200">
-                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    <line x1="10" y1="11" x2="10" y2="17"/>
-                    <line x1="14" y1="11" x2="14" y2="17"/>
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
+            </div>
+            <div>
+              <div class="font-bold text-[0.9rem] text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">{{ user.name }}</div>
+              <div class="text-xs text-slate-400 mt-0.5">{{ user.phone || 'No phone' }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="px-5 py-4">
+          <span class="text-sm text-slate-600">{{ user.email }}</span>
+        </td>
+        <td class="px-5 py-4">
+          <span class="text-sm text-slate-600">
+            {{ (user.city || '—') }}{{ user.pinCode ? ', ' + user.pinCode : '' }}
+          </span>
+        </td>
+        <td class="px-5 py-4">
+          @if (user.profilePhoto && user.address && user.city) {
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700
+                       rounded-lg text-[0.7rem] font-bold uppercase tracking-widest border border-emerald-100">
+            Verified
+          </span>
+          } @else {
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-700
+                       rounded-lg text-[0.7rem] font-bold uppercase tracking-widest border border-amber-100">
+            Incomplete
+          </span>
           }
-        </tbody>
-      </table>
-    </div>
+        </td>
+        <td class="px-5 py-4">
+          <span class="text-sm text-slate-400">{{ user.createdAt | date: 'MMM d, yyyy' }}</span>
+        </td>
+        <td class="px-5 py-4 text-right">
+          <div class="flex items-center justify-end gap-2">
+            <button (click)="openEditModel(user)" title="Edit"
+                    class="w-8 h-8 flex items-center justify-center bg-slate-100 border border-slate-200
+                           rounded-lg text-slate-400 transition hover:bg-indigo-50 hover:text-indigo-600
+                           hover:border-indigo-200 cursor-pointer">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button (click)="openDeleteModel(user)" title="Delete"
+                    class="w-8 h-8 flex items-center justify-center bg-slate-100 border border-slate-200
+                           rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600
+                           hover:border-rose-200 cursor-pointer">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                <line x1="10" y1="11" x2="10" y2="17"/>
+                <line x1="14" y1="11" x2="14" y2="17"/>
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+      }
+    </app-table>
+    }
+  </app-card>
 
-    <!-- Row count -->
-    <p class="text-xs text-slate-400 mt-4 px-1">
-      Showing {{ filteredUsers().length }} of {{ counts().all }} users
-    </p>
-  </div>
-  }
-
-</div><!-- end page -->
-
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!--  EDIT MODAL                                                            -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-@if (showEditModal()) {
-<div class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4
-            animate-[fadeIn_0.18s_ease]"
-     (click)="closeEditModal()">
-  <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl max-h-[92vh] overflow-y-auto
-              animate-[slideUp_0.2s_ease]"
-       (click)="$event.stopPropagation()">
-
-    <!-- Header -->
-    <div class="flex items-start justify-between gap-4 px-6 pt-6 pb-5 border-b border-slate-100">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-xl overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-600
-                    flex items-center justify-center text-white font-bold text-lg shrink-0">
+  <!-- ── EDIT MODEL ───────────────────────────────────────────────────── -->
+  @if (showEditModel()) {
+  <app-model [title]="'Edit User Profile'" maxWidth="md" (onClose)="closeEditModel()" [hasFooter]="true">
+    <div class="flex flex-col gap-6">
+      <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <div class="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-600 to-violet-700
+                    flex items-center justify-center text-white font-bold text-xl shrink-0 shadow-lg shadow-indigo-100">
           @if (getImageUrl(selectedUser()?.profilePhoto)) {
           <img [src]="getImageUrl(selectedUser()?.profilePhoto)" class="w-full h-full object-cover"/>
           } @else {
@@ -305,487 +207,60 @@
           }
         </div>
         <div>
-          <h3 class="text-lg font-bold m-0 mb-0.5 text-slate-900">{{ selectedUser()?.name }}</h3>
-          <p class="text-sm text-slate-400 m-0">{{ selectedUser()?.email }}</p>
-        </div>
-      </div>
-      <button (click)="closeEditModal()"
-              class="w-9 h-9 flex items-center justify-center bg-slate-100 border border-slate-200
-                     rounded-xl text-slate-400 transition hover:bg-slate-200 hover:text-slate-600">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Form body -->
-    <!-- FIX: [(ngModel)] on plain object properties — works correctly -->
-    <div class="px-6 py-5 space-y-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Full Name</label>
-          <input type="text" [(ngModel)]="editFormData.name"
-                 class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none
-                        transition focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
-                 placeholder="Full name"/>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Email</label>
-          <input type="email" [(ngModel)]="editFormData.email"
-                 class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none
-                        transition focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
-                 placeholder="Email address"/>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Phone</label>
-          <input type="tel" [(ngModel)]="editFormData.phone"
-                 class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none
-                        transition focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
-                 placeholder="10-digit number"/>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">City</label>
-          <input type="text" [(ngModel)]="editFormData.city"
-                 class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none
-                        transition focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
-                 placeholder="City"/>
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Address</label>
-        <textarea [(ngModel)]="editFormData.address" rows="2"
-                  class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-[inherit]
-                         resize-none outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
-                  placeholder="Street, area…"></textarea>
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Pin Code</label>
-        <input type="text" [(ngModel)]="editFormData.pinCode"
-               class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none
-                      transition focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
-               placeholder="6-digit pin code"/>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="flex justify-end gap-2 px-6 pb-6 pt-2 border-t border-slate-100">
-      <button (click)="closeEditModal()"
-              class="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-100 text-slate-500
-                     hover:bg-slate-200 transition">Cancel</button>
-      <button (click)="submitEdit()" [disabled]="isSubmitting()"
-              class="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold bg-blue-600
-                     text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
-                     transition active:scale-[0.97]">
-        @if (isSubmitting()) {
-        <span class="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
-        }
-        {{ isSubmitting() ? 'Saving…' : 'Save Changes' }}
-      </button>
-    </div>
-  </div>
-</div>
-}
-
-
-
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!--  DELETE CONFIRM MODAL                                                  -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-@if (showDeleteModal()) {
-<div class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4
-            animate-[fadeIn_0.18s_ease]"
-     (click)="closeDeleteModal()">
-  <div class="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-7 text-center animate-[slideUp_0.2s_ease]"
-       (click)="$event.stopPropagation()">
-    <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4">
-      <svg width="26" height="26" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24">
-        <polyline points="3 6 5 6 21 6"/>
-        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-        <line x1="10" y1="11" x2="10" y2="17"/>
-        <line x1="14" y1="11" x2="14" y2="17"/>
-      </svg>
-    </div>
-    <h3 class="text-lg font-bold m-0 mb-2 text-slate-900">Delete User?</h3>
-    <p class="text-sm text-slate-500 m-0 mb-1 leading-relaxed">
-      Are you sure you want to permanently delete
-      <strong class="text-slate-800">{{ selectedUser()?.name }}</strong>?
-    </p>
-    <p class="text-xs text-slate-400 mb-5">This action cannot be undone.</p>
-    <div class="flex gap-2 justify-center">
-      <button (click)="closeDeleteModal()"
-              class="px-5 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 text-slate-500
-                     hover:bg-slate-200 transition">Cancel</button>
-      <button (click)="submitDelete()" [disabled]="isSubmitting()"
-              class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-red-600
-                     text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed
-                     transition active:scale-[0.97]">
-        @if (isSubmitting()) {
-        <span class="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
-        }
-        {{ isSubmitting() ? 'Deleting…' : 'Delete User' }}
-      </button>
-    </div>
-  </div>
-</div>
-}
-
-
-
-
-<!-- <div class="users-page min-h-screen bg-[#F0F2F5] max-w-[1500px] mx-auto py-6 px-4 sm:px-6">
-
-
-
-  <div class="page-header flex items-center justify-between flex-wrap gap-4 mb-3">
-    <div class="header-left flex items-center gap-3.5">
-      <div class="w-11.5 h-11.5 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      </div>
-      <div>
-        <h1 class="text-2xl font-bold tracking-tight m-0 leading-tight">User Management</h1>
-        <p class="text-[0.8125rem] text-slate-500 mt-0.5 mb-0">Manage and monitor all registered users</p>
-      </div>
-    </div>
-
-    <div class="header-stats flex gap-2 flex-wrap">
-      <div
-        class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-sky-100 text-sky-700 border-blue-300"
-        [class.ring-2]="filter() === 'all'" [class.ring-sky-400]="filter() === 'all'" (click)="filter.set('all')">
-        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-        {{ counts().all }} All Users
-      </div>
-      <div
-        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-emerald-100 text-emerald-800 border-emerald-300"
-        [class.ring-2]="filter() === 'verified'" [class.ring-emerald-400]="filter() === 'verified'"
-        (click)="filter.set('verified')">
-        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-        {{ counts().verified }} Verified
-      </div>
-      <div
-        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer bg-amber-100 text-amber-800 border-amber-300"
-        [class.ring-2]="filter() === 'unverified'" [class.ring-amber-400]="filter() === 'unverified'"
-        (click)="filter.set('unverified')">
-        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-        {{ counts().unverified }} Unverified
-      </div>
-    </div>
-  </div>
-
-  <div class="toolbar flex gap-3 flex-wrap mb-3 items-center w-full">
-    <div class="relative flex-1 min-w-55">
-      <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" width="16" height="16"
-        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.35-4.35" />
-      </svg>
-      <input type="text"
-        class="w-full py-2.5 pl-9 pr-9 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 box-border"
-        placeholder="Search by name, email, city, phone..." [value]="search()"
-        (input)="search.set($any($event.target).value)" />
-      @if (search()) {
-      <button
-        class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-slate-400 flex p-1 rounded hover:text-slate-700"
-        (click)="search.set('')">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
-      </button>
-      }
-    </div>
-  </div>
-
-
-  @if (isLoading()) {
-  <div class="flex flex-col items-center justify-center py-20 text-slate-400 gap-3.5 text-sm w-full">
-    <div class="w-8 h-8 border-[3px] border-slate-200 border-t-indigo-600 rounded-full animate-spin"></div>
-    <p>Loading users…</p>
-  </div>
-  }
-
-
-  @if (!isLoading() && filteredUsers().length === 0) {
-  <div class="flex flex-col items-center justify-center py-20 gap-3 text-center w-full">
-    <div class="w-18 h-18 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-1">
-      <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-      </svg>
-    </div>
-    <h3 class="text-lg font-semibold m-0">No users found</h3>
-    <p class="text-slate-500 text-sm m-0">Try adjusting your search or filter criteria.</p>
-    <button
-      class="mt-2 px-5 py-2 bg-[#6C63FF] text-white rounded-xl text-sm font-semibold cursor-pointer transition-all duration-200 hover:bg-[#574fcc]"
-      (click)="search.set(''); filter.set('all')">Reset filters</button>
-  </div>
-  }
-
-  @if (!isLoading() && filteredUsers().length > 0) {
-  <div class="bg-white border border-gray-200 rounded-3xl shadow-sm w-full p-5 transition-all duration-200 hover:shadow-md">
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr>
-            <th
-              class="px-4.5 py-2.75 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-50 transition"
-              (click)="toggleSort('name')">
-              <div class="flex items-center gap-1.5">
-                Name
-                @if (sortBy() === 'name') {
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"
-                  viewBox="0 0 24 24"
-                  [class.rotate-180]="sortOrder() === 'desc'">
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-                }
-              </div>
-            </th>
-            <th
-              class="px-4.5 py-2.75 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-50 transition"
-              (click)="toggleSort('email')">
-              <div class="flex items-center gap-1.5">
-                Email
-                @if (sortBy() === 'email') {
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"
-                  viewBox="0 0 24 24"
-                  [class.rotate-180]="sortOrder() === 'desc'">
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-                }
-              </div>
-            </th>
-            <th class="px-4.5 py-2.75 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Location</th>
-            <th class="px-4.5 py-2.75 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Status</th>
-            <th
-              class="px-4.5 py-2.75 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-50 transition"
-              (click)="toggleSort('createdAt')">
-              <div class="flex items-center gap-1.5">
-                Joined
-                @if (sortBy() === 'createdAt') {
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"
-                  viewBox="0 0 24 24"
-                  [class.rotate-180]="sortOrder() === 'desc'">
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-                }
-              </div>
-            </th>
-            <th class="px-4.5 py-2.75 border-b border-slate-200 text-right"></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (user of filteredUsers(); track user._id) {
-          <tr class="border-b border-slate-100 transition hover:bg-slate-50/50">
-            <td class="px-4.5 py-3.5">
-              <div class="flex items-center gap-2.5">
-                <div class="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-gradient-to-br from-indigo-600 to-violet-600">
-                  @if (user.profilePhoto) {
-                  <img [src]="getImageUrl(user.profilePhoto)" alt="{{ user.name }}"
-                    class="w-full h-full object-cover" />
-                  } @else {
-                  <div class="w-full h-full flex items-center justify-center text-white text-sm font-bold">
-                    {{ user.name.charAt(0).toUpperCase() }}
-                  </div>
-                  }
-                </div>
-                <div>
-                  <div class="font-semibold text-[0.9375rem] text-slate-900">{{ user.name }}</div>
-                  <div class="text-[0.75rem] text-slate-500">{{ user.phone || 'N/A' }}</div>
-                </div>
-              </div>
-            </td>
-            <td class="px-4.5 py-3.5">
-              <div class="text-sm text-slate-600">{{ user.email }}</div>
-            </td>
-            <td class="px-4.5 py-3.5">
-              <div class="text-sm text-slate-600">{{ user.city || '-' }}, {{ user.pinCode || '-' }}</div>
-            </td>
-            <td class="px-4.5 py-3.5">
-              @if (user.profilePhoto && user.address && user.city) {
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                Verified
-              </span>
-              } @else {
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-                Incomplete
-              </span>
-              }
-            </td>
-            <td class="px-4.5 py-3.5">
-              <div class="text-sm text-slate-500">{{ user.createdAt | date: 'MMM d, yyyy' }}</div>
-            </td>
-            <td class="px-4.5 py-3.5">
-              <div class="flex items-center justify-end gap-2">
-                <button
-                  class="w-8.5 h-8.5 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-pointer transition hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200"
-                  (click)="openEditModal(user)" title="Edit user">
-                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
-                </button>
-                <button
-                  class="w-8.5 h-8.5 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-pointer transition hover:bg-red-50 hover:text-red-600 hover:border-red-200"
-                  (click)="openDeleteModal(user)" title="Delete user">
-                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    <line x1="10" y1="11" x2="10" y2="17" />
-                    <line x1="14" y1="11" x2="14" y2="17" />
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </div>
-  }
-</div>
-
-
-@if (showEditModal()) {
-<div
-  class="fixed inset-0 z-40 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.18s_ease]"
-  (click)="closeEditModal()">
-  <div class="w-full max-w-110 bg-white rounded-3xl shadow-2xl p-7 animate-[slideUp_0.2s_ease] max-h-[92vh] overflow-y-auto"
-    (click)="$event.stopPropagation()">
-    <div class="flex items-start justify-between gap-4 pb-5.5 border-b border-slate-200 mb-5">
-      <div class="flex items-center gap-3">
-        @if (selectedUser()?.profilePhoto) {
-        <img [src]="getImageUrl(selectedUser()?.profilePhoto!)" alt="{{ selectedUser()?.name }}"
-          class="w-12.5 h-12.5 rounded-xl object-cover" />
-        } @else {
-        <div class="w-12.5 h-12.5 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 text-white text-xl font-bold flex items-center justify-center shrink-0">
-          {{ selectedUser()!.name.charAt(0).toUpperCase() }}
-        </div>
-        }
-        <div>
-          <h3 class="text-lg font-bold m-0 mb-0.5">{{ selectedUser()?.name }}</h3>
+          <h3 class="text-lg font-bold m-0 text-slate-900">{{ selectedUser()?.name }}</h3>
           <p class="text-sm text-slate-500 m-0">{{ selectedUser()?.email }}</p>
         </div>
       </div>
-      <button
-        class="w-9.5 h-9.5 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-pointer transition hover:bg-slate-200 hover:text-slate-700"
-        (click)="closeEditModal()">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M18 6L6 18M6 6l12 12" />
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+        <app-form-input label="Full Name" [(ngModel)]="editFormData.name" placeholder="Full name"></app-form-input>
+        <app-form-input label="Email Address" [(ngModel)]="editFormData.email" type="email" placeholder="Email"></app-form-input>
+        <app-form-input label="Phone Number" [(ngModel)]="editFormData.phone" type="text" placeholder="10-digit number"></app-form-input>
+        <app-form-input label="City" [(ngModel)]="editFormData.city" placeholder="City"></app-form-input>
+      </div>
+
+      <app-form-input label="Address" [(ngModel)]="editFormData.address" type="textarea" placeholder="Street, area…" [rows]="3"></app-form-input>
+      
+      <div class="max-w-[150px]">
+        <app-form-input label="Pin Code" [(ngModel)]="editFormData.pinCode" placeholder="6-digit code"></app-form-input>
+      </div>
+    </div>
+
+    <div footer>
+      <app-button variant="secondary" (onClick)="closeEditModel()">Cancel</app-button>
+      <app-button (onClick)="submitEdit()" [loading]="isLoading()">Save Changes</app-button>
+    </div>
+  </app-model>
+  }
+
+  <!-- ── DELETE MODEL ─────────────────────────────────────────────────── -->
+  @if (showDeleteModel()) {
+  <app-model [title]="'Confirm Deletion'" maxWidth="sm" (onClose)="closeDeleteModel()" [hasFooter]="true">
+    <div class="flex flex-col items-center text-center py-4">
+      <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-4">
+        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
         </svg>
-      </button>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-2">Delete user account?</h3>
+      <p class="text-[0.9375rem] text-slate-600 leading-relaxed max-w-sm">
+        Are you sure you want to delete <strong>{{ selectedUser()?.name }}</strong>? This action is permanent and cannot be undone.
+      </p>
     </div>
 
-
-    <div class="space-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
-          <input type="text" [(ngModel)]="editFormData().name"
-            class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            placeholder="Enter full name" />
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
-          <input type="email" [(ngModel)]="editFormData().email"
-            class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            placeholder="Enter email address" />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Phone</label>
-          <input type="tel" [(ngModel)]="editFormData().phone"
-            class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            placeholder="10-digit phone number" />
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Pin Code</label>
-          <input type="text" [(ngModel)]="editFormData().pinCode"
-            class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            placeholder="6-digit pin code" />
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-sm font-semibold text-slate-700 mb-1.5">City</label>
-        <input type="text" [(ngModel)]="editFormData().city"
-          class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-          placeholder="Enter city name" />
-      </div>
-
-      <div>
-        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Address</label>
-        <textarea [(ngModel)]="editFormData().address"
-          class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-[inherit] resize-y outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-          rows="3" placeholder="Enter complete address"></textarea>
-      </div>
+    <div footer>
+      <app-button variant="secondary" (onClick)="closeDeleteModel()">Cancel</app-button>
+      <app-button variant="danger" (onClick)="submitDelete()" [loading]="isLoading()">Delete User</app-button>
     </div>
+  </app-model>
+  }
 
- 
-    <div class="flex justify-end gap-2 mt-6 pt-4 border-t border-slate-200">
-      <button
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-slate-100 text-slate-500 transition hover:bg-slate-200"
-        (click)="closeEditModal()">Cancel</button>
-      <button
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-blue-600 text-white transition hover:bg-blue-700 disabled:opacity-55 disabled:cursor-not-allowed active:scale-[0.97]"
-        [disabled]="isSubmitting()" (click)="submitEdit()">
-        @if (isSubmitting()) {
-        <span class="inline-block w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
-        }
-        {{ isSubmitting() ? 'Updating…' : 'Save Changes' }}
-      </button>
-    </div>
-  </div>
 </div>
-}
 
-
-@if (showDeleteModal()) {
-<div
-  class="fixed inset-0 z-40 bg-slate-900/55 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.18s_ease]"
-  (click)="closeDeleteModal()">
-  <div class="w-full max-w-110 bg-white rounded-3xl shadow-2xl p-7 animate-[slideUp_0.2s_ease]"
-    (click)="$event.stopPropagation()">
-    <div class="flex items-center justify-center w-14 h-14 rounded-full bg-red-100 mx-auto mb-4">
-      <svg width="28" height="28" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24">
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-        <line x1="10" y1="11" x2="10" y2="17" />
-        <line x1="14" y1="11" x2="14" y2="17" />
-      </svg>
-    </div>
-    <h3 class="text-lg font-bold m-0 mb-1.5 text-center">Delete User?</h3>
-    <p class="text-sm text-slate-500 m-0 mb-4.5 leading-relaxed text-center">
-      Are you sure you want to permanently delete <strong>{{ selectedUser()?.name }}</strong>? This action cannot be
-      undone.
-    </p>
-    <div class="flex justify-end gap-2 mt-6">
-      <button
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-slate-100 text-slate-500 transition hover:bg-slate-200"
-        (click)="closeDeleteModal()">Cancel</button>
-      <button
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[0.8125rem] font-semibold border-none cursor-pointer bg-red-600 text-white transition hover:bg-red-700 disabled:opacity-55 disabled:cursor-not-allowed active:scale-[0.97]"
-        [disabled]="isSubmitting()" (click)="submitDelete()">
-        @if (isSubmitting()) {
-        <span class="inline-block w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
-        }
-        {{ isSubmitting() ? 'Deleting…' : 'Delete User' }}
-      </button>
-    </div>
-  </div>
-</div>
-}
- -->
+<style>
+  @keyframes slideDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+</style>

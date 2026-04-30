@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Venue } from '../models/venue-types.modal';
+import { Venue } from '../models/venue-types.model';
 
 @Injectable({
   providedIn: 'root',

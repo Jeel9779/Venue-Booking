@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 /* import { VenueService } from '../services/venue.service'; */
 import { AdminVenueService } from '../services/admin-venue.service';
-import type { Venue, VenueVM, Partner } from '../models/venue-types.modal'
+import type { Venue, VenueVM, Partner } from '../models/venue-types.model'
 
 @Injectable({
   providedIn: 'root',

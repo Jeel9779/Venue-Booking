@@ -1,29 +1,31 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { VenueService } from '../../core/services/venue.service';
-import { Venue } from '../../core/models/venue.model';
-
-type FilterState = 'all' | 'pending' | 'approved' | 'rejected';
+import { VenueStore } from '../../core/store/venue.store';
+import { Venue, FilterState } from '../../core/models/venue.model';
+import { Button } from '../../shared/components/button/button';
+import { Card } from '../../shared/components/card/card';
+import { Table } from '../../shared/components/table/table';
+import { Model } from '../../shared/components/model/model';
+import { FormInput } from '../../shared/components/form-input/form-input';
 
 @Component({
   selector: 'app-venues',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput],
   templateUrl: './venues.html',
   styleUrl: './venues.css',
 })
 export class Venues implements OnInit {
-  
-  private baseUrl = 'http://192.168.1.11:3000/venues';
-
-  constructor(private venueService: VenueService) {}
+  private readonly venueService = inject(VenueService);
+  private readonly venueStore = inject(VenueStore);
 
   // ── State ──────────────────────────────────────────────────────────────────
-
-  venues = signal<Venue[]>([]);
-  isLoading = signal(false);
-  isSubmitting = signal(false);
+  readonly venues = toSignal(this.venueStore.venues$, { initialValue: [] });
+  readonly isLoading = toSignal(this.venueStore.isLoading$, { initialValue: false });
+  readonly error = toSignal(this.venueStore.error$, { initialValue: null });
 
   filter = signal<FilterState>('all');
   search = signal('');
@@ -37,7 +39,6 @@ export class Venues implements OnInit {
   previewImage = signal<string | null>(null);
 
   // ── Computed ───────────────────────────────────────────────────────────────
-
   filteredVenues = computed(() => {
     let list = this.venues();
 
@@ -69,61 +70,13 @@ export class Venues implements OnInit {
   });
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
-
   ngOnInit() {
-    this.loadVenues();
+    this.venueService.loadAll();
   }
 
-  // ── Data Loading ─────────────────────────────────────────────────────────────────
-
-  loadVenues() {
-    this.isLoading.set(true);
-
-    this.venueService.getVenues().subscribe({
-      next: (data) => {
-        const venues: Venue[] = data.map((v) => ({
-          ...v,
-          amenities: this.parseAmenities(v.amenities),
-        }));
-        this.venues.set(venues);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        console.error('Failed to load venues:', err);
-        this.isLoading.set(false);
-      },
-    });
-  }
-
-  // ── Helpers ────────────────────────────────────────────────────────────────
-
-  /** Normalise the various shapes amenities can arrive in from the API */
-  private parseAmenities(raw: unknown): string[] {
-    if (Array.isArray(raw)) {
-      // Backend sometimes wraps the JSON array inside a single-element array
-      if (raw.length === 1 && typeof raw[0] === 'string') {
-        try {
-          return JSON.parse(raw[0]);
-        } catch {
-          return [];
-        }
-      }
-      return raw.filter((x): x is string => typeof x === 'string');
-    }
-    if (typeof raw === 'string') {
-      try {
-        return JSON.parse(raw);
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  }
-
-  // ── Modal ──────────────────────────────────────────────────────────────────
-
+  // ── Actions ─────────────────────────────────────────────────────────────────
   openDetails(v: Venue) {
-    this.selectedVenue.set({ ...v, amenities: this.parseAmenities(v.amenities) });
+    this.selectedVenue.set(v);
     this.showDetailsModal.set(true);
   }
 
@@ -131,8 +84,6 @@ export class Venues implements OnInit {
     this.showDetailsModal.set(false);
     this.selectedVenue.set(null);
   }
-
-  // ── Approve flow ───────────────────────────────────────────────────────────
 
   confirmApprove() {
     this.showApproveModal.set(true);
@@ -142,23 +93,10 @@ export class Venues implements OnInit {
     const venue = this.selectedVenue();
     if (!venue?._id) return;
 
-    this.isSubmitting.set(true);
-
-    this.venueService.updateVenue(venue._id, { status: 'approved' }).subscribe({
-      next: () => {
-        this.isSubmitting.set(false);
-        this.showApproveModal.set(false);
-        this.closeDetails();
-        this.loadVenues();
-      },
-      error: (err) => {
-        console.error('Approve failed:', err);
-        this.isSubmitting.set(false);
-      },
-    });
+    this.venueService.updateStatus(venue._id, 'approved');
+    this.showApproveModal.set(false);
+    this.closeDetails();
   }
-
-  // ── Reject flow ────────────────────────────────────────────────────────────
 
   openRejectModal() {
     this.rejectReason = '';
@@ -173,29 +111,12 @@ export class Venues implements OnInit {
     const venue = this.selectedVenue();
     if (!venue?._id || !this.rejectReason.trim()) return;
 
-    this.isSubmitting.set(true);
-
-    this.venueService
-      .updateVenue(venue._id, {
-        status: 'rejected',
-        adminDescription: this.rejectReason.trim(),
-      })
-      .subscribe({
-        next: () => {
-          this.isSubmitting.set(false);
-          this.showRejectModal.set(false);
-          this.closeDetails();
-          this.loadVenues();
-        },
-        error: (err) => {
-          console.error('Reject failed:', err);
-          this.isSubmitting.set(false);
-        },
-      });
+    this.venueService.updateStatus(venue._id, 'rejected', this.rejectReason.trim());
+    this.showRejectModal.set(false);
+    this.closeDetails();
   }
 
   // ── Image preview ──────────────────────────────────────────────────────────
-
   openImage(img: string) {
     this.previewImage.set(this.getImageUrl(img));
   }
@@ -204,20 +125,10 @@ export class Venues implements OnInit {
     this.previewImage.set(null);
   }
 
-  // image url..  Converts relative path → full URL
   getImageUrl(img?: string): string {
     if (!img) return '';
-
     if (img.startsWith('http')) return img;
-
-    const root = this.baseUrl.replace('/venues', '');
-
+    const root = 'http://192.168.1.11:3000'; 
     return root + '/' + img.replace(/^\/+/, '');
   }
 }
-
-/*  No unsubscribe
-Business logic in component
-No auth token
-Hardcoded API URL
-No error UI*/

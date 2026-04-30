@@ -1,20 +1,31 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, signal, effect, computed } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { VendorService } from '../../../core/services/vendor.service';
-import { FormsModule, NgForm } from '@angular/forms';
-
+import { VendorStore } from '../../../core/store/vendor.store';
+import { Button } from '../../../shared/components/button/button';
+import { Card } from '../../../shared/components/card/card';
+import { FormInput } from '../../../shared/components/form-input/form-input';
 
 @Component({
   selector: 'app-add-vendor',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule, Button, Card, FormInput, RouterLink],
   templateUrl: './add-vendor.html',
   styleUrl: './add-vendor.css',
 })
 export class AddVendor {
+  private readonly vendorService = inject(VendorService);
+  private readonly vendorStore = inject(VendorStore);
+  private readonly router = inject(Router);
 
+  // ── State (Signals) ────────────────────────────────────────────────────────
+  readonly isLoading = this.vendorStore.isLoading;
+  readonly error = this.vendorStore.error;
+  readonly vendors = this.vendorStore.vendors;
 
-  vendor: any = {
+  vendorData = signal({
     fullName: '',
     email: '',
     phone: '',
@@ -23,128 +34,96 @@ export class AddVendor {
     state: '',
     pincode: '',
     address: ''
-  };
+  });
 
+  selectedGovFile = signal<File | null>(null);
+  selectedLicenseFile = signal<File | null>(null);
+  isSubmitted = signal(false);
 
+  // Validation Signals
+  errors = computed(() => {
+    if (!this.isSubmitted()) return {} as Record<string, string>;
+    const data = this.vendorData();
+    const errs: Record<string, string> = {};
+    
+    if (!data.businessName.trim()) errs['businessName'] = 'Business Name is required';
+    if (!data.businessType.trim()) errs['businessType'] = 'Type is required';
+    if (!data.address.trim()) errs['address'] = 'Full Address is required';
+    if (!data.state.trim()) errs['state'] = 'State is required';
+    if (!data.pincode.trim()) errs['pincode'] = 'Pincode is required';
+    else if (!/^\d{6}$/.test(data.pincode)) errs['pincode'] = 'Invalid 6-digit Pincode';
+    
+    if (!data.fullName.trim()) errs['fullName'] = 'Owner Name is required';
+    if (!data.email.trim()) errs['email'] = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(data.email)) errs['email'] = 'Invalid Email address';
+    
+    if (!data.phone.trim()) errs['phone'] = 'Phone is required';
+    else if (!/^\d{10}$/.test(data.phone)) errs['phone'] = 'Invalid 10-digit number';
 
-  //  FILE STORAGE
-  selectedGovFile!: File;
-  selectedLicenseFile!: File;
+    return errs;
+  });
 
-  //  UI STATES
-  showSuccess = false;
-  isLoading = false;
-  errorMsg = '';
+  isFormValid = computed(() => {
+    const data = this.vendorData();
+    return !!(
+      data.fullName.trim() &&
+      /\S+@\S+\.\S+/.test(data.email) &&
+      /^\d{10}$/.test(data.phone) &&
+      data.businessName.trim() &&
+      data.address.trim() &&
+      /^\d{6}$/.test(data.pincode) &&
+      this.selectedGovFile() &&
+      this.selectedLicenseFile()
+    );
+  });
 
-  // FILE NAMES (UX)
-  govFileName = '';
-  licenseFileName = '';
-
-  constructor(
-    private vendorService: VendorService,
-    private router: Router
-  ) { }
-
-  //  FILE HANDLERS
-  onGovFile(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedGovFile = file;
-      this.govFileName = file.name;
-    }
-  }
-
-  onLicenseFile(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedLicenseFile = file;
-      this.licenseFileName = file.name;
-    }
-  }
-
-  //  SUBMIT (PRO VERSION)
-  submit(form: NgForm) {
-
-    if (form.invalid || !this.selectedGovFile || !this.selectedLicenseFile) {
-      this.errorMsg = 'Please fill all fields and upload required documents';
-      return;
-    }
-
-    this.isLoading = true;
-    this.errorMsg = '';
-
-    const formData = new FormData();
-
-    //  append text fields
-    Object.keys(this.vendor).forEach((key: any) => {
-      formData.append(key, this.vendor[key]);
-    });
-
-    //  append files
-    formData.append('governmentId', this.selectedGovFile);
-    formData.append('licenseDoc', this.selectedLicenseFile);
-
-    this.vendorService.addVendor(formData).subscribe({
-      next: () => {
-        this.isLoading = false;
-
-        // SHOW SUCCESS UI (instead of alert)
-        this.showSuccess = true;
-
-        setTimeout(() => {
-          this.showSuccess = false;
-
-          // RESET FORM
-          form.resetForm();
-          this.govFileName = '';
-          this.licenseFileName = '';
-
-          //  NAVIGATE AFTER SUCCESS
-          this.router.navigate(['/admin/vendors']);
-        }, 1800);
-      },
-
-      error: (err: any) => {
-        this.isLoading = false;
-
-        // ✅ SMART ERROR HANDLING
-        if (err.status === 400) {
-          this.errorMsg = err?.error?.message || 'Invalid data provided';
-        } else if (err.status === 500) {
-          this.errorMsg = 'Server error. Please try again later';
-        } else {
-          this.errorMsg = 'Something went wrong. Please retry';
-        }
-
-        console.error(err);
+  constructor() {
+    let initialCount = this.vendors().length;
+    effect(() => {
+      if (this.vendors().length > initialCount && !this.error() && !this.isLoading()) {
+        this.router.navigate(['/vendors']);
       }
     });
   }
+
+  // ── Actions ────────────────────────────────────────────────────────────────
+  updateField(field: string, value: string) {
+    this.vendorData.update(prev => ({ ...prev, [field]: value }));
+  }
+
+  onFileSelected(event: any, type: 'gov' | 'license') {
+    const file = event.target.files[0];
+    if (file) {
+      if (type === 'gov') this.selectedGovFile.set(file);
+      else this.selectedLicenseFile.set(file);
+    }
+  }
+
+  onSubmit() {
+    this.isSubmitted.set(true);
+    if (!this.isFormValid()) return;
+
+    const data = this.vendorData();
+    const govFile = this.selectedGovFile()!;
+    const licenseFile = this.selectedLicenseFile()!;
+
+    const formData = new FormData();
+    formData.append('fullName', data.fullName);
+    formData.append('email', data.email);
+    formData.append('phone', data.phone);
+    formData.append('businessName', data.businessName);
+    formData.append('businessType', data.businessType);
+    formData.append('state', data.state);
+    formData.append('pincode', data.pincode);
+    formData.append('address', data.address);
+    
+    formData.append('governmentId', govFile, govFile.name);
+    formData.append('licenseDoc', licenseFile, licenseFile.name);
+
+    this.vendorService.create(formData);
+  }
+
+  dismissError() {
+    this.vendorStore.setError(null);
+  }
 }
-
-
-
-
-
-/* Using localStorage adminId (weak auth)
- No unsubscribe (memory risk)
- Business logic inside component (should move to service)
- No error detail handling */
-/* Replace any with model
-Move logic to service
-Add validation (form + file)
-Improve auth (token)
-Handle unsubscribe */
-
-/*  better structure:
-
-auth.service.ts  ← login/logout + user data
-vendor.service.ts ← API calls
-add-vendor.component.ts ← form UI only
-
-Add guards for routes
-Add proper error logging
-UseRxJS for subscriptions
-
-Use enums for status fields
-Update to use models (Vendor, VendorSubscription, etc.) */

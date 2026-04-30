@@ -1,229 +1,141 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
-import { VendorService } from '@core/services/vendor.service';  // service
-import { Vendor } from '@core/models/vendor.model';   // Interface
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { LucideAngularModule } from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
+import { VendorService } from '../../core/services/vendor.service';
+import { VendorStore } from '../../core/store/vendor.store';
+import { Vendor } from '../../core/models/vendor.model';
+import { Button } from '../../shared/components/button/button';
+import { Card } from '../../shared/components/card/card';
+import { Table } from '../../shared/components/table/table';
+import { Model } from '../../shared/components/model/model';
+import { FormInput } from '../../shared/components/form-input/form-input';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-vendors',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, RouterLink],
   templateUrl: './vendors.html',
   styleUrl: './vendors.css',
 })
 export class Vendors implements OnInit {
+  private readonly vendorService = inject(VendorService);
+  private readonly vendorStore = inject(VendorStore);
 
-  constructor(
-    private router: Router,
-    private vendorService: VendorService
-  ) { }
+  // ── State (Signals) ────────────────────────────────────────────────────────
+  readonly vendors = this.vendorStore.vendors;
+  readonly isLoading = this.vendorStore.isLoading;
+  readonly error = this.vendorStore.error;
 
-  // go to Add Vendor page
-  goToAddVendor() {
-    this.router.navigate(['/add-vendor']);
-  }
-
-  // ================= TOAST =================
-  toast = signal<{ message: string; type: 'success' | 'error' } | null>(null);
-
-  showToast(message: string, type: 'success' | 'error' = 'success') {
-    this.toast.set({ message, type });
-    setTimeout(() => this.toast.set(null), 3000);
-  }
-
-  // ================= STATE =================
-  vendors = signal<Vendor[]>([]); // Stores vendor list
-  isLoading = signal(false);
-
-  filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
   search = signal('');
+  filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
 
   selectedVendor = signal<Vendor | null>(null);
-  //  NEW MODALS
-  showDetailsModal = signal(false);
-  showApproveModal = signal(false);
-  showRejectModal = signal(false);
-
-  // FORM DATA
-  credentials = signal({ username: '', password: '' });
+  showDetailsModel = signal(false);
+  
+  // Moderation state
+  showApproveModel = signal(false);
+  approveData = signal({ username: '', password: '' });
+  
+  showRejectModel = signal(false);
   rejectReason = signal('');
 
+  viewingImageUrl = signal<string | null>(null);
 
-  //Image preview
-  previewImage = signal<string | null>(null);
-
-
-  // Fetch data automatically
-  ngOnInit() {
-    this.loadVendors();
-  }
-
-
-  //api call to get all vendors
-  loadVendors() {
-    this.isLoading.set(true);
-
-    // Observable (async data)
-    this.vendorService.getVendors().subscribe({
-      next: (data) => {
-        this.vendors.set(data);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.showToast('Failed to load vendors', 'error');
-        this.isLoading.set(false);
-      },
-    });
-  }
-
-  // ================= FILTER =================
+  // ── Computed ───────────────────────────────────────────────────────────────
   filteredVendors = computed(() => {
     let list = this.vendors();
-
     if (this.filter() !== 'all') {
-      list = list.filter(
-        v => v.status?.toLowerCase()?.trim() === this.filter()
-      );
+      list = list.filter((v) => v.status === this.filter());
     }
-
-    if (this.search()) {
-      const s = this.search().toLowerCase();
+    const q = this.search().toLowerCase().trim();
+    if (q) {
       list = list.filter(v =>
-        (v.fullName || '').toLowerCase().includes(s) ||
-        (v.email || '').toLowerCase().includes(s) ||
-        (v.businessName || '').toLowerCase().includes(s)
+        v.fullName.toLowerCase().includes(q) ||
+        v.businessName.toLowerCase().includes(q) ||
+        v.email.toLowerCase().includes(q) ||
+        v.phone.includes(q) ||
+        v.businessType.toLowerCase().includes(q) ||
+        v.state.toLowerCase().includes(q)
       );
     }
-
     return list;
   });
 
-
-  // ================= COUNTS =================
   counts = computed(() => {
     const list = this.vendors();
-
     return {
       all: list.length,
-      pending: list.filter(v => v.status?.toLowerCase().trim() === 'pending').length,
-      approved: list.filter(v => v.status?.toLowerCase().trim() === 'approved').length,
-      rejected: list.filter(v => v.status?.toLowerCase().trim() === 'rejected').length,
+      pending: list.filter(v => v.status === 'pending').length,
+      approved: list.filter(v => v.status === 'approved').length,
+      rejected: list.filter(v => v.status === 'rejected').length,
     };
   });
 
-
-  // ================= DETAILS =================
-  //open modal
-  openDetails(v: Vendor) {
-    this.selectedVendor.set(v);
-    this.showDetailsModal.set(true);
+  // ── Lifecycle ──────────────────────────────────────────────────────────────
+  ngOnInit() {
+    this.vendorService.loadAll();
   }
 
-  // close modal
+  // ── Actions ────────────────────────────────────────────────────────────────
+  openDetails(v: Vendor) {
+    this.selectedVendor.set(v);
+    this.showDetailsModel.set(true);
+  }
+
   closeDetails() {
-    this.showDetailsModal.set(false);
+    this.showDetailsModel.set(false);
     this.selectedVendor.set(null);
   }
 
-  // ================= IMAGE =================
-  // show img
-  openModal(img?: string) {
-    if (!img) return;
-    this.previewImage.set(img);
+  // Approve flow
+  openApproveModel() {
+    this.approveData.set({ username: '', password: '' });
+    this.showApproveModel.set(true);
   }
 
-  // close img
-  closeModal() {
-    this.previewImage.set(null);
+  submitApprove() {
+    const v = this.selectedVendor();
+    if (!v || !this.approveData().username || !this.approveData().password) return;
+    this.vendorService.approve(v._id, this.approveData());
+    this.showApproveModel.set(false);
+    this.closeDetails();
   }
 
-  // ================= APPROVE =================
-  approve(v: Vendor) {
-    this.selectedVendor.set(v);
-    this.credentials.set({ username: '', password: '' });
-    this.showApproveModal.set(true);
-  }
-
-  confirmApprove() {
-    const vendor = this.selectedVendor();
-    const { username, password } = this.credentials();
-
-    if (!vendor || !vendor._id || !username || !password) {
-      this.showToast('Fill all fields', 'error');
-      return;
-    }
-
-    const adminId = localStorage.getItem('adminId');
-    if (!adminId) {
-      this.showToast('Admin not logged in', 'error');
-      return;
-    }
-
-    this.vendorService
-      .approveVendor(vendor._id, username, password, adminId)
-      .subscribe({
-        next: () => {
-          this.showApproveModal.set(false);
-
-          this.showDetailsModal.set(false); // ✅ ADD THIS
-          this.selectedVendor.set(null);    // ✅ ADD THIS
-          this.showToast('Vendor Approved ✅');
-          this.loadVendors();
-        },
-        error: () => this.showToast('Approval Failed ❌', 'error')
-      });
-  }
-
-  // ================= REJECT =================
-  openRejectModal(v: Vendor) {
-    this.selectedVendor.set(v);
+  // Reject flow
+  openRejectModel() {
     this.rejectReason.set('');
-    this.showRejectModal.set(true);
+    this.showRejectModel.set(true);
   }
 
-  confirmReject() {
-    const vendor = this.selectedVendor();
+  submitReject() {
+    const v = this.selectedVendor();
+    if (!v || !this.rejectReason().trim()) return;
+    this.vendorService.reject(v._id, { message: this.rejectReason() });
+    this.showRejectModel.set(false);
+    this.closeDetails();
+  }
 
-    if (!vendor || !vendor._id || !this.rejectReason()) {
-      this.showToast('Enter reject reason', 'error');
-      return;
+  deleteVendor(v: Vendor) {
+    if (confirm(`Are you sure you want to delete ${v.businessName}?`)) {
+      this.vendorService.delete(v._id);
     }
+  }
 
-    const adminId = localStorage.getItem('adminId');
-    if (!adminId) {
-      this.showToast('Admin not logged in', 'error');
-      return;
-    }
+  getFileUrl(path?: string) {
+    return this.vendorService.getFileUrl(path);
+  }
 
-    this.vendorService
-      .rejectVendor(vendor._id, adminId, this.rejectReason())
-      .subscribe({
-        next: () => {
-          this.showRejectModal.set(false);
-          this.showDetailsModal.set(false); // ✅ ADD THIS
-          this.selectedVendor.set(null);    // ✅ ADD THIS
+  openImageViewer(path?: string) {
+    if (!path) return;
+    this.viewingImageUrl.set(this.getFileUrl(path));
+  }
 
-          // Force UI refresh (important)
-          this.rejectReason.set('');
-          this.showToast('Vendor Rejected ❌', 'error');
-          this.loadVendors();
-        },
-        error: () => this.showToast('Reject failed', 'error')
-      });
+  closeImageViewer() {
+    this.viewingImageUrl.set(null);
+  }
+
+  dismissError() {
+    this.vendorStore.setError(null);
   }
 }
-
-/* Improvements (important)
- Move business logic to service
- Use token instead of adminId
- Add unsubscribe handling
- Remove unused methods
- improve:
-
-Unsubscribe handling
-Central modal management
-Auth (JWT instead of adminId)
-Error handling (global)
-Form validation
- */
