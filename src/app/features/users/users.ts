@@ -39,6 +39,7 @@ export class Users implements OnInit {
   selectedUser = signal<User | null>(null);
   showEditModel = signal(false);
   showDeleteModel = signal(false);
+  deleteReason = signal('');
 
   editFormData: UpdateUserPayload = {
     name: '', email: '', phone: '', address: '', city: '', pinCode: ''
@@ -46,7 +47,8 @@ export class Users implements OnInit {
 
   // ── Computed ───────────────────────────────────────────────────────────────
   filteredUsers = computed(() => {
-    let result = [...this.users()];
+    // Filter out soft-deleted users first
+    let result = this.users().filter(u => !u.deleted);
 
     // Search
     const q = this.search().toLowerCase().trim();
@@ -86,7 +88,7 @@ export class Users implements OnInit {
   });
 
   counts = computed(() => {
-    const list = this.users();
+    const list = this.users().filter(u => !u.deleted);
     const verified = list.filter(u => u.profilePhoto && u.address && u.city).length;
     return {
       all: list.length,
@@ -128,6 +130,7 @@ export class Users implements OnInit {
 
   openDeleteModel(user: User) {
     this.selectedUser.set(user);
+    this.deleteReason.set('');
     this.showDeleteModel.set(true);
   }
 
@@ -141,6 +144,8 @@ export class Users implements OnInit {
     if (!user) return;
     this.userService.delete(user._id);
     this.closeDeleteModel();
+    // Clear reason for next use
+    this.deleteReason.set('');
   }
 
   getImageUrl(path: string | null | undefined): string {

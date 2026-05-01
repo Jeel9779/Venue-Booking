@@ -8,7 +8,7 @@ import { User, UpdateUserPayload } from '../models/user.model';
 })
 export class UsersApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.11:3000/users';
+  private readonly baseUrl = 'http://192.168.1.6:3000/users';
 
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(this.baseUrl);
@@ -32,7 +32,9 @@ export class UsersApi {
     );
   }
 
-  delete(id: string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`);
+  delete(id: string, reason?: string): Observable<void> {
+    const url = `${this.baseUrl}/${id}`;
+    const options = reason ? { body: { reason } } : {};
+    return this.http.delete<void>(url, options);
   }
 }

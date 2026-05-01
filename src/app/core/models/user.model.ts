@@ -7,6 +7,7 @@ export interface User {
   city?: string;
   pinCode?: string;
   profilePhoto?: string | null;
+  deleted?: boolean;
   createdAt: string;
   updatedAt: string;
 }

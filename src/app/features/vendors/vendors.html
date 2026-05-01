@@ -62,6 +62,12 @@
            (click)="filter.set('approved')">
         {{ counts().approved }} Approved
       </div>
+      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
+                  bg-white text-rose-600 border-slate-200 hover:border-rose-300"
+           [class.ring-2]="filter() === 'rejected'" [class.ring-rose-500]="filter() === 'rejected'" [class.border-rose-500]="filter() === 'rejected'"
+           (click)="filter.set('rejected')">
+        {{ counts().rejected }} Rejected
+      </div>
     </div>
 
     <div class="relative w-full sm:w-80">
@@ -101,7 +107,7 @@
             <td class="px-5 py-4">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold shrink-0">
-                  {{ v.businessName.charAt(0) }}
+                  {{ ((v.businessName || '').trim().charAt(0) || (v.fullName || '').trim().charAt(0) || 'V') | uppercase }}
                 </div>
                 <div>
                   <div class="font-bold text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">{{ v.businessName }}</div>
@@ -137,7 +143,7 @@
                 <app-button variant="ghost" size="sm" (onClick)="openDetails(v)">
                   View Details
                 </app-button>
-                <button (click)="deleteVendor(v)" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all">
+                <button (click)="deleteVendor(v); $event.stopPropagation()" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all">
                   <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                   </svg>
@@ -153,85 +159,87 @@
   <!-- ── VENDOR DETAILS MODEL ─────────────────────────────────────────── -->
   @if (showDetailsModel() && selectedVendor()) {
     <app-model [title]="'Review Application'" maxWidth="lg" (onClose)="closeDetails()" [hasFooter]="true">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 m-0 flex items-center gap-2">
-            <span class="w-1 h-1 rounded-full bg-indigo-500"></span>
-            Business Information
-          </h4>
-          <div class="bg-white rounded-2xl p-5 border border-slate-300 shadow-sm transition-all hover:border-indigo-200">
-            <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Business Name</div>
-            <div class="font-extrabold text-slate-900 text-lg leading-tight">{{ selectedVendor()?.businessName }}</div>
-            
-            <div class="mt-5">
-              <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Category</div>
-              <div class="font-bold text-slate-800">{{ selectedVendor()?.businessType }}</div>
-            </div>
-            
-            <div class="mt-5">
-              <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Address</div>
-              <div class="text-[0.9rem] text-slate-600 leading-relaxed font-medium">
-                {{ selectedVendor()?.address }}<br>
-                {{ selectedVendor()?.state }} - {{ selectedVendor()?.pincode }}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-2">
+        <div class="space-y-6">
+          <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+            <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-5 flex items-center gap-2">
+              Business Information
+            </h4>
+            <div class="space-y-4">
+              <div>
+                <div class="text-[0.65rem] text-slate-400 font-bold mb-1 tracking-wider uppercase">Business Name</div>
+                <div class="font-bold text-slate-800 text-[0.95rem] leading-tight">{{ selectedVendor()?.businessName }}</div>
+              </div>
+              <div>
+                <div class="text-[0.65rem] text-slate-400 font-bold mb-1 tracking-wider uppercase">Category</div>
+                <div class="font-bold text-slate-800 text-[0.95rem]">{{ selectedVendor()?.businessType }}</div>
+              </div>
+              <div>
+                <div class="text-[0.65rem] text-slate-400 font-bold mb-1 tracking-wider uppercase">Location</div>
+                <div class="font-bold text-slate-800 text-sm leading-relaxed">
+                  {{ selectedVendor()?.address }}<br>
+                  {{ selectedVendor()?.state }} - {{ selectedVendor()?.pincode }}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="space-y-4">
-          <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 m-0 flex items-center gap-2">
-            <span class="w-1 h-1 rounded-full bg-indigo-500"></span>
-            Contact Details
-          </h4>
-          <div class="bg-white rounded-2xl p-5 border border-slate-300 shadow-sm transition-all hover:border-indigo-200">
-            <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Owner Name</div>
-            <div class="font-extrabold text-slate-900 text-lg leading-tight">{{ selectedVendor()?.fullName }}</div>
-            
-            <div class="mt-5">
-              <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Email</div>
-              <div class="font-bold text-slate-800 break-all">{{ selectedVendor()?.email }}</div>
-            </div>
-            
-            <div class="mt-5">
-              <div class="text-[0.65rem] text-slate-400 uppercase font-bold mb-1 tracking-wider">Phone</div>
-              <div class="font-bold text-slate-900 text-lg">{{ selectedVendor()?.phone }}</div>
+        <div class="space-y-6">
+          <div class="bg-indigo-50/40 rounded-3xl p-6 border border-indigo-100/50">
+            <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-indigo-400 mb-5 flex items-center gap-2">
+              Contact Details
+            </h4>
+            <div class="space-y-4">
+              <div>
+                <div class="text-[0.65rem] text-indigo-400/80 font-bold mb-1 tracking-wider uppercase">Owner Name</div>
+                <div class="font-bold text-indigo-950 text-[0.95rem] leading-tight">{{ selectedVendor()?.fullName }}</div>
+              </div>
+              <div>
+                <div class="text-[0.65rem] text-indigo-400/80 font-bold mb-1 tracking-wider uppercase">Email Address</div>
+                <div class="font-bold text-indigo-900 text-[0.95rem] break-all">{{ selectedVendor()?.email }}</div>
+              </div>
+              <div>
+                <div class="text-[0.65rem] text-indigo-400/80 font-bold mb-1 tracking-wider uppercase">Phone Number</div>
+                <div class="font-bold text-indigo-900 text-[0.95rem]">{{ selectedVendor()?.phone }}</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="md:col-span-2 space-y-4">
-          <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 m-0 flex items-center gap-2">
-            <span class="w-1 h-1 rounded-full bg-indigo-500"></span>
+        <div class="md:col-span-2">
+          <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-4 mt-2 px-2">
             Verification Documents
           </h4>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button (click)="openImageViewer(selectedVendor()?.governmentId); $event.stopPropagation()"
-               class="flex items-center gap-4 p-4 bg-white border border-slate-300 rounded-2xl hover:border-indigo-500 hover:shadow-md transition-all group w-full text-left">
-              <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+               class="flex items-center gap-4 p-5 bg-white border border-slate-200 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] rounded-2xl hover:border-indigo-400 hover:shadow-md transition-all group w-full text-left">
+              <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
                 </svg>
               </div>
               <div>
-                <div class="text-[0.95rem] font-extrabold text-slate-900">Government ID</div>
-                <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-[0.1em] mt-0.5">Click to preview</div>
+                <div class="text-[0.9rem] font-bold text-slate-800">Government ID</div>
+                <div class="text-[0.65rem] text-slate-400 font-bold mt-0.5">Click to preview document</div>
               </div>
             </button>
             <button (click)="openImageViewer(selectedVendor()?.licenseDoc); $event.stopPropagation()"
-               class="flex items-center gap-4 p-4 bg-white border border-slate-300 rounded-2xl hover:border-emerald-500 hover:shadow-md transition-all group w-full text-left">
-              <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+               class="flex items-center gap-4 p-5 bg-white border border-slate-200 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] rounded-2xl hover:border-emerald-400 hover:shadow-md transition-all group w-full text-left">
+              <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
               </div>
               <div>
-                <div class="text-[0.95rem] font-extrabold text-slate-900">Business License</div>
-                <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-[0.1em] mt-0.5">Click to preview</div>
+                <div class="text-[0.9rem] font-bold text-slate-800">Business License</div>
+                <div class="text-[0.65rem] text-slate-400 font-bold mt-0.5">Click to preview document</div>
               </div>
             </button>
           </div>
         </div>
       </div>
+
 
       <div footer class="flex items-center justify-between w-full">
         @if (selectedVendor()?.status === 'pending') {
@@ -276,6 +284,33 @@
       <div footer>
         <app-button variant="secondary" (onClick)="showRejectModel.set(false)">Cancel</app-button>
         <app-button variant="danger" (onClick)="submitReject()" [disabled]="!rejectReason().trim()">Submit Rejection</app-button>
+      </div>
+    </app-model>
+  }
+
+  <!-- ── DELETE MODEL ─────────────────────────────────────────────────── -->
+  @if (showDeleteModel()) {
+    <app-model [title]="'Delete Vendor'" maxWidth="sm" (onClose)="showDeleteModel.set(false)" [hasFooter]="true">
+      <div class="space-y-4">
+        <div class="p-4 rounded-xl bg-rose-50 border border-rose-100 flex gap-3">
+          <div class="text-rose-500 shrink-0">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-rose-800 mb-1">Warning: Irreversible Action</h4>
+            <p class="text-xs text-rose-600/80 leading-relaxed">
+              You are about to permanently delete <strong>{{ vendorToDelete()?.businessName || vendorToDelete()?.fullName }}</strong>. All associated venues, bookings, and data will be lost. This cannot be undone.
+            </p>
+          </div>
+        </div>
+        <app-form-input label="Reason for Deletion" type="textarea" placeholder="Please specify why this vendor is being deleted..." [rows]="3"
+                        [ngModel]="deleteReason()" (ngModelChange)="deleteReason.set($event)"></app-form-input>
+      </div>
+      <div footer>
+        <app-button variant="secondary" (onClick)="showDeleteModel.set(false)">Cancel</app-button>
+        <app-button variant="danger" (onClick)="submitDelete()" [disabled]="!deleteReason().trim()">Permanently Delete</app-button>
       </div>
     </app-model>
   }

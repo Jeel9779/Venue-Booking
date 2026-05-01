@@ -12,7 +12,8 @@ import {
   Plus,
   HelpCircle,
   LogOut,
-  ListChecks
+  ListChecks,
+  CreditCard
 } from 'lucide-angular';
 
 @Component({
@@ -39,7 +40,8 @@ export class Sidebar {
     add: Plus,
     help: HelpCircle,
     logout: LogOut,
-    subscript: ListChecks
+    subscript: ListChecks,
+    subscription: CreditCard
   };
 
   //constructor for router and window resize

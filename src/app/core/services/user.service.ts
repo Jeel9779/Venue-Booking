@@ -34,9 +34,9 @@ export class UserService {
       });
   }
 
-  delete(id: string): void {
+  delete(id: string, reason?: string): void {
     this.store.setLoading(true);
-    this.api.delete(id)
+    this.api.delete(id, reason)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: () => {

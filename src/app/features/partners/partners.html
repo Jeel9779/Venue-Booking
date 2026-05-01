@@ -1,47 +1,35 @@
-<!-- src/app/features/partners/partners.component.html -->
 <div class="min-h-screen bg-gray-300 font-sans text-slate-900">
 
-    <!-- ══════════════════════════════════════════════
-       LOADING SKELETON
-  ══════════════════════════════════════════════ -->
-    @if (loading()) {
+  @if (loading()) {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-6 animate-pulse">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            @for (i of [1,2,3,4]; track i) {
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
-            }
-        </div>
-        <div class="h-52 bg-gray-200 rounded-2xl"></div>
-        @for (i of [1,2,3]; track i) {
-        <div class="h-20 bg-gray-200 rounded-2xl"></div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        @for (i of [1,2,3,4]; track i) {
+          <div class="h-32 bg-gray-200 rounded-2xl"></div>
         }
+      </div>
+      <div class="h-52 bg-gray-200 rounded-2xl"></div>
+      @for (i of [1,2,3]; track i) {
+        <div class="h-20 bg-gray-200 rounded-2xl"></div>
+      }
     </div>
-    }
+  }
 
-    <!-- ══════════════════════════════════════════════
-       ERROR STATE
-  ══════════════════════════════════════════════ -->
-    @if (error() && !loading()) {
+  @if (error() && !loading()) {
     <div class="max-w-7xl mx-auto px-6 py-24 text-center">
-        <div
-            class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center">
-            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-            </svg>
-        </div>
-        <h3 class="text-base font-black text-slate-800 mb-1">Failed to load data</h3>
-        <p class="text-sm text-slate-400 mb-4">{{ error() }}</p>
-        <button (click)="reload()"
-            class="px-5 py-2.5 bg-slate-900 text-white text-xs font-black uppercase rounded-xl hover:bg-slate-700 transition-colors">
-            Retry
-        </button>
+      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center">
+        <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+        </svg>
+      </div>
+      <h3 class="text-base font-black text-slate-800 mb-1">Failed to load data</h3>
+      <p class="text-sm text-slate-400 mb-4">{{ error() }}</p>
+      <app-button variant="primary" (onClick)="reload()">Retry</app-button>
     </div>
-    }
+  }
 
-    <div class="page-header mb-6">
-    <div class="flex items-center gap-2.5 mb-1">
-      <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+  <div class="page-header mb-6 px-4 pt-6">
+    <div class="flex items-center gap-2.5 mb-1 max-w-7xl mx-auto">
+      <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <rect x="3" y="4" width="18" height="18" rx="2" />
           <line x1="16" y1="2" x2="16" y2="6" />
@@ -50,604 +38,339 @@
         </svg>
       </div>
       <div>
-        <h1 class="text-3xl font-bold tracking-tight m-0 leading-tight">Vendor & Venues Directory
-
-        </h1>
+        <h1 class="text-3xl font-bold tracking-tight m-0 leading-tight">Vendor & Venues Directory</h1>
         <p class="text-[0.8125rem] text-slate-500 mt-0.5 mb-0">Monitor and manage vendor and venue information</p>
       </div>
     </div>
   </div>
 
-
-    <!-- ══════════════════════════════════════════════
-       MAIN CONTENT
-  ══════════════════════════════════════════════ -->
-    @if (!loading() && !error()) {
+  @if (!loading() && !error()) {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
-        <!-- ── KPI CARDS ─────────────────────────────── -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- KPI CARDS -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <app-card [padding]="true" customClass="shadow-sm hover:shadow-md transition-all duration-200">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
+              <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <span class="text-[10px] font-bold text-slate-400 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full uppercase tracking-wider">Live</span>
+          </div>
+          <p class="text-3xl font-black text-slate-900 tracking-tight">{{ kpi().vendors }}</p>
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Total Vendors</p>
+        </app-card>
 
-            <!-- Total Vendors -->
-            <div class="bg-white rounded-2xl border border-gray-300 shadow-sm p-5
-                    hover:shadow-md hover:-translate-y-0.5 transition-all duration-200" role="region"
-                aria-label="Total Vendors">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200
-                        flex items-center justify-center">
-                        <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5
-                     M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
+        <app-card [padding]="true" customClass="shadow-sm hover:shadow-md transition-all duration-200">
+          <div class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
+            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <p class="text-3xl font-black text-slate-900 tracking-tight">{{ kpi().venues }}</p>
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Total Venues</p>
+        </app-card>
+
+        <app-card [padding]="true" customClass="shadow-sm hover:shadow-md transition-all duration-200">
+          <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-4">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <p class="text-3xl font-black text-slate-900 tracking-tight">{{ kpi().active }}</p>
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Active</p>
+        </app-card>
+
+        <app-card [padding]="true" customClass="shadow-sm hover:shadow-md transition-all duration-200">
+          <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center mb-4">
+            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <p class="text-3xl font-black text-slate-900 tracking-tight">{{ kpi().pending }}</p>
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Pending Review</p>
+        </app-card>
+      </div>
+
+      <!-- CHART: Venues per Vendor -->
+      @if (chartData().length > 0) {
+        <app-card [padding]="true">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h3 class="text-sm font-black text-slate-900 tracking-tight uppercase">Venue Distribution</h3>
+              <p class="text-xs text-slate-400 font-medium mt-0.5">Venues per vendor breakdown</p>
+            </div>
+            <div class="flex items-center gap-4 text-[10px] font-bold uppercase tracking-wider">
+              <span class="flex items-center gap-1.5 text-slate-500">
+                <span class="w-2.5 h-2.5 rounded-sm bg-emerald-400 inline-block"></span> Approved
+              </span>
+              <span class="flex items-center gap-1.5 text-slate-500">
+                <span class="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block"></span> Pending
+              </span>
+              <span class="flex items-center gap-1.5 text-slate-500">
+                <span class="w-2.5 h-2.5 rounded-sm bg-red-400 inline-block"></span> Rejected
+              </span>
+            </div>
+          </div>
+          <div class="space-y-3">
+            @for (row of chartData(); track row.label) {
+              <div class="flex items-center gap-4">
+                <div class="w-28 shrink-0 text-[11px] font-bold text-slate-500 truncate">{{ row.label }}</div>
+                <div class="flex-1 flex items-center h-7 gap-0.5">
+                  @if (row.approved > 0) {
+                    <div class="h-full bg-emerald-100 border border-emerald-200 flex items-center justify-center transition-all duration-500 first:rounded-l-md" [style.width.%]="(row.approved / maxVenues()) * 85">
+                      <span class="text-[10px] font-black text-emerald-700 px-1.5">{{ row.approved }}</span>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-400 bg-slate-50 border border-slate-200
-                         px-2 py-0.5 rounded-full uppercase tracking-wider">Live</span>
+                  }
+                  @if (row.pending > 0) {
+                    <div class="h-full bg-amber-100 border border-amber-200 flex items-center justify-center transition-all duration-500" [style.width.%]="(row.pending / maxVenues()) * 85">
+                      <span class="text-[10px] font-black text-amber-700 px-1.5">{{ row.pending }}</span>
+                    </div>
+                  }
+                  @if (row.rejected > 0) {
+                    <div class="h-full bg-red-100 border border-red-200 flex items-center justify-center transition-all duration-500 last:rounded-r-md" [style.width.%]="(row.rejected / maxVenues()) * 85">
+                      <span class="text-[10px] font-black text-red-700 px-1.5">{{ row.rejected }}</span>
+                    </div>
+                  }
                 </div>
-                <p class="text-3xl font-black text-slate-900 tracking-tight">{{ vm().kpi.vendors }}</p>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Total Vendors</p>
-            </div>
+                <div class="w-6 text-right text-xs font-black text-slate-400">{{ row.value }}</div>
+              </div>
+            }
+          </div>
+        </app-card>
+      }
 
-            <!-- Total Venues -->
-            <div class="bg-white rounded-2xl border border-gray-300 shadow-sm p-5
-                    hover:shadow-md hover:-translate-y-0.5 transition-all duration-200" role="region"
-                aria-label="Total Venues">
-                <div class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200
-                      flex items-center justify-center mb-4">
-                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </div>
-                <p class="text-3xl font-black text-slate-900 tracking-tight">{{ vm().kpi.venues }}</p>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Total Venues</p>
-            </div>
-
-            <!-- Active -->
-            <div class="bg-white rounded-2xl border border-gray-300 shadow-sm p-5
-                    hover:shadow-md hover:-translate-y-0.5 transition-all duration-200" role="region"
-                aria-label="Active venues">
-                <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-100
-                      flex items-center justify-center mb-4">
-                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                    </svg>
-                </div>
-                <p class="text-3xl font-black text-slate-900 tracking-tight">{{ vm().kpi.active }}</p>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Active</p>
-            </div>
-
-            <!-- Pending -->
-            <div class="bg-white rounded-2xl border border-gray-300 shadow-sm p-5
-                    hover:shadow-md hover:-translate-y-0.5 transition-all duration-200" role="region"
-                aria-label="Pending review">
-                <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100
-                      flex items-center justify-center mb-4">
-                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <p class="text-3xl font-black text-slate-900 tracking-tight">{{ vm().kpi.pending }}</p>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Pending Review</p>
-            </div>
+      <div class="flex items-end justify-between">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900 tracking-tight">Vendor Directory</h2>
+          <p class="text-sm text-slate-400 font-medium mt-0.5">Manage partner affiliations and venue statuses</p>
         </div>
+        <app-button variant="primary" customClass="uppercase text-xs !font-black !px-4 shadow-sm flex items-center gap-2">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+          </svg>
+          New Vendor
+        </app-button>
+      </div>
 
-        <!-- ── CHART: Venues per Vendor ──────────────── -->
-        @if (chartData().length > 0) {
-        <div class="bg-white rounded-2xl border border-gray-300 shadow-sm p-6" role="region"
-            aria-label="Venue distribution chart">
-            <div class="flex items-center justify-between mb-6">
+      <!-- VENDOR ACCORDION LIST -->
+      <div class="space-y-3">
+        @for (partner of partners(); track partner.id) {
+          <app-card [padding]="false" customClass="transition-all duration-200 hover:shadow-md hover:border-slate-300">
+            <div class="flex items-center justify-between px-5 py-4 cursor-pointer rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+                (click)="toggle(partner.id)" (keydown.enter)="toggle(partner.id)" (keydown.space)="toggle(partner.id); $event.preventDefault()" [attr.tabindex]="0" role="button">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 text-slate-700 font-black text-lg select-none">
+                  {{ partner.name ? partner.name.charAt(0) : 'V' }}
+                </div>
                 <div>
-                    <h3 class="text-sm font-black text-slate-900 tracking-tight uppercase">
-                        Venue Distribution
-                    </h3>
-                    <p class="text-xs text-slate-400 font-medium mt-0.5">Venues per vendor breakdown</p>
+                  <h4 class="font-black text-slate-800 text-sm leading-tight">
+                    <div>
+                      <div class="font-semibold">{{ partner.name || ('Vendor ' + (partner.id | slice:0:6)) }}</div>
+                      <div class="text-xs text-gray-500">{{ partner.email }}</div>
+                    </div>
+                  </h4>
+                  <div class="flex flex-wrap items-center gap-2 mt-1.5">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border"
+                        [ngClass]="{
+                          'bg-emerald-50 text-emerald-700 border-emerald-200': getVendorStatus(partner.spaces) === 'ACTIVE',
+                          'bg-amber-50  text-amber-700  border-amber-200':  getVendorStatus(partner.spaces) === 'PENDING',
+                          'bg-red-50    text-red-700    border-red-200':    getVendorStatus(partner.spaces) === 'REJECTED'
+                        }">
+                      {{ getVendorStatus(partner.spaces) }}
+                    </span>
+                    <span class="flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded uppercase">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
+                      {{ partner.spaces.length }} {{ partner.spaces.length === 1 ? 'Venue' : 'Venues' }}
+                    </span>
+                  </div>
                 </div>
-                <div class="flex items-center gap-4 text-[10px] font-bold uppercase tracking-wider">
-                    <span class="flex items-center gap-1.5 text-slate-500">
-                        <span class="w-2.5 h-2.5 rounded-sm bg-emerald-400 inline-block"></span> Approved
-                    </span>
-                    <span class="flex items-center gap-1.5 text-slate-500">
-                        <span class="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block"></span> Pending
-                    </span>
-                    <span class="flex items-center gap-1.5 text-slate-500">
-                        <span class="w-2.5 h-2.5 rounded-sm bg-red-400 inline-block"></span> Rejected
-                    </span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="hidden sm:flex -space-x-2">
+                  @for (s of partner.spaces | slice:0:3; track s._id) {
+                    <div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-600 shadow-sm select-none">
+                      {{ s.name | slice:0:1 | uppercase }}
+                    </div>
+                  }
+                  @if (partner.spaces.length > 3) {
+                    <div class="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-500 shadow-sm">
+                      +{{ partner.spaces.length - 3 }}
+                    </div>
+                  }
                 </div>
+                <div class="w-8 h-8 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 transition-transform duration-300" [class.rotate-180]="expandedMap[partner.id]">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </div>
+              </div>
             </div>
 
-            <div class="space-y-3">
-                @for (row of chartData(); track row.label) {
-                <div class="flex items-center gap-4">
-                    <div class="w-28 shrink-0 text-[11px] font-bold text-slate-500 truncate">
-                        {{ row.label }}
+            @if (expandedMap[partner.id]) {
+              <div class="border-t border-gray-100 px-4 pb-4 pt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                @for (space of partner.spaces; track space._id) {
+                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-300 hover:border-slate-300 hover:bg-white transition-all duration-150 flex flex-col gap-3">
+                    <div class="flex items-start gap-3">
+                      <div class="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 text-slate-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" /></svg>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p class="font-bold text-sm text-slate-800 truncate">{{ space.name }}</p>
+                        <p class="text-[11px] text-slate-400 font-medium mt-0.5">{{ space.city }}, {{ space.state }}</p>
+                      </div>
                     </div>
-                    <div class="flex-1 flex items-center h-7 gap-0.5">
-                        @if (row.approved > 0) {
-                        <div class="h-full bg-emerald-100 border border-emerald-200 flex items-center
-                                justify-center transition-all duration-500 first:rounded-l-md"
-                            [style.width.%]="(row.approved / maxVenues()) * 85"
-                            [attr.aria-label]="row.approved + ' approved'">
-                            <span class="text-[10px] font-black text-emerald-700 px-1.5">{{ row.approved }}</span>
-                        </div>
-                        }
-                        @if (row.pending > 0) {
-                        <div class="h-full bg-amber-100 border border-amber-200 flex items-center
-                                justify-center transition-all duration-500"
-                            [style.width.%]="(row.pending / maxVenues()) * 85"
-                            [attr.aria-label]="row.pending + ' pending'">
-                            <span class="text-[10px] font-black text-amber-700 px-1.5">{{ row.pending }}</span>
-                        </div>
-                        }
-                        @if (row.rejected > 0) {
-                        <div class="h-full bg-red-100 border border-red-200 flex items-center
-                                justify-center transition-all duration-500 last:rounded-r-md"
-                            [style.width.%]="(row.rejected / maxVenues()) * 85"
-                            [attr.aria-label]="row.rejected + ' rejected'">
-                            <span class="text-[10px] font-black text-red-700 px-1.5">{{ row.rejected }}</span>
-                        </div>
-                        }
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border"
+                          [ngClass]="{
+                            'bg-emerald-50 text-emerald-700 border-emerald-200': space.status === 'approved',
+                            'bg-amber-50  text-amber-700  border-amber-200':  space.status === 'pending',
+                            'bg-red-50    text-red-700    border-red-200':    space.status === 'rejected'
+                          }">
+                        {{ getStatus(space.status) }}
+                      </span>
+                      @if (space.type) {
+                        <span class="text-[10px] text-slate-400 font-medium">{{ space.type }}</span>
+                      }
                     </div>
-                    <div class="w-6 text-right text-xs font-black text-slate-400">{{ row.value }}</div>
-                </div>
+                    <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-500">
+                      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      ₹{{ space.pricePerDay }}/day <span class="text-slate-300">·</span>
+                      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                      {{ space.capacity }} pax
+                    </div>
+                    <div class="flex items-center gap-1 border-t border-gray-300 pt-3">
+                      <button (click)="openModal(space, $event)" class="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg py-1.5 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                        View
+                      </button>
+                      <button class="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg py-1.5 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        Edit
+                      </button>
+                      <button (click)="deleteVenue(space, $event)" class="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg py-1.5 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        Delete
+                      </button>
+                    </div>
+                  </div>
                 }
-            </div>
-        </div>
+              </div>
+            }
+          </app-card>
         }
 
-        <!-- ── VENDOR DIRECTORY HEADER ────────────────── -->
-        <div class="flex items-end justify-between">
-            <div>
-                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Vendor Directory</h2>
-                <p class="text-sm text-slate-400 font-medium mt-0.5">
-                    Manage partner affiliations and venue statuses
-                </p>
+        @if (partners().length === 0) {
+          <div class="text-center py-20 border border-dashed border-gray-300 rounded-2xl bg-white">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 mx-auto mb-3 flex items-center justify-center">
+              <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
             </div>
-            <!-- TODO: Wire to vendor creation flow when Vendor API is ready -->
-            <button class="flex items-center gap-2 bg-slate-900 text-white text-xs font-black
-                       px-4 py-2.5 rounded-xl hover:bg-slate-700 transition-colors shadow-sm uppercase"
-                aria-label="Add new vendor">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                </svg>
-                New Vendor
-            </button>
-        </div>
-
-        <!-- ── VENDOR ACCORDION LIST ───────────────────── -->
-        <div class="space-y-3">
-            @for (partner of vm().partners; track partner.id) {
-            <div class="bg-white rounded-2xl border border-gray-300 shadow-sm
-                      transition-all duration-200 hover:shadow-md hover:border-slate-300" role="region"
-                [attr.aria-label]="'Vendor ' + partner.id">
-
-                <!-- Vendor Header Row -->
-                <div class="flex items-center justify-between px-5 py-4 cursor-pointer rounded-2xl
-                        outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
-                    (click)="toggle(partner.id)" (keydown.enter)="toggle(partner.id)"
-                    (keydown.space)="toggle(partner.id); $event.preventDefault()" [attr.tabindex]="0" role="button"
-                    [attr.aria-expanded]="expandedMap[partner.id]" [attr.aria-controls]="'panel-' + partner.id">
-
-                    <div class="flex items-center gap-4">
-                        <!-- Avatar -->
-                        <div class="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200
-                            flex items-center justify-center shrink-0
-                            text-slate-700 font-black text-lg select-none">
-                            <!--  {{ getVendorInitial(partner.id) }} -->
-                            {{ partner.name?.charAt(0) || 'V' }}
-                        </div>
-
-                        <div>
-                            <!--
-                    TODO: Replace "Vendor {{ id }}" with actual vendor name
-                    when Vendor details API is connected.
-                    TODO: Show vendorEmail below name when Vendor API is ready.
-                  -->
-                            <h4 class="font-black text-slate-800 text-sm leading-tight">
-                                <!--    Vendor <span class="text-slate-400 font-mono text-xs">{{ partner.id | slice:0:8
-                                    }}</span> -->
-                                <div>
-                                    <div class="font-semibold">
-                                        {{ partner.name || ('Vendor ' + (partner.id | slice:0:6)) }}
-                                    </div>
-                                    <div class="text-xs text-gray-500">
-                                        {{ partner.email }}
-                                    </div>
-                                </div>
-                            </h4>
-
-                            <div class="flex flex-wrap items-center gap-2 mt-1.5">
-                                <!-- Vendor status chip -->
-                                <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border"
-                                    [ngClass]="{
-                            'bg-emerald-50 text-emerald-700 border-emerald-200': getVendorStatus(partner.spaces) === 'ACTIVE',
-                            'bg-amber-50  text-amber-700  border-amber-200':  getVendorStatus(partner.spaces) === 'PENDING',
-                            'bg-red-50    text-red-700    border-red-200':    getVendorStatus(partner.spaces) === 'REJECTED'
-                          }">
-                                    {{ getVendorStatus(partner.spaces) }}
-                                </span>
-
-                                <!-- Venue count badge -->
-                                <span class="flex items-center gap-1 text-[10px] font-bold text-slate-500
-                                 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded uppercase">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    </svg>
-                                    {{ partner.spaces.length }}
-                                    {{ partner.spaces.length === 1 ? 'Venue' : 'Venues' }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right: stacked initials + chevron -->
-                    <div class="flex items-center gap-3">
-                        <div class="hidden sm:flex -space-x-2">
-                            @for (s of partner.spaces | slice:0:3; track s._id) {
-                            <div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white
-                                flex items-center justify-center text-[10px] font-bold
-                                text-slate-600 shadow-sm select-none">
-                                {{ s.name | slice:0:1 | uppercase }}
-                            </div>
-                            }
-                            @if (partner.spaces.length > 3) {
-                            <div class="w-8 h-8 rounded-full bg-slate-200 border-2 border-white
-                                flex items-center justify-center text-[10px] font-bold
-                                text-slate-500 shadow-sm">
-                                +{{ partner.spaces.length - 3 }}
-                            </div>
-                            }
-                        </div>
-
-                        <!-- Chevron -->
-                        <div class="w-8 h-8 rounded-lg border border-slate-200 bg-slate-50
-                            flex items-center justify-center text-slate-400
-                            transition-transform duration-300" [class.rotate-180]="expandedMap[partner.id]">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── EXPANDED: Venue Cards ── -->
-                @if (expandedMap[partner.id]) {
-                <div [id]="'panel-' + partner.id" class="border-t border-gray-100 px-4 pb-4 pt-4
-                          grid sm:grid-cols-2 xl:grid-cols-3 gap-3" role="region"
-                    [attr.aria-label]="'Venues for vendor ' + partner.id">
-
-                    @for (space of partner.spaces; track space._id) {
-                    <div class="p-4 rounded-xl bg-gray-50 border border-gray-300
-                              hover:border-slate-300 hover:bg-white
-                              transition-all duration-150 flex flex-col gap-3">
-
-                        <!-- Venue icon + Name + Location -->
-                        <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-white border border-slate-200
-                                  flex items-center justify-center shrink-0 text-slate-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3
-                               0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0
-                               2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0
-                               2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2
-                               M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5
-                               a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0
-                               00-2 2v2h12z" />
-                                </svg>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="font-bold text-sm text-slate-800 truncate">{{ space.name }}</p>
-                                <p class="text-[11px] text-slate-400 font-medium mt-0.5">
-                                    {{ space.city }}, {{ space.state }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Status + Type -->
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border"
-                                [ngClass]="{
-                              'bg-emerald-50 text-emerald-700 border-emerald-200': space.status === 'approved',
-                              'bg-amber-50  text-amber-700  border-amber-200':  space.status === 'pending',
-                              'bg-red-50    text-red-700    border-red-200':    space.status === 'rejected'
-                            }">
-                                {{ getStatus(space.status) }}
-                            </span>
-                            @if (space.type) {
-                            <span class="text-[10px] text-slate-400 font-medium">{{ space.type }}</span>
-                            }
-                        </div>
-
-                        <!-- Price + Capacity -->
-                        <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-500">
-                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343
-                             2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0
-                             0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            ₹{{ space.pricePerDay }}/day
-                            <span class="text-slate-300">·</span>
-                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10
-                             0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3
-                             3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857
-                             m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            {{ space.capacity }} pax
-                        </div>
-
-                        <!-- Action buttons -->
-                        <div class="flex items-center gap-1 border-t border-gray-300 pt-3">
-
-                            <!-- View -->
-                            <button (click)="openModal(space, $event)" class="flex-1 flex items-center justify-center gap-1.5 text-[11px]
-                                     font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100
-                                     rounded-lg py-1.5 transition-all"
-                                [attr.aria-label]="'View details for ' + space.name">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943
-                               9.542 7-1.274 4.057-5.064 7-9.542 7-4.477
-                               0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                View
-                            </button>
-
-                            <!-- Edit (wire later) -->
-                            <button class="flex-1 flex items-center justify-center gap-1.5 text-[11px]
-                                     font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50
-                                     rounded-lg py-1.5 transition-all" [attr.aria-label]="'Edit ' + space.name">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0
-                               113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                                Edit
-                            </button>
-
-                            <!-- Delete -->
-                            <button (click)="deleteVenue(space, $event)" class="flex-1 flex items-center justify-center gap-1.5 text-[11px]
-                                     font-bold text-slate-500 hover:text-red-600 hover:bg-red-50
-                                     rounded-lg py-1.5 transition-all" [attr.aria-label]="'Delete ' + space.name">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0
-                               01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0
-                               00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                    }
-                </div>
-                }
-            </div>
-            }
-
-            <!-- Empty state -->
-            @if (vm().partners.length === 0) {
-            <div class="text-center py-20 border border-dashed border-gray-300 rounded-2xl bg-white">
-                <div class="w-12 h-12 rounded-xl bg-slate-100 mx-auto mb-3
-                        flex items-center justify-center">
-                    <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9
-                     0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2
-                     a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                </div>
-                <p class="font-bold text-slate-700">No vendors found</p>
-                <p class="text-sm text-slate-400 mt-1">Add your first vendor to get started</p>
-            </div>
-            }
-        </div>
+            <p class="font-bold text-slate-700">No vendors found</p>
+            <p class="text-sm text-slate-400 mt-1">Add your first vendor to get started</p>
+          </div>
+        }
+      </div>
     </div>
-    }
+  }
 </div>
 
-<!-- ══════════════════════════════════════════════
-     VENUE DETAIL MODAL — inline in partners
-══════════════════════════════════════════════ -->
 @if (selectedVenue()) {
-<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6" role="dialog" aria-modal="true"
-    [attr.aria-label]="'Details for ' + selectedVenue()!.name">
-
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" (click)="closeModal()" aria-hidden="true"></div>
-
-    <!-- Modal Panel -->
-    <div class="relative bg-white w-full sm:max-w-lg
-                rounded-t-3xl sm:rounded-2xl border border-gray-300
-                shadow-2xl overflow-hidden">
-
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200
-                      flex items-center justify-center">
-                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9
-                   0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2
-                   a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                </div>
-                <h3 class="font-black text-slate-900 text-sm uppercase tracking-wide">
-                    Venue Profile
-                </h3>
-            </div>
-            <button (click)="closeModal()" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200
-                       flex items-center justify-center text-slate-400
-                       hover:text-slate-700 transition-colors" aria-label="Close venue detail modal">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+  <app-model [title]="'Venue Profile'" maxWidth="lg" (onClose)="closeModal()" [hasFooter]="true">
+    <div class="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h4 class="text-2xl font-black text-slate-900 leading-tight">{{ selectedVenue()!.name }}</h4>
+          <p class="text-xs text-slate-400 font-medium mt-1 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            {{ selectedVenue()!.address }}, {{ selectedVenue()!.city }}, {{ selectedVenue()!.state }} {{ selectedVenue()!.zip }}
+          </p>
         </div>
+        <span class="shrink-0 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border"
+            [ngClass]="{
+              'bg-emerald-50 text-emerald-700 border-emerald-200': selectedVenue()!.status === 'approved',
+              'bg-amber-50  text-amber-700  border-amber-200':  selectedVenue()!.status === 'pending',
+              'bg-red-50    text-red-700    border-red-200':    selectedVenue()!.status === 'rejected'
+            }">
+          {{ getStatus(selectedVenue()!.status) }}
+        </span>
+      </div>
 
-        <!-- Modal Scrollable Body -->
-        <div class="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
-
-            <!-- Name + Status -->
-            <div class="flex items-start justify-between gap-4">
-                <div>
-                    <h4 class="text-2xl font-black text-slate-900 leading-tight">
-                        {{ selectedVenue()!.name }}
-                    </h4>
-                    <p class="text-xs text-slate-400 font-medium mt-1 flex items-center gap-1.5">
-                        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827
-                     0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {{ selectedVenue()!.address }},
-                        {{ selectedVenue()!.city }},
-                        {{ selectedVenue()!.state }}
-                        {{ selectedVenue()!.zip }}
-                    </p>
-                </div>
-                <span class="shrink-0 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border"
-                    [ngClass]="{
-                  'bg-emerald-50 text-emerald-700 border-emerald-200': selectedVenue()!.status === 'approved',
-                  'bg-amber-50  text-amber-700  border-amber-200':  selectedVenue()!.status === 'pending',
-                  'bg-red-50    text-red-700    border-red-200':    selectedVenue()!.status === 'rejected'
-                }">
-                    {{ getStatus(selectedVenue()!.status) }}
-                </span>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 gap-3">
-                <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                        Daily Rate
-                    </p>
-                    <p class="text-xl font-black text-slate-900">₹{{ selectedVenue()!.pricePerDay }}</p>
-                </div>
-                <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                        Capacity
-                    </p>
-                    <p class="text-xl font-black text-slate-900">{{ selectedVenue()!.capacity }} PAX</p>
-                </div>
-                <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                        Type
-                    </p>
-                    <p class="text-sm font-black text-slate-900">{{ selectedVenue()!.type || '—' }}</p>
-                </div>
-                <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                        Available From
-                    </p>
-                    <p class="text-sm font-black text-slate-900">
-                        {{ selectedVenue()!.availableFrom
-                        ? (selectedVenue()!.availableFrom | date:'mediumDate')
-                        : '—' }}
-                    </p>
-                </div>
-            </div>
-
-            <!-- Description -->
-            @if (selectedVenue()!.description) {
-            <div class="p-4 rounded-xl bg-blue-50 border border-blue-100">
-                <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-2">
-                    Description
-                </p>
-                <p class="text-sm text-slate-700 leading-relaxed">
-                    {{ selectedVenue()!.description }}
-                </p>
-            </div>
-            }
-
-            <!-- Amenities -->
-            @if (getAmenities(selectedVenue()!).length > 0) {
-            <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
-                    Amenities
-                </p>
-                <div class="flex flex-wrap gap-2">
-                    @for (amenity of getAmenities(selectedVenue()!); track amenity) {
-                    <span class="px-2.5 py-1 bg-slate-100 border border-slate-200
-                             rounded-lg text-[11px] font-semibold text-slate-600">
-                        {{ amenity }}
-                    </span>
-                    }
-                </div>
-            </div>
-            }
-
-            <!-- Country + Coordinates (collapsible info) -->
-            <div class="p-4 rounded-xl bg-gray-50 border border-gray-00">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
-                    Location Details
-                </p>
-                <div class="grid grid-cols-2 gap-y-2 text-xs text-slate-600 font-medium">
-                    <span class="text-slate-400">Country</span>
-                    <span class="font-bold">{{ selectedVenue()!.country || '—' }}</span>
-                    <span class="text-slate-400">ZIP</span>
-                    <span class="font-bold">{{ selectedVenue()!.zip || '—' }}</span>
-                    <span class="text-slate-400">Coordinates</span>
-                    <span class="font-bold font-mono text-[10px]">
-                        {{ selectedVenue()!.lat }}, {{ selectedVenue()!.lng }}
-                    </span>
-                </div>
-            </div>
-
-            <!-- Rejection Reason -->
-            @if (selectedVenue()!.status === 'rejected' && selectedVenue()!.adminDescription) {
-            <div class="p-4 rounded-xl bg-red-50 border border-red-200">
-                <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-2">
-                    Rejection Reason
-                </p>
-                <p class="text-sm text-red-700">{{ selectedVenue()!.adminDescription }}</p>
-            </div>
-            }
-
-            <!-- Action error -->
-            @if (actionError()) {
-            <div class="p-3 rounded-xl bg-red-50 border border-red-200
-                      text-xs font-bold text-red-600">
-                ⚠ {{ actionError() }}
-            </div>
-            }
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Daily Rate</p>
+          <p class="text-xl font-black text-slate-900">₹{{ selectedVenue()!.pricePerDay }}</p>
         </div>
-
-        <!-- Modal Footer Actions -->
-        <div class="px-6 py-4 border-t border-gray-100
-                  flex items-center justify-between gap-2">
-
-            <!-- Admin action buttons -->
-            <div class="flex items-center gap-2">
-                @if (selectedVenue()!.status !== 'approved') {
-                <button (click)="approve()" [disabled]="actionLoading()" class="px-4 py-2 text-[11px] font-black uppercase
-                           text-emerald-700 bg-emerald-50 border border-emerald-200
-                           rounded-xl hover:bg-emerald-100 transition-colors
-                           disabled:opacity-50 disabled:cursor-not-allowed">
-                    @if (actionLoading()) { Processing… } @else { ✓ Approve }
-                </button>
-                }
-                @if (selectedVenue()!.status !== 'rejected') {
-                <button (click)="reject()" [disabled]="actionLoading()" class="px-4 py-2 text-[11px] font-black uppercase
-                           text-red-700 bg-red-50 border border-red-200
-                           rounded-xl hover:bg-red-100 transition-colors
-                           disabled:opacity-50 disabled:cursor-not-allowed">
-                    @if (actionLoading()) { Processing… } @else { ✕ Reject }
-                </button>
-                }
-            </div>
-
-            <!-- Close -->
-            <button (click)="closeModal()" class="px-5 py-2 text-xs font-black uppercase text-white
-                       bg-slate-900 rounded-xl hover:bg-slate-700 transition-colors">
-                Close
-            </button>
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Capacity</p>
+          <p class="text-xl font-black text-slate-900">{{ selectedVenue()!.capacity }} PAX</p>
         </div>
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Type</p>
+          <p class="text-sm font-black text-slate-900">{{ selectedVenue()!.type || '—' }}</p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Available From</p>
+          <p class="text-sm font-black text-slate-900">
+            {{ selectedVenue()!.availableFrom ? (selectedVenue()!.availableFrom | date:'mediumDate') : '—' }}
+          </p>
+        </div>
+      </div>
+
+      @if (selectedVenue()!.description) {
+        <div class="p-4 rounded-xl bg-blue-50 border border-blue-100">
+          <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-2">Description</p>
+          <p class="text-sm text-slate-700 leading-relaxed">{{ selectedVenue()!.description }}</p>
+        </div>
+      }
+
+      @if (getAmenities(selectedVenue()!).length > 0) {
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Amenities</p>
+          <div class="flex flex-wrap gap-2">
+            @for (amenity of getAmenities(selectedVenue()!); track amenity) {
+              <span class="px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-lg text-[11px] font-semibold text-slate-600">{{ amenity }}</span>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Location Details</p>
+        <div class="grid grid-cols-2 gap-y-2 text-xs text-slate-600 font-medium">
+          <span class="text-slate-400">Country</span><span class="font-bold">{{ selectedVenue()!.country || '—' }}</span>
+          <span class="text-slate-400">ZIP</span><span class="font-bold">{{ selectedVenue()!.zip || '—' }}</span>
+          <span class="text-slate-400">Coordinates</span><span class="font-bold font-mono text-[10px]">{{ selectedVenue()!.lat }}, {{ selectedVenue()!.lng }}</span>
+        </div>
+      </div>
+
+      @if (selectedVenue()!.status === 'rejected' && selectedVenue()!.adminDescription) {
+        <div class="p-4 rounded-xl bg-red-50 border border-red-200">
+          <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-2">Rejection Reason</p>
+          <p class="text-sm text-red-700">{{ selectedVenue()!.adminDescription }}</p>
+        </div>
+      }
+
+      @if (actionError()) {
+        <div class="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-red-600">
+          ⚠ {{ actionError() }}
+        </div>
+      }
     </div>
-</div>
+
+    <div footer class="flex justify-between items-center w-full">
+      <div class="flex gap-2">
+        @if (selectedVenue()!.status !== 'approved') {
+          <app-button variant="primary" (onClick)="approve()" [loading]="actionLoading()" customClass="!text-[11px] !py-2 uppercase !bg-emerald-600 hover:!bg-emerald-700">
+            ✓ Approve
+          </app-button>
+        }
+        @if (selectedVenue()!.status !== 'rejected') {
+          <app-button variant="danger" (onClick)="reject()" [loading]="actionLoading()" customClass="!text-[11px] !py-2 uppercase !bg-red-600 hover:!bg-red-700">
+            ✕ Reject
+          </app-button>
+        }
+      </div>
+      <app-button variant="secondary" (onClick)="closeModal()" customClass="!text-xs uppercase !px-5 !py-2">Close</app-button>
+    </div>
+  </app-model>
 }

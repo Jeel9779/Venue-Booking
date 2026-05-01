@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+    <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm bg-white">
       <table class="w-full border-collapse text-sm">
         <thead>
           <tr class="bg-slate-50/80">
@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
             }
           </tr>
         </thead>
-        <tbody class="divide-y divide-pink-500">
+        <tbody class="divide-y divide-slate-100">
           <ng-content></ng-content>
         </tbody>
       </table>

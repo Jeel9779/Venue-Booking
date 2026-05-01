@@ -63,7 +63,7 @@ export const routes: Routes = [
         path: 'plans',
         loadComponent: () =>
           import('@features/subscription/plan-list/plan-list').then((m) => m.PlanList),
-        runGuardsAndResolvers: 'always', // 
+        runGuardsAndResolvers: 'always', 
       },
       {
         path: 'admin/vendor-subscriptions',

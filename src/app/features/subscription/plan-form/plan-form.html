@@ -1,111 +1,80 @@
-<div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6 transition-all duration-300">
-  <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[90vh] transform transition-all">
+<form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+
+  <!-- Basic Info Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <app-form-input 
+      label="Plan Name" 
+      placeholder="e.g. Premium Business" 
+      formControlName="name"
+      [error]="planForm.get('name')?.touched && planForm.get('name')?.invalid ? 'Valid name required' : null">
+    </app-form-input>
+
+    <app-form-input 
+      label="Price (₹)" 
+      type="number" 
+      placeholder="0" 
+      formControlName="price"
+      [error]="planForm.get('price')?.touched && planForm.get('price')?.invalid ? 'Price required' : null">
+    </app-form-input>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <app-form-input 
+      label="Duration (Days)" 
+      type="number" 
+      placeholder="30" 
+      formControlName="duration_days"
+      [error]="planForm.get('duration_days')?.touched && planForm.get('duration_days')?.invalid ? 'Duration required' : null">
+    </app-form-input>
+
+    <div class="flex flex-col">
+      <label class="block text-[0.8125rem] font-bold text-slate-700 mb-2 uppercase tracking-wider">Status</label>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" formControlName="is_active" class="sr-only peer">
+        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+        <span class="ml-3 text-sm font-bold text-slate-600">{{ planForm.get('is_active')?.value ? 'Active' : 'Inactive' }}</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="space-y-4">
+    <label class="block text-[0.8125rem] font-bold text-slate-700 uppercase tracking-wider">Plan Features</label>
     
-    <!-- Header -->
-    <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-        </div>
-        <div>
-          <h2 class="text-2xl font-bold text-gray-900 tracking-tight">
-            {{ planData ? 'Edit Plan' : 'Create New Plan' }}
-          </h2>
-          <p class="text-sm text-gray-500 font-medium mt-0.5">Configure pricing, features, and visibility.</p>
-        </div>
-      </div>
-      <button type="button" (click)="closeForm.emit()" class="w-10 h-10 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
+    <div class="flex gap-2">
+      <input 
+        type="text" 
+        [(ngModel)]="newFeature" 
+        [ngModelOptions]="{standalone: true}"
+        (keyup.enter)="addFeature()"
+        placeholder="Add a feature (e.g. Unlimited Listings)" 
+        class="flex-1 h-11 px-4 border border-slate-300 rounded-xl bg-white text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-sm ring-1 ring-slate-200">
+      <app-button type="button" (onClick)="addFeature()">Add</app-button>
     </div>
 
-    <!-- Form Body -->
-    <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-1 overflow-hidden">
-      <div class="p-8 space-y-8 overflow-y-auto custom-scrollbar flex-1">
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-2.5">
-            <label class="text-xs font-bold text-gray-600 uppercase tracking-wide">Plan Name</label>
-            <input type="text" formControlName="name" placeholder="e.g. Premium Tier"
-              class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white outline-none transition-all text-gray-800 font-medium placeholder:text-gray-400">
-          </div>
-          
-          <div class="space-y-2.5">
-            <label class="text-xs font-bold text-gray-600 uppercase tracking-wide">Monthly Price</label>
-            <div class="relative">
-              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">₹</span>
-              <input type="number" formControlName="price" placeholder="0.00"
-                class="w-full pl-9 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white outline-none transition-all text-gray-800 font-medium placeholder:text-gray-400">
-            </div>
-          </div>
+    <!-- Features List -->
+    <div class="flex flex-wrap gap-2">
+      @for (feature of features; track $index) {
+        <div class="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100 group">
+          {{ feature }}
+          <button type="button" (click)="removeFeature($index)" class="hover:text-rose-600 transition-colors">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
-
-        <div class="space-y-2.5">
-          <label class="text-xs font-bold text-gray-600 uppercase tracking-wide">Plan Description</label>
-          <textarea formControlName="description" rows="3" placeholder="Briefly describe who this plan is for..."
-            class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white outline-none transition-all text-gray-800 font-medium placeholder:text-gray-400 resize-none"></textarea>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-gray-600 uppercase tracking-wide">Included Features</label>
-            <span class="text-xs text-gray-400 font-medium">{{ currentFeatures.length }} feature(s) added</span>
-          </div>
-          
-          <div class="relative flex items-center">
-            <div class="absolute left-4 text-gray-400">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            </div>
-            <input #featInput type="text" placeholder="Type a feature and press Enter or Add..." (keyup.enter)="addFeature(featInput); $event.preventDefault()"
-              class="w-full pl-11 pr-24 py-3.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all text-gray-800 font-medium placeholder:text-gray-400 shadow-sm">
-            <button type="button" (click)="addFeature(featInput)"
-              class="absolute right-2 bg-gray-900 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
-              Add
-            </button>
-          </div>
-          
-          <div class="flex flex-wrap gap-2.5 mt-4" *ngIf="currentFeatures.length > 0">
-            <span *ngFor="let feat of currentFeatures; let i = index"
-              class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-50/50 text-indigo-700 rounded-lg text-sm font-medium border border-indigo-100/50 group">
-              {{ feat }}
-              <button type="button" (click)="removeFeature(i)" class="text-indigo-400 group-hover:text-red-500 transition-colors focus:outline-none">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-              </button>
-            </span>
-          </div>
-        </div>
-
-        <div class="pt-2">
-          <label class="group relative flex items-start gap-4 p-5 bg-white rounded-2xl border border-gray-200 cursor-pointer hover:border-indigo-300 hover:shadow-md transition-all">
-            <div class="flex items-center h-6">
-              <input type="checkbox" formControlName="isActive"
-                class="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer">
-            </div>
-            <div>
-              <span class="block text-base font-semibold text-gray-900 mb-0.5">Active & Publicly Visible</span>
-              <span class="block text-sm text-gray-500 font-medium">When active, vendors will be able to see and subscribe to this plan immediately.</span>
-            </div>
-            <div class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-300 group-hover:text-indigo-400 transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            </div>
-          </label>
-        </div>
-
-      </div>
-      
-      <!-- Footer Actions -->
-      <div class="p-6 border-t border-gray-100 bg-[#F5F6F8] flex items-center justify-end gap-3 rounded-b-3xl">
-        <button type="button" (click)="closeForm.emit()"
-          class="px-6 py-2.5 text-sm font-semibold text-gray-600 hover:text-gray-900 bg-white border border-gray-200 hover:border-gray-300 rounded-xl transition-all shadow-sm">
-          Cancel
-        </button>
-        <button type="submit" [disabled]="planForm.invalid || isLoading"
-          class="px-6 py-2.5 bg-[#6C63FF] hover:bg-[#574fcc] text-white rounded-xl text-sm font-semibold shadow-md shadow-[#6C63FF]/20 disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none transition-all flex items-center gap-2">
-          <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-          {{ isLoading ? 'Saving Plan...' : (planData ? 'Update Plan' : 'Create Plan') }}
-        </button>
-      </div>
-
-    </form>
+      } @empty {
+        <p class="text-xs text-slate-400 font-medium italic">No features added yet.</p>
+      }
+    </div>
   </div>
-</div>
+
+  <!-- Footer Actions -->
+  <div class="flex items-center justify-end gap-3 mt-4 pt-6 border-t border-slate-100">
+    <app-button variant="secondary" type="button" (onClick)="onCancel.emit()">Cancel</app-button>
+    <app-button type="submit" [loading]="isLoading()" [disabled]="planForm.invalid">
+      {{ plan() ? 'Update Plan' : 'Create Plan' }}
+    </app-button>
+  </div>
+
+</form>

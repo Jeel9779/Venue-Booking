@@ -40,6 +40,10 @@ export class Vendors implements OnInit {
   showRejectModel = signal(false);
   rejectReason = signal('');
 
+  showDeleteModel = signal(false);
+  deleteReason = signal('');
+  vendorToDelete = signal<Vendor | null>(null);
+
   viewingImageUrl = signal<string | null>(null);
 
   // ── Computed ───────────────────────────────────────────────────────────────
@@ -56,7 +60,8 @@ export class Vendors implements OnInit {
         v.email.toLowerCase().includes(q) ||
         v.phone.includes(q) ||
         v.businessType.toLowerCase().includes(q) ||
-        v.state.toLowerCase().includes(q)
+        v.state.toLowerCase().includes(q) ||
+        new Date(v.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(q)
       );
     }
     return list;
@@ -90,7 +95,9 @@ export class Vendors implements OnInit {
 
   // Approve flow
   openApproveModel() {
-    this.approveData.set({ username: '', password: '' });
+    const v = this.selectedVendor();
+    const suggestedName = v ? v.fullName.trim() : '';
+    this.approveData.set({ username: suggestedName, password: '' });
     this.showApproveModel.set(true);
   }
 
@@ -117,9 +124,17 @@ export class Vendors implements OnInit {
   }
 
   deleteVendor(v: Vendor) {
-    if (confirm(`Are you sure you want to delete ${v.businessName}?`)) {
-      this.vendorService.delete(v._id);
-    }
+    this.vendorToDelete.set(v);
+    this.deleteReason.set('');
+    this.showDeleteModel.set(true);
+  }
+
+  submitDelete() {
+    const v = this.vendorToDelete();
+    if (!v || !this.deleteReason().trim()) return;
+    this.vendorService.delete(v._id);
+    this.showDeleteModel.set(false);
+    this.vendorToDelete.set(null);
   }
 
   getFileUrl(path?: string) {

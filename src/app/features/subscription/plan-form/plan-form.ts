@@ -1,97 +1,92 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, OnInit, inject, input, output, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Plan } from '@core/models/plan.model';
-import { PlanService } from '@core/services/plan.service';
+import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
+import { Plan } from '@core/models/subscription.model';   // subscription model
+import { PlanService } from '@core/services/plan.service'; // plan service
+import { PlanStore } from '@core/store/plan.store';       // plan store
+import { Button } from '@shared/components/button/button';
+import { FormInput } from '@shared/components/form-input/form-input';
 
 @Component({
   selector: 'app-plan-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './plan-form.html'
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, Button, FormInput],
+  templateUrl: './plan-form.html',
 })
-export class PlanForm implements OnChanges {
-  @Input() planData: Plan | null = null;
-  @Output() closeForm = new EventEmitter<void>();
-  @Output() planAdded = new EventEmitter<void>();
+export class PlanForm implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly planService = inject(PlanService);
+  private readonly planStore = inject(PlanStore);
 
-  private fb = inject(FormBuilder);
-  private planService = inject(PlanService);
+  // ── Inputs / Outputs ──
+  plan = input<Plan | null>(null);
+  onSaved = output<void>();
+  onCancel = output<void>();
 
-  isLoading = false;
+  // ── State ──
+  readonly isLoading = this.planStore.isLoading;
+  readonly error = this.planStore.error;
+
+  newFeature = signal('');
 
   planForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
+    duration_days: [30, [Validators.required, Validators.min(1)]],
     price: [0, [Validators.required, Validators.min(0)]],
-    duration: [30, [Validators.required, Validators.min(1)]],
-    description: ['', [Validators.required]], // This was causing the fail because it wasn't in the HTML
-    isActive: [true],
+    is_active: [true],
     features: [[] as string[]]
   });
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['planData']) {
-      if (this.planData) {
-        this.planForm.patchValue(this.planData);
+  constructor() {
+    // Sync form with input plan
+    effect(() => {
+      const p = this.plan();
+      if (p) {
+        this.planForm.patchValue({
+          name: p.name,
+          duration_days: p.duration_days,
+          price: p.price,
+          is_active: p.is_active,
+          features: p.features
+        });
       } else {
-        this.planForm.reset({ isActive: true, duration: 30, price: 0, features: [] });
+        this.planForm.reset({ duration_days: 30, price: 0, is_active: true, features: [] });
       }
-    }
+    });
   }
 
-  get currentFeatures(): string[] {
+  ngOnInit(): void { }
+
+  get features(): string[] {
     return this.planForm.get('features')?.value || [];
   }
 
-  addFeature(input: HTMLInputElement) {
-    const value = input.value.trim();
-    if (value) {
-      const updatedFeatures = [...this.currentFeatures, value];
-      this.planForm.patchValue({ features: updatedFeatures });
-      input.value = '';
+  addFeature() {
+    const val = this.newFeature().trim();
+    if (val) {
+      this.planForm.patchValue({ features: [...this.features, val] });
+      this.newFeature.set('');
     }
   }
 
   removeFeature(index: number) {
-    const updatedFeatures = this.currentFeatures.filter((_, i) => i !== index);
-    this.planForm.patchValue({ features: updatedFeatures });
+    const updated = this.features.filter((_, i) => i !== index);
+    this.planForm.patchValue({ features: updated });
   }
 
   onSubmit() {
     if (this.planForm.invalid) {
-      console.error("FORM INVALID:", this.planForm.errors);
       this.planForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading = true;
-    const formData = this.planForm.value;
-    const now = new Date().toISOString();
+    const payload = this.planForm.value as Partial<Plan>;
+    const p = this.plan();
 
-    if (this.planData && this.planData.id) {
-      // UPDATE logic
-      this.planService.updatePlan(this.planData.id, { ...formData, updatedAt: now } as Plan).subscribe({
-        next: () => this.handleSuccess(),
-        error: () => this.isLoading = false
-      });
+    if (p?._id) {
+      this.planService.update(p._id, payload, () => this.onSaved.emit());
     } else {
-      // CREATE logic - Ensure ID is not sent so DB can generate it
-      const { ...newPlanData } = formData;
-      const newPlan = { ...newPlanData, createdAt: now, updatedAt: now };
-
-      this.planService.addPlan(newPlan as any).subscribe({
-        next: () => this.handleSuccess(),
-        error: (err) => {
-          console.error("API Error:", err);
-          this.isLoading = false;
-        }
-      });
+      this.planService.create(payload, () => this.onSaved.emit());
     }
-  }
-
-  private handleSuccess() {
-    this.isLoading = false;
-    this.planAdded.emit();
-    this.closeForm.emit();
   }
 }

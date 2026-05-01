@@ -1,41 +1,67 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Plan } from '@core/models/plan.model'; 
-import { Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { PlanApi } from '@core/api/plan-api';
+import { PlanStore } from '@core/store/plan.store';
+import { finalize } from 'rxjs';
+import { Plan } from '@core/models/subscription.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PlanService {
-  private http = inject(HttpClient);
+  private readonly api = inject(PlanApi);
+  private readonly store = inject(PlanStore);
 
-  private apiUrl = 'http://localhost:4000/plans';
-
-  // ✅ GET all plans
-  getPlans(): Observable<Plan[]> {
-    return this.http.get<Plan[]>(this.apiUrl);
+  loadActivePlans() {
+    this.store.setLoading(true);
+    this.api.getActivePlans()
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: (res) => this.store.setPlans(res.plans),
+        error: (err) => this.store.setError(err.error?.message || 'Failed to load plans')
+      });
   }
 
-  // ✅ GET single plan
-  getPlanById(id: string): Observable<Plan> {
-    return this.http.get<Plan>(`${this.apiUrl}/${id}`);
+  loadAllPlans() {
+    this.store.setLoading(true);
+    this.api.getAllPlans()
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: (res) => this.store.setPlans(res.plans),
+        error: (err) => this.store.setError(err.error?.message || 'Failed to load all plans')
+      });
   }
 
-  // ✅ CREATE plan
-  addPlan(plan: Plan): Observable<Plan> {
-    return this.http.post<Plan>(this.apiUrl, plan);
+  create(payload: Partial<Plan>, callback?: () => void) {
+    this.store.setLoading(true);
+    this.api.createPlan(payload)
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: (res) => {
+          this.store.addPlan(res.plan);
+          if (callback) callback();
+        },
+        error: (err) => this.store.setError(err.error?.message || 'Failed to create plan')
+      });
   }
 
-  // ✅ UPDATE plan
-   updatePlan(id: string, plan: any): Observable<Plan> {
-    return this.http.put<Plan>(`${this.apiUrl}/${id}`, plan);
-  } 
-/*  updatePlan(id: number, plan: any) {
-  return this.http.put(`http://localhost:4000/plans/${id}`, plan);
-} */
+  update(id: string, payload: Partial<Plan>, callback?: () => void) {
+    this.store.setLoading(true);
+    this.api.updatePlan(id, payload)
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: (res) => {
+          this.store.updatePlan(res.plan);
+          if (callback) callback();
+        },
+        error: (err) => this.store.setError(err.error?.message || 'Failed to update plan')
+      });
+  }
 
-  // ✅ DELETE plan
-  deletePlan(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: string) {
+    this.store.setLoading(true);
+    this.api.deletePlan(id)
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: () => this.store.removePlan(id),
+        error: (err) => this.store.setError(err.error?.message || 'Failed to delete plan')
+      });
   }
 }

@@ -64,8 +64,7 @@
         [class.opacity-100]="openGroup() === 'main' || collapsed()">
         <div class="pt-1 space-y-1">
 
-          <a [routerLink]="['/dashboard']"
-            routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm"
+          <a [routerLink]="['/dashboard']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm"
             [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200 focus:outline-none" [class.px-3]="!collapsed()"
@@ -76,8 +75,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Overview</span> }
           </a>
 
-          <a [routerLink]="['/venues']"
-            routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/venues']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()">
@@ -87,8 +85,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Venues</span> }
           </a>
 
-            <a [routerLink]="['/users']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm"
-            class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/users']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()">
@@ -126,8 +123,7 @@
         [class.opacity-100]="openGroup() === 'management' || collapsed()">
         <div class="pt-1 space-y-1">
 
-          <a [routerLink]="['/vendors']"
-            routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/vendors']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()">
@@ -137,19 +133,17 @@
             @if (!collapsed()) { <span class="tracking-wide">Vendors</span> }
           </a>
 
-          <a [routerLink]="['/partners']"
-            routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/partners']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()">
             <lucide-icon [img]="icons.users" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
-            @if (!collapsed()) { <span class="tracking-wide">Partners</span> }
+            @if (!collapsed()) { <span class="tracking-wide">Venue by Vendor</span> }
           </a>
 
-          <a [routerLink]="['/bookings']"
-            routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/bookings']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()">
@@ -187,8 +181,7 @@
         [class.opacity-100]="openGroup() === 'billing' || collapsed()">
         <div class="pt-1 space-y-1">
 
-          <a [routerLink]="['/plans']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm"
-            class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/plans']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()">
@@ -198,15 +191,15 @@
             @if (!collapsed()) { <span class="tracking-wide">Plans</span> }
           </a>
 
-          <a [routerLink]="['/admin/vendor-subscriptions']"
-            routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/admin/vendor-subscriptions']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm"
+            class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()">
             <lucide-icon [img]="icons.subscript" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
-            @if (!collapsed()) { <span class="tracking-wide">Payments</span> }
+            @if (!collapsed()) { <span class="tracking-wide">Subscription Monitor</span> }
           </a>
 
         </div>

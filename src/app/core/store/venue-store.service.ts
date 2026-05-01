@@ -24,8 +24,9 @@ export class VenueStoreService {
        partnerMap.get(space.vendorId)!.push(space);
      }); */
     spaces.forEach(space => {
-      const vendorKey =
-        typeof space.vendorId === 'string'
+      const vendorKey = !space.vendorId
+        ? 'unassigned'
+        : typeof space.vendorId === 'string'
           ? space.vendorId
           : space.vendorId._id;
 
@@ -40,13 +41,13 @@ export class VenueStoreService {
     const partners: Partner[] = Array.from(partnerMap.entries()).map(
       ([id, spaces]) => {
         const vendor =
-          typeof spaces[0].vendorId === 'object'
+          typeof spaces[0].vendorId === 'object' && spaces[0].vendorId !== null
             ? spaces[0].vendorId
             : null;
 
         return {
           id,
-          name: vendor?.fullName || 'Vendor',
+          name: id === 'unassigned' ? 'Unassigned Venues' : (vendor?.fullName || 'Vendor'),
           email: vendor?.email || '',
           spaces,
         };

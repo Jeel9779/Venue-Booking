@@ -1,8 +1,13 @@
-import { Component, signal, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Subject, switchMap, startWith, catchError, of } from 'rxjs';  // rxjs
-import { BookingService, Booking } from '../../core/services/booking.service';  // booking servcice + interface
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { CommonModule, TitleCasePipe } from '@angular/common';
+import { BookingService } from '../../core/services/booking.service';
+import { BookingStore } from '../../core/store/booking.store';
+import { Booking } from '../../core/models/booking.model';
+import { FormsModule } from '@angular/forms';
+import { Card } from '../../shared/components/card/card';
+import { Table } from '../../shared/components/table/table';
+import { Model } from '../../shared/components/model/model';
+import { Button } from '../../shared/components/button/button';
 
 type SortField   = 'date' | 'cost' | 'createdAt';
 type SortOrder   = 'asc' | 'desc';
@@ -11,49 +16,35 @@ type StatusFilter = 'all' | 'approved' | 'rejected' | 'pending';
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [CommonModule],   // FormsModule removed — no longer needed
+  imports: [CommonModule, FormsModule, Card, Table, Model, Button, TitleCasePipe],
   templateUrl: './bookings.html',
   styleUrl: './bookings.css',
 })
-export class Bookings {
-  private bookingService = inject(BookingService);
+export class Bookings implements OnInit {
+  private readonly bookingService = inject(BookingService);
+  private readonly bookingStore = inject(BookingStore);
 
-  // ── Refresh trigger ───────────────────────────────────────────────────────
-  // Emit on this to reload bookings (e.g. after status update)
-  private refresh$ = new Subject<void>();
-
-  // ── Async data (replaces manual subscribe + isLoading signal) ─────────────
-  private bookingsData = toSignal(
-    this.refresh$.pipe(
-      startWith(undefined),
-      switchMap(() =>
-        this.bookingService.getAllBookings().pipe(
-          catchError(err => {
-            this.error.set(err?.message ?? 'Failed to load bookings. Please try again.');
-            return of({ bookings: [] as Booking[] });
-          })
-        )
-      )
-    ),
-    { initialValue: { bookings: [] as Booking[] } }
-  );
+  // ── State from Store ──────────────────────────────────────────────────────
+  readonly bookings = this.bookingStore.bookings;
+  readonly isLoading = this.bookingStore.isLoading;
+  readonly error = this.bookingStore.error;
 
   // ── UI State ──────────────────────────────────────────────────────────────
-  error         = signal<string | null>(null);
   search        = signal('');
   statusFilter  = signal<StatusFilter>('all');
   sortBy        = signal<SortField>('createdAt');
   sortOrder     = signal<SortOrder>('desc');
 
-  // Modal
+  // Modal State
   selectedBooking = signal<Booking | null>(null);
   showStatusModal = signal(false);
   newStatus       = signal<'approved' | 'rejected' | 'pending'>('approved');
-  isSubmitting    = signal(false);
 
-  // ── Computed (all auto-update when bookings() changes) ────────────────────
-  bookings = computed(() => this.bookingsData()?.bookings ?? []);
+  ngOnInit() {
+    this.bookingService.loadAllBookings();
+  }
 
+  // ── Computed ──────────────────────────────────────────────────────────────
   stats = computed(() => this.bookingService.calculateStats(this.bookings()));
 
   filteredBookings = computed(() => {
@@ -84,7 +75,6 @@ export class Bookings {
     });
   });
 
-  // Chart computeds — reactive, no manual computeCharts() call needed
   vendorRevenue = computed(() =>
     Object.entries(this.bookingService.getVendorRevenue(this.bookings()))
       .map(([vendor, revenue]) => ({ vendor, revenue }))
@@ -108,8 +98,7 @@ export class Bookings {
 
   // ── Methods ───────────────────────────────────────────────────────────────
   retry() {
-    this.error.set(null);
-    this.refresh$.next();
+    this.bookingService.loadAllBookings();
   }
 
   onSearchInput(e: Event) {
@@ -130,18 +119,9 @@ export class Bookings {
   submitStatusUpdate() {
     const booking = this.selectedBooking();
     if (!booking) return;
-    this.isSubmitting.set(true);
 
-    this.bookingService.updateBookingStatus(booking._id, this.newStatus()).subscribe({
-      next: () => {
-        this.closeStatusModal();
-        this.isSubmitting.set(false);
-        this.refresh$.next(); // triggers reactive reload via toSignal
-      },
-      error: (err) => {
-        this.error.set(err?.message ?? 'Failed to update booking status.');
-        this.isSubmitting.set(false);
-      },
+    this.bookingService.updateBookingStatus(booking._id, this.newStatus(), () => {
+      this.closeStatusModal();
     });
   }
 
@@ -154,7 +134,6 @@ export class Bookings {
     }
   }
 
-  // Safe percentage — guards division by zero (was showing NaN)
   pct(part: number, total: number): number {
     return total > 0 ? Math.round((part / total) * 100) : 0;
   }
@@ -162,7 +141,7 @@ export class Bookings {
   getStatusColor(status: string): string {
     const map: Record<string, string> = {
       approved: 'bg-emerald-100 text-emerald-700 border-emerald-300',
-      rejected:  'bg-red-100 text-red-700 border-red-300',
+      rejected:  'bg-rose-100 text-rose-700 border-rose-300',
       pending:   'bg-amber-100 text-amber-700 border-amber-300',
     };
     return map[status] ?? 'bg-slate-100 text-slate-700 border-slate-300';

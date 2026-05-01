@@ -8,7 +8,7 @@ import { Vendor } from '../models/vendor.model';
 })
 export class VendorApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.11:3000/vendors';
+  private readonly baseUrl = 'http://192.168.1.6:3000/vendors';
 
   getAll(): Observable<Vendor[]> {
     return this.http.get<Vendor[]>(this.baseUrl);

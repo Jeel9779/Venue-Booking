@@ -119,7 +119,7 @@
     @if (!isLoading() && filteredUsers().length > 0) {
     <app-table [columns]="['Name', 'Email', 'Location', 'Status', 'Joined', '']">
       @for (user of filteredUsers(); track user._id) {
-      <tr class="group transition-all hover:bg-slate-50 border-b border-slate-100 last:border-0">
+      <tr class="group transition-all hover:bg-slate-50 border-b border-slate-100 last:border-0 cursor-pointer" (click)="openEditModel(user)">
         <td class="px-5 py-4">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-gradient-to-br
@@ -165,7 +165,7 @@
         </td>
         <td class="px-5 py-4 text-right">
           <div class="flex items-center justify-end gap-2">
-            <button (click)="openEditModel(user)" title="Edit"
+            <button (click)="openEditModel(user); $event.stopPropagation()" title="Edit"
                     class="w-8 h-8 flex items-center justify-center bg-slate-100 border border-slate-200
                            rounded-lg text-slate-400 transition hover:bg-indigo-50 hover:text-indigo-600
                            hover:border-indigo-200 cursor-pointer">
@@ -174,7 +174,7 @@
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <button (click)="openDeleteModel(user)" title="Delete"
+            <button (click)="openDeleteModel(user); $event.stopPropagation()" title="Delete"
                     class="w-8 h-8 flex items-center justify-center bg-slate-100 border border-slate-200
                            rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600
                            hover:border-rose-200 cursor-pointer">
@@ -235,25 +235,31 @@
 
   <!-- ── DELETE MODEL ─────────────────────────────────────────────────── -->
   @if (showDeleteModel()) {
-  <app-model [title]="'Confirm Deletion'" maxWidth="sm" (onClose)="closeDeleteModel()" [hasFooter]="true">
-    <div class="flex flex-col items-center text-center py-4">
-      <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-4">
-        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <polyline points="3 6 5 6 21 6"/>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-        </svg>
+    <app-model [title]="'Delete User'" maxWidth="sm" (onClose)="closeDeleteModel()" [hasFooter]="true">
+      <div class="space-y-4">
+        <div class="p-4 rounded-xl bg-rose-50 border border-rose-100 flex gap-3">
+          <div class="text-rose-500 shrink-0">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-rose-800 mb-1">Warning: Irreversible Action</h4>
+            <p class="text-xs text-rose-600/80 leading-relaxed">
+              You are about to permanently delete <strong>{{ selectedUser()?.name }}</strong>. All associated profile data, history, and active sessions will be lost. This cannot be undone.
+            </p>
+          </div>
+        </div>
+        <app-form-input label="Reason for Deletion" type="textarea" placeholder="Please specify why this user is being deleted..." [rows]="3"
+                        [ngModel]="deleteReason()" (ngModelChange)="deleteReason.set($event)"></app-form-input>
       </div>
-      <h3 class="text-lg font-bold text-slate-900 mb-2">Delete user account?</h3>
-      <p class="text-[0.9375rem] text-slate-600 leading-relaxed max-w-sm">
-        Are you sure you want to delete <strong>{{ selectedUser()?.name }}</strong>? This action is permanent and cannot be undone.
-      </p>
-    </div>
-
-    <div footer>
-      <app-button variant="secondary" (onClick)="closeDeleteModel()">Cancel</app-button>
-      <app-button variant="danger" (onClick)="submitDelete()" [loading]="isLoading()">Delete User</app-button>
-    </div>
-  </app-model>
+      <div footer>
+        <app-button variant="secondary" (onClick)="closeDeleteModel()">Cancel</app-button>
+        <app-button variant="danger" (onClick)="submitDelete()" [loading]="isLoading()">
+          Delete User
+        </app-button>
+      </div>
+    </app-model>
   }
 
 </div>
