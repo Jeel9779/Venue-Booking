@@ -222,14 +222,16 @@
 
       <!-- Vendor Info -->
       <div class="flex items-center gap-3 bg-indigo-50 px-5 py-4 rounded-2xl border border-indigo-100">
-        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white text-sm font-bold flex items-center justify-center shrink-0">
+        <div
+          class="w-10 h-10 rounded-xl bg-indigo-600 text-white text-sm font-bold flex items-center justify-center shrink-0">
           {{ getVendorName(selectedVenue()!).charAt(0) }}
         </div>
         <div class="flex-1 min-w-0">
           <div class="text-sm font-bold text-slate-800">{{ getVendorName(selectedVenue()!) }}</div>
           <div class="text-xs text-indigo-600/80 truncate">{{ getVendorEmail(selectedVenue()!) }}</div>
         </div>
-        <span class="text-[0.6rem] font-black uppercase tracking-widest text-indigo-500 bg-indigo-100 px-2.5 py-1 rounded-lg">Vendor</span>
+        <span
+          class="text-[0.6rem] font-black uppercase tracking-widest text-indigo-500 bg-indigo-100 px-2.5 py-1 rounded-lg">Vendor</span>
       </div>
 
       <!-- Info Grid -->
@@ -294,8 +296,7 @@
           <div
             class="aspect-square rounded-2xl overflow-hidden cursor-pointer group relative shadow-sm border border-slate-100"
             (click)="openImage(img)">
-            <img [src]="getImageUrl(img)"
-              (error)="handleImageError($event)"
+            <img [src]="getImageUrl(img)" (error)="handleImageError($event)"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               alt="Venue preview" />
             <div
@@ -372,8 +373,7 @@
         <path d="M18 6L6 18M6 6l12 12" />
       </svg>
     </button>
-    <img [src]="previewImage()"
-      (error)="handleImageError($event)"
+    <img [src]="previewImage()" (error)="handleImageError($event)"
       class="max-h-[85vh] max-w-full rounded-2xl shadow-2xl object-contain border border-white/5"
       (click)="$event.stopPropagation()" alt="Full screen preview" />
   </div>
@@ -418,3 +418,16 @@
     }
   } */
 </style>
+
+
+<!-- 🔹 Features implemented:
+
+✅ Filter chips
+✅ Search
+✅ Loading state
+✅ Error state
+✅ Empty state
+✅ Table view
+✅ Modal (details)
+✅ Approve / Reject
+✅ Image preview -->

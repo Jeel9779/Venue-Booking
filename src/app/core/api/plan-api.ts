@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class PlanApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.6:3000/plans';   // cards
+  private readonly baseUrl = 'http://192.168.1.7:3000/plans';   // cards
 
   // Public/Vendor: Browse active plans
   getActivePlans(): Observable<{ success: boolean; plans: Plan[] }> {

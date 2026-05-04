@@ -37,6 +37,17 @@ export class PlanForm implements OnInit {
     features: [[] as string[]]
   });
 
+  durations = [
+    { label: '1 Month', days: 30 },
+    { label: '3 Months', days: 90 },
+    { label: '6 Months', days: 180 },
+    { label: '1 Year', days: 365 },
+  ];
+
+  selectDuration(days: number) {
+    this.planForm.patchValue({ duration_days: days });
+  }
+
   constructor() {
     // Sync form with input plan
     effect(() => {

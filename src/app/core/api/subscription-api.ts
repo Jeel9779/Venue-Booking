@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class SubscriptionApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.6:3000/subscription';
+  private readonly baseUrl = 'http://192.168.1.7:3000/subscription';
 
   purchasePlan(planId: string): Observable<{ success: boolean; message: string; subscription?: Subscription; queueEntry?: SubscriptionQueue; queued: boolean }> {
     return this.http.post<{ success: boolean; message: string; subscription?: Subscription; queueEntry?: SubscriptionQueue; queued: boolean }>(`${this.baseUrl}/purchase`, { planId });

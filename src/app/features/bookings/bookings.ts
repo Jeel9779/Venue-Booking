@@ -3,6 +3,7 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { BookingService } from '../../core/services/booking.service';
 import { BookingStore } from '../../core/store/booking.store';
 import { Booking } from '../../core/models/booking.model';
+import { VendorSubscriptionServices } from '../../core/services/vendor-subscription.service';
 import { FormsModule } from '@angular/forms';
 import { Card } from '../../shared/components/card/card';
 import { Table } from '../../shared/components/table/table';
@@ -12,6 +13,7 @@ import { Button } from '../../shared/components/button/button';
 type SortField   = 'date' | 'cost' | 'createdAt';
 type SortOrder   = 'asc' | 'desc';
 type StatusFilter = 'all' | 'approved' | 'rejected' | 'pending';
+type TimeFilter   = 'all' | 'today' | 'upcoming' | 'past';
 
 @Component({
   selector: 'app-bookings',
@@ -23,25 +25,73 @@ type StatusFilter = 'all' | 'approved' | 'rejected' | 'pending';
 export class Bookings implements OnInit {
   private readonly bookingService = inject(BookingService);
   private readonly bookingStore = inject(BookingStore);
+  private readonly subService = inject(VendorSubscriptionServices);
 
   // ── State from Store ──────────────────────────────────────────────────────
   readonly bookings = this.bookingStore.bookings;
   readonly isLoading = this.bookingStore.isLoading;
   readonly error = this.bookingStore.error;
 
+  // ── Local State for Earnings ──────────────────────────────────────────────
+  allSubscriptions = signal<any[]>([]);
+  adminEarnings = computed(() => {
+    const subs = this.allSubscriptions();
+    const time = this.timeFilter();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return subs
+      .filter(s => s.status === 'active' || s.paymentStatus === 'approved')
+      .filter(s => {
+        if (time === 'all') return true;
+        const sDate = new Date(s.createdAt || s.requestedAt);
+        sDate.setHours(0, 0, 0, 0);
+        
+        if (time === 'today') return sDate.toDateString() === today.toDateString();
+        if (time === 'upcoming') return sDate >= today;
+        if (time === 'past') return sDate < today;
+        return true;
+      })
+      .reduce((sum, s) => sum + (s.amount || 0), 0);
+  });
+
+  revenueByPlan = computed(() => {
+    const subs = this.allSubscriptions().filter(s => s.status === 'active' || s.paymentStatus === 'approved');
+    const data: Record<string, number> = {};
+    
+    subs.forEach(s => {
+      const name = s.planName || 'Unknown Plan';
+      data[name] = (data[name] || 0) + (s.amount || 0);
+    });
+
+    return Object.entries(data)
+      .map(([plan, revenue]) => ({ plan, revenue }))
+      .sort((a, b) => b.revenue - a.revenue);
+  });
+
   // ── UI State ──────────────────────────────────────────────────────────────
   search        = signal('');
   statusFilter  = signal<StatusFilter>('all');
+  timeFilter    = signal<TimeFilter>('all');
   sortBy        = signal<SortField>('createdAt');
   sortOrder     = signal<SortOrder>('desc');
 
   // Modal State
   selectedBooking = signal<Booking | null>(null);
-  showStatusModal = signal(false);
-  newStatus       = signal<'approved' | 'rejected' | 'pending'>('approved');
+  showDetailsModal = signal(false);
 
   ngOnInit() {
     this.bookingService.loadAllBookings();
+    this.loadAdminEarnings();
+  }
+
+  loadAdminEarnings() {
+    this.subService.getAll().subscribe({
+      next: (subs) => {
+        this.allSubscriptions.set(subs);
+      },
+      error: (err) => console.error('Failed to load earnings:', err)
+    });
   }
 
   // ── Computed ──────────────────────────────────────────────────────────────
@@ -53,15 +103,32 @@ export class Bookings implements OnInit {
 
     if (term) {
       result = result.filter(b =>
-        b.userId?.name?.toLowerCase().includes(term)   ||
-        b.venueId?.name?.toLowerCase().includes(term)  ||
-        b.vendorId?.name?.toLowerCase().includes(term) ||
-        b.date?.includes(term)
+        b.userId?.name?.toLowerCase().includes(term) ||
+        b.userId?.email?.toLowerCase().includes(term) ||
+        b.userId?.phone?.includes(term) ||
+        b.venueId?.name?.toLowerCase().includes(term) ||
+        b.venueId?.city?.toLowerCase().includes(term) ||
+        b.vendorId?.businessName?.toLowerCase().includes(term) ||
+        b.vendorId?.fullName?.toLowerCase().includes(term) ||
+        b.status?.toLowerCase().includes(term) ||
+        b.date?.includes(term) ||
+        String(b.cost).includes(term)
       );
     }
 
     if (this.statusFilter() !== 'all') {
       result = result.filter(b => b.status === this.statusFilter());
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (this.timeFilter() === 'today') {
+      result = result.filter(b => new Date(b.date).toDateString() === today.toDateString());
+    } else if (this.timeFilter() === 'upcoming') {
+      result = result.filter(b => new Date(b.date) >= today);
+    } else if (this.timeFilter() === 'past') {
+      result = result.filter(b => new Date(b.date) < today);
     }
 
     return result.sort((a, b) => {
@@ -105,24 +172,21 @@ export class Bookings implements OnInit {
     this.search.set((e.target as HTMLInputElement).value);
   }
 
-  openStatusModal(booking: Booking) {
+  openDetails(booking: Booking) {
     this.selectedBooking.set(booking);
-    this.newStatus.set(booking.status);
-    this.showStatusModal.set(true);
+    this.showDetailsModal.set(true);
   }
 
-  closeStatusModal() {
-    this.showStatusModal.set(false);
+  closeDetailsModal() {
+    this.showDetailsModal.set(false);
     this.selectedBooking.set(null);
   }
 
-  submitStatusUpdate() {
-    const booking = this.selectedBooking();
-    if (!booking) return;
 
-    this.bookingService.updateBookingStatus(booking._id, this.newStatus(), () => {
-      this.closeStatusModal();
-    });
+
+  exportData() {
+    alert('Generating booking report (CSV)...');
+    // Implementation for CSV export would go here
   }
 
   toggleSort(field: SortField) {

@@ -68,7 +68,7 @@ export class BookingService {
     const vendorData: { [key: string]: number } = {};
     bookings.forEach(b => {
       if (b.status === 'approved') {
-        const vendorName = b.vendorId?.name || 'Unknown';
+        const vendorName = b.vendorId?.businessName || b.vendorId?.fullName || 'Unknown';
         vendorData[vendorName] = (vendorData[vendorName] || 0) + b.cost;
       }
     });

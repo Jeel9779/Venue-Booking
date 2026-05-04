@@ -43,57 +43,95 @@
   } @else {
     <!-- ── PLANS GRID ── -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      @for (plan of plans(); track plan._id) {
-        <app-card [padding]="false" customClass="group relative flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:border-indigo-100 h-full overflow-hidden">
+      @for (plan of plans(); track plan._id; let i = $index) {
+        <div 
+          class="relative flex flex-col rounded-[2.5rem] bg-white border border-slate-100 shadow-xl shadow-slate-200/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-4 overflow-hidden group"
+          [class.ring-4]="i === 1"
+          [class.ring-indigo-500/20]="i === 1"
+          [class.scale-105]="i === 1 && plans().length === 3"
+          [class.z-10]="i === 1">
           
-          <!-- Badge for Active Status -->
+          <!-- Premium Highlight for Middle Plan -->
+          @if (i === 1 && plans().length === 3) {
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+            <div class="absolute top-6 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[0.65rem] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-lg shadow-indigo-200">
+              Recommended
+            </div>
+          }
+
+          <!-- Status Badge -->
           @if (!plan.is_active) {
-            <div class="absolute top-4 right-4 px-3 py-1 bg-slate-100 text-slate-500 text-[0.65rem] font-black uppercase tracking-widest rounded-full border border-slate-200">
+            <div class="absolute top-6 right-6 px-3 py-1 bg-rose-50 text-rose-600 text-[0.6rem] font-black uppercase tracking-widest rounded-lg border border-rose-100 backdrop-blur-sm">
               Inactive
             </div>
           }
 
-          <!-- Card Content -->
-          <div class="p-8 flex-1">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-              </svg>
+          <div class="p-10 flex-1 flex flex-col">
+            <!-- Icon & Header -->
+            <div class="mb-8 flex items-center justify-between">
+              <div 
+                class="w-16 h-16 rounded-[1.5rem] flex items-center justify-center shadow-inner transition-all duration-500 group-hover:rotate-6"
+                [class]="i === 0 ? 'bg-blue-50 text-blue-600' : i === 1 ? 'bg-indigo-50 text-indigo-600' : 'bg-purple-50 text-purple-600'">
+                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+              </div>
             </div>
 
-            <h3 class="text-xl font-extrabold text-slate-900 mb-2">{{ plan.name }}</h3>
+            <h3 class="text-2xl font-black text-slate-900 mb-1 tracking-tight">{{ plan.name }}</h3>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">Professional Plan</p>
             
-            <div class="flex items-baseline gap-1 mb-6">
-              <span class="text-4xl font-black text-slate-900">₹{{ plan.price }}</span>
-              <span class="text-slate-400 text-sm font-bold uppercase tracking-wider">/ {{ plan.duration_days }} Days</span>
+            <!-- Pricing -->
+            <div class="mb-10 p-6 rounded-3xl bg-slate-50/50 border border-slate-100 flex flex-col items-center justify-center relative overflow-hidden group-hover:bg-white transition-colors duration-500">
+              <div class="flex items-start gap-1">
+                <span class="text-xl font-bold text-slate-400 mt-2">₹</span>
+                <span class="text-6xl font-black text-slate-900 tracking-tighter">{{ plan.price }}</span>
+              </div>
+              <div class="mt-2 px-4 py-1 bg-white rounded-full shadow-sm border border-slate-100">
+                <span class="text-[0.7rem] font-black text-slate-500 uppercase tracking-widest">{{ plan.duration_days }} Days Access</span>
+              </div>
+              
+              <!-- Subtle Background Pattern -->
+              <div class="absolute -right-4 -bottom-4 opacity-[0.03] pointer-events-none group-hover:opacity-[0.06] transition-opacity">
+                <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+              </div>
             </div>
 
-            <div class="space-y-4 mb-8">
+            <!-- Features -->
+            <div class="space-y-4 mb-10 flex-1">
               @for (feature of plan.features; track $index) {
-                <div class="flex items-center gap-3 text-slate-600">
-                  <div class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                <div class="flex items-start gap-3 group/feat">
+                  <div class="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 group-hover/feat:bg-emerald-600 group-hover/feat:text-white transition-all duration-300">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                       <path d="M20 6L9 17l-5-5"/>
                     </svg>
                   </div>
-                  <span class="text-sm font-medium">{{ feature }}</span>
+                  <span class="text-[0.9375rem] font-medium text-slate-600 group-hover/feat:text-slate-900 transition-colors">{{ feature }}</span>
                 </div>
               }
             </div>
-          </div>
 
-          <!-- Actions Footer -->
-          <div class="p-6 bg-slate-50/50 border-t border-slate-100 flex gap-3 mt-auto">
-            <app-button variant="secondary" [fullWidth]="true" size="sm" (onClick)="editPlan(plan)">
-              Edit Plan
-            </app-button>
-            <button (click)="deletePlan(plan._id)" class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all border border-slate-200 hover:border-rose-100">
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-              </svg>
-            </button>
+            <!-- Actions -->
+            <div class="flex items-center gap-3 pt-6 border-t border-slate-50">
+              <app-button 
+                [variant]="i === 1 ? 'primary' : 'secondary'" 
+                [fullWidth]="true" 
+                customClass="!rounded-2xl !py-4 shadow-lg shadow-indigo-100"
+                (onClick)="editPlan(plan)">
+                Manage Plan
+              </app-button>
+              <button 
+                (click)="deletePlan(plan._id)" 
+                class="w-14 h-14 rounded-2xl flex items-center justify-center text-slate-300 hover:bg-rose-50 hover:text-rose-600 transition-all border border-slate-100 hover:border-rose-100 shrink-0">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
           </div>
-        </app-card>
+        </div>
       }
     </div>
   }

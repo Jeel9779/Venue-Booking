@@ -4,15 +4,23 @@ export interface Booking {
     _id: string;
     name: string;
     email: string;
+    phone?: string;
   };
   vendorId: {
     _id: string;
-    name: string;
+    fullName?: string;
+    businessName?: string;
+    email?: string;
+    phone?: string;
   };
   venueId: {
     _id: string;
     name: string;
-    location: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    country?: string;
   };
   date: string;
   cost: number;

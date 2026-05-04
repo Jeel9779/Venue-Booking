@@ -5,7 +5,7 @@ import { Venue } from '../models/venue.model';
 @Injectable({ providedIn: 'root' })
 export class PartnerApi {
   private readonly http = inject(HttpClient);
-  private readonly api = 'http://192.168.1.6:3000/admin/venues';
+  private readonly api = 'http://192.168.1.7:3000/admin/venues';
 
   approveVenue(id: string) {
     return this.http.patch<Venue>(`${this.api}/${id}/approve`, {});

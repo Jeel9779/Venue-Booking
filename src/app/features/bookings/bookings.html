@@ -44,10 +44,13 @@
         </div>
       </div>
       <div class="text-2xl font-bold text-slate-900">{{ stats().totalBookings }}</div>
-      <p class="text-[0.75rem] text-slate-500 mt-1">Total venue bookings</p>
+      <div class="flex items-center gap-1 mt-1">
+        <span class="text-[0.65rem] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">+12%</span>
+        <span class="text-[0.7rem] text-slate-400 font-medium">vs last month</span>
+      </div>
     </app-card>
 
-    <app-card [padding]="true" customClass="shadow-sm hover:shadow-lg transition-all duration-200">
+    <app-card [padding]="true" customClass="shadow-sm hover:shadow-lg transition-all duration-200 border-l-4 border-l-emerald-500">
       <div class="flex items-center justify-between mb-3">
         <span class="text-[0.75rem] font-bold uppercase tracking-wider text-slate-500">Total Revenue</span>
         <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
@@ -57,7 +60,20 @@
         </div>
       </div>
       <div class="text-2xl font-bold text-slate-900">{{ formatCurrency(stats().totalRevenue) }}</div>
-      <p class="text-[0.75rem] text-slate-500 mt-1">From approved bookings</p>
+      <p class="text-[0.75rem] text-slate-500 mt-1">Total volume handled</p>
+    </app-card>
+
+    <app-card [padding]="true" customClass="shadow-sm hover:shadow-lg transition-all duration-200 border-l-4 border-l-indigo-500">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-[0.75rem] font-bold uppercase tracking-wider text-slate-500">Admin Earnings</span>
+        <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-indigo-600">{{ formatCurrency(adminEarnings()) }}</div>
+      <p class="text-[0.75rem] text-slate-500 mt-1">From vendor plans</p>
     </app-card>
 
     <app-card [padding]="true" customClass="shadow-sm hover:shadow-lg transition-all duration-200">
@@ -128,14 +144,33 @@
     </div>
 
     <select
-      class="py-2.5 px-3 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 shadow-sm"
+      class="py-2.5 px-3 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 shadow-sm font-medium"
       [value]="statusFilter()"
       (change)="statusFilter.set($any($event.target).value)">
-      <option value="all">All Status</option>
+      <option value="all">All Statuses</option>
       <option value="approved">Approved</option>
       <option value="rejected">Rejected</option>
       <option value="pending">Pending</option>
     </select>
+
+    <select
+      class="py-2.5 px-3 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 shadow-sm font-medium"
+      [value]="timeFilter()"
+      (change)="timeFilter.set($any($event.target).value)">
+      <option value="all">All Time</option>
+      <option value="today">Today</option>
+      <option value="upcoming">Upcoming</option>
+      <option value="past">Past Events</option>
+    </select>
+
+    <app-button variant="secondary" (onClick)="exportData()" customClass="!py-2.5">
+      <div class="flex items-center gap-2">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+        </svg>
+        Export
+      </div>
+    </app-button>
   </div>
 
   @if (isLoading()) {
@@ -167,46 +202,83 @@
   @if (!isLoading() && filteredBookings().length > 0) {
     <div class="mb-6">
       <app-card [padding]="false">
-        <app-table [columns]="['User', 'Vendor', 'Venue', 'Booking Date', 'Cost', 'Status', '']">
-          @for (booking of filteredBookings(); track booking._id) {
-            <tr class="border-b border-slate-100 transition hover:bg-slate-50/50">
-              <td class="px-4 py-3.5">
-                <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.userId.name || 'N/A' }}</div>
-                <div class="text-[0.75rem] text-slate-500">{{ booking.userId.email || 'N/A' }}</div>
-              </td>
-              <td class="px-4 py-3.5">
-                <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.vendorId.name || 'N/A' }}</div>
-              </td>
-              <td class="px-4 py-3.5">
-                <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.venueId.name || 'N/A' }}</div>
-                <div class="text-[0.75rem] text-slate-500">{{ booking.venueId.location || 'N/A' }}</div>
-              </td>
-              <td class="px-4 py-3.5">
-                <div class="text-sm font-semibold text-slate-600">{{ formatDate(booking.date) }}</div>
-              </td>
-              <td class="px-4 py-3.5">
-                <div class="text-sm font-bold text-slate-900">{{ formatCurrency(booking.cost) }}</div>
-              </td>
-              <td class="px-4 py-3.5">
-                <span [class]="'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold border ' + getStatusColor(booking.status)">
-                  <span class="w-1.5 h-1.5 rounded-full"
-                    [class.bg-emerald-600]="booking.status === 'approved'"
-                    [class.bg-red-600]="booking.status === 'rejected'"
-                    [class.bg-amber-600]="booking.status === 'pending'">
-                  </span>
-                  {{ booking.status | titlecase }}
-                </span>
-              </td>
-              <td class="px-4 py-3.5 text-right">
+        <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm bg-white">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-slate-50/80 border-b border-slate-200">
+              <tr>
+                <th class="px-5 py-4 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap">User</th>
+                <th class="px-5 py-4 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap">Vendor</th>
+                <th class="px-5 py-4 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap">Venue</th>
+                <th class="px-5 py-4 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('date')">
+                  Booking Date
+                  @if (sortBy() === 'date') {
+                    <span class="ml-1 text-indigo-600">{{ sortOrder() === 'asc' ? '↑' : '↓' }}</span>
+                  }
+                </th>
+                <th class="px-5 py-4 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('cost')">
+                  Cost
+                  @if (sortBy() === 'cost') {
+                    <span class="ml-1 text-indigo-600">{{ sortOrder() === 'asc' ? '↑' : '↓' }}</span>
+                  }
+                </th>
+                <th class="px-5 py-4 text-left text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap">Status</th>
+                <th class="px-5 py-4"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              @for (booking of filteredBookings(); track booking._id) {
+                <tr class="transition hover:bg-slate-50/50">
+                  <td class="px-5 py-4">
+                    <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.userId.name || 'N/A' }}</div>
+                    <div class="text-[0.75rem] text-slate-500">{{ booking.userId.email }}</div>
+                    @if (booking.userId.phone) {
+                      <div class="text-[0.7rem] text-slate-400 mt-0.5 flex items-center gap-1">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                        {{ booking.userId.phone }}
+                      </div>
+                    }
+                  </td>
+                  <td class="px-5 py-4">
+                    <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.vendorId.businessName || booking.vendorId.fullName || 'N/A' }}</div>
+                    @if (booking.vendorId.fullName && booking.vendorId.businessName) {
+                      <div class="text-[0.7rem] text-slate-400 mt-0.5">{{ booking.vendorId.fullName }}</div>
+                    }
+                  </td>
+                  <td class="px-5 py-4">
+                    <div class="font-semibold text-[0.9375rem] text-slate-900">{{ booking.venueId.name || 'N/A' }}</div>
+                    <div class="text-[0.75rem] text-slate-500">
+                      {{ booking.venueId.city }}{{ booking.venueId.state ? ', ' + booking.venueId.state : '' }}
+                    </div>
+                  </td>
+                  <td class="px-5 py-4">
+                    <div class="text-sm font-semibold text-slate-600">{{ formatDate(booking.date) }}</div>
+                  </td>
+                  <td class="px-5 py-4">
+                    <div class="text-sm font-bold text-slate-900">{{ formatCurrency(booking.cost) }}</div>
+                  </td>
+                  <td class="px-5 py-4">
+                    <span [class]="'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold border ' + getStatusColor(booking.status)">
+                      <span class="w-1.5 h-1.5 rounded-full"
+                        [class.bg-emerald-600]="booking.status === 'approved'"
+                        [class.bg-red-600]="booking.status === 'rejected'"
+                        [class.bg-amber-600]="booking.status === 'pending'">
+                      </span>
+                      {{ booking.status | titlecase }}
+                    </span>
+                  </td>
+              <td class="px-5 py-4 text-right">
                 <button
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.75rem] font-semibold border-none cursor-pointer bg-slate-100 text-slate-600 transition hover:bg-slate-200"
-                  (click)="openStatusModal(booking)">
-                  Change Status
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.75rem] font-semibold border-none cursor-pointer bg-indigo-50 text-indigo-600 transition hover:bg-indigo-100"
+                  (click)="openDetails(booking)">
+                  View Details
                 </button>
               </td>
-            </tr>
-          }
-        </app-table>
+              }
+            </tbody>
+          </table>
+        </div>
       </app-card>
     </div>
 
@@ -251,23 +323,23 @@
       </app-card>
 
       <app-card [padding]="true">
-        <h3 class="text-base font-bold m-0 mb-4 text-slate-900">Monthly Revenue</h3>
+        <h3 class="text-base font-bold m-0 mb-4 text-slate-900">Earnings by Plan</h3>
         <div class="space-y-3">
-          @for (item of monthlyRevenue(); track item.month) {
+          @for (item of revenueByPlan(); track item.plan) {
             <div>
               <div class="flex items-center justify-between mb-1">
-                <span class="text-sm font-semibold text-slate-900">{{ item.month }}</span>
+                <span class="text-sm font-semibold text-slate-900">{{ item.plan }}</span>
                 <span class="text-sm font-bold text-slate-600">{{ formatCurrency(item.revenue) }}</span>
               </div>
               <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500"
-                  [style.width.%]="pct(item.revenue, monthlyRevenue()[monthlyRevenue().length - 1]?.revenue || 1)">
+                <div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                  [style.width.%]="pct(item.revenue, revenueByPlan()[0]?.revenue || 1)">
                 </div>
               </div>
             </div>
           }
-          @if (monthlyRevenue().length === 0) {
-            <p class="text-sm text-slate-400 text-center py-4">No revenue data yet</p>
+          @if (revenueByPlan().length === 0) {
+            <p class="text-sm text-slate-400 text-center py-4">No subscription data</p>
           }
         </div>
       </app-card>
@@ -275,71 +347,81 @@
   }
 </div>
 
-@if (showStatusModal()) {
-  <app-model [title]="'Update Booking Status'" maxWidth="md" (onClose)="closeStatusModal()" [hasFooter]="true">
-    <div class="bg-slate-50 rounded-2xl p-4 mb-5 space-y-2">
-      <div class="flex justify-between text-sm">
-        <span class="text-slate-500">User</span>
-        <span class="font-semibold text-slate-900">{{ selectedBooking()!.userId.name }}</span>
+@if (showDetailsModal() && selectedBooking()) {
+  <app-model [title]="'Booking Insight'" maxWidth="md" (onClose)="closeDetailsModal()" [hasFooter]="true">
+    <div class="flex flex-col gap-6">
+      <!-- Status Banner -->
+      <div class="flex items-center justify-between p-4 rounded-2xl border" [class]="getStatusColor(selectedBooking()!.status)">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-2 rounded-full animate-pulse" 
+            [class.bg-emerald-600]="selectedBooking()!.status === 'approved'"
+            [class.bg-red-600]="selectedBooking()!.status === 'rejected'"
+            [class.bg-amber-600]="selectedBooking()!.status === 'pending'"></div>
+          <span class="text-sm font-black uppercase tracking-widest">{{ selectedBooking()!.status }}</span>
+        </div>
+        <span class="text-[0.65rem] font-bold opacity-70">Order ID: #{{ selectedBooking()!._id.slice(-8).toUpperCase() }}</span>
       </div>
-      <div class="flex justify-between text-sm">
-        <span class="text-slate-500">Venue</span>
-        <span class="font-semibold text-slate-900">{{ selectedBooking()!.venueId.name }}</span>
+
+      <!-- Main Info -->
+      <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 shadow-inner">
+        <div class="space-y-6">
+          <div>
+            <span class="block text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-2">Customer Details</span>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-indigo-600 font-bold shadow-sm">
+                {{ selectedBooking()!.userId.name.charAt(0) }}
+              </div>
+              <div class="flex flex-col">
+                <span class="font-bold text-slate-900">{{ selectedBooking()!.userId.name }}</span>
+                <span class="text-xs text-slate-500">{{ selectedBooking()!.userId.email }}</span>
+                @if (selectedBooking()!.userId.phone) {
+                  <span class="text-[0.7rem] font-medium text-slate-400 flex items-center gap-1 mt-0.5">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    {{ selectedBooking()!.userId.phone }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-6 pt-6 border-t border-slate-200">
+            <div>
+              <span class="block text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-2">Venue & Vendor</span>
+              <div class="flex flex-col gap-1">
+                <span class="font-bold text-slate-800 text-sm leading-tight">{{ selectedBooking()!.venueId.name }}</span>
+                <span class="text-[0.7rem] text-indigo-600 font-semibold">{{ selectedBooking()!.vendorId.businessName || selectedBooking()!.vendorId.fullName }}</span>
+                <span class="text-[0.65rem] text-slate-400 truncate">{{ selectedBooking()!.venueId.city }}, {{ selectedBooking()!.venueId.state }}</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="block text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-2">Schedule & Cost</span>
+              <div class="flex flex-col gap-1">
+                <span class="font-bold text-slate-900 text-sm">{{ formatDate(selectedBooking()!.date) }}</span>
+                <span class="text-xl font-black text-indigo-600">{{ formatCurrency(selectedBooking()!.cost) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="flex justify-between text-sm">
-        <span class="text-slate-500">Date</span>
-        <span class="font-semibold text-slate-900">{{ formatDate(selectedBooking()!.date) }}</span>
-      </div>
-      <div class="flex justify-between text-sm">
-        <span class="text-slate-500">Cost</span>
-        <span class="font-semibold text-slate-900">{{ formatCurrency(selectedBooking()!.cost) }}</span>
+
+      <!-- Financial Note -->
+      <div class="px-2">
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 flex gap-3">
+          <svg width="16" height="16" class="shrink-0 text-amber-600 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/>
+          </svg>
+          <div class="flex flex-col">
+            <span class="text-xs font-bold text-amber-900">Payment Notice</span>
+            <span class="text-[0.65rem] text-amber-700">The full amount of {{ formatCurrency(selectedBooking()!.cost) }} is handled directly by the vendor. Admin revenue is generated separately via subscription plans.</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="mb-6">
-      <label class="block text-sm font-semibold text-slate-700 mb-3">New Status</label>
-      <div class="space-y-2">
-        <label
-          class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition"
-          [class.border-emerald-500]="newStatus() === 'approved'"
-          [class.bg-emerald-50]="newStatus() === 'approved'"
-          [class.border-slate-200]="newStatus() !== 'approved'">
-          <input type="radio" value="approved"
-            [checked]="newStatus() === 'approved'"
-            (change)="newStatus.set('approved')"
-            class="w-4 h-4 accent-emerald-600" />
-          <span class="font-semibold text-slate-900">Approved</span>
-        </label>
-
-        <label
-          class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition"
-          [class.border-red-500]="newStatus() === 'rejected'"
-          [class.bg-red-50]="newStatus() === 'rejected'"
-          [class.border-slate-200]="newStatus() !== 'rejected'">
-          <input type="radio" value="rejected"
-            [checked]="newStatus() === 'rejected'"
-            (change)="newStatus.set('rejected')"
-            class="w-4 h-4 accent-red-600" />
-          <span class="font-semibold text-slate-900">Rejected</span>
-        </label>
-
-        <label
-          class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition"
-          [class.border-amber-500]="newStatus() === 'pending'"
-          [class.bg-amber-50]="newStatus() === 'pending'"
-          [class.border-slate-200]="newStatus() !== 'pending'">
-          <input type="radio" value="pending"
-            [checked]="newStatus() === 'pending'"
-            (change)="newStatus.set('pending')"
-            class="w-4 h-4 accent-amber-600" />
-          <span class="font-semibold text-slate-900">Pending</span>
-        </label>
-      </div>
-    </div>
-
-    <div footer class="flex justify-end gap-2">
-      <app-button variant="secondary" (onClick)="closeStatusModal()">Cancel</app-button>
-      <app-button (onClick)="submitStatusUpdate()" [loading]="isLoading()">Update Status</app-button>
+    <div footer class="flex justify-end">
+      <app-button variant="secondary" (onClick)="closeDetailsModal()">Close View</app-button>
     </div>
   </app-model>
 }
