@@ -28,7 +28,7 @@ export class BookingApi {
     return this.http.get<VendorBookings>(`${this.baseUrl}/vendor/${vendorId}`);
   }
 
-  updateBookingStatus(bookingId: string, status: 'approved' | 'rejected' | 'pending'): Observable<{ message: string; booking: Booking }> {
+  updateBookingStatus(bookingId: string, status: 'approved' | 'rejected'): Observable<{ message: string; booking: Booking }> {
     return this.http.put<{ message: string; booking: Booking }>(`${this.baseUrl}/${bookingId}/status`, { status });
   }
 }

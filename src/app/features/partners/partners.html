@@ -1,376 +1,570 @@
-<div class="min-h-screen bg-gray-300 font-sans text-slate-900">
+<ng-template #spinner>
+  <lucide-icon name="loader-2" class="animate-spin h-3 w-3 text-white"></lucide-icon>
+</ng-template>
 
-  @if (loading()) {
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-6 animate-pulse">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        @for (i of [1,2,3,4]; track i) {
-          <div class="h-32 bg-gray-200 rounded-2xl"></div>
-        }
-      </div>
-      <div class="h-52 bg-gray-200 rounded-2xl"></div>
-      @for (i of [1,2,3]; track i) {
-        <div class="h-20 bg-gray-200 rounded-2xl"></div>
-      }
-    </div>
-  }
+<!-- LOADING STATE -->
+@if (loading()) {
+<div class="max-w-7xl mx-auto px-4 py-8 space-y-5 animate-pulse">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    @for (i of [1,2,3,4]; track i) {
+    <div class="h-24 bg-white border border-slate-200 rounded-2xl"></div>
+    }
+  </div>
+  <div class="h-48 bg-white border border-slate-200 rounded-2xl"></div>
+  <div class="space-y-3">
+    @for (i of [1,2,3]; track i) {
+    <div class="h-16 bg-white border border-slate-200 rounded-xl"></div>
+    }
+  </div>
+</div>
+}
 
-  @if (error() && !loading()) {
-    <div class="max-w-7xl mx-auto px-6 py-24 text-center">
-      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center">
-        <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-        </svg>
-      </div>
-      <h3 class="text-base font-black text-slate-800 mb-1">Failed to load data</h3>
-      <p class="text-sm text-slate-400 mb-4">{{ error() }}</p>
-      <app-button variant="primary" (onClick)="reload()">Retry</app-button>
-    </div>
-  }
+@if (error()) {
+<div class="max-w-7xl mx-auto px-4 py-20 text-center">
+  <div
+    class="w-20 h-20 rounded-3xl bg-red-50 mx-auto mb-6 flex items-center justify-center text-red-500 shadow-lg shadow-red-100 border border-red-100 ring-4 ring-red-50">
+    <lucide-icon name="triangle-alert" class="w-10 h-10"></lucide-icon>
+  </div>
+  <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Unable to Load Data</h2>
+  <p class="text-slate-500 text-base font-medium mt-3 max-w-sm mx-auto leading-relaxed">{{ error() }}</p>
+  <button (click)="reload()"
+    class="mt-8 bg-emerald-600 text-white px-8 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-widest hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-200">
+    Retry Connection
+  </button>
+</div>
+}
 
-  <div class="page-header mb-6 px-4 pt-6">
-    <div class="flex items-center gap-2.5 mb-1 max-w-7xl mx-auto">
-      <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="18" rx="2" />
-          <line x1="16" y1="2" x2="16" y2="6" />
-          <line x1="8" y1="2" x2="8" y2="6" />
-          <line x1="3" y1="10" x2="21" y2="10" />
-        </svg>
+@if (!loading() && !error()) {
+<div class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+  <!-- PAGE HEADER -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5">
+    <div class="flex items-center gap-3">
+      <div
+        class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shrink-0 shadow-lg shadow-emerald-200">
+        <lucide-icon name="building" class="w-5 h-5" [strokeWidth]="2.5"></lucide-icon>
       </div>
       <div>
-        <h1 class="text-3xl font-bold tracking-tight m-0 leading-tight">Vendor & Venues Directory</h1>
-        <p class="text-[0.8125rem] text-slate-500 mt-0.5 mb-0">Monitor and manage vendor and venue information</p>
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">Partners Directory</h1>
+        <p class="text-base font-medium text-slate-500 flex items-center gap-1.5 mt-0.5">
+          Analytics & Venue Management
+          <span class="w-1 h-1 rounded-full bg-emerald-400 inline-block"></span>
+          <span class="text-emerald-600 font-bold">{{ kpi().venues }} Total Venues</span>
+        </p>
       </div>
     </div>
   </div>
 
-  @if (!loading() && !error()) {
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+  <!-- KPI SECTION -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
-      <!-- KPI CARDS -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <app-card [padding]="true" customClass="shadow-sm hover:shadow-md transition-all duration-200">
-          <div class="flex items-center justify-between mb-4">
-            <div class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
-              <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-            </div>
-            <span class="text-[10px] font-bold text-slate-400 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full uppercase tracking-wider">Live</span>
-          </div>
-          <p class="text-3xl font-black text-slate-900 tracking-tight">{{ kpi().vendors }}</p>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Total Vendors</p>
-        </app-card>
-
-        <app-card [padding]="true" customClass="shadow-sm hover:shadow-md transition-all duration-200">
-          <div class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </div>
-          <p class="text-3xl font-black text-slate-900 tracking-tight">{{ kpi().venues }}</p>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Total Venues</p>
-        </app-card>
-
-        <app-card [padding]="true" customClass="shadow-sm hover:shadow-md transition-all duration-200">
-          <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <p class="text-3xl font-black text-slate-900 tracking-tight">{{ kpi().active }}</p>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Active</p>
-        </app-card>
-
-        <app-card [padding]="true" customClass="shadow-sm hover:shadow-md transition-all duration-200">
-          <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <p class="text-3xl font-black text-slate-900 tracking-tight">{{ kpi().pending }}</p>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Pending Review</p>
-        </app-card>
-      </div>
-
-      <!-- CHART: Venues per Vendor -->
-      @if (chartData().length > 0) {
-        <app-card [padding]="true">
-          <div class="flex items-center justify-between mb-6">
-            <div>
-              <h3 class="text-sm font-black text-slate-900 tracking-tight uppercase">Venue Distribution</h3>
-              <p class="text-xs text-slate-400 font-medium mt-0.5">Venues per vendor breakdown</p>
-            </div>
-            <div class="flex items-center gap-4 text-[10px] font-bold uppercase tracking-wider">
-              <span class="flex items-center gap-1.5 text-slate-500">
-                <span class="w-2.5 h-2.5 rounded-sm bg-emerald-400 inline-block"></span> Approved
-              </span>
-              <span class="flex items-center gap-1.5 text-slate-500">
-                <span class="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block"></span> Pending
-              </span>
-              <span class="flex items-center gap-1.5 text-slate-500">
-                <span class="w-2.5 h-2.5 rounded-sm bg-red-400 inline-block"></span> Rejected
-              </span>
-            </div>
-          </div>
-          <div class="space-y-3">
-            @for (row of chartData(); track row.label) {
-              <div class="flex items-center gap-4">
-                <div class="w-28 shrink-0 text-[11px] font-bold text-slate-500 truncate">{{ row.label }}</div>
-                <div class="flex-1 flex items-center h-7 gap-0.5">
-                  @if (row.approved > 0) {
-                    <div class="h-full bg-emerald-100 border border-emerald-200 flex items-center justify-center transition-all duration-500 first:rounded-l-md" [style.width.%]="(row.approved / maxVenues()) * 85">
-                      <span class="text-[10px] font-black text-emerald-700 px-1.5">{{ row.approved }}</span>
-                    </div>
-                  }
-                  @if (row.pending > 0) {
-                    <div class="h-full bg-amber-100 border border-amber-200 flex items-center justify-center transition-all duration-500" [style.width.%]="(row.pending / maxVenues()) * 85">
-                      <span class="text-[10px] font-black text-amber-700 px-1.5">{{ row.pending }}</span>
-                    </div>
-                  }
-                  @if (row.rejected > 0) {
-                    <div class="h-full bg-red-100 border border-red-200 flex items-center justify-center transition-all duration-500 last:rounded-r-md" [style.width.%]="(row.rejected / maxVenues()) * 85">
-                      <span class="text-[10px] font-black text-red-700 px-1.5">{{ row.rejected }}</span>
-                    </div>
-                  }
-                </div>
-                <div class="w-6 text-right text-xs font-black text-slate-400">{{ row.value }}</div>
-              </div>
-            }
-          </div>
-        </app-card>
-      }
-
-      <div class="flex items-end justify-between">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900 tracking-tight">Vendor Directory</h2>
-          <p class="text-sm text-slate-400 font-medium mt-0.5">Manage partner affiliations and venue statuses</p>
+    <!-- Vendors KPI -->
+    <div
+      class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 shadow-sm">
+          <lucide-icon name="users" class="w-5 h-5"></lucide-icon>
         </div>
-        <app-button variant="primary" customClass="uppercase text-xs !font-black !px-4 shadow-sm flex items-center gap-2">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-          </svg>
-          New Vendor
-        </app-button>
+        <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest">Vendors</span>
       </div>
+      <p class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none">{{ kpi().vendors }}</p>
+      <p class="text-sm font-semibold text-slate-600 uppercase mt-2 tracking-wider">Active Affiliates</p>
+    </div>
 
-      <!-- VENDOR ACCORDION LIST -->
-      <div class="space-y-3">
-        @for (partner of partners(); track partner.id) {
-          <app-card [padding]="false" customClass="transition-all duration-200 hover:shadow-md hover:border-slate-300">
-            <div class="flex items-center justify-between px-5 py-4 cursor-pointer rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
-                (click)="toggle(partner.id)" (keydown.enter)="toggle(partner.id)" (keydown.space)="toggle(partner.id); $event.preventDefault()" [attr.tabindex]="0" role="button">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 text-slate-700 font-black text-lg select-none">
-                  {{ partner.name ? partner.name.charAt(0) : 'V' }}
-                </div>
-                <div>
-                  <h4 class="font-black text-slate-800 text-sm leading-tight">
-                    <div>
-                      <div class="font-semibold">{{ partner.name || ('Vendor ' + (partner.id | slice:0:6)) }}</div>
-                      <div class="text-xs text-gray-500">{{ partner.email }}</div>
-                    </div>
-                  </h4>
-                  <div class="flex flex-wrap items-center gap-2 mt-1.5">
-                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border"
-                        [ngClass]="{
-                          'bg-emerald-50 text-emerald-700 border-emerald-200': getVendorStatus(partner.spaces) === 'ACTIVE',
-                          'bg-amber-50  text-amber-700  border-amber-200':  getVendorStatus(partner.spaces) === 'PENDING',
-                          'bg-red-50    text-red-700    border-red-200':    getVendorStatus(partner.spaces) === 'REJECTED'
-                        }">
-                      {{ getVendorStatus(partner.spaces) }}
-                    </span>
-                    <span class="flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded uppercase">
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
-                      {{ partner.spaces.length }} {{ partner.spaces.length === 1 ? 'Venue' : 'Venues' }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="hidden sm:flex -space-x-2">
-                  @for (s of partner.spaces | slice:0:3; track s._id) {
-                    <div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-600 shadow-sm select-none">
-                      {{ s.name | slice:0:1 | uppercase }}
-                    </div>
-                  }
-                  @if (partner.spaces.length > 3) {
-                    <div class="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-500 shadow-sm">
-                      +{{ partner.spaces.length - 3 }}
-                    </div>
-                  }
-                </div>
-                <div class="w-8 h-8 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 transition-transform duration-300" [class.rotate-180]="expandedMap[partner.id]">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </div>
-              </div>
-            </div>
+    <!-- Venues KPI -->
+    <div
+      class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-emerald-600 shadow-sm">
+          <lucide-icon name="map-pin" class="w-5 h-5"></lucide-icon>
+        </div>
+        <span class="text-[10px] font-extrabold text-emerald-500 uppercase tracking-widest">Venues</span>
+      </div>
+      <p class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none">{{ kpi().venues }}</p>
+      <p class="text-sm font-semibold text-emerald-500 uppercase mt-2 tracking-wider">{{ kpi().active }} Live Spaces</p>
+    </div>
 
-            @if (expandedMap[partner.id]) {
-              <div class="border-t border-gray-100 px-4 pb-4 pt-4 grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                @for (space of partner.spaces; track space._id) {
-                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-300 hover:border-slate-300 hover:bg-white transition-all duration-150 flex flex-col gap-3">
-                    <div class="flex items-start gap-3">
-                      <div class="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 text-slate-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" /></svg>
-                      </div>
-                      <div class="flex-1 min-w-0">
-                        <p class="font-bold text-sm text-slate-800 truncate">{{ space.name }}</p>
-                        <p class="text-[11px] text-slate-400 font-medium mt-0.5">{{ space.city }}, {{ space.state }}</p>
-                      </div>
-                    </div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                      <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border"
-                          [ngClass]="{
-                            'bg-emerald-50 text-emerald-700 border-emerald-200': space.status === 'approved',
-                            'bg-amber-50  text-amber-700  border-amber-200':  space.status === 'pending',
-                            'bg-red-50    text-red-700    border-red-200':    space.status === 'rejected'
-                          }">
-                        {{ getStatus(space.status) }}
-                      </span>
-                      @if (space.type) {
-                        <span class="text-[10px] text-slate-400 font-medium">{{ space.type }}</span>
-                      }
-                    </div>
-                    <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-500">
-                      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                      ₹{{ space.pricePerDay }}/day <span class="text-slate-300">·</span>
-                      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                      {{ space.capacity }} pax
-                    </div>
-                    <div class="flex items-center gap-1 border-t border-gray-300 pt-3">
-                      <button (click)="openModal(space, $event)" class="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg py-1.5 transition-all">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        View
-                      </button>
-                      <button class="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg py-1.5 transition-all">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                        Edit
-                      </button>
-                      <button (click)="deleteVenue(space, $event)" class="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg py-1.5 transition-all">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </app-card>
-        }
+    <!-- Reviews KPI -->
+    <div
+      class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-blue-600 shadow-sm">
+          <lucide-icon name="message-square" class="w-5 h-5"></lucide-icon>
+        </div>
+        <span class="text-[10px] font-extrabold text-blue-500 uppercase tracking-widest">Reviews</span>
+      </div>
+      <p class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none">{{ kpi().totalReviews }}</p>
+      <p class="text-sm font-semibold text-blue-500 uppercase mt-2 tracking-wider">Verified Reviews</p>
+    </div>
 
-        @if (partners().length === 0) {
-          <div class="text-center py-20 border border-dashed border-gray-300 rounded-2xl bg-white">
-            <div class="w-12 h-12 rounded-xl bg-slate-100 mx-auto mb-3 flex items-center justify-center">
-              <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-            </div>
-            <p class="font-bold text-slate-700">No vendors found</p>
-            <p class="text-sm text-slate-400 mt-1">Add your first vendor to get started</p>
-          </div>
-        }
+    <!-- Quality KPI -->
+    <div
+      class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-purple-600 shadow-sm">
+          <lucide-icon name="star" class="w-5 h-5"></lucide-icon>
+        </div>
+        <span class="text-[10px] font-extrabold text-purple-500 uppercase tracking-widest">Quality</span>
+      </div>
+      <p class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none">{{ kpi().avgRating }}</p>
+      <p class="text-sm font-semibold text-purple-500 uppercase mt-2 tracking-wider">Average Rating</p>
+    </div>
+
+  </div>
+
+  <!-- ANALYTICS CHART -->
+  @if (chartData().length > 0) {
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Venue Distribution</h3>
+        <p class="text-base text-slate-500 uppercase tracking-widest mt-0.5">Status breakdown per partner</p>
+      </div>
+      <div
+        class="flex items-center gap-4 text-[10px] font-extrabold uppercase tracking-widest border border-slate-100 rounded-xl px-4 py-2.5 bg-slate-50">
+        <span class="flex items-center gap-1.5 text-emerald-600"><span
+            class="w-2 h-2 rounded-full bg-emerald-500"></span> Approved</span>
+        <span class="flex items-center gap-1.5 text-amber-500"><span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          Pending</span>
+        <span class="flex items-center gap-1.5 text-red-500"><span class="w-2 h-2 rounded-full bg-red-400"></span>
+          Rejected</span>
       </div>
     </div>
-  }
-</div>
 
-@if (selectedVenue()) {
-  <app-model [title]="'Venue Profile'" maxWidth="lg" (onClose)="closeModal()" [hasFooter]="true">
-    <div class="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h4 class="text-2xl font-black text-slate-900 leading-tight">{{ selectedVenue()!.name }}</h4>
-          <p class="text-xs text-slate-400 font-medium mt-1 flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            {{ selectedVenue()!.address }}, {{ selectedVenue()!.city }}, {{ selectedVenue()!.state }} {{ selectedVenue()!.zip }}
-          </p>
+    <div class="space-y-4">
+      @for (row of chartData(); track row.label) {
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+        <div class="w-36 shrink-0 text-[11px] font-extrabold text-slate-600 uppercase tracking-wide truncate">{{
+          row.label
+          }}</div>
+        <div class="flex-1 h-8 flex gap-1 rounded-xl overflow-hidden bg-slate-100 p-1 border border-slate-200">
+          @if (row.approved > 0) {
+          <div
+            class="h-full bg-emerald-400 rounded-lg flex items-center justify-center text-[10px] font-extrabold text-white transition-all duration-500"
+            [style.width.%]="(row.approved / row.total) * 100">
+            {{ row.approved }}
+          </div>
+          }
+          @if (row.pending > 0) {
+          <div
+            class="h-full bg-amber-400 rounded-lg flex items-center justify-center text-[10px] font-extrabold text-white transition-all duration-500"
+            [style.width.%]="(row.pending / row.total) * 100">
+            {{ row.pending }}
+          </div>
+          }
+          @if (row.rejected > 0) {
+          <div
+            class="h-full bg-red-400 rounded-lg flex items-center justify-center text-[10px] font-extrabold text-white transition-all duration-500"
+            [style.width.%]="(row.rejected / row.total) * 100">
+            {{ row.rejected }}
+          </div>
+          }
         </div>
-        <span class="shrink-0 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border"
-            [ngClass]="{
-              'bg-emerald-50 text-emerald-700 border-emerald-200': selectedVenue()!.status === 'approved',
-              'bg-amber-50  text-amber-700  border-amber-200':  selectedVenue()!.status === 'pending',
-              'bg-red-50    text-red-700    border-red-200':    selectedVenue()!.status === 'rejected'
-            }">
+        <div class="hidden lg:block w-8 text-right text-sm font-extrabold text-slate-500">{{ row.value }}</div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- DIRECTORY CONTROLS -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4">
+    <div>
+      <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Partner Ecosystem</h2>
+      <p class="text-base text-slate-500 mt-0.5">Manage vendor permissions and venue visibility</p>
+    </div>
+    <div class="relative group max-w-sm w-full">
+      <div
+        class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-emerald-500 transition-colors">
+        <lucide-icon name="search" class="w-4 h-4"></lucide-icon>
+      </div>
+      <input type="text" [ngModel]="search()" (ngModelChange)="search.set($event)"
+        placeholder="Search by vendor, venue or city..."
+        class="w-full bg-white border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm font-medium text-slate-700 placeholder:text-slate-500 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all outline-none shadow-sm">
+    </div>
+  </div>
+
+  <!-- VENDOR LIST -->
+  <div class="space-y-3">
+    @for (partner of filteredPartners(); track partner.id) {
+    <div
+      class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+      <!-- VENDOR ROW -->
+      <div
+        class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50/80 transition-colors"
+        (click)="toggle(partner.id)" (keydown.enter)="toggle(partner.id)" role="button">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-11 h-11 rounded-xl flex items-center justify-center text-gray-500 text-xl font-extrabold select-none shrink-0 bg-transparent">
+            {{ getInitials(partner.name) }}
+          </div>
+          <div class="min-w-0">
+            <!-- Subtitle: fullName + email -->
+            <p class="text-base font-semibold text-slate-500 flex items-center gap-1.5 mb-0.5">
+              <span class="text-sm font-extrabold text-slate-900">{{ partner.name }}</span>
+              <span class="w-1 h-1 rounded-full bg-slate-300 inline-block"></span>
+              {{ partner.email }}
+            </p>
+            <!-- Primary heading: businessName -->
+            <h4 class="text-sm font-normal text-slate-600 leading-tight tracking-tight truncate">
+              {{ partner.businessName || 'Independent Partner' }}
+            </h4>
+            <div class="flex flex-wrap items-center gap-1.5 mt-2">
+              <span
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700">
+                {{ getVendorStatus(partner.spaces) }}
+              </span>
+              @if (partner.isSubscriptionActive) {
+              <span
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700">Subscribed</span>
+              }
+              <span
+                class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 bg-gray-200 border border-gray-300 px-2.5 py-1 rounded-full">
+                <lucide-icon name="map-pin" class="w-3 h-3 text-emerald-500"></lucide-icon>
+                {{ partner.spaces.length }} {{ partner.spaces.length === 1 ? 'Venue' : 'Venues' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 mt-3 sm:mt-0">
+          <!-- Mobile Count Badge -->
+          <div class="lg:hidden">
+            <span
+              class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-xs font-extrabold text-emerald-600 border border-emerald-100">
+              {{ partner.spaces.length }}
+            </span>
+          </div>
+
+          <div class="hidden lg:flex -space-x-2">
+            @for (s of partner.spaces.slice(0,3); track s._id) {
+            <div
+              class="w-8 h-8 rounded-lg bg-white border-2 border-white shadow-sm flex items-center justify-center text-[9px] font-extrabold text-slate-500 uppercase select-none overflow-hidden ring-1 ring-slate-200">
+              {{ getInitials(s.name) }}
+            </div>
+            }
+            @if (partner.spaces.length > 3) {
+            <div
+              class="w-8 h-8 rounded-lg bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-[9px] font-extrabold text-slate-500 ring-1 ring-slate-200">
+              +{{ partner.spaces.length - 3 }}
+            </div>
+            }
+          </div>
+          <div
+            class="w-7 h-7 rounded-lg border border-slate-200 bg-white flex items-center justify-center text-slate-500 group-hover:text-emerald-600 transition-all duration-300 shadow-sm"
+            [class.rotate-180]="expandedMap()[partner.id]">
+            <lucide-icon name="chevron-down" class="w-4 h-4"></lucide-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPANDED VENUE GRID -->
+      @if (expandedMap()[partner.id]) {
+      <div
+        class="border-t border-slate-200 bg-slate-100 px-5 py-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
+        @for (space of partner.spaces; track space._id) {
+        <div
+          class="bg-white rounded-2xl border border-gray-300 p-4 flex flex-col gap-3 shadow-md hover:-translate-y-1 transition-all duration-300 group/venue">
+          <div class="flex items-start justify-between">
+            <div class="flex items-start gap-3">
+              <div
+                class="w-9 h-9 rounded-xl bg-gray-200 border border-gray-300 flex items-center justify-center shrink-0 text-slate-600 transition-colors">
+                <lucide-icon name="building" class="w-5 h-5"></lucide-icon>
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-extrabold text-slate-900 truncate tracking-tight">{{ space.name }}</p>
+                <p class="text-xs font-semibold text-slate-500 mt-0.5">{{ space.city }}, {{ space.state }}</p>
+              </div>
+            </div>
+            <span
+              class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700">
+              {{ getStatus(space.status) }}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-gray-200 border border-gray-300 p-3 rounded-xl">
+              <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest mb-0.5">Price</p>
+              <p class="text-sm font-extrabold text-slate-800">₹{{ space.pricePerDay }}<span
+                  class="text-[9px] text-slate-500 ml-0.5">/day</span></p>
+            </div>
+            <div class="min-w-0 text-right bg-gray-200 border border-gray-300 p-3 rounded-xl">
+              <p class="text-[9px] font-semibold text-slate-600 uppercase tracking-widest mb-0.5">Capacity</p>
+              <p class="text-sm font-extrabold text-slate-800">{{ space.capacity }} <span
+                  class="text-[9px] text-slate-500">Guests</span></p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 border-t border-slate-200 pt-3">
+            <button (click)="openModal(space, $event)"
+              class="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-xl py-2.5 transition-all">
+              <lucide-icon name="eye" class="w-4 h-4"></lucide-icon>
+              View Details
+            </button>
+            <button (click)="deleteVenue(space, $event)"
+              class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-red-50 rounded-xl transition-all">
+              <lucide-icon name="trash-2" class="w-4 h-4"></lucide-icon>
+            </button>
+          </div>
+        </div>
+        } @empty {
+        <div class="col-span-full py-10 text-center bg-white border border-dashed border-slate-200 rounded-3xl">
+          <p class="text-xs font-extrabold text-slate-300 uppercase tracking-[0.2em]">No venues added yet</p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+
+    @if (filteredPartners().length === 0) {
+    <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
+      <div class="w-14 h-14 rounded-2xl bg-slate-50 mx-auto mb-5 flex items-center justify-center text-slate-300">
+        <lucide-icon name="search" class="w-7 h-7"></lucide-icon>
+      </div>
+      <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">No results found</h3>
+      <p class="text-base text-slate-500 mt-1.5">No partners matching <span class="font-semibold text-slate-700">"{{
+          search() }}"</span></p>
+      <button (click)="search.set('')"
+        class="mt-5 text-xs font-extrabold uppercase tracking-widest text-emerald-600 hover:text-emerald-700 underline underline-offset-4">Clear
+        Search</button>
+    </div>
+    }
+  </div>
+</div>
+}
+
+<!-- VENUE PROFILE MODAL -->
+@if (selectedVenue()) {
+<app-model title="Venue Profile" maxWidth="2xl" (onClose)="closeModal()" [hasFooter]="true">
+  <div class="space-y-6 modal-content-container scrollbar-hide py-2">
+
+    <!-- HEADER -->
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-slate-100 pb-6">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="badge-premium border border-gray-300 bg-gray-200 text-slate-700">{{ selectedVenue()!.type ||
+            'VENUE' }}</span>
+          @if (selectedPartner()?.isSubscriptionActive) {
+          <span class="badge-premium border border-gray-300 bg-gray-200 text-slate-700">Premium Partner</span>
+          }
+        </div>
+        <h4 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">{{ selectedVenue()!.name }}</h4>
+        <p class="text-base text-slate-500 mt-1.5 flex items-center gap-2">
+          <lucide-icon name="map-pin" class="w-4 h-4 text-emerald-500"></lucide-icon>
+          {{ selectedVenue()!.city }}, {{ selectedVenue()!.state }}
+        </p>
+      </div>
+      <div class="flex flex-col items-end gap-2 shrink-0">
+        <span class="badge-premium text-[10px] px-4 py-1.5 border border-gray-300 bg-gray-200 text-slate-700 shadow-sm">
           {{ getStatus(selectedVenue()!.status) }}
         </span>
+        @if (selectedVenue()!.averageRating > 0) {
+        <div class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+          <span class="text-amber-500 text-sm">★</span>
+          <span class="text-sm font-extrabold text-slate-700">{{ selectedVenue()!.averageRating }}</span>
+          <span class="text-[10px] font-bold text-slate-300">/ 5.0</span>
+        </div>
+        }
       </div>
+    </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Daily Rate</p>
-          <p class="text-xl font-black text-slate-900">₹{{ selectedVenue()!.pricePerDay }}</p>
+    <!-- MEDIA GALLERY -->
+    @if (selectedVenue()!.mediaFiles && selectedVenue()!.mediaFiles.length > 0) {
+    <div>
+      <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-3">Gallery</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        @for (img of selectedVenue()!.mediaFiles; track img) {
+        <div class="aspect-video rounded-xl overflow-hidden border border-slate-200 group">
+          <img [src]="img" alt="Venue"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
         </div>
-        <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Capacity</p>
-          <p class="text-xl font-black text-slate-900">{{ selectedVenue()!.capacity }} PAX</p>
-        </div>
-        <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Type</p>
-          <p class="text-sm font-black text-slate-900">{{ selectedVenue()!.type || '—' }}</p>
-        </div>
-        <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Available From</p>
-          <p class="text-sm font-black text-slate-900">
-            {{ selectedVenue()!.availableFrom ? (selectedVenue()!.availableFrom | date:'mediumDate') : '—' }}
-          </p>
-        </div>
+        }
       </div>
+    </div>
+    }
 
-      @if (selectedVenue()!.description) {
-        <div class="p-4 rounded-xl bg-blue-50 border border-blue-100">
-          <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-2">Description</p>
-          <p class="text-sm text-slate-700 leading-relaxed">{{ selectedVenue()!.description }}</p>
-        </div>
-      }
+    <!-- STATS ROW -->
+    <div class="grid grid-cols-3 gap-3">
+      <div class="bg-white border border-gray-300 p-4 rounded-2xl">
+        <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-1">Price</p>
+        <p class="text-base font-extrabold text-slate-500">₹{{ selectedVenue()!.pricePerDay }}<span
+            class="text-[10px] text-slate-500 ml-0.5">/day</span></p>
+      </div>
+      <div class="bg-white border border-gray-300 p-4 rounded-2xl">
+        <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-1">Capacity</p>
+        <p class="text-base font-extrabold text-slate-500">{{ selectedVenue()!.capacity }} <span
+            class="text-[10px] text-slate-500">Guests</span></p>
+      </div>
+      <div class="bg-white border border-gray-300 p-4 rounded-2xl">
+        <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-1">Available</p>
+        <p class="text-sm font-extrabold text-slate-500">{{ selectedVenue()!.availableFrom | date:'mediumDate' }}</p>
+      </div>
+    </div>
 
-      @if (getAmenities(selectedVenue()!).length > 0) {
-        <div>
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Amenities</p>
-          <div class="flex flex-wrap gap-2">
-            @for (amenity of getAmenities(selectedVenue()!); track amenity) {
-              <span class="px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-lg text-[11px] font-semibold text-slate-600">{{ amenity }}</span>
-            }
+    <!-- DESCRIPTION -->
+    <div class="bg-slate-50 border border-gray-300 p-5 rounded-2xl">
+      <p class="text-sm font-semibold text-slate-600 uppercase tracking-widest mb-2 flex items-center gap-2">
+        <lucide-icon name="info" class="w-4 h-4 text-emerald-500"></lucide-icon>
+        Description
+      </p>
+      <p class="text-base text-slate-700 leading-relaxed">{{ selectedVenue()!.description || 'No description provided.'
+        }}
+      </p>
+    </div>
+
+    <!-- AMENITIES -->
+    <div>
+      <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-3">Amenities & Services</p>
+      <div class="flex flex-wrap gap-2">
+        @for (amenity of getAmenities(selectedVenue()!); track amenity) {
+        <span
+          class="px-3 py-1.5 bg-slate-300 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:border-emerald-300 hover:text-emerald-700 transition-colors">{{
+          amenity }}</span>
+        }
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    @if (selectedVenue()!.reviews && selectedVenue()!.reviews.length > 0) {
+    <div class="border-t border-slate-100 pt-5">
+      <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Customer Reviews</p>
+      <div class="space-y-3">
+        @for (rev of selectedVenue()!.reviews; track rev._id) {
+        <div class="p-4 rounded-xl bg-white border border-slate-100 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-0.5">
+              @for (star of [1,2,3,4,5]; track star) {
+              <span class="text-sm" [class.text-amber-500]="star <= rev.rating"
+                [class.text-slate-200]="star > rev.rating">★</span>
+              }
+            </div>
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ rev.createdAt |
+              date:'mediumDate' }}</span>
           </div>
+          <p class="text-sm text-slate-600 italic leading-relaxed">"{{ rev.feedback }}"</p>
         </div>
-      }
-
-      <div class="p-4 rounded-xl bg-gray-50 border border-gray-300">
-        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Location Details</p>
-        <div class="grid grid-cols-2 gap-y-2 text-xs text-slate-600 font-medium">
-          <span class="text-slate-400">Country</span><span class="font-bold">{{ selectedVenue()!.country || '—' }}</span>
-          <span class="text-slate-400">ZIP</span><span class="font-bold">{{ selectedVenue()!.zip || '—' }}</span>
-          <span class="text-slate-400">Coordinates</span><span class="font-bold font-mono text-[10px]">{{ selectedVenue()!.lat }}, {{ selectedVenue()!.lng }}</span>
-        </div>
-      </div>
-
-      @if (selectedVenue()!.status === 'rejected' && selectedVenue()!.adminDescription) {
-        <div class="p-4 rounded-xl bg-red-50 border border-red-200">
-          <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-2">Rejection Reason</p>
-          <p class="text-sm text-red-700">{{ selectedVenue()!.adminDescription }}</p>
-        </div>
-      }
-
-      @if (actionError()) {
-        <div class="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-red-600">
-          ⚠ {{ actionError() }}
-        </div>
-      }
-    </div>
-
-    <div footer class="flex justify-between items-center w-full">
-      <div class="flex gap-2">
-        @if (selectedVenue()!.status !== 'approved') {
-          <app-button variant="primary" (onClick)="approve()" [loading]="actionLoading()" customClass="!text-[11px] !py-2 uppercase !bg-emerald-600 hover:!bg-emerald-700">
-            ✓ Approve
-          </app-button>
-        }
-        @if (selectedVenue()!.status !== 'rejected') {
-          <app-button variant="danger" (onClick)="reject()" [loading]="actionLoading()" customClass="!text-[11px] !py-2 uppercase !bg-red-600 hover:!bg-red-700">
-            ✕ Reject
-          </app-button>
         }
       </div>
-      <app-button variant="secondary" (onClick)="closeModal()" customClass="!text-xs uppercase !px-5 !py-2">Close</app-button>
     </div>
-  </app-model>
+    }
+
+    <!-- REJECTION REASON -->
+    @if (selectedVenue()!.status === 'rejected' && selectedVenue()!.adminDescription) {
+    <div class="p-4 rounded-2xl bg-red-50 border border-red-100">
+      <p class="text-[10px] font-extrabold text-red-500 uppercase tracking-widest mb-1.5">Rejection Reason</p>
+      <p class="text-sm text-red-700 italic leading-relaxed">"{{ selectedVenue()!.adminDescription }}"</p>
+    </div>
+    }
+
+    @if (actionError()) {
+    <div
+      class="p-4 rounded-2xl bg-red-50 border border-red-100 text-sm font-semibold text-red-600 flex items-center gap-2">
+      <lucide-icon name="triangle-alert" class="w-4 h-4 shrink-0"></lucide-icon>
+      {{ actionError() }}
+    </div>
+    }
+  </div>
+
+  <div footer class="flex justify-between items-center w-full pt-4">
+    <div class="flex gap-3">
+      @if (selectedVenue()!.status !== 'approved') {
+      <button (click)="approve()" [disabled]="actionLoading()"
+        class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
+        @if (actionLoading()) {
+        <ng-container *ngTemplateOutlet="spinner"></ng-container>
+        }
+        {{ actionLoading() ? 'Approving...' : 'Approve Venue' }}
+      </button>
+      }
+      @if (selectedVenue()!.status !== 'rejected') {
+      <button (click)="openRejectFlow()" [disabled]="actionLoading()"
+        class="bg-white text-red-600 border border-red-200 px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-50 transition-all disabled:opacity-50 active:scale-95">
+        Reject Venue
+      </button>
+      }
+    </div>
+  </div>
+</app-model>
 }
+
+<!-- REJECT MODAL -->
+@if (showRejectModal()) {
+<app-model title="Moderation Action" maxWidth="md" (onClose)="closeRejectModal()" [hasFooter]="true">
+  <div class="space-y-5">
+    <div class="p-4 rounded-xl bg-red-100 border border-red-300 flex items-start gap-4">
+      <div
+        class="w-9 h-9 rounded-lg bg-white border border-red-300 flex items-center justify-center text-red-500 shrink-0">
+        <lucide-icon name="alert-triangle" class="w-5 h-5"></lucide-icon>
+      </div>
+      <div>
+        <h5 class="text-lg font-extrabold text-slate-900">Rejection Notice</h5>
+        <p class="text-base text-red-600 font-medium mt-1 leading-relaxed">
+          Provide a reason for rejecting <span class="text-slate-900 font-extrabold">"{{ selectedVenue()?.name
+            }}"</span>.
+          This will be sent to the vendor.
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <label class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-2 block">Rejection
+        Message</label>
+      <textarea [ngModel]="rejectReason()" (ngModelChange)="rejectReason.set($event)"
+        placeholder="e.g. Image quality is low, description is insufficient..."
+        class="w-full h-36 bg-slate-100 border border-slate-300 rounded-xl p-4 text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:bg-white focus:ring-4 focus:ring-emerald-500/8 transition-all outline-none resize-none"></textarea>
+      <div class="flex justify-between items-center mt-2 px-1">
+        <p class="text-[10px] font-bold"
+          [class]="rejectReason().trim().length >= 10 ? 'text-emerald-500' : 'text-slate-500'">
+          {{ rejectReason().trim().length >= 10 ? '✓ Ready to submit' : 'Minimum 10 characters required' }}
+        </p>
+        <p class="text-[10px] font-extrabold text-slate-300">{{ rejectReason().trim().length }} / 500</p>
+      </div>
+    </div>
+  </div>
+
+  <div footer class="flex justify-end gap-3 w-full pt-3">
+    <button (click)="closeRejectModal()"
+      class="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 hover:text-slate-600 transition-colors px-4 py-2.5">Cancel</button>
+    <button (click)="submitReject()" [disabled]="rejectReason().trim().length < 10 || actionLoading()"
+      class="bg-red-600 text-white px-8 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-lg shadow-red-100 hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
+      @if (actionLoading()) {
+      <ng-container *ngTemplateOutlet="spinner"></ng-container>
+      }
+      {{ actionLoading() ? 'Processing...' : 'Confirm Reject' }}
+    </button>
+  </div>
+</app-model>
+}
+
+<!-- DELETE CONFIRMATION MODAL -->
+@if (venueToDelete()) {
+<app-model title="Confirm Deletion" maxWidth="sm" (onClose)="venueToDelete.set(null)" [hasFooter]="true">
+  <div class="space-y-4 py-2">
+    <div
+      class="w-16 h-16 rounded-2xl bg-red-100 mx-auto flex items-center justify-center text-red-500 border border-red-200 mb-4">
+      <lucide-icon name="trash-2" class="w-8 h-8"></lucide-icon>
+    </div>
+    <div class="text-center">
+      <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Delete Venue?</h3>
+      <p class="text-xs text-slate-500 font-medium mt-2 leading-relaxed px-4">
+        Are you sure you want to delete <span class="text-slate-900 font-extrabold">"{{ venueToDelete()?.name
+          }}"</span>?
+        This action is permanent and cannot be undone.
+      </p>
+    </div>
+  </div>
+
+  <div footer class="flex gap-3 w-full pt-4">
+    <button (click)="venueToDelete.set(null)" [disabled]="actionLoading()"
+      class="flex-1 text-[11px] font-extrabold uppercase tracking-widest text-slate-500 hover:text-slate-600 transition-colors py-3">Cancel</button>
+    <button (click)="confirmDelete()" [disabled]="actionLoading()"
+      class="flex-1 bg-red-600 text-white rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-lg shadow-red-100 hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2 py-3">
+      @if (actionLoading()) {
+      <ng-container *ngTemplateOutlet="spinner"></ng-container>
+      }
+      {{ actionLoading() ? 'Deleting...' : 'Confirm Delete' }}
+    </button>
+  </div>
+</app-model>
+}
+<!-- END OF DELETE MODAL -->

@@ -23,7 +23,7 @@ export class BookingService {
       });
   }
 
-  updateBookingStatus(bookingId: string, status: 'approved' | 'rejected' | 'pending', callback?: () => void) {
+  updateBookingStatus(bookingId: string, status: 'approved' | 'rejected', callback?: () => void) {
     this.store.setLoading(true);
     this.api.updateBookingStatus(bookingId, status)
       .pipe(finalize(() => this.store.setLoading(false)))
@@ -40,14 +40,12 @@ export class BookingService {
     const total = bookings.length;
     const approvedCount = bookings.filter(b => b.status === 'approved').length;
     const rejectedCount = bookings.filter(b => b.status === 'rejected').length;
-    const pendingCount = bookings.filter(b => b.status === 'pending').length;
 
     return {
       totalBookings: total,
       totalRevenue: bookings.reduce((sum, b) => sum + (b.status === 'approved' ? b.cost : 0), 0),
       approvedCount,
       rejectedCount,
-      pendingCount,
       approvalRate: total > 0 ? Math.round((approvedCount / total) * 100) : 0,
     };
   }

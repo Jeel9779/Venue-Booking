@@ -10,6 +10,7 @@ export interface Booking {
     _id: string;
     fullName?: string;
     businessName?: string;
+    businessType?: string;
     email?: string;
     phone?: string;
   };
@@ -24,7 +25,7 @@ export interface Booking {
   };
   date: string;
   cost: number;
-  status: 'approved' | 'rejected' | 'pending';
+  status: 'approved' | 'rejected';
   createdAt: string;
   updatedAt: string;
 }
@@ -48,6 +49,5 @@ export interface BookingStats {
   totalRevenue: number;
   approvedCount: number;
   rejectedCount: number;
-  pendingCount: number;
   approvalRate: number;
 }

@@ -1,9 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
-/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap'); */
 
-
+body {
+  font-family: "Rubik", sans-serif;
+  @apply text-slate-900 bg-slate-50/50;
+}
 
 .rubik-doodle-shadow-regular {
   font-family: "Rubik Doodle Shadow", system-ui;
@@ -16,12 +16,6 @@
   font-weight: 400;
   font-style: normal;
 }
-
-/* Font */
-/* * {
-  font-family: 'Inter', sans-serif;
-} */
-
 
 /* Sidebar */
 :root {
@@ -36,4 +30,50 @@
   border: 1px solid #ddd;
   padding: 8px;
   border-radius: 6px;
+}
+
+/* Custom Premium Utilities (Converted to standard classes for reliability) */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.premium-card {
+  @apply bg-white rounded-[2.5rem] border border-slate-300 shadow-xl shadow-slate-200/30 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500;
+}
+
+.glass-modal {
+  @apply bg-white/95 backdrop-blur-xl border border-slate-300 shadow-2xl shadow-slate-400/20 rounded-[2.5rem] overflow-hidden;
+}
+
+.kpi-gradient-1 {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.kpi-gradient-2 {
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.kpi-gradient-3 {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+}
+
+.kpi-gradient-4 {
+  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+}
+
+.border-highlight {
+  @apply border border-slate-300 rounded-4xl p-6 bg-slate-50/50 hover:border-emerald-400/50 hover:bg-white transition-all duration-300;
+}
+
+.badge-premium {
+  @apply px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-slate-300 bg-white shadow-sm;
+}
+
+.avatar-gradient {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }

@@ -38,7 +38,7 @@ export class Login {
     this.isLoading.set(true);
     this.errorMsg = '';
 
-    this.http.post<any>('http://192.168.1.11:3000/admin/login', {
+    this.http.post<any>('http://192.168.1.7:3000/admin/login', {
       username,
       password
     }).subscribe({

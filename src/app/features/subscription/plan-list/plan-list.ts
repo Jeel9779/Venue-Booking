@@ -11,7 +11,7 @@ import { Plan } from '@core/models/subscription.model';   // subscription model
 @Component({
   selector: 'app-plan-list',
   standalone: true,
-  imports: [CommonModule, PlanForm, Button, Card, Model],
+  imports: [CommonModule, PlanForm, Button, Model],
   templateUrl: './plan-list.html',
   styleUrl: './plan-list.css',
 })

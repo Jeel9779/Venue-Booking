@@ -12,13 +12,13 @@ import { Button } from '../../shared/components/button/button';
 
 type SortField   = 'date' | 'cost' | 'createdAt';
 type SortOrder   = 'asc' | 'desc';
-type StatusFilter = 'all' | 'approved' | 'rejected' | 'pending';
+type StatusFilter = 'all' | 'approved' | 'rejected';
 type TimeFilter   = 'all' | 'today' | 'upcoming' | 'past';
 
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [CommonModule, FormsModule, Card, Table, Model, Button, TitleCasePipe],
+  imports: [CommonModule, FormsModule, Card, Model, Button, TitleCasePipe],
   templateUrl: './bookings.html',
   styleUrl: './bookings.css',
 })
@@ -182,7 +182,13 @@ export class Bookings implements OnInit {
     this.selectedBooking.set(null);
   }
 
-
+  cancelBooking(id: string) {
+    if (confirm('Are you sure you want to force cancel this booking? This action cannot be undone.')) {
+      this.bookingService.updateBookingStatus(id, 'rejected', () => {
+        this.closeDetailsModal();
+      });
+    }
+  }
 
   exportData() {
     alert('Generating booking report (CSV)...');
@@ -206,7 +212,6 @@ export class Bookings implements OnInit {
     const map: Record<string, string> = {
       approved: 'bg-emerald-100 text-emerald-700 border-emerald-300',
       rejected:  'bg-rose-100 text-rose-700 border-rose-300',
-      pending:   'bg-amber-100 text-amber-700 border-amber-300',
     };
     return map[status] ?? 'bg-slate-100 text-slate-700 border-slate-300';
   }
