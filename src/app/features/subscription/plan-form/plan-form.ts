@@ -33,6 +33,7 @@ export class PlanForm implements OnInit {
     name: ['', [Validators.required, Validators.minLength(3)]],
     duration_days: [30, [Validators.required, Validators.min(1)]],
     price: [0, [Validators.required, Validators.min(0)]],
+    planType: ['base', [Validators.required]],
     is_active: [true],
     features: [[] as string[]]
   });
@@ -57,11 +58,12 @@ export class PlanForm implements OnInit {
           name: p.name,
           duration_days: p.duration_days,
           price: p.price,
+          planType: p.planType || 'base',
           is_active: p.is_active,
           features: p.features
         });
       } else {
-        this.planForm.reset({ duration_days: 30, price: 0, is_active: true, features: [] });
+        this.planForm.reset({ duration_days: 30, price: 0, planType: 'base', is_active: true, features: [] });
       }
     });
   }

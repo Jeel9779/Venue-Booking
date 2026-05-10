@@ -1,41 +1,45 @@
 <!-- SIDEBAR — always visible, no overlay, no close button -->
 <aside class="h-screen bg-[#F5F6F8] border-r border-gray-300 flex flex-col
   shadow-sm transition-all duration-300 ease-in-out
-  relative shrink-0" [class.w-\[360px\]]="!collapsed()" [class.w-\[120px\]]="collapsed()">
-
-  <!-- COLLAPSE TOGGLE BUTTON -->
-  <button (click)="toggleSidebar()" class="absolute -right-3 top-8 bg-[#F5F6F8] border border-gray-200
-    shadow-sm rounded-full p-1.5 text-gray-500 hover:text-[#6C63FF]
-    transition-colors z-50 focus:outline-none flex items-center justify-center">
-    <svg [class.rotate-180]="collapsed()" class="w-3.5 h-3.5 transition-transform duration-300" fill="none"
-      viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-    </svg>
-  </button>
+  relative shrink-0" [class.w-\[280px\]]="!collapsed()" [class.w-\[84px\]]="collapsed()">
 
   <!-- HEADER -->
-  <div class="py-7 border-b border-gray-100/80 flex flex-col items-start gap-1
+  <div class="py-6 border-b border-gray-100/80 flex flex-col
     relative overflow-hidden shrink-0 min-h-[90px]" [class.px-6]="!collapsed()" [class.px-2]="collapsed()">
 
-    <div class="flex items-center gap-3 w-full" [class.justify-center]="collapsed()">
-      <div class="w-8 h-8 shrink-0 rounded-xl bg-linear-to-br
-        from-[#1b824f] to-[#0bbe7a] flex items-center justify-center
-        shadow-lg shadow-[#6C63FF]/20 text-white font-bold text-lg">
-        B
-      </div>
-      @if (!collapsed()) {
-      <h2 class="text-xl font-bold tracking-tight text-gray-900 truncate">
-        BookMyVenue
-      </h2>
-      }
-    </div>
+    <div class="flex items-center w-full" [class.justify-between]="!collapsed()" [class.flex-col]="collapsed()"
+      [class.gap-4]="collapsed()" [class.gap-3]="!collapsed()">
 
-    @if (!collapsed()) {
-    <span class="text-[0.65rem] font-semibold text-gray-400 uppercase
-        tracking-widest mt-1 ml-11 truncate">
-      Admin System
-    </span>
-    }
+      <!-- LOGO & TITLE -->
+      <div class="flex items-center gap-3" [class.justify-center]="collapsed()">
+        <div class="w-8 h-8 shrink-0 rounded-xl bg-linear-to-br
+          from-[#1b824f] to-[#0bbe7a] flex items-center justify-center
+          shadow-lg shadow-[#6C63FF]/20 text-white font-bold text-lg">
+          B
+        </div>
+        @if (!collapsed()) {
+        <div class="flex flex-col">
+          <h2 class="text-xl font-bold tracking-tight text-gray-900 truncate leading-tight">
+            BookMyVenue
+          </h2>
+          <span class="text-[0.65rem] font-semibold text-gray-400 uppercase tracking-widest truncate">
+            Admin System
+          </span>
+        </div>
+        }
+      </div>
+
+      <!-- TOGGLE BUTTON -->
+      <button (click)="toggleSidebar()" class="bg-[#F5F6F8] border border-gray-200
+        shadow-sm rounded-md p-1.5 text-gray-500 hover:text-[#6C63FF] hover:bg-white
+        transition-colors focus:outline-none flex items-center justify-center shrink-0" title="Toggle Sidebar">
+        <svg [class.rotate-180]="collapsed()" class="w-4 h-4 transition-transform duration-300" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+    </div>
   </div>
 
   <!-- NAV -->
@@ -68,7 +72,7 @@
             [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200 focus:outline-none" [class.px-3]="!collapsed()"
-            [class.justify-center]="collapsed()" [class.py-3]="collapsed()">
+            [class.justify-center]="collapsed()" [class.py-3]="collapsed()" title="Overview">
             <lucide-icon [img]="icons.dashboard" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
@@ -78,7 +82,7 @@
           <a [routerLink]="['/venues']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
-            [class.py-3]="collapsed()">
+            [class.py-3]="collapsed()" title="Venues">
             <lucide-icon [img]="icons.venues" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
@@ -88,11 +92,21 @@
           <a [routerLink]="['/users']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
-            [class.py-3]="collapsed()">
+            [class.py-3]="collapsed()" title="Users">
             <lucide-icon [img]="icons.users" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
             @if (!collapsed()) { <span class="tracking-wide">Users</span> }
+          </a>
+
+          <a [routerLink]="['/user-review']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+            font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
+            transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
+            [class.py-3]="collapsed()" title="User Review">
+            <lucide-icon [img]="icons.users" size="20" class="shrink-0 transition-transform duration-300
+              group-hover:scale-110 group-hover:text-[#6C63FF]">
+            </lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">User Review</span> }
           </a>
 
         </div>
@@ -126,8 +140,8 @@
           <a [routerLink]="['/vendors']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
-            [class.py-3]="collapsed()">
-            <lucide-icon [img]="icons.users" size="20" class="shrink-0 transition-transform duration-300
+            [class.py-3]="collapsed()" title="Vendors">
+            <lucide-icon [img]="icons.vendors" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
             @if (!collapsed()) { <span class="tracking-wide">Vendors</span> }
@@ -136,8 +150,8 @@
           <a [routerLink]="['/partners']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
-            [class.py-3]="collapsed()">
-            <lucide-icon [img]="icons.users" size="20" class="shrink-0 transition-transform duration-300
+            [class.py-3]="collapsed()" title="Venue by Vendor">
+            <lucide-icon [img]="icons.partners" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
             @if (!collapsed()) { <span class="tracking-wide">Venue by Vendor</span> }
@@ -146,7 +160,7 @@
           <a [routerLink]="['/bookings']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
-            [class.py-3]="collapsed()">
+            [class.py-3]="collapsed()" title="Bookings">
             <lucide-icon [img]="icons.bookings" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
@@ -184,8 +198,8 @@
           <a [routerLink]="['/plans']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
-            [class.py-3]="collapsed()">
-            <lucide-icon [img]="icons.subscript" size="20" class="shrink-0 transition-transform duration-300
+            [class.py-3]="collapsed()" title="Plans">
+            <lucide-icon [img]="icons.plans" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
             @if (!collapsed()) { <span class="tracking-wide">Plans</span> }
@@ -195,11 +209,21 @@
             class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
-            [class.py-3]="collapsed()">
-            <lucide-icon [img]="icons.subscript" size="20" class="shrink-0 transition-transform duration-300
+            [class.py-3]="collapsed()" title="Subscription Monitor">
+            <lucide-icon [img]="icons.subscriptions" size="20" class="shrink-0 transition-transform duration-300
               group-hover:scale-110 group-hover:text-[#6C63FF]">
             </lucide-icon>
             @if (!collapsed()) { <span class="tracking-wide">Subscription Monitor</span> }
+          </a>
+
+          <a [routerLink]="['/payment']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+            font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
+            transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
+            [class.py-3]="collapsed()" title="Payment">
+            <lucide-icon [img]="icons.bookings" size="20" class="shrink-0 transition-transform duration-300
+              group-hover:scale-110 group-hover:text-[#6C63FF]">
+            </lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Payment</span> }
           </a>
 
         </div>
@@ -215,7 +239,7 @@
     <button class="group flex items-center gap-3 w-full py-2.5 rounded-lg
       text-sm font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
       transition-all duration-200 outline-none" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
-      [class.py-3]="collapsed()">
+      [class.py-3]="collapsed()" title="Help Center">
       <lucide-icon [img]="icons.help" size="20"
         class="shrink-0 text-gray-400 group-hover:text-gray-600 transition-colors">
       </lucide-icon>
@@ -224,7 +248,8 @@
 
     <button (click)="logout()" class="group relative flex items-center gap-3 w-full py-2.5 rounded-lg
       text-sm font-medium text-red-500 transition-all duration-300 outline-none
-      overflow-hidden" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()" [class.py-3]="collapsed()">
+      overflow-hidden" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()" [class.py-3]="collapsed()"
+      title="Secure Logout">
       <div class="absolute inset-0 bg-red-100 scale-x-0
         group-hover:scale-x-100 origin-left transition-transform
         duration-300 ease-out z-0">

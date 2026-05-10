@@ -4,50 +4,63 @@ export interface Booking {
     _id: string;
     name: string;
     email: string;
-    phone?: string;
+    phone: string;
   };
   vendorId: {
     _id: string;
-    fullName?: string;
-    businessName?: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    businessName: string;
     businessType?: string;
-    email?: string;
-    phone?: string;
   };
   venueId: {
     _id: string;
     name: string;
-    address?: string;
-    city?: string;
-    state?: string;
+    address: string;
+    city: string;
+    state: string;
     zip?: string;
     country?: string;
   };
   date: string;
   cost: number;
-  status: 'approved' | 'rejected';
+  totalBookingAmount: number;
+  upfrontPaymentAmount: number;
+  amountPaid: number;
+  paymentStatus: 'pending' | 'success' | 'failed';
+  transactionId: string;
+  paymentTimestamp: string;
+  status: string;
   createdAt: string;
   updatedAt: string;
 }
 
+export interface BookingStats {
+  totalRevenue: number;
+  collected: number;
+  outstanding: number;
+  totalCount: number;
+  paidCount: number;
+  pendingCount: number;
+  failedCount: number;
+  todayCount: number;
+}
+
 export interface BookedDates {
-  bookedDates: string[];
+  dates: string[];
 }
 
 export interface UserBookings {
   bookings: Booking[];
-  totalSpent: number;
-  totalBookings: number;
 }
 
 export interface VendorBookings {
   bookings: Booking[];
 }
 
-export interface BookingStats {
-  totalBookings: number;
-  totalRevenue: number;
-  approvedCount: number;
-  rejectedCount: number;
-  approvalRate: number;
+export interface BookingState {
+  bookings: Booking[];
+  isLoading: boolean;
+  error: string | null;
 }

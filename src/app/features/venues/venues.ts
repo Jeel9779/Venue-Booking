@@ -10,11 +10,12 @@ import { Card } from '../../shared/components/card/card';
 import { Table } from '../../shared/components/table/table';
 import { Model } from '../../shared/components/model/model';
 import { FormInput } from '../../shared/components/form-input/form-input';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-venues',
   standalone: true,
-  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, LucideAngularModule],
   templateUrl: './venues.html',
   styleUrl: './venues.css',
 })
@@ -183,7 +184,8 @@ export class Venues implements OnInit {
     if (!img) return '';
     let url = img.replace(/\\/g, '/'); // Fix Windows paths for cross-platform compatibility
     if (url.startsWith('http')) return url;
-    const root = 'http://192.168.1.6:3000';
+    // Use localhost as the primary root to match the API environment
+    const root = 'http://localhost:3000';
     return root + '/' + url.replace(/^\/+/, '');
   }
 
@@ -199,8 +201,9 @@ export class Venues implements OnInit {
    * Safely extracts the vendor's full name, handling both string IDs and populated objects.
    */
   getVendorName(v: Venue): string {
-    if (typeof v.vendorId === 'object' && v.vendorId?.fullName) {
-      return v.vendorId.fullName;
+    const vendor = (v as any).vendorId || (v as any).vendor;
+    if (vendor && typeof vendor === 'object') {
+      return vendor.fullName || vendor.name || vendor.businessName || '—';
     }
     return '—';
   }
@@ -209,8 +212,9 @@ export class Venues implements OnInit {
    * Safely extracts the vendor's email address.
    */
   getVendorEmail(v: Venue): string {
-    if (typeof v.vendorId === 'object' && v.vendorId?.email) {
-      return v.vendorId.email;
+    const vendor = (v as any).vendorId || (v as any).vendor;
+    if (vendor && typeof vendor === 'object') {
+      return vendor.email || '—';
     }
     return '—';
   }

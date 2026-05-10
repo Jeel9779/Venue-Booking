@@ -1,0 +1,41 @@
+export interface Payment {
+  _id: string;
+  vendorId: {
+    _id: string;
+    name?: string;
+    email: string;
+  };
+  userId?: {
+    _id: string;
+    name: string;
+    email: string;
+    username?: string;
+  };
+  type: 'booking' | 'subscription' | 'addon';
+  relatedId: string;
+  amount: number;
+  paymentStatus: 'pending' | 'success' | 'failed';
+  transactionId: string;
+  paymentTimestamp: string | null;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaymentStats {
+  totalRevenue: number;
+  revenueChange: number;
+  pendingAmount: number;
+  pendingCount: number;
+  failedCount: number;
+  successfulAmount: number;
+  successfulCount: number;
+}
+
+export interface PaymentFilters {
+  type: string;
+  paymentStatus: string;
+  vendorId: string;
+  startDate?: string;
+  endDate?: string;
+}

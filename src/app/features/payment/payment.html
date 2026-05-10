@@ -1,0 +1,341 @@
+<div class="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700">
+  <!-- Header Section -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Payment Analytics</h1>
+      <p class="text-slate-500 text-sm mt-1 flex items-center gap-2">
+        <lucide-icon [img]="icons.calendar" size="14"></lucide-icon>
+        Real-time financial monitoring for all transactions
+      </p>
+    </div>
+    <div class="flex items-center gap-3 w-full sm:w-auto">
+      <button class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all shadow-sm active:scale-95">
+        <lucide-icon [img]="icons.download" size="18"></lucide-icon>
+        <span>Export</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Cards Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+    <!-- Total Revenue -->
+    <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all group relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-50/50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+      <div class="flex justify-between items-start mb-4 relative z-10">
+        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+          <lucide-icon [img]="icons.trendingUp" size="24"></lucide-icon>
+        </div>
+        <span class="text-emerald-500 text-[10px] font-bold bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
+          +12.5% <lucide-icon [img]="icons.trendingUp" size="10"></lucide-icon>
+        </span>
+      </div>
+      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10">Total Revenue</p>
+      <h3 class="text-2xl font-black text-slate-900 mt-1 relative z-10">₹ {{ stats()?.totalRevenue | number:'1.0-0' }}</h3>
+    </div>
+
+    <!-- Pending -->
+    <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all group">
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
+          <lucide-icon [img]="icons.pending" size="24"></lucide-icon>
+        </div>
+      </div>
+      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Pending Volume</p>
+      <h3 class="text-2xl font-black text-slate-900 mt-1">₹ {{ stats()?.pendingAmount | number:'1.0-0' }}</h3>
+      <p class="text-slate-400 text-[10px] mt-2 font-medium flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+        {{ stats()?.pendingCount }} transactions waiting
+      </p>
+    </div>
+
+    <!-- Failed -->
+    <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all group border-l-4 border-l-rose-500">
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-3 bg-rose-50 text-rose-600 rounded-xl">
+          <lucide-icon [img]="icons.alert" size="24"></lucide-icon>
+        </div>
+        <span class="text-rose-600 text-[10px] font-black bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-full uppercase">Alert</span>
+      </div>
+      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Failed Attempts</p>
+      <h3 class="text-2xl font-black text-slate-900 mt-1">{{ stats()?.failedCount }}</h3>
+      <button class="text-rose-500 text-[10px] mt-2 font-bold hover:underline">Review issues &rarr;</button>
+    </div>
+
+    <!-- Successful -->
+    <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all group">
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+          <lucide-icon [img]="icons.success" size="24"></lucide-icon>
+        </div>
+      </div>
+      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Successful</p>
+      <h3 class="text-2xl font-black text-slate-900 mt-1">₹ {{ stats()?.successfulAmount | number:'1.0-0' }}</h3>
+      <p class="text-emerald-600 text-[10px] mt-2 font-bold">{{ stats()?.successfulCount }} verified payments</p>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+        <lucide-icon [img]="icons.filter" size="16"></lucide-icon>
+        Refine Results
+      </h3>
+      @if (hasActiveFilters()) {
+        <button (click)="resetFilters()" class="text-xs text-indigo-600 font-bold hover:text-indigo-700 transition-colors">
+          Clear all filters
+        </button>
+      }
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="space-y-1.5">
+        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Type</label>
+        <select 
+          [(ngModel)]="filterValues.type" 
+          (change)="applyFilters()"
+          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-hidden transition-all"
+        >
+          <option value="">All Categories</option>
+          <option value="booking">Booking</option>
+          <option value="subscription">Subscription</option>
+          <option value="addon">Addon</option>
+        </select>
+      </div>
+
+      <div class="space-y-1.5">
+        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Status</label>
+        <select 
+          [(ngModel)]="filterValues.paymentStatus" 
+          (change)="applyFilters()"
+          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-hidden transition-all"
+        >
+          <option value="">All Statuses</option>
+          <option value="success">Success</option>
+          <option value="pending">Pending</option>
+          <option value="failed">Failed</option>
+        </select>
+      </div>
+
+      <div class="sm:col-span-2 lg:col-span-2 space-y-1.5">
+        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Search Vendor</label>
+        <div class="relative">
+          <lucide-icon [img]="icons.search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></lucide-icon>
+          <input 
+            type="text" 
+            [(ngModel)]="filterValues.vendorId" 
+            (input)="applyFilters()"
+            placeholder="Search by Vendor ID or Name..."
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-hidden transition-all"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table Section (Desktop) -->
+  <div class="hidden lg:block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-slate-50/80 border-b border-slate-200">
+          @for (col of columns; track col) {
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">{{ col }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        @if (isLoading()) {
+          @for (i of [1,2,3,4,5]; track i) {
+            <tr class="animate-pulse">
+              @for (c of columns; track c) { <td class="px-6 py-5"><div class="h-4 bg-slate-100 rounded-full w-24"></div></td> }
+            </tr>
+          }
+        } @else {
+          @for (payment of payments(); track payment._id) {
+            <tr class="group hover:bg-slate-50/50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold border border-indigo-100 shadow-xs">
+                    {{ (payment.vendorId.name || 'V').substring(0, 1).toUpperCase() }}
+                  </div>
+                  <div>
+                    <p class="font-bold text-slate-900 leading-tight">{{ payment.vendorId.name || 'Unknown Vendor' }}</p>
+                    <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1 mt-0.5">
+                      <lucide-icon [img]="icons.user" size="10"></lucide-icon>
+                      {{ payment.userId?.name || 'Guest' }}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span [class]="getTypeClass(payment.type)" class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                  {{ payment.type }}
+                </span>
+              </td>
+              <td class="px-6 py-4 font-black text-slate-900">₹{{ payment.amount | number }}</td>
+              <td class="px-6 py-4">
+                <span [class]="getStatusClass(payment.paymentStatus)" class="px-3 py-1 rounded-lg text-[10px] font-bold border flex items-center justify-center gap-1.5 w-fit">
+                  <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{
+                    'bg-emerald-500': payment.paymentStatus === 'success',
+                    'bg-amber-500': payment.paymentStatus === 'pending',
+                    'bg-rose-500': payment.paymentStatus === 'failed'
+                  }"></span>
+                  {{ payment.paymentStatus }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="font-mono text-[10px] text-slate-400 bg-slate-50 px-2 py-1 rounded-md border border-slate-100 w-fit">
+                  {{ payment.transactionId || 'N/A' }}
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-[10px] text-slate-500">
+                  <p class="font-bold text-slate-700 uppercase tracking-tighter">{{ payment.createdAt | date:'MMM d, y' }}</p>
+                  <p class="mt-0.5">{{ payment.createdAt | date:'h:mm a' }}</p>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <button (click)="viewDetails(payment)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all active:scale-90">
+                  <lucide-icon [img]="icons.view" size="20"></lucide-icon>
+                </button>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card View (Mobile/Tablet) -->
+  <div class="lg:hidden space-y-4">
+    @if (isLoading()) {
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 animate-pulse">
+        <div class="h-6 bg-slate-100 rounded w-1/3 mb-4"></div>
+        <div class="h-4 bg-slate-50 rounded w-full mb-2"></div>
+        <div class="h-4 bg-slate-50 rounded w-2/3"></div>
+      </div>
+    } @else {
+      @for (payment of payments(); track payment._id) {
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm active:scale-[0.98] transition-transform" (click)="viewDetails(payment)">
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold">
+                {{ (payment.vendorId.name || 'V').substring(0, 1).toUpperCase() }}
+              </div>
+              <div>
+                <p class="font-bold text-slate-900 text-sm">{{ payment.vendorId.name || 'Unknown' }}</p>
+                <p class="text-[10px] text-slate-400">{{ payment.userId?.name }}</p>
+              </div>
+            </div>
+            <span [class]="getStatusClass(payment.paymentStatus)" class="px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase border">
+              {{ payment.paymentStatus }}
+            </span>
+          </div>
+          <div class="flex justify-between items-center pt-4 border-t border-slate-50">
+            <div>
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Amount</p>
+              <p class="text-base font-black text-slate-900">₹{{ payment.amount | number }}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Type</p>
+              <p class="text-[10px] font-bold text-indigo-600">{{ payment.type }}</p>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Empty State -->
+  @if (!isLoading() && payments().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center bg-slate-50/50 rounded-3xl border-2 border-dashed border-slate-200">
+      <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-sm mb-4">
+        <lucide-icon [img]="icons.alert" size="32" class="text-slate-300"></lucide-icon>
+      </div>
+      <h3 class="text-lg font-bold text-slate-800">No Transaction Records</h3>
+      <p class="text-slate-500 text-sm max-w-xs mt-1">We couldn't find any payments matching your current filters.</p>
+      <button (click)="resetFilters()" class="mt-6 text-indigo-600 font-bold text-sm bg-white px-6 py-2.5 rounded-xl border border-slate-200 shadow-sm">
+        Reset All Filters
+      </button>
+    </div>
+  }
+
+  <!-- Detail Modal -->
+  @if (showModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" (click)="closeModal()"></div>
+      <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative z-10 animate-in zoom-in slide-in-from-bottom-8 duration-300">
+        <!-- Modal Header -->
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+          <h2 class="text-lg font-black text-slate-900 tracking-tight">Transaction Summary</h2>
+          <button (click)="closeModal()" class="p-2 hover:bg-slate-200/50 rounded-full transition-colors">
+            <lucide-icon [img]="icons.close" size="20" class="text-slate-500"></lucide-icon>
+          </button>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+          <!-- Status Banner -->
+          <div [class]="getStatusClass(selectedPayment?.paymentStatus || '')" class="p-4 rounded-2xl border flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <lucide-icon [img]="selectedPayment?.paymentStatus === 'success' ? icons.success : icons.alert" size="24"></lucide-icon>
+              <span class="font-black uppercase tracking-widest">{{ selectedPayment?.paymentStatus }}</span>
+            </div>
+            <span class="text-2xl font-black">₹{{ selectedPayment?.amount | number }}</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-6">
+            <div class="space-y-1">
+              <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                <lucide-icon [img]="icons.building" size="10"></lucide-icon> Vendor
+              </label>
+              <p class="font-bold text-slate-900">{{ selectedPayment?.vendorId?.name }}</p>
+              <p class="text-[10px] text-slate-500 truncate">{{ selectedPayment?.vendorId?.email }}</p>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                <lucide-icon [img]="icons.user" size="10"></lucide-icon> Customer
+              </label>
+              <p class="font-bold text-slate-900">{{ selectedPayment?.userId?.name }}</p>
+              <p class="text-[10px] text-slate-500 truncate">{{ selectedPayment?.userId?.email }}</p>
+            </div>
+          </div>
+
+          <div class="space-y-3 pt-4 border-t border-slate-100">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-500 font-medium">Payment Type</span>
+              <span class="font-bold text-slate-900 capitalize">{{ selectedPayment?.type }}</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-500 font-medium">Transaction ID</span>
+              <span class="font-mono text-xs text-slate-400">#{{ selectedPayment?.transactionId }}</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-500 font-medium">Date & Time</span>
+              <span class="font-bold text-slate-900">{{ selectedPayment?.createdAt | date:'MMM d, y, h:mm a' }}</span>
+            </div>
+          </div>
+
+          @if (selectedPayment?.description) {
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+              <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1 mb-2">
+                <lucide-icon [img]="icons.fileText" size="10"></lucide-icon> Description
+              </label>
+              <p class="text-sm text-slate-600 leading-relaxed italic">"{{ selectedPayment?.description }}"</p>
+            </div>
+          }
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="p-6 bg-slate-50/50 border-t border-slate-100 flex gap-3">
+          <button (click)="closeModal()" class="flex-1 bg-white border border-slate-200 py-3 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-colors">
+            Dismiss
+          </button>
+          <button class="flex-1 bg-indigo-600 py-3 rounded-2xl text-sm font-bold text-white hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
+            Download Invoice
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

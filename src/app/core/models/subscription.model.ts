@@ -3,6 +3,7 @@ export interface Plan {
   name: string;
   duration_days: number;
   price: number;
+  planType?: 'base' | 'addon';
   is_active: boolean;
   features: string[];
   createdAt?: string;

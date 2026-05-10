@@ -63,7 +63,7 @@ export const routes: Routes = [
         path: 'plans',
         loadComponent: () =>
           import('@features/subscription/plan-list/plan-list').then((m) => m.PlanList),
-        runGuardsAndResolvers: 'always', 
+        runGuardsAndResolvers: 'always',
       },
       {
         path: 'admin/vendor-subscriptions',
@@ -78,6 +78,14 @@ export const routes: Routes = [
       {
         path: 'partners',
         loadComponent: () => import('@features/partners/partners').then(m => m.Partners)
+      },
+      {
+        path: 'payment',
+        loadComponent: () => import('@features/payment/payment').then(m => m.Payments)
+      },
+      {
+        path: 'user-review',
+        loadComponent: () => import('@features/user-review/user-review').then(m => m.UserReview)
       }
 
     ],

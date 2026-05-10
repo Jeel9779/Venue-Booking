@@ -1,36 +1,54 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Booking } from '../models/booking.model';
+import { Booking, BookingState } from '../models/booking.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class BookingStore {
-  // ── State ──
-  private readonly _bookings = signal<Booking[]>([]);
-  private readonly _isLoading = signal<boolean>(false);
-  private readonly _error = signal<string | null>(null);
+  // ── State ──────────────────────────────────────────────────────────────────
+  private readonly _state = signal<BookingState>({
+    bookings: [],
+    isLoading: false,
+    error: null,
+  });
 
-  // ── Selectors (Computed) ──
-  readonly bookings = computed(() => this._bookings());
-  readonly isLoading = computed(() => this._isLoading());
-  readonly error = computed(() => this._error());
+  // ── Selectors ──────────────────────────────────────────────────────────────
+  readonly bookings = computed(() => this._state().bookings);
+  readonly isLoading = computed(() => this._state().isLoading);
+  readonly error = computed(() => this._state().error);
 
-  // ── Updaters ──
-  setBookings(bookings: Booking[]) {
-    this._bookings.set(bookings);
+  // ── Actions ────────────────────────────────────────────────────────────────
+  setBookings(bookings: Booking[]): void {
+    this._state.update((s) => ({ ...s, bookings, isLoading: false, error: null }));
   }
 
-  addBooking(booking: Booking) {
-    this._bookings.update(bookings => [booking, ...bookings]);
+  setLoading(isLoading: boolean): void {
+    this._state.update((s) => ({ ...s, isLoading }));
   }
 
-  updateBooking(updatedBooking: Booking) {
-    this._bookings.update(bookings => bookings.map(b => b._id === updatedBooking._id ? updatedBooking : b));
+  setError(error: string | null): void {
+    this._state.update((s) => ({ ...s, error, isLoading: false }));
   }
 
-  setLoading(loading: boolean) {
-    this._isLoading.set(loading);
+  // ⚡ OPTIMISTIC UPDATE: Instant UI change
+  optimisticUpdate(id: string, changes: Partial<Booking>): void {
+    this._state.update((s) => ({
+      ...s,
+      bookings: s.bookings.map((b) => (b._id === id ? { ...b, ...changes } : b)),
+    }));
   }
 
-  setError(error: string | null) {
-    this._error.set(error);
+  updateBooking(updatedBooking: Booking): void {
+    this._state.update((s) => ({
+      ...s,
+      bookings: s.bookings.map((b) => (b._id === updatedBooking._id ? updatedBooking : b)),
+    }));
+  }
+
+  removeBooking(id: string): void {
+    this._state.update((s) => ({
+      ...s,
+      bookings: s.bookings.filter((b) => b._id !== id),
+    }));
   }
 }

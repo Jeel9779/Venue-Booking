@@ -22,6 +22,7 @@ export class VendorSubscriptions implements OnInit {
   private readonly vendorService = inject(VendorService);
 
   readonly subscriptions = signal<any[]>([]);
+  readonly backendSummary = signal<any>({});
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -45,11 +46,14 @@ export class VendorSubscriptions implements OnInit {
   // Stats for the header cards
   readonly stats = computed(() => {
     const subs = this.enrichedSubscriptions();
+    const sum = this.backendSummary();
+    
     return {
-      total: subs.length,
-      active: subs.filter((s: any) => s.status === 'active').length,
-      expired: subs.filter((s: any) => s.status === 'expired').length,
-      grace: subs.filter((s: any) => s.status === 'grace').length,
+      total: sum.total || 0,
+      active: sum.active || 0,
+      expired: sum.expired || 0,
+      grace: sum.grace || 0,
+      expiringSoon: sum.expiringWithin15Days || 0,
       revenue: subs.reduce((acc: number, curr: any) => acc + (curr.planId?.price || 0), 0)
     };
   });
@@ -67,7 +71,10 @@ export class VendorSubscriptions implements OnInit {
     this.subApi.adminGetAllSubscriptions()
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
-        next: (res: any) => this.subscriptions.set(res.subscriptions),
+        next: (res: any) => {
+          this.subscriptions.set(res.subscriptions);
+          this.backendSummary.set(res.summary || {});
+        },
         error: (err: any) => this.error.set(err.error?.message || 'Failed to load subscriptions')
       });
   }

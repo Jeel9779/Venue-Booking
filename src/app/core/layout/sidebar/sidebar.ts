@@ -9,11 +9,13 @@ import {
   BarChart3,
   Settings,
   Users,
+  Store,
+  MapPin,
   Plus,
   HelpCircle,
   LogOut,
   ListChecks,
-  CreditCard
+  Activity
 } from 'lucide-angular';
 
 @Component({
@@ -37,11 +39,13 @@ export class Sidebar {
     analytics: BarChart3,
     settings: Settings,
     users: Users,
+    vendors: Store,
+    partners: MapPin,
     add: Plus,
     help: HelpCircle,
     logout: LogOut,
-    subscript: ListChecks,
-    subscription: CreditCard
+    plans: ListChecks,
+    subscriptions: Activity
   };
 
   //constructor for router and window resize

@@ -14,16 +14,17 @@ export class VenueService {
 
   /**
    * Loads all venues from the API and synchronizes the local Store.
-   * Handles loading states, data transformation (amenities parsing), and error reporting.
+   * Handles loading states, data transformation (amenities/media parsing), and error reporting.
    */
   loadAll(): void {
     this.store.setLoading(true);
     this.api.getAll().pipe(
       tap((venues) => {
-        // Data Transformation: Ensure amenities are always a clean string array
+        // Data Transformation: Ensure amenities and mediaFiles are always clean string arrays
         const parsedVenues = venues.map(v => ({
           ...v,
-          amenities: this.parseAmenities(v.amenities)
+          amenities: this.parseAmenities(v.amenities),
+          mediaFiles: this.parseMediaFiles(v.mediaFiles)
         }));
         this.store.setVenues(parsedVenues);
       }),
@@ -49,7 +50,8 @@ export class VenueService {
       tap((updatedVenue) => {
         const parsedVenue = {
           ...updatedVenue,
-          amenities: this.parseAmenities(updatedVenue.amenities)
+          amenities: this.parseAmenities(updatedVenue.amenities),
+          mediaFiles: this.parseMediaFiles(updatedVenue.mediaFiles)
         };
         this.store.updateVenue(parsedVenue); // Update the specific item in the store
       }),
@@ -59,6 +61,13 @@ export class VenueService {
       }),
       finalize(() => this.store.setLoading(false))
     ).subscribe();
+  }
+
+  /**
+   * Utility to handle inconsistent 'mediaFiles' data from the backend.
+   */
+  private parseMediaFiles(raw: unknown): string[] {
+    return this.parseAmenities(raw); // Reuse the same logic for now as they follow similar patterns
   }
 
   /**

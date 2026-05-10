@@ -10,11 +10,12 @@ import { Table } from '../../shared/components/table/table';
 import { Model } from '../../shared/components/model/model';
 import { FormInput } from '../../shared/components/form-input/form-input';
 import { RouterLink } from '@angular/router';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-vendors',
   standalone: true,
-  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, RouterLink],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, RouterLink, LucideAngularModule],
   templateUrl: './vendors.html',
   styleUrl: './vendors.css',
 })
@@ -84,6 +85,7 @@ export class Vendors implements OnInit {
 
   // ── Actions ────────────────────────────────────────────────────────────────
   openDetails(v: Vendor) {
+    console.log('Opening details for vendor:', v);
     this.selectedVendor.set(v);
     this.showDetailsModel.set(true);
   }

@@ -8,7 +8,9 @@ import { Venue } from '../models/venue.model';
 })
 export class VenueApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.7:3000/venues';
+  /*  private readonly baseUrl = 'http://192.168.1.7:3000/venues'; */
+  private readonly baseUrl = 'http://localhost:3000/venues';
+
 
   /**
    * Fetches all venues from the backend. 

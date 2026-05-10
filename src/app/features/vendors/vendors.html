@@ -5,14 +5,10 @@
   <div class="fixed top-5 right-5 z-[10001] flex items-center gap-3 bg-white border border-red-200
               text-red-600 px-5 py-3 rounded-2xl shadow-xl text-sm font-semibold
               animate-[slideDown_0.25s_ease]">
-    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
-    </svg>
+    <lucide-icon name="alert-circle" size="18" [strokeWidth]="2.5"></lucide-icon>
     {{ error() }}
-    <button (click)="dismissError()" class="ml-1 opacity-60 hover:opacity-100">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
+    <button (click)="dismissError()" class="ml-1 opacity-60 hover:opacity-100 flex">
+      <lucide-icon name="x" size="14" [strokeWidth]="2.5"></lucide-icon>
     </button>
   </div>
   }
@@ -20,12 +16,9 @@
   <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
   <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
     <div class="flex items-center gap-4">
-      <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-indigo-200">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-          <line x1="12" y1="22.08" x2="12" y2="12"/>
-        </svg>
+      <div
+        class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-indigo-200">
+        <lucide-icon name="users" size="24"></lucide-icon>
       </div>
       <div>
         <h1 class="text-2xl font-bold tracking-tight m-0 text-slate-900">Vendor Management</h1>
@@ -34,9 +27,7 @@
     </div>
 
     <app-button routerLink="/add-vendor" customClass="shadow-lg shadow-indigo-100">
-      <svg class="mr-2" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path d="M12 5v14M5 12h14"/>
-      </svg>
+      <lucide-icon name="plus" size="18" [strokeWidth]="2.5" class="mr-2"></lucide-icon>
       Add New Vendor
     </app-button>
   </div>
@@ -45,298 +36,385 @@
   <div class="flex items-center justify-between flex-wrap gap-4 mb-5">
     <div class="flex items-center gap-2 flex-wrap">
       <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
-                  bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
-           [class.ring-2]="filter() === 'all'" [class.ring-indigo-500]="filter() === 'all'" [class.border-indigo-500]="filter() === 'all'"
-           (click)="filter.set('all')">
+                  bg-white text-slate-600 border-slate-200 hover:border-indigo-300" [class.ring-2]="filter() === 'all'"
+        [class.ring-indigo-500]="filter() === 'all'" [class.border-indigo-500]="filter() === 'all'"
+        (click)="filter.set('all')">
         {{ counts().all }} All
       </div>
       <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
                   bg-white text-amber-600 border-slate-200 hover:border-amber-300"
-           [class.ring-2]="filter() === 'pending'" [class.ring-amber-500]="filter() === 'pending'" [class.border-amber-500]="filter() === 'pending'"
-           (click)="filter.set('pending')">
+        [class.ring-2]="filter() === 'pending'" [class.ring-amber-500]="filter() === 'pending'"
+        [class.border-amber-500]="filter() === 'pending'" (click)="filter.set('pending')">
         {{ counts().pending }} Pending
       </div>
       <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
                   bg-white text-emerald-600 border-slate-200 hover:border-emerald-300"
-           [class.ring-2]="filter() === 'approved'" [class.ring-emerald-500]="filter() === 'approved'" [class.border-emerald-500]="filter() === 'approved'"
-           (click)="filter.set('approved')">
+        [class.ring-2]="filter() === 'approved'" [class.ring-emerald-500]="filter() === 'approved'"
+        [class.border-emerald-500]="filter() === 'approved'" (click)="filter.set('approved')">
         {{ counts().approved }} Approved
       </div>
       <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
                   bg-white text-rose-600 border-slate-200 hover:border-rose-300"
-           [class.ring-2]="filter() === 'rejected'" [class.ring-rose-500]="filter() === 'rejected'" [class.border-rose-500]="filter() === 'rejected'"
-           (click)="filter.set('rejected')">
+        [class.ring-2]="filter() === 'rejected'" [class.ring-rose-500]="filter() === 'rejected'"
+        [class.border-rose-500]="filter() === 'rejected'" (click)="filter.set('rejected')">
         {{ counts().rejected }} Rejected
       </div>
     </div>
 
     <div class="relative w-full sm:w-80">
-      <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
+      <lucide-icon name="search" size="16"
+        class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></lucide-icon>
       <input type="text"
-             class="w-full py-2.5 pl-10 pr-4 border border-slate-200 rounded-xl bg-white text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
-             placeholder="Search vendors..."
-             [value]="search()"
-             (input)="search.set($any($event.target).value)"/>
+        class="w-full py-2.5 pl-10 pr-4 border border-slate-200 rounded-xl bg-white text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+        placeholder="Search vendors..." [value]="search()" (input)="search.set($any($event.target).value)" />
     </div>
   </div>
 
   <!-- ── MAIN TABLE ────────────────────────────────────────────────────── -->
   <app-card [padding]="false" customClass="shadow-xl shadow-slate-200/50">
     @if (isLoading()) {
-      <div class="flex flex-col items-center justify-center py-20 text-slate-400 gap-3">
-        <div class="w-10 h-10 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
-        <p class="font-medium animate-pulse">Fetching vendor list...</p>
-      </div>
+    <div class="flex flex-col items-center justify-center py-20 text-slate-400 gap-3">
+      <div class="w-10 h-10 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
+      <p class="font-medium animate-pulse">Fetching vendor list...</p>
+    </div>
     } @else if (filteredVendors().length === 0) {
-      <div class="flex flex-col items-center justify-center py-24 text-center">
-        <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-4 text-slate-300">
-          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-          </svg>
-        </div>
-        <h3 class="text-lg font-bold text-slate-900 m-0">No vendors found</h3>
-        <p class="text-slate-500 text-sm mt-1 max-w-[280px]">We couldn't find any vendors matching your current filters.</p>
-        <app-button variant="secondary" customClass="mt-4" (onClick)="search.set(''); filter.set('all')">Clear Filters</app-button>
+    <div class="flex flex-col items-center justify-center py-24 text-center">
+      <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-4 text-slate-300">
+        <lucide-icon name="users" size="40" [strokeWidth]="1.5"></lucide-icon>
       </div>
+      <h3 class="text-lg font-bold text-slate-900 m-0">No vendors found</h3>
+      <p class="text-slate-500 text-sm mt-1 max-w-[280px]">We couldn't find any vendors matching your current filters.
+      </p>
+      <app-button variant="secondary" customClass="mt-4" (onClick)="search.set(''); filter.set('all')">Clear
+        Filters</app-button>
+    </div>
     } @else {
-      <app-table [columns]="['Business', 'Owner', 'Phone', 'Type', 'Status', 'Joined', '']">
-        @for (v of filteredVendors(); track v._id) {
-          <tr (click)="openDetails(v)" class="group hover:bg-slate-50/80 transition-colors border-b border-slate-100 last:border-0 cursor-pointer">
-            <td class="px-5 py-4">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold shrink-0">
-                  {{ ((v.businessName || '').trim().charAt(0) || (v.fullName || '').trim().charAt(0) || 'V') | uppercase }}
-                </div>
-                <div>
-                  <div class="font-bold text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">{{ v.businessName }}</div>
-                  <div class="text-[0.7rem] text-slate-400 mt-0.5 uppercase tracking-wider font-bold">{{ v.state }}</div>
-                </div>
-              </div>
-            </td>
-            <td class="px-5 py-4 text-sm text-slate-600">
-              <div class="font-medium text-slate-900">{{ v.fullName }}</div>
-              <div class="text-[0.75rem] text-slate-400">{{ v.email }}</div>
-            </td>
-            <td class="px-5 py-4 text-sm text-slate-600 font-medium">
-              {{ v.phone }}
-            </td>
-            <td class="px-5 py-4">
-              <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-[0.7rem] font-bold uppercase tracking-wider">
-                {{ v.businessType }}
-              </span>
-            </td>
-            <td class="px-5 py-4">
-              <span [class]="'px-2.5 py-1 rounded-lg text-[0.7rem] font-black uppercase tracking-widest border ' + 
+    <app-table [columns]="['Business', 'Owner', 'Phone', 'Type', 'Status', 'Joined', '']">
+      @for (v of filteredVendors(); track v._id) {
+      <tr (click)="openDetails(v)"
+        class="group hover:bg-slate-50/80 transition-colors border-b border-slate-100 last:border-0 cursor-pointer">
+        <td class="px-5 py-4">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold shrink-0">
+              {{ ((v.businessName || '').trim().charAt(0) || (v.fullName || '').trim().charAt(0) || 'V') | uppercase }}
+            </div>
+            <div>
+              <div class="font-bold text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">{{
+                v.businessName }}</div>
+              <div class="text-[0.7rem] text-slate-400 mt-0.5 uppercase tracking-wider font-bold">{{ v.state }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="px-5 py-4 text-sm text-slate-600">
+          <div class="font-medium text-slate-900">{{ v.fullName }}</div>
+          <div class="text-[0.75rem] text-slate-400">{{ v.email }}</div>
+        </td>
+        <td class="px-5 py-4 text-sm text-slate-600 font-medium">
+          {{ v.phone }}
+        </td>
+        <td class="px-5 py-4">
+          <span
+            class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-[0.7rem] font-bold uppercase tracking-wider">
+            {{ v.businessType }}
+          </span>
+        </td>
+        <td class="px-5 py-4">
+          <span [class]="'px-2.5 py-1 rounded-lg text-[0.7rem] font-black uppercase tracking-widest border ' + 
                             (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 
                              v.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-100' : 
                              'bg-amber-50 text-amber-700 border-amber-100')">
-                {{ v.status }}
-              </span>
-            </td>
-            <td class="px-5 py-4 text-sm text-slate-400">
-              {{ v.createdAt | date:'MMM d, y' }}
-            </td>
-            <td class="px-5 py-4 text-right">
-              <div class="flex items-center justify-end gap-2 transition-opacity" (click)="$event.stopPropagation()">
-                <app-button variant="ghost" size="sm" (onClick)="openDetails(v)">
-                  View Details
-                </app-button>
-                <button (click)="deleteVendor(v); $event.stopPropagation()" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all">
-                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
-      </app-table>
+            {{ v.status }}
+          </span>
+        </td>
+        <td class="px-5 py-4 text-sm text-slate-400">
+          {{ v.createdAt | date:'MMM d, y' }}
+        </td>
+        <td class="px-5 py-4 text-right">
+          <div class="flex items-center justify-end gap-2 transition-opacity" (click)="$event.stopPropagation()">
+            <app-button variant="ghost" size="sm" (onClick)="openDetails(v)">
+              View Details
+            </app-button>
+            <button (click)="deleteVendor(v); $event.stopPropagation()"
+              class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all">
+              <lucide-icon name="trash-2" size="16"></lucide-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      }
+    </app-table>
     }
   </app-card>
 
   <!-- ── VENDOR DETAILS MODEL ─────────────────────────────────────────── -->
-  @if (showDetailsModel() && selectedVendor()) {
-    <app-model [title]="'Review Application'" maxWidth="lg" (onClose)="closeDetails()" [hasFooter]="true">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-2">
-        <div class="space-y-6">
-          <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
-            <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-5 flex items-center gap-2">
-              Business Information
-            </h4>
-            <div class="space-y-4">
-              <div>
-                <div class="text-[0.65rem] text-slate-400 font-bold mb-1 tracking-wider uppercase">Business Name</div>
-                <div class="font-bold text-slate-800 text-[0.95rem] leading-tight">{{ selectedVendor()?.businessName }}</div>
-              </div>
-              <div>
-                <div class="text-[0.65rem] text-slate-400 font-bold mb-1 tracking-wider uppercase">Category</div>
-                <div class="font-bold text-slate-800 text-[0.95rem]">{{ selectedVendor()?.businessType }}</div>
-              </div>
-              <div>
-                <div class="text-[0.65rem] text-slate-400 font-bold mb-1 tracking-wider uppercase">Location</div>
-                <div class="font-bold text-slate-800 text-sm leading-relaxed">
-                  {{ selectedVendor()?.address }}<br>
-                  {{ selectedVendor()?.state }} - {{ selectedVendor()?.pincode }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  @if (selectedVendor(); as v) {
+  <app-model [title]="'Vendor Verification ' " maxWidth="lg" (onClose)="closeDetails()" [hasFooter]="true">
+    <div class="flex flex-col gap-6 p-1">
 
-        <div class="space-y-6">
-          <div class="bg-indigo-50/40 rounded-3xl p-6 border border-indigo-100/50">
-            <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-indigo-400 mb-5 flex items-center gap-2">
-              Contact Details
-            </h4>
-            <div class="space-y-4">
-              <div>
-                <div class="text-[0.65rem] text-indigo-400/80 font-bold mb-1 tracking-wider uppercase">Owner Name</div>
-                <div class="font-bold text-indigo-950 text-[0.95rem] leading-tight">{{ selectedVendor()?.fullName }}</div>
-              </div>
-              <div>
-                <div class="text-[0.65rem] text-indigo-400/80 font-bold mb-1 tracking-wider uppercase">Email Address</div>
-                <div class="font-bold text-indigo-900 text-[0.95rem] break-all">{{ selectedVendor()?.email }}</div>
-              </div>
-              <div>
-                <div class="text-[0.65rem] text-indigo-400/80 font-bold mb-1 tracking-wider uppercase">Phone Number</div>
-                <div class="font-bold text-indigo-900 text-[0.95rem]">{{ selectedVendor()?.phone }}</div>
-              </div>
-            </div>
-          </div>
+      <!-- TOP SECTION: IDENTITY -->
+      <div class="flex flex-col sm:flex-row gap-5 bg-slate-50 p-6 rounded-[24px] border border-slate-200">
+        <div
+          class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-200 to-violet-300 text-indigo-400 flex items-center justify-center text-2xl font-black shadow-lg shadow-indigo-100 shrink-0">
+          {{ (v.businessName || '').trim().charAt(0) || 'V' }}
         </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <h2 class="text-xl font-black text-slate-900 m-0 tracking-tight">{{ v.businessName }}</h2>
+            <span [class]="'px-2.5 py-0.5 rounded-lg text-[0.65rem] font-black uppercase tracking-widest border ' + 
+                             (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
+                              v.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
+                              'bg-amber-50 text-amber-700 border-amber-100')">
+              {{ v.status }}
+            </span>
+          </div>
+          <p class="text-sm font-bold text-indigo-600 flex items-center gap-1.5 m-0">
+            <lucide-icon name="tag" size="14" [strokeWidth]="2.5"></lucide-icon>
+            {{ v.businessType }}
+          </p>
+          <p class="text-[0.875rem] text-slate-600 mt-2 flex items-center gap-1.5 m-0 font-medium">
+            <lucide-icon name="map-pin" size="14" class="text-slate-400"></lucide-icon>
+            {{ v.address }}, {{ v.state }} {{ v.pincode }}
+          </p>
+        </div>
+      </div>
 
-        <div class="md:col-span-2">
-          <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-4 mt-2 px-2">
-            Verification Documents
+      <!-- MIDDLE SECTION: DETAILS GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Personnel Info -->
+        <div class="bg-white border border-slate-300 rounded-3xl p-6 shadow-sm">
+          <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 mb-5 flex items-center gap-2">
+            <lucide-icon name="user" size="14" class="text-indigo-500"></lucide-icon>
+            Contact Personnel
           </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <button (click)="openImageViewer(selectedVendor()?.governmentId); $event.stopPropagation()"
-               class="flex items-center gap-4 p-5 bg-white border border-slate-200 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] rounded-2xl hover:border-indigo-400 hover:shadow-md transition-all group w-full text-left">
-              <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-                </svg>
+          <div class="space-y-5">
+            <div>
+              <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-widest mb-1.5">Legal Full Name
+              </div>
+              <div class="text-[1rem] font-black text-slate-900">{{ v.fullName || 'N/A' }}</div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-widest mb-1.5">Official Email
+                </div>
+                <div class="text-[0.9375rem] font-bold text-slate-800 break-all">{{ v.email || 'N/A' }}</div>
               </div>
               <div>
-                <div class="text-[0.9rem] font-bold text-slate-800">Government ID</div>
-                <div class="text-[0.65rem] text-slate-400 font-bold mt-0.5">Click to preview document</div>
+                <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-widest mb-1.5">Primary Contact
+                </div>
+                <div class="text-[0.9375rem] font-bold text-slate-800">{{ v.phone || 'N/A' }}</div>
               </div>
-            </button>
-            <button (click)="openImageViewer(selectedVendor()?.licenseDoc); $event.stopPropagation()"
-               class="flex items-center gap-4 p-5 bg-white border border-slate-200 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] rounded-2xl hover:border-emerald-400 hover:shadow-md transition-all group w-full text-left">
-              <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Business Status -->
+        <div class="bg-white border border-slate-300 rounded-3xl p-6 shadow-sm">
+          <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 mb-5 flex items-center gap-2">
+            <lucide-icon name="info" size="14" class="text-amber-500"></lucide-icon>
+            Administrative Data
+          </h4>
+          <div class="space-y-5">
+            <div>
+              <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-widest mb-1.5">Onboarding Date
               </div>
-              <div>
-                <div class="text-[0.9rem] font-bold text-slate-800">Business License</div>
-                <div class="text-[0.65rem] text-slate-400 font-bold mt-0.5">Click to preview document</div>
+              <div class="text-[1rem] font-black text-slate-900">{{ (v.createdAt | date:'longDate') || 'N/A' }}</div>
+            </div>
+            <div>
+              <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-widest mb-1.5">Last Modification
               </div>
-            </button>
+              <div class="text-[0.9375rem] font-bold text-slate-800">{{ (v.updatedAt | date:'medium') || 'N/A' }}</div>
+            </div>
+            @if (v.adminMessage) {
+            <div class="pt-2">
+              <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-widest mb-1.5">Moderator Remarks
+              </div>
+              <div
+                class="text-[0.8125rem] font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100 italic">
+                "{{ v.adminMessage }}"
+              </div>
+            </div>
+            }
           </div>
         </div>
       </div>
 
-
-      <div footer class="flex items-center justify-between w-full">
-        @if (selectedVendor()?.status === 'pending') {
-          <div class="flex gap-3">
-            <app-button variant="danger" (onClick)="openRejectModel()">Reject</app-button>
-            <app-button variant="success" (onClick)="openApproveModel()">Approve Partner</app-button>
-          </div>
-        } @else {
-          <div [class]="'text-sm font-bold ' + (selectedVendor()?.status === 'approved' ? 'text-emerald-600' : 'text-rose-600')">
-            Status: {{ selectedVendor()?.status | uppercase }}
-          </div>
-        }
+      <!-- BOTTOM SECTION: DOCUMENTS -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+        <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-900 mb-5 flex items-center gap-2">
+          <lucide-icon name="shield-check" size="16" class="text-emerald-600"></lucide-icon>
+          Verification Documents
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <button (click)="openImageViewer(v.governmentId); $event.stopPropagation()"
+            class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl hover:border-indigo-400 hover:bg-indigo-50 transition-all group w-full text-left">
+            <div
+              class="w-12 h-12 rounded-xl bg-white border border-slate-200 text-slate-400 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">
+              <lucide-icon name="file-text" size="24"></lucide-icon>
+            </div>
+            <div>
+              <div class="text-[0.875rem] font-bold text-slate-900">Government ID</div>
+              <div class="text-[0.65rem] text-indigo-600 font-black mt-0.5 uppercase tracking-widest">Preview ID</div>
+            </div>
+          </button>
+          <button (click)="openImageViewer(v.licenseDoc); $event.stopPropagation()"
+            class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl hover:border-emerald-400 hover:bg-emerald-50 transition-all group w-full text-left">
+            <div
+              class="w-12 h-12 rounded-xl bg-white border border-slate-200 text-slate-400 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
+              <lucide-icon name="file-check" size="24"></lucide-icon>
+            </div>
+            <div>
+              <div class="text-[0.875rem] font-bold text-slate-900">Business License</div>
+              <div class="text-[0.65rem] text-emerald-600 font-black mt-0.5 uppercase tracking-widest">Preview NOC</div>
+            </div>
+          </button>
+        </div>
       </div>
-    </app-model>
+    </div>
+
+    <div footer class="flex items-center justify-end w-full">
+      @if (v.status === 'pending') {
+      <div class="flex gap-3">
+        <app-button variant="danger" customClass="px-8 shadow-lg shadow-rose-100" (onClick)="openRejectModel()">Reject
+          Application</app-button>
+        <app-button variant="success" customClass="px-8 shadow-lg shadow-emerald-100"
+          (onClick)="openApproveModel()">Approve Partner</app-button>
+      </div>
+      }
+    </div>
+  </app-model>
   }
 
   <!-- ── APPROVE MODEL ─────────────────────────────────────────────────── -->
   @if (showApproveModel()) {
-    <app-model [title]="'Set Credentials'" maxWidth="sm" (onClose)="showApproveModel.set(false)" [hasFooter]="true">
-      <div class="space-y-4">
-        <p class="text-sm text-slate-600">Provide login credentials for <strong>{{ selectedVendor()?.businessName }}</strong>. These will be emailed to the vendor.</p>
-        <app-form-input label="Username" placeholder="e.g. vendor123" 
-                        [ngModel]="approveData().username" (ngModelChange)="approveData.set({...approveData(), username: $event})"></app-form-input>
-        <app-form-input label="Password" type="password" placeholder="••••••••" 
-                        [ngModel]="approveData().password" (ngModelChange)="approveData.set({...approveData(), password: $event})"></app-form-input>
+  <app-model [title]="'Set Credentials'" maxWidth="sm" (onClose)="showApproveModel.set(false)" [hasFooter]="true">
+    <div class="space-y-6 text-center py-4">
+      <div
+        class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-50">
+        <lucide-icon name="check-circle-2" size="32" [strokeWidth]="2.5"></lucide-icon>
       </div>
-      <div footer>
-        <app-button variant="secondary" (onClick)="showApproveModel.set(false)">Cancel</app-button>
-        <app-button variant="success" (onClick)="submitApprove()" [disabled]="!approveData().username || !approveData().password">Confirm Approval</app-button>
+      <div>
+        <h3 class="text-lg font-black text-slate-900 mb-2">Configure Access</h3>
+        <p class="text-sm text-slate-500 leading-relaxed">Provide login credentials for <strong>{{
+            selectedVendor()?.businessName }}</strong>. These will be securely emailed to the vendor.</p>
       </div>
-    </app-model>
+      <div class="space-y-4 text-left">
+        <app-form-input label="System Username" placeholder="e.g. vendor123" [ngModel]="approveData().username"
+          (ngModelChange)="approveData.set({...approveData(), username: $event})"></app-form-input>
+        <app-form-input label="Temporary Password" type="password" placeholder="••••••••"
+          [ngModel]="approveData().password"
+          (ngModelChange)="approveData.set({...approveData(), password: $event})"></app-form-input>
+      </div>
+    </div>
+    <div footer>
+      <app-button variant="secondary" (onClick)="showApproveModel.set(false)">Cancel</app-button>
+      <app-button variant="success" customClass="shadow-lg shadow-emerald-100" (onClick)="submitApprove()"
+        [disabled]="!approveData().username || !approveData().password">Confirm & Onboard</app-button>
+    </div>
+  </app-model>
   }
 
   <!-- ── REJECT MODEL ─────────────────────────────────────────────────── -->
   @if (showRejectModel()) {
-    <app-model [title]="'Rejection Reason'" maxWidth="sm" (onClose)="showRejectModel.set(false)" [hasFooter]="true">
-      <div class="space-y-4">
-        <p class="text-sm text-slate-600">Please provide a reason for rejecting this application.</p>
-        <app-form-input label="Reason" type="textarea" placeholder="e.g. Invalid license..." [rows]="4"
-                        [ngModel]="rejectReason()" (ngModelChange)="rejectReason.set($event)"></app-form-input>
+  <app-model [title]="'Rejection Reason'" maxWidth="sm" (onClose)="showRejectModel.set(false)" [hasFooter]="true">
+    <div class="space-y-6 text-center py-4">
+      <div
+        class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-rose-50">
+        <lucide-icon name="x-circle" size="32" [strokeWidth]="2.5"></lucide-icon>
       </div>
-      <div footer>
-        <app-button variant="secondary" (onClick)="showRejectModel.set(false)">Cancel</app-button>
-        <app-button variant="danger" (onClick)="submitReject()" [disabled]="!rejectReason().trim()">Submit Rejection</app-button>
+      <div>
+        <h3 class="text-lg font-black text-slate-900 mb-2">Decline Application</h3>
+        <p class="text-sm text-slate-500 leading-relaxed">Please provide a constructive reason for rejecting this
+          application.</p>
       </div>
-    </app-model>
+      <div class="text-left">
+        <app-form-input label="Reason for Rejection" type="textarea" placeholder="e.g. Invalid documents provided..."
+          [rows]="4" [ngModel]="rejectReason()" (ngModelChange)="rejectReason.set($event)"></app-form-input>
+      </div>
+    </div>
+    <div footer>
+      <app-button variant="secondary" (onClick)="showRejectModel.set(false)">Cancel</app-button>
+      <app-button variant="danger" (onClick)="submitReject()" [disabled]="!rejectReason().trim()">Submit
+        Rejection</app-button>
+    </div>
+  </app-model>
   }
 
   <!-- ── DELETE MODEL ─────────────────────────────────────────────────── -->
   @if (showDeleteModel()) {
-    <app-model [title]="'Delete Vendor'" maxWidth="sm" (onClose)="showDeleteModel.set(false)" [hasFooter]="true">
-      <div class="space-y-4">
-        <div class="p-4 rounded-xl bg-rose-50 border border-rose-100 flex gap-3">
-          <div class="text-rose-500 shrink-0">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-          </div>
-          <div>
-            <h4 class="text-sm font-bold text-rose-800 mb-1">Warning: Irreversible Action</h4>
-            <p class="text-xs text-rose-600/80 leading-relaxed">
-              You are about to permanently delete <strong>{{ vendorToDelete()?.businessName || vendorToDelete()?.fullName }}</strong>. All associated venues, bookings, and data will be lost. This cannot be undone.
-            </p>
-          </div>
+  <app-model [title]="'Delete Vendor'" maxWidth="sm" (onClose)="showDeleteModel.set(false)" [hasFooter]="true">
+    <div class="space-y-6 py-4">
+      <div class="p-5 rounded-2xl bg-rose-50 border border-rose-200 flex gap-4 shadow-sm">
+        <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center shrink-0">
+          <lucide-icon name="alert-triangle" size="24" [strokeWidth]="2.5"></lucide-icon>
         </div>
-        <app-form-input label="Reason for Deletion" type="textarea" placeholder="Please specify why this vendor is being deleted..." [rows]="3"
-                        [ngModel]="deleteReason()" (ngModelChange)="deleteReason.set($event)"></app-form-input>
+        <div>
+          <h4 class="text-[0.9rem] font-black text-rose-900 mb-1">Critical Action</h4>
+          <p class="text-xs text-rose-700/80 leading-relaxed">
+            You are about to permanently delete <strong>{{ vendorToDelete()?.businessName || vendorToDelete()?.fullName
+              }}</strong>. This action is irreversible.
+          </p>
+        </div>
       </div>
-      <div footer>
-        <app-button variant="secondary" (onClick)="showDeleteModel.set(false)">Cancel</app-button>
-        <app-button variant="danger" (onClick)="submitDelete()" [disabled]="!deleteReason().trim()">Permanently Delete</app-button>
-      </div>
-    </app-model>
+      <app-form-input label="Authorization Reason" type="textarea" placeholder="Specify reason for system audit..."
+        [rows]="3" [ngModel]="deleteReason()" (ngModelChange)="deleteReason.set($event)"></app-form-input>
+    </div>
+    <div footer>
+      <app-button variant="secondary" (onClick)="showDeleteModel.set(false)">Cancel</app-button>
+      <app-button variant="danger" (onClick)="submitDelete()" [disabled]="!deleteReason().trim()">Confirm
+        Deletion</app-button>
+    </div>
+  </app-model>
   }
 
-  <!-- ── IMAGE PREVIEW (Venues Style) ── -->
+  <!-- ── IMAGE PREVIEW ── -->
   @if (viewingImageUrl()) {
-    <div class="fixed inset-0 z-[10001] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease]"
-         (click)="closeImageViewer()">
-      <button
-        class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all border border-white/10 backdrop-blur-md shadow-2xl">
-        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
-      </button>
-      <div class="relative max-w-5xl max-h-[90vh] flex flex-col items-center gap-4" (click)="$event.stopPropagation()">
-        <img [src]="viewingImageUrl()"
-             class="max-h-[90vh] max-w-full rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.4)] object-contain border border-white/10 animate-[scaleIn_0.3s_ease]"
-             alt="Full screen preview" />
-      </div>
-    </div>
+  <div class="fixed inset-0 z-[10001] bg-slate-950/95 flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease]"
+    (click)="closeImageViewer()">
+    <button
+      class="absolute top-6 right-6 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all border border-white/10 backdrop-blur-md">
+      <lucide-icon name="x" size="24"></lucide-icon>
+    </button>
+    <img [src]="viewingImageUrl()"
+      class="max-h-[85vh] max-w-full rounded-2xl shadow-2xl object-contain border border-white/5"
+      (click)="$event.stopPropagation()" alt="Full screen preview" />
+  </div>
   }
 
 </div>
 
 <style>
-  @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes slideDown {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 </style>
