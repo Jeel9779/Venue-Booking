@@ -45,4 +45,37 @@ export class SubscriptionService {
         error: (err) => this.store.setError(err.error?.message || 'Failed to purchase plan')
       });
   }
+  // Admin Actions
+  loadAllSubscriptions() {
+    this.store.setLoading(true);
+    this.api.adminGetAllSubscriptions()
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: (res) => {
+          this.store.setAllSubscriptions(res.subscriptions);
+          this.store.setSummary(res.summary);
+        },
+        error: (err) => this.store.setError(err.error?.message || 'Failed to load all subscriptions')
+      });
+  }
+
+  adminAssign(data: { vendorId: string; planId: string; startDate?: string; endDate?: string }) {
+    this.store.setLoading(true);
+    this.api.adminAssign(data)
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: () => this.loadAllSubscriptions(),
+        error: (err) => this.store.setError(err.error?.message || 'Failed to assign subscription')
+      });
+  }
+
+  adminFullPayment(data: { vendorId: string; planId: string; startDate?: string; endDate?: string }) {
+    this.store.setLoading(true);
+    this.api.adminFullPayment(data)
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: () => this.loadAllSubscriptions(),
+        error: (err) => this.store.setError(err.error?.message || 'Failed to record full payment')
+      });
+  }
 }

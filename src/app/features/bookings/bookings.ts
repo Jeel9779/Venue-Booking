@@ -54,6 +54,9 @@ export class Bookings {
   pageSize = signal(10);
 
   selectedBooking = signal<Booking | null>(null);
+  // Controls which tab is active in the booking detail modal:
+  // 'booking' = Booking & Customer Info | 'payment' = Payment Details
+  modalTab = signal<'booking' | 'payment'>('booking');
 
   // Moderation state (Aligned with Vendor pattern)
   showApproveModel = signal(false);
@@ -244,6 +247,7 @@ export class Bookings {
 
   openDetails(booking: Booking) {
     this.selectedBooking.set(booking);
+    this.modalTab.set('booking'); // Always open on 'Booking Info' tab first
   }
 
   closeDetails() {

@@ -358,7 +358,7 @@
   </app-card>
 </div>
 
-<!-- ── DETAILS MODAL ── -->
+<!-- ── DETAILS MODAL (lives outside the card, inside the page) ── -->
 @if (selectedBooking(); as booking) {
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
     <!-- Backdrop -->
@@ -368,128 +368,168 @@
     <div class="relative bg-white w-full max-w-[800px] rounded-[48px] shadow-2xl border border-slate-300 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
       
       <!-- Header -->
-      <div class="p-10 border-b border-slate-100 flex items-center justify-between bg-linear-to-r from-slate-50 to-white">
+      <div class="p-8 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white">
         <div class="flex items-center gap-5">
-          <div class="w-16 h-16 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white shadow-xl shadow-indigo-100">
-            <lucide-icon name="file-text" size="28"></lucide-icon>
+          <div class="w-14 h-14 bg-indigo-600 rounded-[24px] flex items-center justify-center text-white shadow-xl shadow-indigo-100">
+            <lucide-icon name="file-text" size="24"></lucide-icon>
           </div>
           <div>
-            <h2 class="text-2xl font-black text-slate-900 m-0 tracking-tight">Booking Record</h2>
-            <p class="text-sm text-slate-400 font-bold mt-1 uppercase tracking-widest">ID: {{ booking.transactionId }}</p>
+            <h2 class="text-xl font-black text-slate-900 m-0 tracking-tight">Booking Record</h2>
+            <p class="text-xs text-slate-400 font-bold mt-1 uppercase tracking-widest font-mono">TXN: {{ booking.transactionId }}</p>
           </div>
         </div>
-        <button (click)="closeDetails()" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full flex items-center justify-center transition-all active:scale-90 border-none cursor-pointer">
-          <lucide-icon name="x" size="20"></lucide-icon>
+        <button (click)="closeDetails()" class="w-11 h-11 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full flex items-center justify-center transition-all active:scale-90 border-none cursor-pointer">
+          <lucide-icon name="x" size="18"></lucide-icon>
         </button>
       </div>
 
-      <div class="p-10 overflow-y-auto max-h-[70vh]">
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-          
-          <!-- Column 1: Entities -->
-          <div class="space-y-10">
+      <!-- Tab Switcher -->
+      <div class="flex items-center gap-1 px-8 pt-5 pb-0">
+        <button
+          (click)="modalTab.set('booking')"
+          [class]="modalTab() === 'booking' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'"
+          class="flex items-center gap-2 px-5 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all border-none cursor-pointer">
+          <lucide-icon name="calendar" size="13"></lucide-icon>
+          Booking Info
+        </button>
+        <button
+          (click)="modalTab.set('payment')"
+          [class]="modalTab() === 'payment' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-100' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'"
+          class="flex items-center gap-2 px-5 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all border-none cursor-pointer">
+          <lucide-icon name="credit-card" size="13"></lucide-icon>
+          Payment Details
+        </button>
+      </div>
+
+      <div class="p-8 overflow-y-auto max-h-[60vh]">
+
+        <!-- ── TAB 1: BOOKING INFO ── -->
+        @if (modalTab() === 'booking') {
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in duration-200">
             <!-- Customer -->
             <section>
-              <h4 class="text-[0.65rem] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4">Customer Details</h4>
-              <div class="p-6 bg-slate-50 rounded-[32px] border border-slate-200">
-                <p class="text-lg font-black text-slate-900 m-0">{{ booking.userId.name }}</p>
-                <div class="mt-4 space-y-2">
-                  <div class="flex items-center gap-3 text-sm text-slate-500 font-bold">
-                    <lucide-icon name="mail" size="14"></lucide-icon>
-                    {{ booking.userId.email }}
-                  </div>
-                  <div class="flex items-center gap-3 text-sm text-slate-500 font-bold">
-                    <lucide-icon name="phone" size="14"></lucide-icon>
-                    {{ booking.userId.phone }}
-                  </div>
+              <h4 class="text-[0.6rem] font-black text-indigo-500 uppercase tracking-[0.2em] mb-3">Customer Details</h4>
+              <div class="p-5 bg-slate-50 rounded-[24px] border border-slate-200 space-y-2">
+                <p class="text-base font-black text-slate-900 m-0">{{ booking.userId.name }}</p>
+                <div class="flex items-center gap-2 text-xs text-slate-500 font-bold">
+                  <lucide-icon name="mail" size="12"></lucide-icon>{{ booking.userId.email }}
+                </div>
+                <div class="flex items-center gap-2 text-xs text-slate-500 font-bold">
+                  <lucide-icon name="phone" size="12"></lucide-icon>{{ booking.userId.phone }}
                 </div>
               </div>
             </section>
-
-            <!-- Venue -->
+            <!-- Vendor -->
             <section>
-              <h4 class="text-[0.65rem] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4">Venue & Event</h4>
-              <div class="p-6 bg-slate-50 rounded-[32px] border border-slate-200">
-                <p class="text-lg font-black text-slate-900 m-0">{{ booking.venueId.name }}</p>
-                <p class="text-xs text-slate-400 font-bold mt-1">{{ booking.venueId.address }}, {{ booking.venueId.city }}</p>
-                
-                <div class="mt-6 flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                  <div class="flex items-center gap-3">
-                    <lucide-icon name="calendar" size="18" class="text-indigo-600"></lucide-icon>
-                    <div>
-                      <p class="text-[10px] text-slate-400 font-black uppercase m-0">Event Date</p>
-                      <p class="text-sm font-black text-slate-900 m-0">{{ booking.date | date:'fullDate' }}</p>
-                    </div>
+              <h4 class="text-[0.6rem] font-black text-indigo-500 uppercase tracking-[0.2em] mb-3">Vendor Details</h4>
+              <div class="p-5 bg-slate-50 rounded-[24px] border border-slate-200 space-y-2">
+                <p class="text-base font-black text-slate-900 m-0">{{ booking.vendorId.fullName }}</p>
+                <p class="text-xs text-slate-500 font-bold">{{ booking.vendorId.businessName }}</p>
+                <div class="flex items-center gap-2 text-xs text-slate-500 font-bold">
+                  <lucide-icon name="mail" size="12"></lucide-icon>{{ booking.vendorId.email }}
+                </div>
+              </div>
+            </section>
+            <!-- Venue & Date -->
+            <section class="md:col-span-2">
+              <h4 class="text-[0.6rem] font-black text-indigo-500 uppercase tracking-[0.2em] mb-3">Venue &amp; Event</h4>
+              <div class="p-5 bg-slate-50 rounded-[24px] border border-slate-200 flex flex-col sm:flex-row sm:items-center gap-4">
+                <div class="flex-1">
+                  <p class="text-base font-black text-slate-900 m-0">{{ booking.venueId.name }}</p>
+                  <p class="text-xs text-slate-400 font-bold mt-1">{{ booking.venueId.address }}, {{ booking.venueId.city }}</p>
+                </div>
+                <div class="flex items-center gap-3 bg-white px-4 py-3 rounded-2xl border border-slate-200 shadow-sm shrink-0">
+                  <lucide-icon name="calendar" size="16" class="text-indigo-600"></lucide-icon>
+                  <div>
+                    <p class="text-[9px] text-slate-400 font-black uppercase m-0">Event Date</p>
+                    <p class="text-sm font-black text-slate-900 m-0">{{ booking.date | date:'fullDate' }}</p>
                   </div>
                 </div>
               </div>
             </section>
           </div>
+        }
 
-          <!-- Column 2: Financials -->
-          <div class="space-y-10">
-            <section>
-              <h4 class="text-[0.65rem] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4">Payment Summary</h4>
-              <div class="space-y-4">
-                <!-- Total Card -->
-                <div class="p-6 bg-slate-100 rounded-[32px] text-slate-900 border border-slate-300 shadow-sm overflow-hidden relative group">
-                  <lucide-icon name="trending-up" size="60" class="absolute -bottom-4 -right-4 text-slate-200 transition-transform group-hover:scale-125"></lucide-icon>
-                  <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 m-0">Total Contract Value</p>
-                  <h3 class="text-3xl font-black mt-2 m-0">{{ formatCurrency(booking.totalBookingAmount) }}</h3>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                  <!-- Paid Card -->
-                  <div class="p-5 bg-emerald-50 rounded-[28px] border border-emerald-100">
-                    <p class="text-[9px] font-black uppercase tracking-widest text-emerald-500 m-0">Amount Paid</p>
-                    <p class="text-xl font-black text-emerald-600 mt-1 m-0">{{ formatCurrency(booking.amountPaid) }}</p>
-                  </div>
-                  <!-- Remaining Card -->
-                  <div class="p-5 bg-amber-50 rounded-[28px] border border-amber-100">
-                    <p class="text-[9px] font-black uppercase tracking-widest text-amber-500 m-0">Remaining</p>
-                    <p class="text-xl font-black text-amber-600 mt-1 m-0">{{ formatCurrency(booking.totalBookingAmount - booking.amountPaid) }}</p>
-                  </div>
-                </div>
+        <!-- ── TAB 2: PAYMENT DETAILS ── -->
+        @if (modalTab() === 'payment') {
+          <div class="space-y-5 animate-in fade-in duration-200">
+            <!-- Status Banner -->
+            <div class="flex items-center justify-between p-4 rounded-2xl border"
+                 [ngClass]="{
+                   'bg-emerald-50 border-emerald-200': booking.paymentStatus === 'success',
+                   'bg-amber-50 border-amber-200': booking.paymentStatus === 'pending',
+                   'bg-rose-50 border-rose-200': booking.paymentStatus === 'failed'
+                 }">
+              <div class="flex items-center gap-3">
+                @if (booking.paymentStatus === 'success') {
+                  <lucide-icon name="check-circle" size="20" class="text-emerald-600"></lucide-icon>
+                  <span class="text-sm font-black text-emerald-700 uppercase tracking-widest">Payment Verified</span>
+                } @else if (booking.paymentStatus === 'pending') {
+                  <lucide-icon name="clock" size="20" class="text-amber-600"></lucide-icon>
+                  <span class="text-sm font-black text-amber-700 uppercase tracking-widest">Awaiting Verification</span>
+                } @else {
+                  <lucide-icon name="x-circle" size="20" class="text-rose-600"></lucide-icon>
+                  <span class="text-sm font-black text-rose-700 uppercase tracking-widest">Payment Failed</span>
+                }
               </div>
-            </section>
-
-            <!-- Metadata -->
-            <section>
-              <h4 class="text-[0.65rem] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4">Internal Tracking</h4>
-              <div class="space-y-3">
+              <div [class]="getStatusClass(booking.paymentStatus)">{{ booking.paymentStatus }}</div>
+            </div>
+            <!-- Payment Breakdown 3-col -->
+            <div class="grid grid-cols-3 gap-4">
+              <div class="p-4 bg-slate-100 rounded-[20px] border border-slate-200 text-center">
+                <p class="text-[9px] font-black uppercase tracking-widest text-slate-500 m-0">Total Value</p>
+                <p class="text-base font-black text-slate-900 mt-1 m-0">{{ formatCurrency(booking.totalBookingAmount) }}</p>
+              </div>
+              <div class="p-4 bg-emerald-50 rounded-[20px] border border-emerald-100 text-center">
+                <p class="text-[9px] font-black uppercase tracking-widest text-emerald-500 m-0">Paid (20%)</p>
+                <p class="text-base font-black text-emerald-600 mt-1 m-0">{{ formatCurrency(booking.amountPaid) }}</p>
+              </div>
+              <div class="p-4 bg-amber-50 rounded-[20px] border border-amber-100 text-center">
+                <p class="text-[9px] font-black uppercase tracking-widest text-amber-500 m-0">Due at Venue</p>
+                <p class="text-base font-black text-amber-600 mt-1 m-0">{{ formatCurrency(booking.totalBookingAmount - booking.amountPaid) }}</p>
+              </div>
+            </div>
+            <!-- Transaction Audit -->
+            <div>
+              <h4 class="text-[0.6rem] font-black text-emerald-600 uppercase tracking-[0.2em] mb-3">Transaction Audit</h4>
+              <div class="p-5 bg-slate-50 rounded-[20px] border border-slate-200 space-y-3">
                 <div class="flex items-center justify-between text-xs font-bold py-2 border-b border-slate-100">
-                  <span class="text-slate-400 uppercase tracking-widest">Status</span>
-                  <div [class]="getStatusClass(booking.paymentStatus)">{{ booking.paymentStatus }}</div>
+                  <span class="text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <lucide-icon name="hash" size="11"></lucide-icon> Transaction ID
+                  </span>
+                  <span class="font-mono text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-[10px]">{{ booking.transactionId || 'N/A' }}</span>
                 </div>
                 <div class="flex items-center justify-between text-xs font-bold py-2 border-b border-slate-100">
-                  <span class="text-slate-400 uppercase tracking-widest">Logged At</span>
-                  <span class="text-slate-700">{{ booking.createdAt | date:'short' }}</span>
+                  <span class="text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <lucide-icon name="clock" size="11"></lucide-icon> Payment Timestamp
+                  </span>
+                  <span class="text-slate-700">{{ booking.paymentTimestamp | date:'medium' }}</span>
                 </div>
                 <div class="flex items-center justify-between text-xs font-bold py-2">
-                  <span class="text-slate-400 uppercase tracking-widest">Vendor</span>
-                  <span class="text-indigo-600">{{ booking.vendorId.fullName }}</span>
+                  <span class="text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <lucide-icon name="calendar" size="11"></lucide-icon> Booking Created
+                  </span>
+                  <span class="text-slate-700">{{ booking.createdAt | date:'short' }}</span>
                 </div>
               </div>
-            </section>
+            </div>
           </div>
-
-        </div>
+        }
 
       </div>
 
-      <!-- Footer Action -->
-      <div class="p-8 bg-slate-50 border-t border-slate-100 flex items-center justify-center gap-4">
+      <!-- Footer -->
+      <div class="px-8 py-5 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-4">
         @if (booking.paymentStatus === 'pending') {
-          <app-button (onClick)="openReject()" variant="secondary" customClass="px-8 py-4 rounded-[20px] shadow-sm text-rose-600 border-rose-100 hover:bg-rose-50">
+          <app-button (onClick)="openReject()" variant="secondary" customClass="px-6 py-3 rounded-[18px] shadow-sm text-rose-600 border-rose-100 hover:bg-rose-50">
             Reject Payment
           </app-button>
-          <app-button (onClick)="openApprove()" variant="primary" customClass="px-8 py-4 rounded-[20px] shadow-lg shadow-indigo-100 bg-indigo-600 hover:bg-indigo-700">
-            Verify & Approve
+          <app-button (onClick)="openApprove()" variant="primary" customClass="px-6 py-3 rounded-[18px] shadow-lg shadow-indigo-100 bg-indigo-600 hover:bg-indigo-700">
+            Verify &amp; Approve
           </app-button>
         } @else {
-          <app-button (onClick)="closeDetails()" variant="secondary" customClass="px-12 py-4 rounded-[20px] shadow-sm">
-            Return to Dashboard
+          <app-button (onClick)="closeDetails()" variant="secondary" customClass="px-10 py-3 rounded-[18px] shadow-sm">
+            Close
           </app-button>
         }
       </div>

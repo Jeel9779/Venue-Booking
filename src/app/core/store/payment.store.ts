@@ -14,9 +14,13 @@ const initialState: PaymentState = {
   payments: [],
   stats: null,
   filters: {
-    type: '',
+    // Default to 'subscription' so Payment page only shows Vendor↔Admin flows.
+    // Booking/full-payment types belong in the Bookings module.
+    type: 'subscription',
     paymentStatus: '',
     vendorId: '',
+    startDate: '',
+    endDate: '',
   },
   isLoading: false,
   error: null,

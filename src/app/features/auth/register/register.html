@@ -1,5 +1,5 @@
-<!-- Main Section Container (Responsive flexbox layout for mobile, tablet, and desktop) -->
-<section class="login-page-bg min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+<!-- Main Section Container -->
+<section class="register-page-bg min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
   <div class="flex flex-col items-center justify-center w-full max-w-md sm:max-w-lg">
 
     <!-- Brand / Logo Area -->
@@ -13,29 +13,28 @@
       Book My Venue
     </a>
 
-    <!-- Login Card (Responsive max width, padding adjusts for mobile/tablet) -->
+    <!-- Register Card -->
     <div class="w-full bg-white rounded-2xl shadow-xl border border-gray-300 relative overflow-hidden">
-      <!-- Top Decorative Line for premium feel -->
-      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+      <!-- Top Decorative Line -->
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 via-teal-500 to-blue-500"></div>
       
-      <!-- Card Padding: smaller on mobile (p-6), larger on tablet/desktop (sm:p-10) -->
       <div class="p-6 space-y-5 sm:p-10 md:space-y-6">
 
         <!-- Title & Subtitle -->
         <div class="text-center">
           <h1 class="text-xl sm:text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
-            Admin Portal Access
+            Admin Registration
           </h1>
-          <p class="text-xs sm:text-sm text-gray-500 mt-2">Sign in to manage venues, bookings, and users.</p>
+          <p class="text-xs sm:text-sm text-gray-500 mt-2">Create a new administrative portal account.</p>
         </div>
 
-        <!-- Authentication Form -->
-        <form [formGroup]="form" (ngSubmit)="login()" class="space-y-4 md:space-y-5">
+        <!-- Registration Form -->
+        <form [formGroup]="form" (ngSubmit)="register()" class="space-y-4 md:space-y-5">
 
-          <!-- Email / Username Field -->
+          <!-- Username Field -->
           <div>
             <label for="username" class="block mb-1.5 text-sm font-semibold text-gray-900">
-              Username or Email
+              Username
             </label>
             <input
               type="text"
@@ -44,19 +43,18 @@
               formControlName="username"
               autocomplete="username"
               placeholder="admin@bookmyvenue.com"
-              class="login-input"
+              class="register-input"
               [class.border-red-500]="form.controls.username.touched && form.controls.username.invalid"
             />
-            <!-- Username Validation Error Message -->
             @if (form.controls.username.touched && form.controls.username.invalid) {
               <p class="text-red-500 text-xs sm:text-sm mt-1.5 font-medium flex items-center gap-1">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                Please enter a valid username.
+                Username is required (min 3 chars).
               </p>
             }
           </div>
 
-          <!-- Password Field with Visibility Toggle -->
+          <!-- Password Field -->
           <div>
             <label for="password" class="block mb-1.5 text-sm font-semibold text-gray-900">
               Password
@@ -67,24 +65,21 @@
                 id="password"
                 name="password"
                 formControlName="password"
-                autocomplete="current-password"
+                autocomplete="new-password"
                 placeholder="••••••••"
-                class="login-input pr-10" 
+                class="register-input pr-10" 
                 [class.border-red-500]="form.controls.password.touched && form.controls.password.invalid"
               />
-              <!-- Toggle Button -->
               <button 
                 type="button" 
                 (click)="togglePassword()"
                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 focus:outline-none transition-colors"
                 aria-label="Toggle password visibility">
                 @if (showPassword()) {
-                  <!-- Eye Off Icon -->
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                   </svg>
                 } @else {
-                  <!-- Eye Icon -->
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -92,34 +87,38 @@
                 }
               </button>
             </div>
-            <!-- Password Validation Error Message -->
             @if (form.controls.password.touched && form.controls.password.invalid) {
               <p class="text-red-500 text-xs sm:text-sm mt-1.5 font-medium flex items-center gap-1">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                Password is required (min 5 characters).
+                Password is required (min 5 chars).
               </p>
             }
           </div>
 
-          <!-- Remember Me & Forgot Password Section -->
-          <div class="flex flex-wrap items-center justify-between gap-y-2 pt-1">
-            <div class="flex items-start">
-              <div class="flex items-center h-5">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  formControlName="remember"
-                  class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 cursor-pointer"
-                />
-              </div>
-              <div class="ml-3 text-sm">
-                <label for="remember" class="text-gray-600 font-medium cursor-pointer">Remember my device</label>
-              </div>
-            </div>
-            <a href="#" class="text-sm font-semibold text-primary-600 hover:text-primary-700 hover:underline transition-colors">Forgot password?</a>
+          <!-- Confirm Password Field -->
+          <div>
+            <label for="confirmPassword" class="block mb-1.5 text-sm font-semibold text-gray-900">
+              Confirm Password
+            </label>
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              id="confirmPassword"
+              name="confirmPassword"
+              formControlName="confirmPassword"
+              autocomplete="new-password"
+              placeholder="••••••••"
+              class="register-input"
+              [class.border-red-500]="form.controls.confirmPassword.touched && (form.controls.confirmPassword.invalid || form.errors?.['mismatch'])"
+            />
+            @if (form.controls.confirmPassword.touched && form.errors?.['mismatch']) {
+              <p class="text-red-500 text-xs sm:text-sm mt-1.5 font-medium flex items-center gap-1">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                Passwords do not match.
+              </p>
+            }
           </div>
 
-          <!-- Global Error Message Banner -->
+          <!-- Messages -->
           @if (errorMsg) {
             <div class="bg-red-50 border border-red-300 rounded-lg p-3 sm:p-4">
               <p class="text-red-600 text-sm font-medium flex items-center gap-2">
@@ -133,12 +132,22 @@
             </div>
           }
 
+          @if (successMsg) {
+            <div class="bg-green-50 border border-green-300 rounded-lg p-3 sm:p-4">
+              <p class="text-green-600 text-sm font-medium flex items-center gap-2">
+                <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                {{ successMsg }}
+              </p>
+            </div>
+          }
+
           <!-- Submit Button -->
           <button
             type="submit"
-            id="login-submit-btn"
             [disabled]="isLoading() || form.invalid"
-            class="login-btn mt-4 sm:mt-2"
+            class="register-btn mt-4 sm:mt-2"
           >
             @if (isLoading()) {
               <svg class="w-5 h-5 animate-spin mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,32 +155,22 @@
                 <path class="opacity-75" fill="currentColor"
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
               </svg>
-              Authenticating...
+              Creating Account...
             } @else {
-              Access Dashboard
+              Create Admin Account
             }
           </button>
 
-          <!-- Navigation Back Link -->
-          <div class="text-center mt-4 space-y-2">
+          <!-- Login Link -->
+          <div class="text-center mt-4">
             <p class="text-sm font-medium text-gray-500">
-              Don't have an admin account?
-              <a routerLink="/register" class="text-primary-600 hover:text-primary-700 hover:underline transition-colors">Sign up</a>
-            </p>
-            <p class="text-sm font-medium text-gray-500">
-              Not an admin?
-              <a href="#" class="text-primary-600 hover:text-primary-700 hover:underline transition-colors">Return to Main Site</a>
+              Already have an account?
+              <a routerLink="/login" class="text-primary-600 hover:text-primary-700 hover:underline transition-colors">Sign in here</a>
             </p>
           </div>
 
         </form>
       </div>
     </div>
-
-    <!-- Footer Copyright -->
-    <div class="mt-8 text-center text-xs sm:text-sm text-gray-500">
-      &copy; 2026 Book My Venue. All rights reserved.
-    </div>
-
   </div>
 </section>

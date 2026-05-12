@@ -1,114 +1,326 @@
-<div class="subscription-monitor-page p-6 sm:p-8 bg-gray-300 min-h-screen">
+<div class="subscription-monitor-page p-6 sm:p-10 bg-gray-300 min-h-screen">
 
   <!-- ── HEADER ── -->
-  <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
-    <div class="flex items-center gap-4">
-      <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-        </svg>
+  <div class="flex items-center justify-between mb-10">
+    <div class="flex items-center gap-5">
+      <div
+        class="w-16 h-16 bg-indigo-600 rounded-[22px] flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+        <lucide-icon name="scroll-text" size="32"></lucide-icon>
       </div>
       <div>
-        <h1 class="text-2xl font-bold tracking-tight m-0 text-slate-900">Subscription Monitor</h1>
-        <p class="text-sm text-slate-500 mt-0.5 m-0 font-medium">Track and manage vendor subscription lifecycles</p>
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Subscription Monitor</h1>
+        <p class="text-sm font-bold text-slate-500">Track and manage vendor subscription lifecycles</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button (click)="loadAll()"
+        class="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-black text-slate-700 hover:bg-slate-50 transition-all cursor-pointer shadow-sm">
+        <lucide-icon name="refresh-cw" size="14" [class.animate-spin]="isLoading()"></lucide-icon>
+        Refresh Data
+      </button>
+    </div>
+  </div>
+
+  <!-- ── TOP KPI CARDS ── -->
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-10">
+    <!-- Total -->
+    <div
+      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Total Subs</p>
+      <h3 class="text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.total || 0 }}</h3>
+      <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
+        <div class="h-full bg-indigo-500 transition-all duration-1000" [style.width.%]="100"></div>
       </div>
     </div>
 
-    <app-button variant="secondary" (onClick)="loadAll()" [loading]="isLoading()">
-      <svg class="mr-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-      </svg>
-      Refresh Data
-    </app-button>
+    <!-- Active -->
+    <div
+      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+      <p class="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-4">Active</p>
+      <h3 class="text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.active || 0 }}</h3>
+      <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
+        <div class="h-full bg-emerald-500 transition-all duration-1000"
+          [style.width.%]="(summary()?.active / summary()?.total) * 100 || 0"></div>
+      </div>
+    </div>
+
+    <!-- Expiring -->
+    <div
+      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+      <p class="text-[10px] font-black text-rose-600 uppercase tracking-[0.2em] mb-4">Expiring Soon (15D)</p>
+      <h3 class="text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.expiringWithin15Days || 0 }}</h3>
+      <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
+        <div class="h-full bg-rose-500 transition-all duration-1000"
+          [style.width.%]="(summary()?.expiringWithin15Days / summary()?.total) * 100 || 0"></div>
+      </div>
+    </div>
+
+    <!-- Grace -->
+    <div
+      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+      <p class="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-4">In Grace</p>
+      <h3 class="text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.grace || 0 }}</h3>
+      <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
+        <div class="h-full bg-amber-500 transition-all duration-1000"
+          [style.width.%]="(summary()?.grace / summary()?.total) * 100 || 0"></div>
+      </div>
+    </div>
+
+    <!-- Revenue -->
+    <div
+      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+      <p class="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-4">Total Revenue</p>
+      <h3 class="text-4xl font-black text-slate-900 mb-2 leading-none">₹{{ summary()?.revenue || 0 | number }}</h3>
+      <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
+        <div class="h-full bg-indigo-600 transition-all duration-1000" [style.width.%]="100"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- ── STATS CARDS ── -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-    <app-card [padding]="true" customClass="shadow-sm">
-      <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Total Subs</p>
-      <h3 class="text-3xl font-black text-slate-900">{{ stats().total }}</h3>
-    </app-card>
-    <app-card [padding]="true" customClass="shadow-sm">
-      <p class="text-xs font-black text-emerald-500 uppercase tracking-widest mb-1">Active</p>
-      <h3 class="text-3xl font-black text-slate-900">{{ stats().active }}</h3>
-    </app-card>
-    <app-card [padding]="true" customClass="shadow-sm">
-      <p class="text-xs font-black text-rose-500 uppercase tracking-widest mb-1">Expiring Soon (15d)</p>
-      <h3 class="text-3xl font-black text-rose-600">{{ stats().expiringSoon }}</h3>
-    </app-card>
-    <app-card [padding]="true" customClass="shadow-sm">
-      <p class="text-xs font-black text-amber-500 uppercase tracking-widest mb-1">In Grace</p>
-      <h3 class="text-3xl font-black text-slate-900">{{ stats().grace }}</h3>
-    </app-card>
-    <app-card [padding]="true" customClass="shadow-sm">
-      <p class="text-xs font-black text-indigo-500 uppercase tracking-widest mb-1">Total Revenue</p>
-      <h3 class="text-3xl font-black text-slate-900">₹{{ stats().revenue }}</h3>
-    </app-card>
+  <!-- ── FILTERS & SEARCH ── -->
+  <div
+    class="flex items-center justify-between flex-wrap gap-4 mb-8 bg-white p-3 rounded-[28px] border border-slate-200 shadow-sm">
+    <div class="flex items-center gap-1">
+      <button (click)="filter.set('all')"
+        class="px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer"
+        [class]="filter() === 'all' ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'text-slate-500 hover:bg-slate-50'">
+        All
+      </button>
+      <button (click)="filter.set('active')"
+        class="px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer"
+        [class]="filter() === 'active' ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'text-slate-500 hover:bg-slate-50'">
+        Active
+      </button>
+      <button (click)="filter.set('grace')"
+        class="px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer"
+        [class]="filter() === 'grace' ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'text-slate-500 hover:bg-slate-50'">
+        Grace
+      </button>
+      <button (click)="filter.set('expired')"
+        class="px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer"
+        [class]="filter() === 'expired' ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'text-slate-500 hover:bg-slate-50'">
+        Expired
+      </button>
+    </div>
+
+    <div class="flex items-center gap-4 px-4 border-l border-slate-100">
+      <div class="relative w-72 group">
+        <lucide-icon name="search" size="16"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors"></lucide-icon>
+        <input type="text" [value]="search()" (input)="search.set($any($event.target).value)"
+          placeholder="Search by vendor or plan..."
+          class="w-full bg-slate-50 border border-transparent focus:border-indigo-100 focus:bg-white outline-none py-3 pl-12 pr-4 text-xs font-bold text-slate-900 placeholder:text-slate-400 rounded-xl transition-all">
+      </div>
+    </div>
   </div>
 
-  <!-- ── MONITOR TABLE ── -->
-  <app-table [columns]="['Vendor', 'Current Plan', 'Start Date', 'Expiry Date', 'Status', 'Queue']">
-          @if (isLoading() && subscriptions().length === 0) {
-            @for (i of [1,2,3,4,5]; track i) {
-              <tr class="animate-pulse">
-                <td class="px-5 py-4"><div class="h-4 bg-slate-100 rounded w-32"></div></td>
-                <td class="px-5 py-4"><div class="h-4 bg-slate-100 rounded w-24"></div></td>
-                <td class="px-5 py-4"><div class="h-4 bg-slate-100 rounded w-24"></div></td>
-                <td class="px-5 py-4"><div class="h-4 bg-slate-100 rounded w-24"></div></td>
-                <td class="px-5 py-4"><div class="h-6 bg-slate-100 rounded-full w-16"></div></td>
-                <td class="px-5 py-4 text-right"><div class="h-4 bg-slate-100 rounded w-8 ml-auto"></div></td>
-              </tr>
-            }
-          } @else if (subscriptions().length === 0) {
-            <tr>
-              <td colspan="6" class="px-5 py-12 text-center">
-                <div class="flex flex-col items-center justify-center text-slate-300">
-                  <svg class="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                  <p class="font-bold text-slate-400 uppercase tracking-widest text-xs">No vendor subscriptions found</p>
-                </div>
-              </td>
-            </tr>
-          } @else {
-            @for (sub of enrichedSubscriptions(); track sub._id) {
-              <tr class="hover:bg-slate-50/50 transition-colors group">
-                <td class="px-5 py-4">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-sm">
-                      {{ sub.vendorDetails?.fullName?.charAt(0) || sub.vendorDetails?.name?.charAt(0) || sub.vendorDetails?.businessName?.charAt(0) || 'V' }}
-                    </div>
-                    <div>
-                      <p class="font-extrabold text-slate-900 leading-tight">{{ sub.vendorDetails?.fullName || sub.vendorDetails?.name || sub.vendorDetails?.businessName || 'Unknown Vendor' }}</p>
-                      <p class="text-[11px] font-bold text-slate-400 mt-0.5">{{ sub.vendorDetails?.email }}</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-5 py-4">
-                  <p class="font-bold text-slate-700">{{ sub.planId?.name || 'No Plan' }}</p>
-                  <p class="text-[10px] font-black text-indigo-500 uppercase mt-0.5">₹{{ sub.planId?.price }}</p>
-                </td>
-                <td class="px-5 py-4 whitespace-nowrap">
-                  <p class="text-sm font-bold text-slate-600">{{ sub.startDate | date:'mediumDate' }}</p>
-                </td>
-                <td class="px-5 py-4 whitespace-nowrap">
-                  <p class="text-sm font-bold" [class.text-rose-600]="sub.status === 'expired'">
-                    {{ sub.endDate | date:'mediumDate' }}
-                  </p>
-                </td>
-                <td class="px-5 py-4">
-                  <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border whitespace-nowrap" [ngClass]="getStatusClass(sub.status)">
-                    {{ sub.status }}
-                  </span>
-                </td>
-                <td class="px-5 py-4 text-right">
-                  <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold text-xs">
-                    {{ sub.queueCount || 0 }}
-                  </span>
-                </td>
-              </tr>
-            }
+  <!-- ── SUBSCRIPTION TABLE ── -->
+  <div class="bg-white rounded-[40px] border border-slate-200 overflow-hidden shadow-xl shadow-slate-200/50">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-slate-100 bg-slate-50/50">
+            <th class="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Vendor</th>
+            <th class="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Current Plan</th>
+            <th class="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Start Date</th>
+            <th class="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Expiry Date</th>
+            <th class="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
+            <th class="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Queue</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          @if (isLoading() && filteredSubscriptions().length === 0) {
+          @for (i of [1,2,3,4,5]; track i) {
+          <tr class="animate-pulse">
+            <td class="px-10 py-10" colspan="6">
+              <div class="h-12 bg-slate-50 rounded-2xl w-full"></div>
+            </td>
+          </tr>
           }
-  </app-table>
+          } @else {
+          @for (sub of filteredSubscriptions(); track sub._id) {
+          <tr (click)="openDetails(sub)" class="hover:bg-slate-50 transition-all cursor-pointer group">
+            <!-- Vendor -->
+            <td class="px-10 py-8">
+              <div class="flex items-center gap-5">
+                <div
+                  class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-md">
+                  {{ sub.vendorDetails?.businessName?.charAt(0) || 'V' }}
+                </div>
+                <div>
+                  <h4 class="text-base font-black text-slate-900 leading-tight mb-1">{{ sub.vendorDetails?.businessName
+                    || 'Unknown Vendor' }}</h4>
+                  <p class="text-[11px] font-bold text-slate-400 leading-none">{{ sub.vendorDetails?.email }}</p>
+                </div>
+              </div>
+            </td>
 
+            <!-- Plan -->
+            <td class="px-8 py-8">
+              <div>
+                <p class="text-sm font-black text-slate-900">{{ sub.planSnapshot?.name }}</p>
+                <p class="text-[11px] font-bold text-indigo-600 mt-0.5">₹{{ sub.planSnapshot?.price | number }}</p>
+              </div>
+            </td>
+
+            <!-- Start Date -->
+            <td class="px-8 py-8">
+              <p class="text-xs font-black text-slate-700">{{ sub.startDate | date:'MMM dd, yyyy' }}</p>
+            </td>
+
+            <!-- Expiry Date -->
+            <td class="px-8 py-8">
+              <p class="text-xs font-black text-slate-700">{{ sub.endDate | date:'MMM dd, yyyy' }}</p>
+            </td>
+
+            <!-- Status -->
+            <td class="px-8 py-8">
+              <div
+                [class]="'px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border inline-flex ' + getStatusClass(sub.status)">
+                {{ sub.status }}
+              </div>
+            </td>
+
+            <!-- Queue -->
+            <td class="px-8 py-8">
+              <p class="text-xs font-bold text-slate-500">0</p>
+            </td>
+          </tr>
+          }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    @if (!isLoading() && filteredSubscriptions().length === 0) {
+    <div class="py-32 flex flex-col items-center justify-center text-center">
+      <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6 border border-slate-100">
+        <lucide-icon name="shield-off" size="48" class="text-slate-200"></lucide-icon>
+      </div>
+      <h3 class="text-xl font-black text-slate-900 mb-2">No results found</h3>
+      <p class="text-sm font-bold text-slate-400 max-w-xs">We couldn't find any subscriptions matching your search.</p>
+      <button (click)="filter.set('all'); search.set('')"
+        class="mt-8 text-indigo-600 text-[10px] font-black uppercase tracking-widest hover:underline cursor-pointer">
+        Reset all filters
+      </button>
+    </div>
+    }
+  </div>
 </div>
+
+<!-- ── DETAIL MODAL ── -->
+@if (selectedSubscription()) {
+<app-model [title]="'Subscription Details'" maxWidth="lg" (onClose)="closeDetails()">
+
+  <div class="space-y-8">
+    <!-- Vendor Info -->
+    <div class="flex items-center gap-6 p-6 bg-slate-50 rounded-[32px] border border-slate-100">
+      <div
+        class="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center text-white text-3xl font-black shadow-lg">
+        {{ selectedSubscription().vendorDetails?.businessName?.charAt(0) }}
+      </div>
+      <div>
+        <h3 class="text-2xl font-black text-slate-900">{{ selectedSubscription().vendorDetails?.businessName }}</h3>
+        <p class="text-sm font-bold text-slate-500">{{ selectedSubscription().vendorDetails?.email }}</p>
+        <div class="mt-2 flex gap-2">
+          <span
+            class="px-3 py-1 bg-white border border-slate-200 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-600">
+            ID: {{ selectedSubscription()._id.slice(-8) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan Grid -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="p-6 bg-white border border-slate-100 rounded-[28px] shadow-sm">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Current Plan</p>
+        <p class="text-xl font-black text-slate-900">{{ selectedSubscription().planSnapshot?.name }}</p>
+        <p class="text-sm font-bold text-indigo-600 mt-1">₹{{ selectedSubscription().planSnapshot?.price | number }}</p>
+      </div>
+      <div class="p-6 bg-white border border-slate-100 rounded-[28px] shadow-sm">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Status</p>
+        <div
+          [class]="'px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border inline-flex ' + getStatusClass(selectedSubscription().status)">
+          {{ selectedSubscription().status }}
+        </div>
+        <p class="text-[10px] font-bold text-slate-500 mt-2">Ends in {{ selectedSubscription().daysLeft }} days</p>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="p-8 bg-white border border-slate-100 rounded-[32px] shadow-sm">
+      <h4 class="text-sm font-black text-slate-900 mb-6 flex items-center gap-2">
+        <lucide-icon name="calendar" size="18" class="text-indigo-600"></lucide-icon>
+        Subscription Timeline
+      </h4>
+      <div class="relative pl-8 border-l-2 border-slate-100 space-y-10">
+        <!-- Start -->
+        <div class="relative">
+          <div class="absolute -left-[41px] top-0 w-5 h-5 bg-white border-4 border-indigo-600 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Started On</p>
+          <p class="text-lg font-black text-slate-900">{{ selectedSubscription().startDate | date:'MMMM dd, yyyy' }}</p>
+        </div>
+        <!-- End -->
+        <div class="relative">
+          <div class="absolute -left-[41px] top-0 w-5 h-5 bg-white border-4 border-slate-200 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Expires On</p>
+          <p class="text-lg font-black text-slate-900">{{ selectedSubscription().endDate | date:'MMMM dd, yyyy' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="p-8 bg-indigo-600 rounded-[32px] text-white shadow-xl shadow-indigo-100">
+      <div class="flex justify-between items-end mb-4">
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-widest opacity-70 mb-1">Usage Progress</p>
+          <h4 class="text-2xl font-black">{{ selectedSubscription().daysLeft }} Days Left</h4>
+        </div>
+        <p class="text-sm font-bold opacity-70">{{ selectedSubscription().planSnapshot?.duration_days }} Day Cycle</p>
+      </div>
+      <div class="h-3 bg-white/20 rounded-full overflow-hidden">
+        <div class="h-full bg-white transition-all duration-1000"
+          [style.width.%]="Math.max(0, Math.min(100, (selectedSubscription().daysLeft / selectedSubscription().planSnapshot?.duration_days) * 100))">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div footer class="w-full flex gap-3">
+    <button (click)="closeDetails()"
+      class="flex-1 py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-800 transition-all cursor-pointer">
+      Close Details
+    </button>
+  </div>
+</app-model>
+}
+
+<style>
+  :host {
+    display: block;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+</style>

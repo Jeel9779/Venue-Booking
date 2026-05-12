@@ -11,7 +11,7 @@ import {
   Maximize2, ImageOff, CheckCircle2, Check, Tag, Plus, Mail, Phone, 
   ShieldCheck, FileText, FileCheck, XCircle, User, List, Clock, 
   MessageSquareOff, ShieldX, CheckCircle, TrendingUp, Wallet,
-  CalendarCheck, Download, ClipboardList, CalendarX
+  CalendarCheck, Download, ClipboardList, CalendarX, RefreshCw, ShieldOff, ScrollText
 } from 'lucide-angular';
 
 
@@ -27,7 +27,7 @@ export const appConfig: ApplicationConfig = {
       Maximize2, ImageOff, CheckCircle2, Check, Tag, Plus, Mail, Phone, 
       ShieldCheck, FileText, FileCheck, XCircle, User, List, Clock, 
       MessageSquareOff, ShieldX, CheckCircle, TrendingUp, Wallet,
-      CalendarCheck, Download, ClipboardList, CalendarX
+      CalendarCheck, Download, ClipboardList, CalendarX, RefreshCw, ShieldOff, ScrollText
     }))
   ]
 };

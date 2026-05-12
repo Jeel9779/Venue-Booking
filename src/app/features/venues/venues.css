@@ -1,0 +1,33 @@
+/* Targeting the custom modal component internal body if possible */
+:host ::ng-deep .modal-body,
+:host ::ng-deep .modal-content,
+:host ::ng-deep .app-model-body {
+  background-color: #e2e8f0 !important;
+  /* bg-slate-200 */
+  border: 1px solid #cbd5e1 !important;
+  /* border-slate-300 */
+}
+
+/* Ensure borders are visible against slate-200 */
+.border-slate-300 {
+  border-color: #cbd5e1 !important;
+  /* slate-300 */
+}
+
+/* Remove shadows globally within venues feature if desired, but focus on modal elements */
+.shadow-none,
+.shadow-sm,
+.shadow-md,
+.shadow-lg,
+.shadow-xl,
+.shadow-2xl,
+.shadow-inner {
+  box-shadow: none !important;
+}
+
+/* Specific modal container override */
+:host ::ng-deep .app-model-container {
+  background-color: #678ab3 !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: none !important;
+}

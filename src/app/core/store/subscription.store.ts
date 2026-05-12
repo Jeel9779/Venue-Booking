@@ -6,12 +6,16 @@ export class SubscriptionStore {
   // ── State ──
   private readonly _currentSubscription = signal<Subscription | null>(null);
   private readonly _queue = signal<SubscriptionQueue[]>([]);
+  private readonly _allSubscriptions = signal<any[]>([]);
+  private readonly _summary = signal<any>({});
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
 
   // ── Selectors (Computed) ──
   readonly currentSubscription = computed(() => this._currentSubscription());
   readonly queue = computed(() => this._queue());
+  readonly allSubscriptions = computed(() => this._allSubscriptions());
+  readonly summary = computed(() => this._summary());
   readonly isLoading = computed(() => this._isLoading());
   readonly error = computed(() => this._error());
 
@@ -26,6 +30,14 @@ export class SubscriptionStore {
 
   setLoading(loading: boolean) {
     this._isLoading.set(loading);
+  }
+
+  setAllSubscriptions(subs: any[]) {
+    this._allSubscriptions.set(subs);
+  }
+
+  setSummary(summary: any) {
+    this._summary.set(summary);
   }
 
   setError(error: string | null) {

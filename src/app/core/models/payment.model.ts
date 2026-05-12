@@ -3,6 +3,7 @@ export interface Payment {
   vendorId: {
     _id: string;
     name?: string;
+    fullName?: string;   // backend may populate either name or fullName
     email: string;
   };
   userId?: {
@@ -11,7 +12,7 @@ export interface Payment {
     email: string;
     username?: string;
   };
-  type: 'booking' | 'subscription' | 'addon';
+  type: 'booking' | 'subscription' | 'full payment' | 'addon';
   relatedId: string;
   amount: number;
   paymentStatus: 'pending' | 'success' | 'failed';

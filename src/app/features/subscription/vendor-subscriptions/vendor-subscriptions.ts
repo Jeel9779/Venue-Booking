@@ -1,85 +1,102 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { finalize } from 'rxjs';
-import { SubscriptionApi } from '@core/api/subscription-api';    // Subscription API
-import { VendorStore } from '@core/store/vendor.store';          // Vendor Store
-import { VendorService } from '@core/services/vendor.service';  // Vendor Service
+import { SubscriptionService } from '@core/services/subscription.service';
+import { SubscriptionStore } from '@core/store/subscription.store';
+import { VendorStore } from '@core/store/vendor.store';
+import { VendorService } from '@core/services/vendor.service';
 import { Button } from '@shared/components/button/button';
 import { Card } from '@shared/components/card/card';
 import { Table } from '@shared/components/table/table';
+import { Model } from '@shared/components/model/model';
 
+
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-vendor-subscriptions',
   standalone: true,
-  imports: [CommonModule, Button, Card, Table],
+  imports: [CommonModule, Button, Card, Table, LucideAngularModule, Model],
   templateUrl: './vendor-subscriptions.html',
   styleUrl: './vendor-subscriptions.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VendorSubscriptions implements OnInit {
-  private readonly subApi = inject(SubscriptionApi);
+  private readonly subService = inject(SubscriptionService);
+  private readonly subStore = inject(SubscriptionStore);
   private readonly vendorStore = inject(VendorStore);
   private readonly vendorService = inject(VendorService);
+  protected readonly Math = Math;
 
-  readonly subscriptions = signal<any[]>([]);
-  readonly backendSummary = signal<any>({});
-  readonly isLoading = signal(false);
-  readonly error = signal<string | null>(null);
+  readonly isLoading = this.subStore.isLoading;
+  readonly error = this.subStore.error;
+  readonly summary = this.subStore.summary;
 
-  // Join subscriptions with vendor data from store
+  search = signal('');
+  filter = signal<string>('all');
+  selectedSubscription = signal<any>(null);
+
+  // Logic to calculate days left and enrich data
   readonly enrichedSubscriptions = computed(() => {
-    const subs = this.subscriptions();
+    const subs = this.subStore.allSubscriptions();
     const vendors = this.vendorStore.vendors();
+    const now = new Date();
 
     return subs.map((sub: any) => {
-      // If vendorId is a string, look it up. If it's an object, use it.
       const vId = typeof sub.vendorId === 'string' ? sub.vendorId : sub.vendorId?._id;
       const vendorDetails = vendors.find((v: any) => v._id === vId);
 
+      // Calculate days remaining
+      const endDate = new Date(sub.endDate);
+      const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+      // Check warnings from backend or calculate locally
+      const isExpiring = sub.expirationWarning?.expiresWithin15Days || daysLeft <= 15;
+
       return {
         ...sub,
-        vendorDetails: vendorDetails || sub.vendorId // Fallback to whatever we have
+        vendorDetails: vendorDetails || sub.vendorId,
+        daysLeft,
+        isExpiring
       };
     });
   });
 
-  // Stats for the header cards
-  readonly stats = computed(() => {
-    const subs = this.enrichedSubscriptions();
-    const sum = this.backendSummary();
-    
-    return {
-      total: sum.total || 0,
-      active: sum.active || 0,
-      expired: sum.expired || 0,
-      grace: sum.grace || 0,
-      expiringSoon: sum.expiringWithin15Days || 0,
-      revenue: subs.reduce((acc: number, curr: any) => acc + (curr.planId?.price || 0), 0)
-    };
+  readonly filteredSubscriptions = computed(() => {
+    const list = this.enrichedSubscriptions();
+    const f = this.filter();
+    const q = this.search().toLowerCase().trim();
+
+    return list.filter(sub => {
+      // 1. Status Filter
+      if (f === 'expiring') {
+        if (!sub.isExpiring) return false;
+      } else if (f !== 'all' && sub.status !== f) {
+        return false;
+      }
+
+      // 2. Search Filter
+      if (q) {
+        const vendorName = sub.vendorDetails?.businessName?.toLowerCase() || '';
+        const vendorEmail = sub.vendorDetails?.email?.toLowerCase() || '';
+        const planName = sub.planSnapshot?.name?.toLowerCase() || '';
+        return vendorName.includes(q) || vendorEmail.includes(q) || planName.includes(q);
+      }
+
+      return true;
+    });
   });
 
   ngOnInit(): void {
     if (this.vendorStore.vendors().length === 0) {
       this.vendorService.loadAll();
     }
-    this.loadAll();
+    this.subService.loadAllSubscriptions();
   }
 
   loadAll() {
-    this.isLoading.set(true);
-    this.error.set(null);
-    this.subApi.adminGetAllSubscriptions()
-      .pipe(finalize(() => this.isLoading.set(false)))
-      .subscribe({
-        next: (res: any) => {
-          this.subscriptions.set(res.subscriptions);
-          this.backendSummary.set(res.summary || {});
-        },
-        error: (err: any) => this.error.set(err.error?.message || 'Failed to load subscriptions')
-      });
+    this.subService.loadAllSubscriptions();
   }
 
-  // Helper to get status color
   getStatusClass(status: string): string {
     switch (status) {
       case 'active': return 'bg-emerald-50 text-emerald-700 border-emerald-100';
@@ -87,5 +104,13 @@ export class VendorSubscriptions implements OnInit {
       case 'expired': return 'bg-rose-50 text-rose-700 border-rose-100';
       default: return 'bg-slate-50 text-slate-700 border-slate-100';
     }
+  }
+
+  openDetails(sub: any) {
+    this.selectedSubscription.set(sub);
+  }
+
+  closeDetails() {
+    this.selectedSubscription.set(null);
   }
 }

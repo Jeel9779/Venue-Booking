@@ -22,7 +22,22 @@ export class SubscriptionApi {
   }
 
   // Admin: Monitor all vendor subscriptions
-  adminGetAllSubscriptions(): Observable<{ success: boolean; subscriptions: any[] }> {
-    return this.http.get<{ success: boolean; subscriptions: any[] }>(`${this.baseUrl}/all`);
+  adminGetAllSubscriptions(): Observable<{ success: boolean; warningWindowDays: number; summary: any; subscriptions: any[] }> {
+    return this.http.get<{ success: boolean; warningWindowDays: number; summary: any; subscriptions: any[] }>(`${this.baseUrl}/all`);
+  }
+
+  // Admin: Get expiring soon
+  adminGetExpiringSoon(): Observable<{ success: boolean; count: number; subscriptions: any[] }> {
+    return this.http.get<{ success: boolean; count: number; subscriptions: any[] }>(`${this.baseUrl}/expiring-soon`);
+  }
+
+  // Admin: Assign subscription
+  adminAssign(data: { vendorId: string; planId: string; startDate?: string; endDate?: string }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/admin/assign`, data);
+  }
+
+  // Admin: Record full payment
+  adminFullPayment(data: { vendorId: string; planId: string; startDate?: string; endDate?: string }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/admin/full-payment`, data);
   }
 }
