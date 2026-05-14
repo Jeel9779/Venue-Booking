@@ -7,7 +7,7 @@ import { Review } from '../models/review.model';
 export class ReviewApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost:3000/ratings';
-  /* private readonly baseUrl = 'http://192.168.1.18:3000/ratings'; */
+  /* private readonly baseUrl = 'http://192.168.1.12:3000/ratings'; */
 
   /**
    * Fetches all reviews, optionally filtered by status.

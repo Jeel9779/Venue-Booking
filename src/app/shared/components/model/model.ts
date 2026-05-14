@@ -29,7 +29,7 @@ import { CommonModule } from '@angular/common';
         </div>
 
         <!-- Body -->
-        <div class="overflow-y-auto p-6 flex-1 no-scrollbar">
+        <div class="overflow-y-auto p-6 flex-1 scrollbar-hide">
           <ng-content></ng-content>
         </div>
 
@@ -45,8 +45,6 @@ import { CommonModule } from '@angular/common';
   styles: [`
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   `]
 })
 export class Model {

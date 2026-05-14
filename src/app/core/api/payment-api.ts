@@ -8,7 +8,7 @@ import { Payment, PaymentStats, PaymentFilters } from '../models/payment.model';
 })
 export class PaymentApi {
   private readonly http = inject(HttpClient);
-  /*  private readonly baseUrl = 'http://192.168.1.7:3000/payments'; */ // Matching the pattern in venue-api
+  /*   private readonly baseUrl = 'http://192.168.1.12:3000/payments';  */ // Matching the pattern in venue-api
   private readonly baseUrl = 'http://localhost:3000/payments';
 
   /**

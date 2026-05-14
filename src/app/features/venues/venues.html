@@ -125,7 +125,7 @@
 
       <!-- TABLE DESKTOP -->
       @if (!isLoading() && filteredVenues().length > 0) {
-      <div class="hidden md:block w-full overflow-x-auto no-scrollbar">
+      <div class="hidden md:block w-full overflow-x-auto scrollbar-hide">
         <div class="min-w-[900px]">
           <app-table [columns]="['Venue', 'Vendor', 'Type', 'Capacity', 'Price / Day', 'Status', 'Created', '']">
             @for (v of filteredVenues(); track v._id) {
@@ -395,7 +395,7 @@
           Description
         </h4>
         <div
-          class="bg-slate-200 p-5 rounded-2xl border border-slate-300 text-[0.875rem] leading-relaxed text-slate-600 max-h-48 overflow-y-auto no-scrollbar">
+          class="bg-slate-200 p-5 rounded-2xl border border-slate-300 text-[0.875rem] leading-relaxed text-slate-600 max-h-48 overflow-y-auto scrollbar-hide">
           {{ venue.description }}
         </div>
       </div>
@@ -523,14 +523,6 @@
 </div>
 
 <style>
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
 
   .pending {
     background: #fffbeb;

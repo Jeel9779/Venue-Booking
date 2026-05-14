@@ -44,7 +44,7 @@ export class Login implements OnInit {
     // 1. Redirect if already logged in
     const adminId = localStorage.getItem('adminId');
     if (adminId) {
-      this.router.navigate(['/dashboard']); 
+      this.router.navigate(['/dashboard']);
     }
 
     // 2. Load remembered username if available
@@ -72,20 +72,21 @@ export class Login implements OnInit {
     if (this.form.invalid || this.isLoading()) return;
 
     const { username, password, remember } = this.form.value;
-    
+
     // Reset states
     this.isLoading.set(true);
     this.errorMsg = '';
 
     // API Call to backend
     this.http.post<any>('http://localhost:3000/admin/login', {
+      /*    this.http.post<any>('http://192.168.1.12:3000/admin/login', { */
       username,
       password
     }).subscribe({
       next: (res) => {
         // Save auth token / ID
         localStorage.setItem('adminId', res.admin._id);
-        
+
         // Handle 'Remember Me' logic
         if (remember) {
           localStorage.setItem('rememberedAdminUsername', username || '');
