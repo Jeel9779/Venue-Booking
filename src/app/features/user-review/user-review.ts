@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -26,8 +26,20 @@ export class UserReview implements OnInit {
   readonly currentFilter = this.store.filterStatus;
   readonly error = this.store.error;
 
+  // ── Local UI State ──
+  readonly searchTerm = this.store.searchTerm;
+  showDeleteModal = signal(false);
+  reviewToDelete = signal<string | null>(null);
+
   ngOnInit() {
     this.service.loadAll();
+  }
+
+  /**
+   * Updates the search query in the store.
+   */
+  onSearch(query: string) {
+    this.store.searchTerm.set(query);
   }
 
   /**
@@ -52,12 +64,27 @@ export class UserReview implements OnInit {
   }
 
   /**
-   * Action: Delete a review with confirmation.
+   * Action: Open delete confirmation modal.
    */
-  delete(id: string) {
-    if (confirm('Are you sure you want to permanently delete this review? This action cannot be undone.')) {
+  confirmDelete(id: string) {
+    this.reviewToDelete.set(id);
+    this.showDeleteModal.set(true);
+  }
+
+  /**
+   * Action: Finalize deletion.
+   */
+  executeDelete() {
+    const id = this.reviewToDelete();
+    if (id) {
       this.service.deleteReview(id);
+      this.closeDeleteModal();
     }
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal.set(false);
+    this.reviewToDelete.set(null);
   }
 
   /**

@@ -10,7 +10,7 @@ import { User, UpdateUserPayload } from '../models/user.model';
 export class UserService {
   private readonly api = inject(UsersApi);
   private readonly store = inject(UsersStore);
-  private readonly uploadsBase = 'http://192.168.1.11:3000';
+  private readonly uploadsBase = 'http://localhost:3000';
 
   loadAll(): void {
     this.store.setLoading(true);
@@ -48,6 +48,14 @@ export class UserService {
 
   getPhotoUrl(path: string | null | undefined): string {
     if (!path) return '';
+
+    // If the path contains a full Windows path (backend error), extract the relative part
+    if (path.includes('uploads/')) {
+      const parts = path.split('uploads/');
+      const relativePath = 'uploads/' + parts[parts.length - 1];
+      return `${this.uploadsBase}/${relativePath}`;
+    }
+
     if (path.startsWith('http')) return path;
     return `${this.uploadsBase}/${path}`;
   }

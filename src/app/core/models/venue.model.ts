@@ -27,6 +27,9 @@ export interface Venue {
   capacity: number;
   description: string;
   pricePerDay: number;
+  perPlateCost: number;
+  vegPrice: number;
+  nonVegPrice: number;
   address: string;
   city: string;
   state: string;

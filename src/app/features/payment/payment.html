@@ -178,7 +178,7 @@
                     </div>
                     <div>
                       <p class="font-bold text-slate-900 leading-tight">{{ vendorName(payment) }}</p>
-                      <p class="text-[10px] text-slate-400 font-medium mt-0.5">{{ payment.vendorId?.email }}</p>
+                      <p class="text-[10px] text-slate-400 font-medium mt-0.5">{{ payment.vendorId.email }}</p>
                     </div>
                   </div>
                 </td>
@@ -252,7 +252,7 @@
               </div>
               <div>
                 <p class="font-bold text-slate-900 text-sm">{{ vendorName(payment) }}</p>
-                <p class="text-[10px] text-slate-400">{{ payment.vendorId?.email }}</p>
+                <p class="text-[10px] text-slate-400">{{ payment.vendorId.email }}</p>
               </div>
             </div>
             <span [class]="getStatusClass(payment.paymentStatus)" class="px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase border">

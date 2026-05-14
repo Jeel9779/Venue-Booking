@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -26,6 +26,7 @@ export class Venues implements OnInit {
   private readonly venueService = inject(VenueService);
   /** SignalStore for managing and persisting venue state */
   private readonly venueStore = inject(VenueStore);
+  private readonly cd = inject(ChangeDetectorRef);
 
 
   // ── State (Reactive Signals) ─────────────────────────────────────────────
@@ -117,6 +118,7 @@ export class Venues implements OnInit {
   openDetails(v: Venue) {
     this.selectedVenue.set(v);
     this.showDetailsModal.set(true);
+    this.cd.detectChanges();
   }
 
   /**  Closes the details modal and clears the selection.*/

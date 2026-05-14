@@ -347,11 +347,33 @@
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="calendar" size="10"></lucide-icon>
-            Registered
+            Available
           </div>
-          <div class="text-base font-bold text-slate-800">{{ venue.createdAt | date:'d MMM y' }}</div>
+          <div class="text-base font-bold text-slate-800">{{ (venue.availableFrom || venue.createdAt) | date:'d MMM y' }}</div>
           <div class="text-[0.6rem] text-slate-400 mt-1">Last updated: {{ venue.updatedAt | date:'shortTime'
             }}</div>
+        </div>
+      </div>
+
+      <!-- Plate Pricing Section -->
+      <div>
+        <h4 class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-2">
+          <lucide-icon name="utensils" size="12"></lucide-icon>
+          Catering & Plate Pricing
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl">
+            <div class="text-[0.65rem] font-black uppercase tracking-widest text-emerald-600 mb-1">Plate Cost</div>
+            <div class="text-lg font-black text-emerald-900">₹{{ venue.perPlateCost || 0 | number }}</div>
+          </div>
+          <div class="p-4 bg-green-50 border border-green-100 rounded-2xl">
+            <div class="text-[0.65rem] font-black uppercase tracking-widest text-green-600 mb-1">Veg Price</div>
+            <div class="text-lg font-black text-green-900">₹{{ venue.vegPrice || 0 | number }}</div>
+          </div>
+          <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl">
+            <div class="text-[0.65rem] font-black uppercase tracking-widest text-rose-600 mb-1">Non-Veg Price</div>
+            <div class="text-lg font-black text-rose-900">₹{{ venue.nonVegPrice || 0 | number }}</div>
+          </div>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, ChangeDetectionStrategy, resource, effect } from '@angular/core';
+import { Component, signal, computed, inject, ChangeDetectorRef, resource, effect } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { BookingApi } from '../../core/api/booking-api';
 import { CommonModule } from '@angular/common';
@@ -16,13 +16,13 @@ import { Model } from '../../shared/components/model/model';
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule, Card, Button, Model],
   templateUrl: './bookings.html',
-  styleUrl: './bookings.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './bookings.css'
 })
 export class Bookings {
   private readonly bookingService = inject(BookingService);
   private readonly bookingStore = inject(BookingStore);
   private readonly bookingApi = inject(BookingApi);
+  private readonly cd = inject(ChangeDetectorRef);
   protected readonly Math = Math;
 
   // ── Declarative Data Loading (Modern Angular Way) ──────────────────────────
@@ -67,7 +67,7 @@ export class Bookings {
   private static readonly currencyFormatter = new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
-    maximumFractionDigits: 0
+    maximumFractionDigits: 2
   });
 
   /**
@@ -197,7 +197,13 @@ export class Bookings {
       else if (b.paymentStatus === 'pending') stats.pendingCount++;
       else if (b.paymentStatus === 'failed') stats.failedCount++;
 
-      if (b.date.startsWith(todayStr)) stats.todayCount++;
+      // Robust Today's Booking check
+      const bDate = new Date(b.date);
+      if (bDate.getFullYear() === now.getFullYear() && 
+          bDate.getMonth() === now.getMonth() && 
+          bDate.getDate() === now.getDate()) {
+        stats.todayCount++;
+      }
     }
 
     return stats;
@@ -246,8 +252,13 @@ export class Bookings {
   }
 
   openDetails(booking: Booking) {
+    this.modalTab.set('booking');
     this.selectedBooking.set(booking);
-    this.modalTab.set('booking'); // Always open on 'Booking Info' tab first
+    
+    // Force immediate change detection to ensure modal content renders instantly
+    this.cd.detectChanges();
+    
+    console.log('Modal opened with booking:', booking);
   }
 
   closeDetails() {

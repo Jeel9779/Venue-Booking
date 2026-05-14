@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 body {
-  font-family: "Rubik", sans-serif;
+  font-family: "", sans-serif;
   @apply text-slate-900 bg-slate-50/50;
 }
 
