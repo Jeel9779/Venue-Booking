@@ -2,7 +2,7 @@
 
   <!-- ── TOASTS ─────────────────────────────────────────────────────────── -->
   @if (error()) {
-  <div class="fixed top-5 right-5 z-[10001] flex items-center gap-3 bg-white border border-red-200
+  <div class="fixed top-5 right-5 z-10001 flex items-center gap-3 bg-white border border-red-200
               text-red-600 px-5 py-3 rounded-2xl shadow-xl text-sm font-semibold
               animate-[slideDown_0.25s_ease]">
     <lucide-icon name="alert-circle" size="18" [strokeWidth]="2.5"></lucide-icon>
@@ -17,7 +17,7 @@
   <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
     <div class="flex items-center gap-4">
       <div
-        class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-indigo-200">
+        class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-indigo-200">
         <lucide-icon name="users" size="24"></lucide-icon>
       </div>
       <div>
@@ -78,12 +78,12 @@
       <p class="font-medium animate-pulse">Fetching vendor list...</p>
     </div>
     } @else if (filteredVendors().length === 0) {
-    <div class="flex flex-col items-center justify-center py-24 text-center">
-      <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-4 text-slate-300">
-        <lucide-icon name="users" size="40" [strokeWidth]="1.5"></lucide-icon>
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="w-20 h-20 rounded-3xl bg-slate-200 flex items-center justify-center mb-4 text-slate-500">
+        <lucide-icon name="users" size="32" [strokeWidth]="1.5"></lucide-icon>
       </div>
-      <h3 class="text-lg font-bold text-slate-900 m-0">No vendors found</h3>
-      <p class="text-slate-500 text-sm mt-1 max-w-[280px]">We couldn't find any vendors matching your current filters.
+      <h3 class="text-lg font-bold text-slate-900">No vendors found</h3>
+      <p class="text-slate-600 text-sm mt-1 max-w-[280px] font-semibold">We couldn't find any vendors matching your current filters.
       </p>
       <app-button variant="secondary" customClass="mt-4" (onClick)="search.set(''); filter.set('all')">Clear
         Filters</app-button>
@@ -92,11 +92,11 @@
     <app-table [columns]="['Business', 'Owner', 'Phone', 'Type', 'Status', 'Joined', '']">
       @for (v of filteredVendors(); track v._id) {
       <tr (click)="openDetails(v)"
-        class="group hover:bg-slate-50/80 transition-colors border-b border-slate-100 last:border-0 cursor-pointer">
+        class="group hover:bg-slate-200/80 transition-colors border-b border-slate-300 last:border-0 cursor-pointer">
         <td class="px-5 py-4">
           <div class="flex items-center gap-3">
             <div
-              class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold shrink-0">
+              class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-700 font-bold shrink-0">
               {{ ((v.businessName || '').trim().charAt(0) || (v.fullName || '').trim().charAt(0) || 'V') | uppercase }}
             </div>
             <div>

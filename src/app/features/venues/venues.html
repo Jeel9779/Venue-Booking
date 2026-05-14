@@ -1,3 +1,8 @@
+<!-- 
+  VENUES VERIFICATION PAGE 
+  This module handles the administrative auditing of venue listings.
+  It allows admins to view high-res media, verify pricing details, and approve/reject listings.
+-->
 <div class="venues-page min-h-screen bg-gray-300 max-w-[1500px] mx-auto py-6 px-4 sm:px-6">
 
   <!-- HEADER -->
@@ -15,31 +20,31 @@
     </div>
 
     <div
-      class="header-stats flex gap-2 flex-wrap bg-white/50 p-1.5 rounded-2xl border border-white/50 backdrop-blur-sm">
+      class="header-stats flex gap-2 flex-wrap bg-white/80 p-1.5 rounded-2xl border border-slate-300 backdrop-blur-sm">
       <div
         class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
-        [class]="filter() === 'all' ? 'bg-sky-500 text-white shadow-sm shadow-gray-200' : 'bg-sky-50 text-sky-600 hover:bg-sky-100'"
+        [class]="filter() === 'all' ? 'bg-sky-500 text-white shadow-sm shadow-gray-200' : 'bg-sky-200 text-sky-700 hover:bg-sky-300'"
         (click)="filter.set('all')">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().all }} All
       </div>
       <div
         class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
-        [class]="filter() === 'pending' ? 'bg-amber-500 text-white shadow-lg shadow-amber-100' : 'bg-amber-50 text-amber-600 hover:bg-amber-200'"
+        [class]="filter() === 'pending' ? 'bg-amber-500 text-white shadow-lg shadow-amber-100' : 'bg-amber-200 text-amber-700 hover:bg-amber-300'"
         (click)="filter.set('pending')">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().pending }} Pending
       </div>
       <div
         class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
-        [class]="filter() === 'approved' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-200'"
+        [class]="filter() === 'approved' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : 'bg-emerald-200 text-emerald-700 hover:bg-emerald-300'"
         (click)="filter.set('approved')">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().approved }} Approved
       </div>
       <div
         class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
-        [class]="filter() === 'rejected' ? 'bg-red-500 text-white shadow-lg shadow-red-200' : 'bg-red-50 text-red-600 hover:bg-red-200'"
+        [class]="filter() === 'rejected' ? 'bg-red-500 text-white shadow-lg shadow-red-200' : 'bg-red-200 text-red-700 hover:bg-red-300'"
         (click)="filter.set('rejected')">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().rejected }} Rejected
@@ -47,9 +52,12 @@
     </div>
   </div>
 
-  <!-- TOOLBAR -->
+  <!-- 
+    TOOLBAR & SEARCH
+    The search bar is restricted to max-width on desktop for a cleaner, more focused UI.
+  -->
   <div class="toolbar flex gap-3 flex-col sm:flex-row mb-6 items-start sm:items-center w-full">
-    <div class="relative w-full sm:flex-1 sm:min-w-[280px]">
+    <div class="relative w-full lg:max-w-md">
       <lucide-icon name="search" size="18"
         class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></lucide-icon>
       <input type="text"
@@ -78,7 +86,10 @@
   </div>
   }
 
-  <!-- MAIN CONTENT -->
+  <!-- 
+    MAIN CONTENT AREA
+    Displays a data table on desktop and a vertical card list on mobile devices.
+  -->
   <div class="w-full max-w-full overflow-hidden rounded-[24px]">
     <app-card [padding]="false" customClass="shadow-xl shadow-slate-200/50 w-full min-w-0">
       <div header-actions class="text-[0.75rem] font-medium text-slate-400">
@@ -98,11 +109,11 @@
       @if (!isLoading() && filteredVenues().length === 0 && !error()) {
       <div class="flex flex-col items-center justify-center py-24 gap-4 text-center w-full bg-white rounded-[24px]">
         <div
-          class="w-[84px] h-[84px] rounded-[28px] bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2 shadow-inner">
+          class="w-[84px] h-[84px] rounded-[28px] bg-indigo-200 text-indigo-700 flex items-center justify-center mb-2 shadow-inner">
           <lucide-icon name="building-2" size="42" [strokeWidth]="1.5"></lucide-icon>
         </div>
         <h3 class="text-xl font-bold text-slate-900 m-0">No venues found</h3>
-        <p class="text-slate-500 text-[0.9375rem] max-w-xs mx-auto m-0 leading-relaxed">
+        <p class="text-slate-600 text-[0.9375rem] max-w-xs mx-auto m-0 leading-relaxed font-semibold">
           {{ search() ? 'We couldn\'t find any venues matching your search query.' : 'There are currently no venues in
           this category.' }}
         </p>

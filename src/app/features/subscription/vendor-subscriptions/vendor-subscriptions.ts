@@ -77,6 +77,7 @@ export class VendorSubscriptions {
       const end = sub.endDate ? new Date(sub.endDate) : now;
       const graceEnd = sub.graceEndDate ? new Date(sub.graceEndDate) : end;
       
+      const totalDays = sub.planSnapshot?.duration_days || 30;
       let daysLeft = 0;
       let label = 'Remaining';
 
@@ -99,6 +100,7 @@ export class VendorSubscriptions {
         vendorDetails,
         pendingQueue: queueItems,
         daysLeft: Math.max(0, daysLeft),
+        totalDays,
         daysLabel: label,
         isExpiring,
         queueCount

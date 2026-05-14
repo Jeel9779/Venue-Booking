@@ -1,32 +1,69 @@
-<div class="p-6 bg-gray-300 min-h-screen">
+<div class="p-4 sm:p-10 bg-gray-300 min-h-screen">
 
-  <!-- HEADER -->
-  <div class="flex flex-col gap-4 sm:flex-row items-start sm:items-center justify-between mb-6">
-    <div>
-      <h1 class="text-2xl font-bold">Analytics Overview</h1>
+  <!-- ── HEADER ── -->
+  <div class="flex flex-col gap-4 sm:flex-row items-start sm:items-center justify-between mb-10">
+    <div class="flex items-center gap-5">
+      <div class="w-16 h-16 bg-indigo-600 rounded-[22px] flex items-center justify-center text-white shadow-xl shadow-indigo-200">
+        <lucide-icon name="layout-dashboard" size="32"></lucide-icon>
+      </div>
+      <div>
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight m-0">Admin Overview</h1>
+        <p class="text-sm font-bold text-slate-500 mt-1">Real-time platform performance and operational metrics</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <div class="px-5 py-2.5 bg-white border border-slate-200 rounded-2xl flex items-center gap-2 shadow-sm">
+        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+        <span class="text-[10px] font-black text-slate-700 uppercase tracking-widest">System Online</span>
+      </div>
     </div>
   </div>
 
-  <!-- STATS -->
-  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    <app-stat-card *ngFor="let s of service.stats()" [title]="s.title" [value]="s.value" [change]="s.change"
-      [color]="s.color" />
+  <!-- ── KEY PERFORMANCE INDICATORS (KPIs) ── -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <app-stat-card 
+      *ngFor="let s of stats()" 
+      [title]="s.title" 
+      [value]="s.value" 
+      [change]="s.change"
+      [color]="s.color"
+      [icon]="s.icon" />
   </div>
 
-  <!-- CHARTS -->
-  <div class="grid lg:grid-cols-3 gap-6 mb-6">
+  <!-- ── ANALYTICS GRID ── -->
+  <div class="grid lg:grid-cols-3 gap-8 mb-10">
+    <!-- Revenue & Booking Trends -->
     <div class="lg:col-span-2">
-      <app-chart />
+      <app-chart 
+        title="Operational Velocity" 
+        description="Booking and Venue growth trends over the last 30 days">
+      </app-chart>
     </div>
-    <app-donut-chart />
+    
+    <!-- Distribution Analytics -->
+    <div class="h-full">
+      <app-donut-chart></app-donut-chart>
+    </div>
   </div>
 
-  <!-- BOTTOM -->
-  <div class="grid lg:grid-cols-3 gap-6">
+  <!-- ── RECENT ACTIVITY & INSIGHTS ── -->
+  <div class="grid lg:grid-cols-3 gap-8">
+    <!-- Latest Venue Submissions -->
     <div class="lg:col-span-2">
-      <app-venue-list [venues]="service.venues()" />
+      <div class="bg-white rounded-[40px] border border-slate-200 overflow-hidden shadow-sm">
+        <div class="p-8 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="text-xl font-black text-slate-900 m-0">Recent Submissions</h3>
+          <span class="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em]">Action Queue</span>
+        </div>
+        <app-venue-list [venues]="recentVenues()" />
+      </div>
     </div>
-    <app-insight-card />
+    
+    <!-- AI-Powered Insights or Quick Links -->
+    <div class="h-full">
+      <app-insight-card />
+    </div>
   </div>
 
 </div>

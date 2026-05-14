@@ -403,12 +403,12 @@
         </div>
         <div class="mt-6">
           <div class="flex justify-between text-[10px] font-black uppercase mb-2 text-indigo-500">
-            <span>Cycle</span>
-            <span>{{ (sub?.planSnapshot?.duration_days ? (sub?.daysLeft / sub?.planSnapshot?.duration_days * 100) : 0) | number:'1.0-0' }}%</span>
+            <span>Consumed</span>
+            <span>{{ (sub?.totalDays ? Math.round((sub.totalDays - sub.daysLeft) / sub.totalDays * 100) : 0) }}%</span>
           </div>
           <div class="h-2.5 bg-indigo-200 rounded-full overflow-hidden">
             <div class="h-full bg-indigo-600 rounded-full transition-all duration-1000"
-              [style.width.%]="(sub?.planSnapshot?.duration_days ? Math.max(0, Math.min(100, (sub?.daysLeft / sub?.planSnapshot?.duration_days * 100))) : 0)">
+              [style.width.%]="(sub?.totalDays ? Math.max(0, Math.min(100, (sub.totalDays - sub.daysLeft) / sub.totalDays * 100)) : 0)">
             </div>
           </div>
         </div>

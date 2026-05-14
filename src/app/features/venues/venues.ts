@@ -1,7 +1,6 @@
 import { Component, OnInit, signal, computed, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { VenueService } from '../../core/services/venue.service';
 import { VenueStore } from '../../core/store/venue.store';
 import { Venue, FilterState } from '../../core/models/venue.model';
@@ -12,6 +11,21 @@ import { Model } from '../../shared/components/model/model';
 import { FormInput } from '../../shared/components/form-input/form-input';
 import { LucideAngularModule } from 'lucide-angular';
 
+/**
+ * Venues Management Feature
+ * 
+ * Provides an administrative interface for reviewing, approving, and rejecting venue listings.
+ * Key capabilities:
+ * - Reactive filtering and multi-field search using computed signals.
+ * - Image verification with full-screen preview.
+ * - Multi-stage verification workflow (Pending -> Approved/Rejected).
+ * - Safe data extraction for nested/populated vendor objects.
+ * 
+ * Main View Structure:
+ * - Toolbar: Contains search filter and status filter chips.
+ * - Grid/Table: Display area for the venues list.
+ * - Modals: Overlays for details and action confirmations.
+ */
 @Component({
   selector: 'app-venues',
   standalone: true,
@@ -21,23 +35,32 @@ import { LucideAngularModule } from 'lucide-angular';
 })
 export class Venues implements OnInit {
 
-  // ── Dependencies ─────────────────────────────────────────────────────────
-  /** Service for performing CRUD operations on venues */
+  // ── Dependency Injection ──────────────────────────────────────────────────
+  /** 
+   * Service for performing API calls related to Venues.
+   * Documentation: Review VenueService for endpoint definitions.
+   */
   private readonly venueService = inject(VenueService);
-  /** SignalStore for managing and persisting venue state */
+
+  /** 
+   * Global State Store for Venues.
+   * Handles asynchronous streams (RxJS) and exposes them as signals.
+   */
   private readonly venueStore = inject(VenueStore);
+
+  /** Needed for manual change detection in certain modal scenarios */
   private readonly cd = inject(ChangeDetectorRef);
 
 
   // ── State (Reactive Signals) ─────────────────────────────────────────────
   /** The full list of venues synced from the Store */
-  readonly venues = toSignal(this.venueStore.venues$, { initialValue: [] });
+  readonly venues = this.venueStore.venues;
 
   /** Loading state indicator for API calls */
-  readonly isLoading = toSignal(this.venueStore.isLoading$, { initialValue: false });
+  readonly isLoading = this.venueStore.isLoading;
 
   /** Error message if any operation fails */
-  readonly error = toSignal(this.venueStore.error$, { initialValue: null });
+  readonly error = this.venueStore.error;
 
   /** Current active filter ('all', 'pending', 'approved', 'rejected') */
   filter = signal<FilterState>('all');
@@ -68,14 +91,14 @@ export class Venues implements OnInit {
 
     // 1. Filter by Status (Pending/Approved/Rejected)
     if (this.filter() !== 'all') {
-      list = list.filter((v) => v.status === this.filter());
+      list = list.filter((v: Venue) => v.status === this.filter());
     }
 
     // 2. Filter by Search Query (Case-insensitive search across multiple fields)
     const s = this.search().toLowerCase().trim();
     if (s) {
       list = list.filter(
-        (v) =>
+        (v: Venue) =>
           v.name.toLowerCase().includes(s) ||
           v.city.toLowerCase().includes(s) ||
           v.type.toLowerCase().includes(s) ||
@@ -89,7 +112,7 @@ export class Venues implements OnInit {
           String(v.pricePerDay).includes(s) ||
           this.getVendorName(v).toLowerCase().includes(s) ||
           this.getVendorEmail(v).toLowerCase().includes(s) ||
-          v.amenities?.some(a => a.toLowerCase().includes(s)) ||
+          v.amenities?.some((a: string) => a.toLowerCase().includes(s)) ||
           new Date(v.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(s),
       );
     }
@@ -102,19 +125,25 @@ export class Venues implements OnInit {
     const list = this.venues();
     return {
       all: list.length,
-      pending: list.filter((v) => v.status === 'pending').length,
-      approved: list.filter((v) => v.status === 'approved').length,
-      rejected: list.filter((v) => v.status === 'rejected').length,
+      pending: list.filter((v: Venue) => v.status === 'pending').length,
+      approved: list.filter((v: Venue) => v.status === 'approved').length,
+      rejected: list.filter((v: Venue) => v.status === 'rejected').length,
     };
   });
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
+  /**
+   * Initializes the view by triggering the API call to load venues.
+   */
   ngOnInit() {
     this.venueService.loadAll();
   }
 
   // ── Actions (Methods) ───────────────────────────────────────────────────────
-  /** Opens the full details modal for a specific venue. */
+  /** 
+   * Opens the full details modal for a specific venue. 
+   * Triggers manual change detection to ensure modal content renders properly.
+   */
   openDetails(v: Venue) {
     this.selectedVenue.set(v);
     this.showDetailsModal.set(true);

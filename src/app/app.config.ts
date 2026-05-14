@@ -12,7 +12,7 @@ import {
   ShieldCheck, FileText, FileCheck, XCircle, User, List, Clock, 
   MessageSquareOff, ShieldX, CheckCircle, TrendingUp, Wallet,
   CalendarCheck, Download, ClipboardList, CalendarX, RefreshCw, ShieldOff, ScrollText,
-  ChevronLeft, CreditCard, Layers, Activity, ArrowUpCircle, Utensils
+  ChevronLeft, CreditCard, Layers, Activity, ArrowUpCircle, Utensils, LayoutDashboard
 } from 'lucide-angular';
 
 
@@ -29,7 +29,7 @@ export const appConfig: ApplicationConfig = {
       ShieldCheck, FileText, FileCheck, XCircle, User, List, Clock, 
       MessageSquareOff, ShieldX, CheckCircle, TrendingUp, Wallet,
       CalendarCheck, Download, ClipboardList, CalendarX, RefreshCw, ShieldOff, ScrollText,
-      ChevronLeft, CreditCard, Layers, Activity, ArrowUpCircle, Utensils
+      ChevronLeft, CreditCard, Layers, Activity, ArrowUpCircle, Utensils, LayoutDashboard
     }))
   ]
 };

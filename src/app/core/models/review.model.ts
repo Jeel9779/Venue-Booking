@@ -19,8 +19,9 @@ export interface Review {
 }
 
 export interface ReviewStats {
-  total: number;
-  pending: number;
-  approved: number;
-  averageRating: number;
+  totalReviews: number;
+  awaitingReview: number;
+  approvedContent: number;
+  liveAvgScore: number;
+  distribution: { [key: number]: number };
 }

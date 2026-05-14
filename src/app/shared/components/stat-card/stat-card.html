@@ -1,13 +1,17 @@
-<div class="bg-white border border-gray-200 shadow-sm p-5 rounded-3xl transition-all duration-200 hover:shadow-md">
-  <div class="flex justify-between mb-3">
-    <div [ngClass]="bg"></div>
-    <span class="text-xs font-bold" [ngClass]="text">{{change}}</span>
+<div class="stat-card bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm group hover:shadow-md transition-all">
+  <div class="flex justify-between items-start mb-4">
+    <div [class]="'p-3 rounded-2xl flex items-center justify-center ' + bg">
+      <lucide-icon [name]="icon" size="20" [class]="'text-' + color + '-600'"></lucide-icon>
+    </div>
+    <div [class]="'text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-wider ' + (change.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600')">
+      {{ change }}
+    </div>
   </div>
-
-  <p class="text-gray-500 text-xs uppercase">{{title}}</p>
-  <h2 class="text-2xl font-bold">{{value}}</h2>
-
-  <div class="h-1 bg-gray-200 mt-3 rounded-full">
-    <div class="h-1 rounded-full" [ngClass]="bar"></div>
+  
+  <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ title }}</p>
+  <h3 class="text-3xl font-black text-slate-900 tracking-tighter">{{ value }}</h3>
+  
+  <div class="mt-4 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+    <div [class]="'h-full rounded-full transition-all duration-1000 ' + bar"></div>
   </div>
 </div>

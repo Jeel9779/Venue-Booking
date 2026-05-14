@@ -28,6 +28,7 @@ export class Partners implements OnInit {
   search = signal(''); // Search query for filtering
   expandedMap = signal<Record<string, boolean>>({}); // Track which partners are expanded in the list
   selectedVenue = signal<Venue | null>(null); // Venue currently being viewed in modal
+  previewImage = signal<string | null>(null); // URL of the image being previewed
   
   selectedPartner = computed(() => {
     const venue = this.selectedVenue();
@@ -104,6 +105,14 @@ export class Partners implements OnInit {
   closeModal() {
     this.selectedVenue.set(null);
     this.actionError.set(null);
+  }
+
+  openImagePreview(url: string) {
+    this.previewImage.set(url);
+  }
+
+  closeImagePreview() {
+    this.previewImage.set(null);
   }
 
   approve() {

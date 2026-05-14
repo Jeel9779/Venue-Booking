@@ -6,11 +6,12 @@ import { ReviewService } from '../../core/services/review.service';
 import { ReviewStore } from '../../core/store/review.store';
 import { Button } from '../../shared/components/button/button';
 import { Card } from '../../shared/components/card/card';
+import { Chart } from '../../shared/components/chart/chart';
 
 @Component({
   selector: 'app-user-review',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, Button, Card],
+  imports: [CommonModule, FormsModule, LucideAngularModule, Button, Card, Chart],
   templateUrl: './user-review.html',
   styleUrl: './user-review.css'
 })
@@ -25,6 +26,7 @@ export class UserReview implements OnInit {
   readonly isLoading = this.store.isLoading;
   readonly currentFilter = this.store.filterStatus;
   readonly error = this.store.error;
+  readonly chartData = this.store.ratingChartData;
 
   // ── Local UI State ──
   readonly searchTerm = this.store.searchTerm;

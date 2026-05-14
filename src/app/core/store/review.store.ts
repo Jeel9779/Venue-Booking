@@ -4,15 +4,23 @@ import { Review, ReviewStats } from '../models/review.model';
 @Injectable({ providedIn: 'root' })
 export class ReviewStore {
   // ── State (Signals) ──
+  /** The full list of reviews fetched from the server. */
   readonly reviews = signal<Review[]>([]);
+  /** Loading indicator for API operations. */
   readonly isLoading = signal<boolean>(false);
+  /** Global error message for the review feature. */
   readonly error = signal<string | null>(null);
+  /** Current active filter status (all, pending, approved, rejected). */
   readonly filterStatus = signal<string>('all');
+  /** Current search query string. */
   readonly searchTerm = signal<string>('');
 
   // ── Derived State (Computed Signals) ──
   /**
-   * Filters and searches the reviews based on the current selection and query.
+   * Reactive selector that filters and searches the reviews.
+   * Order of operation: 
+   * 1. Status Filter (Primary)
+   * 2. Multi-field Search (Secondary) - Matches name, email, venue, feedback, rating, or status.
    */
   readonly filteredReviews = computed(() => {
     const status = this.filterStatus();
@@ -45,15 +53,49 @@ export class ReviewStore {
    * Calculates real-time statistics for the moderation dashboard.
    */
   readonly stats = computed((): ReviewStats => {
-    const all = this.reviews();
+    return this.calculateAdminStats(this.reviews());
+  });
+
+  /**
+   * Expert calculation logic to process a flat array of reviews.
+   * Treat every approved review as an individual data point for global analytics.
+   */
+  private calculateAdminStats(reviews: Review[]): ReviewStats {
+    const totalReviews = reviews.length;
+    const awaitingReview = reviews.filter(r => r.status === 'pending').length;
+    const approvedReviews = reviews.filter(r => r.status === 'approved');
+    const approvedContent = approvedReviews.length;
+
+    // Live Avg Score: Sum of ratings / Total count ONLY for approved reviews
+    const totalApprovedRating = approvedReviews.reduce((acc, r) => acc + r.rating, 0);
+    const liveAvgScore = approvedContent > 0 
+      ? Number((totalApprovedRating / approvedContent).toFixed(1))
+      : 0;
+
+    // Distribution breakdown for 1-5 stars
+    const distribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    reviews.forEach(r => {
+      if (r.rating >= 1 && r.rating <= 5) {
+        distribution[Math.floor(r.rating)]++;
+      }
+    });
+
     return {
-      total: all.length,
-      pending: all.filter(r => r.status === 'pending').length,
-      approved: all.filter(r => r.status === 'approved').length,
-      averageRating: all.length > 0 
-        ? Number((all.reduce((acc, r) => acc + r.rating, 0) / all.length).toFixed(1))
-        : 0
+      totalReviews,
+      awaitingReview,
+      approvedContent,
+      liveAvgScore,
+      distribution
     };
+  }
+
+  /**
+   * Provides raw counts for the rating distribution.
+   * The Chart component will handle scaling and visualization.
+   */
+  readonly ratingChartData = computed(() => {
+    const dist = this.stats().distribution;
+    return [dist[1], dist[2], dist[3], dist[4], dist[5]];
   });
 
   // ── State Actions ──
