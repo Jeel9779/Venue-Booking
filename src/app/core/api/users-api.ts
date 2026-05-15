@@ -8,8 +8,8 @@ import { User, UpdateUserPayload } from '../models/user.model';
 })
 export class UsersApi {
   private readonly http = inject(HttpClient);
-  /*   private readonly baseUrl = 'http://192.168.1.12:3000/users'; */
-  private readonly baseUrl = 'http://localhost:3000/users';
+  private readonly baseUrl = 'http://192.168.1.12:3000/users';
+  /*  private readonly baseUrl = 'http://localhost:3000/users'; */
 
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(this.baseUrl);

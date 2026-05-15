@@ -130,7 +130,7 @@
                      class="w-full h-full object-cover"/>
                 } @else {
                 <span class="text-white text-sm font-bold">
-                  {{ user.name.charAt(0).toUpperCase() }}
+                  {{ (user.name || 'U').trim().charAt(0).toUpperCase() }}
                 </span>
                 }
               </div>
@@ -201,7 +201,7 @@
               @if (getImageUrl(user.profilePhoto)) {
               <img [src]="getImageUrl(user.profilePhoto)" class="w-full h-full object-cover"/>
               } @else {
-              {{ user.name.charAt(0).toUpperCase() }}
+              {{ (user.name || 'U').trim().charAt(0).toUpperCase() }}
               }
             </div>
             <div>
@@ -266,7 +266,7 @@
           @if (getImageUrl(selectedUser()?.profilePhoto)) {
           <img [src]="getImageUrl(selectedUser()?.profilePhoto)" class="w-full h-full object-cover"/>
           } @else {
-          {{ selectedUser()!.name.charAt(0).toUpperCase() }}
+          {{ (selectedUser()?.name || 'U').trim().charAt(0).toUpperCase() }}
           }
         </div>
         <div>

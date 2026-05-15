@@ -6,8 +6,8 @@ import { Booking, BookedDates, UserBookings, VendorBookings } from '../models/bo
 @Injectable({ providedIn: 'root' })
 export class BookingApi {
   private readonly http = inject(HttpClient);
-  /*  private readonly baseUrl = 'http://192.168.1.12:3000/bookings';  */
-  private readonly baseUrl = 'http://localhost:3000/bookings';
+  private readonly baseUrl = 'http://192.168.1.12:3000/bookings';
+  /*  private readonly baseUrl = 'http://localhost:3000/bookings'; */
 
   getBookedDates(venueId: string): Observable<BookedDates> {
     return this.http.get<BookedDates>(`${this.baseUrl}/venue/${venueId}/booked-dates`);

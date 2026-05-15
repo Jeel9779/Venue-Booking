@@ -10,7 +10,7 @@ import { User, UpdateUserPayload } from '../models/user.model';
 export class UserService {
   private readonly api = inject(UsersApi);
   private readonly store = inject(UsersStore);
-  private readonly uploadsBase = 'http://localhost:3000';
+  private readonly uploadsBase = 'http://192.168.1.12:3000';
 
   loadAll(): void {
     this.store.setLoading(true);
@@ -49,14 +49,19 @@ export class UserService {
   getPhotoUrl(path: string | null | undefined): string {
     if (!path) return '';
 
+    // Fix Windows backslashes
+    let normalizedPath = path.replace(/\\/g, '/');
+
+    if (normalizedPath.startsWith('http')) return normalizedPath;
+
     // If the path contains a full Windows path (backend error), extract the relative part
-    if (path.includes('uploads/')) {
-      const parts = path.split('uploads/');
+    if (normalizedPath.includes('uploads/')) {
+      const parts = normalizedPath.split('uploads/');
       const relativePath = 'uploads/' + parts[parts.length - 1];
       return `${this.uploadsBase}/${relativePath}`;
     }
 
-    if (path.startsWith('http')) return path;
-    return `${this.uploadsBase}/${path}`;
+    // Ensure no double slash
+    return `${this.uploadsBase}/${normalizedPath.replace(/^\/+/, '')}`;
   }
 }

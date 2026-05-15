@@ -78,8 +78,8 @@ export class Login implements OnInit {
     this.errorMsg = '';
 
     // API Call to backend
-    this.http.post<any>('http://localhost:3000/admin/login', {
-      /*    this.http.post<any>('http://192.168.1.12:3000/admin/login', { */
+    /*  this.http.post<any>('http://localhost:3000/admin/login', { */
+    this.http.post<any>('http://192.168.1.12:3000/admin/login', {
       username,
       password
     }).subscribe({

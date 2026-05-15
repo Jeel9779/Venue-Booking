@@ -108,15 +108,18 @@ export class VendorSubscriptions {
     });
   });
 
-  // Calculate total revenue locally if summary is empty or missing it
+  // Calculate total revenue locally to include add-ons and queued plans
   readonly totalRevenue = computed(() => {
-    const s = this.summary();
-    if (s?.revenue) return s.revenue;
-    
-    // Fallback: Sum of prices of all active/grace subscriptions
     return this.enrichedSubscriptions()
-      .filter(sub => sub.status === 'active' || sub.status === 'grace')
-      .reduce((acc, sub) => acc + (sub.planSnapshot?.price || 0), 0);
+      .reduce((acc, sub) => {
+        let total = acc + (sub.planSnapshot?.price || 0);
+        if (sub.pendingQueue && sub.pendingQueue.length > 0) {
+          sub.pendingQueue.forEach((q: any) => {
+            total += (q.planSnapshot?.price || 0);
+          });
+        }
+        return total;
+      }, 0);
   });
 
   readonly filteredSubscriptions = computed(() => {

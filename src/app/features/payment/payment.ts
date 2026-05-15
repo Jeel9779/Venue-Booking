@@ -54,7 +54,7 @@ export class Payments implements OnInit {
 
   // ── Filter form model (type + status sent to API; search stays client-side) ─
   filterValues = {
-    type:          'subscription',
+    type:          '',
     paymentStatus: '',
     startDate:     '',
     endDate:       '',
@@ -73,6 +73,8 @@ export class Payments implements OnInit {
     const seen = new Map<string, Payment>();
 
     for (const p of all) {
+      if (p.type !== 'subscription' && p.type !== 'addon') continue;
+
       // Safe key: vendorId can be an object OR a plain string
       const vendorKey =
         p.vendorId && typeof p.vendorId === 'object'
@@ -160,7 +162,7 @@ export class Payments implements OnInit {
     // Keep form model in sync with store
     this.store.filters$.subscribe(f => {
       this.filterValues = {
-        type:          f.type          ?? 'subscription',
+        type:          f.type          ?? '',
         paymentStatus: f.paymentStatus ?? '',
         startDate:     f.startDate     ?? '',
         endDate:       f.endDate       ?? '',
@@ -180,7 +182,7 @@ export class Payments implements OnInit {
 
   // Reset everything: API filters + client-side search
   resetFilters(): void {
-    this.filterValues = { type: 'subscription', paymentStatus: '', startDate: '', endDate: '' };
+    this.filterValues = { type: '', paymentStatus: '', startDate: '', endDate: '' };
     this.searchQuery.set('');
     this.service.applyFilters(this.filterValues);
   }
