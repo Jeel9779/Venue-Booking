@@ -6,15 +6,26 @@
     <div class="space-y-4">
         <div *ngFor="let v of venues" class="flex justify-between items-center">
             <div class="flex gap-3 items-center">
-                <img [src]="v.img" class="w-10 h-10 rounded" />
+                <!-- If image exists, show it. On error, hide it and show the initials block. -->
+                <img *ngIf="v.img" [src]="v.img" 
+                     class="w-10 h-10 rounded-xl object-cover shadow-sm" 
+                     onerror="this.style.display='none'; this.parentElement.querySelector('.initials-fallback').style.display='flex';" />
+                
+                <!-- Initials block (shown if no image, or if image fails to load via JS) -->
+                <div [class.hidden]="v.img" 
+                     class="initials-fallback w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center shadow-sm"
+                     [ngStyle]="{'display': v.img ? 'none' : 'flex'}">
+                    {{ (v.name || 'V').substring(0, 1).toUpperCase() }}
+                </div>
+                
                 <div>
-                    <p class="font-semibold text-sm">{{v.name}}</p>
-                    <p class="text-xs text-gray-400">{{v.bookings}} bookings</p>
+                    <p class="font-bold text-sm text-slate-900">{{v.name}}</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{v.bookings || 0}} bookings</p>
                 </div>
             </div>
 
             <div class="text-right">
-                <p class="font-bold">{{v.revenue | currency}}</p>
+                <p class="font-bold">₹{{(v.revenue || 0) | number:'1.0-0'}}</p>
             </div>
         </div>
     </div>

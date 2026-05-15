@@ -60,7 +60,7 @@ export class Dashboard implements OnInit {
       { 
         title: 'Net Revenue', 
         value: `₹${(subSummary?.revenue || 0).toLocaleString()}`, 
-        change: '+8.2%', 
+        change: 'Real-time', 
         color: 'indigo',
         icon: 'indian-rupee' 
       },
@@ -81,26 +81,99 @@ export class Dashboard implements OnInit {
       { 
         title: 'Total Bookings', 
         value: bookings.length, 
-        change: '+12.5%', 
+        change: 'All Time', 
         color: 'blue',
         icon: 'calendar-check' 
       },
     ];
   });
 
-  /** Latest venues for the 'Recent Activity' section */
+  /** Booking volume for the last 7 days */
+  readonly bookingTrend = computed(() => {
+    const bookings = this.bookingStore.bookings();
+    const today = new Date();
+    const labels = [];
+    const data = [];
+    
+    // Generate last 7 days
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      labels.push(d.toLocaleDateString('en-US', { weekday: 'short' }));
+      
+      const count = bookings.filter(b => {
+        const bDate = new Date(b.createdAt || b.date);
+        return bDate.getDate() === d.getDate() && bDate.getMonth() === d.getMonth();
+      }).length;
+      data.push(count);
+    }
+    
+    return { labels, data };
+  });
+
+  /** Actionable Insights */
+  readonly actionableInsights = computed(() => {
+    const pendingVenues = this.venueStore.venues().filter(v => v.status === 'pending').length;
+    const pendingReviews = this.reviewStore.reviews().filter(r => r.status === 'pending').length;
+    const graceSubs = this.subStore.allSubscriptions().filter(s => s.status === 'grace').length;
+
+    return [
+      { message: `${pendingVenues} venues await approval`, priority: pendingVenues > 0 ? 'high' : 'low' },
+      { message: `${pendingReviews} flagged reviews need moderation`, priority: pendingReviews > 0 ? 'medium' : 'low' },
+      { message: `${graceSubs} vendors are in payment grace period`, priority: 'medium' }
+    ];
+  });
+
+  /** Latest venues for the 'Recent Activity' section with mapped images and stats */
   readonly recentVenues = computed(() => {
-    return this.venueStore.venues().slice(0, 5);
+    const venues = this.venueStore.venues().slice(0, 5);
+    const bookings = this.bookingStore.bookings();
+
+    return venues.map(v => {
+      // Find bookings for this venue
+      const venueBookings = bookings.filter(b => {
+        const bVenueId = typeof b.venueId === 'object' ? (b.venueId as any)._id : b.venueId;
+        return bVenueId === v._id;
+      });
+
+      const revenue = venueBookings.reduce((sum, b) => sum + (b.totalBookingAmount || 0), 0);
+
+      // Handle Windows backslashes and build absolute URL
+      let imgUrl = v.mediaFiles && v.mediaFiles.length > 0 ? v.mediaFiles[0] : '';
+      if (imgUrl && !imgUrl.startsWith('http')) {
+        imgUrl = imgUrl.replace(/\\/g, '/');
+        imgUrl = `http://192.168.1.12:3000/${imgUrl.replace(/^\/+/, '')}`;
+      }
+
+      return {
+        ...v,
+        img: imgUrl || '',
+        bookings: venueBookings.length,
+        revenue: revenue
+      };
+    });
   });
 
   /** Revenue distribution for the Donut Chart */
   readonly revenueDistribution = computed(() => {
     const subs = this.subStore.allSubscriptions();
-    // Simplified logic for donut: active vs grace vs expired
-    const active = subs.filter(s => s.status === 'active').length;
-    const grace = subs.filter(s => s.status === 'grace').length;
-    const expired = subs.filter(s => s.status === 'expired').length;
-    return [active, grace, expired];
+    
+    let activeRev = 0;
+    let graceRev = 0;
+    
+    subs.forEach(s => {
+      const price = s.planSnapshot?.price || 0;
+      if (s.status === 'active') activeRev += price;
+      if (s.status === 'grace') graceRev += price;
+    });
+
+    const total = activeRev + graceRev;
+    
+    return {
+      activeAmount: activeRev,
+      graceAmount: graceRev,
+      totalAmount: total
+    };
   });
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────

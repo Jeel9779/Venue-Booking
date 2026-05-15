@@ -37,13 +37,19 @@
     <div class="lg:col-span-2">
       <app-chart 
         title="Operational Velocity" 
-        description="Booking and Venue growth trends over the last 30 days">
+        description="Booking volume trends over the last 7 days"
+        [labels]="bookingTrend().labels"
+        [data]="bookingTrend().data">
       </app-chart>
     </div>
     
     <!-- Distribution Analytics -->
     <div class="h-full">
-      <app-donut-chart></app-donut-chart>
+      <app-donut-chart 
+        [activeAmount]="revenueDistribution().activeAmount"
+        [graceAmount]="revenueDistribution().graceAmount"
+        [totalAmount]="revenueDistribution().totalAmount">
+      </app-donut-chart>
     </div>
   </div>
 
@@ -60,9 +66,9 @@
       </div>
     </div>
     
-    <!-- AI-Powered Insights or Quick Links -->
+    <!-- Actionable Insights -->
     <div class="h-full">
-      <app-insight-card />
+      <app-insight-card [insights]="actionableInsights()" />
     </div>
   </div>
 
