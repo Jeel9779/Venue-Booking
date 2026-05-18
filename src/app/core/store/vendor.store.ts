@@ -1,5 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Vendor, VendorState } from '../models/vendor.model';
+import { initialPagination, Pagination } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,18 +9,24 @@ export class VendorStore {
   // ── State ──────────────────────────────────────────────────────────────────
   private readonly _state = signal<VendorState>({
     vendors: [],
+    pagination: initialPagination,
     isLoading: false,
     error: null,
   });
 
   // ── Selectors ──────────────────────────────────────────────────────────────
   readonly vendors = computed(() => this._state().vendors);
+  readonly pagination = computed(() => this._state().pagination);
   readonly isLoading = computed(() => this._state().isLoading);
   readonly error = computed(() => this._state().error);
 
   // ── Actions ────────────────────────────────────────────────────────────────
   setVendors(vendors: Vendor[]): void {
     this._state.update((s) => ({ ...s, vendors, isLoading: false, error: null }));
+  }
+
+  setPagination(pagination: Pagination): void {
+    this._state.update((s) => ({ ...s, pagination }));
   }
 
   setLoading(isLoading: boolean): void {

@@ -47,7 +47,7 @@ export class Register {
 
     const { username, password } = this.form.value;
 
-    this.http.post<any>('http://192.168.1.12:3000/admin/register', {
+    this.http.post<any>('http://192.168.1.9:3000/admin/register', {
       /*     this.http.post<any>('http://localhost:3000/admin/register', { */
       username,
       password

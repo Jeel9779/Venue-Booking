@@ -2,11 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Plan } from '@core/models/subscription.model';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class PlanApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.12:3000/plans';     // cards
+  private readonly baseUrl = 'http://192.168.1.9:3000/plans';     // cards
   /*  private readonly baseUrl = 'http://localhost:3000/plans'; */
   // Public/Vendor: Browse active plans
   getActivePlans(): Observable<{ success: boolean; plans: Plan[] }> {
@@ -15,7 +16,14 @@ export class PlanApi {
 
   // Admin: View all plans
   getAllPlans(): Observable<{ success: boolean; plans: Plan[] }> {
-    return this.http.get<{ success: boolean; plans: Plan[] }>(`${this.baseUrl}/all`);
+    return this.http.get<any>(`${this.baseUrl}/all`).pipe(
+      map(res => {
+        if (res.data && !res.plans) {
+          return { success: true, plans: res.data };
+        }
+        return res;
+      })
+    );
   }
 
   createPlan(payload: Partial<Plan>): Observable<{ success: boolean; plan: Plan }> {

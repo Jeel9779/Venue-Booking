@@ -12,12 +12,24 @@ export class UserService {
   private readonly store = inject(UsersStore);
   private readonly uploadsBase = 'http://192.168.1.12:3000';
 
-  loadAll(): void {
+  loadAll(page: number = 1, limit: number = 10): void {
     this.store.setLoading(true);
-    this.api.getAll()
+    this.api.getAll(page, limit)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
-        next: (users) => this.store.setUsers(users),
+        next: (res) => {
+          const users = Array.isArray(res) ? res : (res.data || []);
+          this.store.setUsers(users);
+          
+          if (!Array.isArray(res)) {
+            this.store.setPagination({
+              page: res.page || page,
+              limit: res.limit || limit,
+              totalRecords: res.totalRecords || users.length,
+              totalPages: res.totalPages || 1
+            });
+          }
+        },
         error: (err) => this.store.setError(err?.error?.message || 'Failed to load users'),
       });
   }

@@ -1,3 +1,5 @@
+import { Pagination, initialPagination } from './pagination.model';
+
 export interface Booking {
   _id: string;
   userId: {
@@ -61,6 +63,7 @@ export interface VendorBookings {
 
 export interface BookingState {
   bookings: Booking[];
+  pagination: Pagination;
   isLoading: boolean;
   error: string | null;
 }

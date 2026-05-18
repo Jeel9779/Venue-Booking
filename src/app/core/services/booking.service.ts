@@ -10,14 +10,23 @@ export class BookingService {
   private readonly api = inject(BookingApi);
   private readonly store = inject(BookingStore);
 
-  loadAll(): void {
+  loadAll(page: number = 1, limit: number = 10): void {
     this.store.setLoading(true);
-    this.api.getAllBookings()
+    this.api.getAllBookings(page, limit)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: (res) => {
-          const data = Array.isArray(res) ? res : (res.bookings || []);
-          this.store.setBookings(data);
+          const bookings = Array.isArray(res) ? res : (res.data || res.bookings || []);
+          this.store.setBookings(bookings);
+
+          if (!Array.isArray(res)) {
+            this.store.setPagination({
+              page: res.page || page,
+              limit: res.limit || limit,
+              totalRecords: res.totalRecords || bookings.length,
+              totalPages: res.totalPages || 1
+            });
+          }
         },
         error: (err) => this.store.setError(err?.message || 'Failed to load bookings'),
       });

@@ -6,14 +6,13 @@ import { SubscriptionStore } from '@core/store/subscription.store';
 import { VendorStore } from '@core/store/vendor.store';
 import { SubscriptionApi } from '@core/api/subscription-api';
 import { VendorApi } from '@core/api/vendor-api';
-import { Button } from '@shared/components/button/button';
 import { Model } from '@shared/components/model/model';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-vendor-subscriptions',
   standalone: true,
-  imports: [CommonModule, Button, LucideAngularModule, Model],
+  imports: [CommonModule, LucideAngularModule, Model],
   templateUrl: './vendor-subscriptions.html',
   styleUrl: './vendor-subscriptions.css'
 })

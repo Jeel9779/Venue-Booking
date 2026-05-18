@@ -14,6 +14,7 @@ export interface Review {
   rating: number;
   feedback: string;
   status: 'pending' | 'approved' | 'rejected';
+  venueName?: string; // Support for backend flat field
   createdAt: string;
   updatedAt: string;
 }

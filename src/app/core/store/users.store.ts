@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User, UserState } from '../models/user.model';
+import { initialPagination, Pagination } from '../models/pagination.model';
 
 const initialState: UserState = {
   users: [],
+  pagination: initialPagination,
   isLoading: false,
   error: null,
 };
@@ -18,6 +20,7 @@ export class UsersStore {
   readonly stateView$ = this.state$.asObservable();
 
   readonly users$ = this.stateView$.pipe(map((s) => s.users));
+  readonly pagination$ = this.stateView$.pipe(map((s) => s.pagination));
   readonly isLoading$ = this.stateView$.pipe(map((s) => s.isLoading));
   readonly error$ = this.stateView$.pipe(map((s) => s.error));
 
@@ -31,6 +34,13 @@ export class UsersStore {
       users,
       isLoading: false,
       error: null,
+    });
+  }
+
+  setPagination(pagination: Pagination): void {
+    this.state$.next({
+      ...this.snapshot,
+      pagination,
     });
   }
 

@@ -10,6 +10,8 @@ import { Card } from '../../shared/components/card/card';
 import { Table } from '../../shared/components/table/table';
 import { Model } from '../../shared/components/model/model';
 import { FormInput } from '../../shared/components/form-input/form-input';
+import { Pagination } from '../../shared/components/pagination/pagination';
+import { initialPagination } from '../../core/models/pagination.model';
 
 type SortField = 'name' | 'email' | 'createdAt';
 type SortOrder = 'asc' | 'desc';
@@ -17,7 +19,7 @@ type SortOrder = 'asc' | 'desc';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, Pagination],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
@@ -29,6 +31,7 @@ export class Users implements OnInit {
   readonly users = toSignal(this.usersStore.users$, { initialValue: [] });
   readonly isLoading = toSignal(this.usersStore.isLoading$, { initialValue: false });
   readonly error = toSignal(this.usersStore.error$, { initialValue: null });
+  readonly pagination = toSignal(this.usersStore.pagination$, { initialValue: initialPagination });
 
   // ── UI State ───────────────────────────────────────────────────────────────
   search = signal('');
@@ -99,7 +102,11 @@ export class Users implements OnInit {
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
   ngOnInit() {
-    this.userService.loadAll();
+    this.userService.loadAll(this.pagination().page);
+  }
+
+  onPageChange(page: number) {
+    this.userService.loadAll(page, this.pagination().limit);
   }
 
   // ── Actions ────────────────────────────────────────────────────────────────

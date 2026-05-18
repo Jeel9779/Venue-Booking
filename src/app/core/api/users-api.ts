@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { User, UpdateUserPayload } from '../models/user.model';
 
 @Injectable({
@@ -8,11 +9,16 @@ import { User, UpdateUserPayload } from '../models/user.model';
 })
 export class UsersApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.12:3000/users';
+  private readonly baseUrl = 'http://192.168.1.9:3000/users';
   /*  private readonly baseUrl = 'http://localhost:3000/users'; */
 
-  getAll(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl);
+  getAll(page: number = 1, limit: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}?page=${page}&limit=${limit}`).pipe(
+      map(res => {
+        // Return full response so service can extract pagination
+        return res;
+      })
+    );
   }
 
   getById(id: string): Observable<User> {

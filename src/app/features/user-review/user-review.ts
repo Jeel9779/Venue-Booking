@@ -31,7 +31,7 @@ export class UserReview implements OnInit {
   // ── Local UI State ──
   readonly searchTerm = this.store.searchTerm;
   showDeleteModal = signal(false);
-  reviewToDelete = signal<string | null>(null);
+  reviewToDelete = signal<any | null>(null);
 
   ngOnInit() {
     this.service.loadAll();
@@ -54,22 +54,22 @@ export class UserReview implements OnInit {
   /**
    * Action: Approve a review.
    */
-  approve(id: string) {
-    this.service.approveReview(id);
+  approve(review: any) {
+    this.service.approveReview(review.venueId._id, review._id);
   }
 
   /**
    * Action: Reject a review.
    */
-  reject(id: string) {
-    this.service.rejectReview(id);
+  reject(review: any) {
+    this.service.rejectReview(review.venueId._id, review._id);
   }
 
   /**
    * Action: Open delete confirmation modal.
    */
-  confirmDelete(id: string) {
-    this.reviewToDelete.set(id);
+  confirmDelete(review: any) {
+    this.reviewToDelete.set(review);
     this.showDeleteModal.set(true);
   }
 
@@ -77,9 +77,9 @@ export class UserReview implements OnInit {
    * Action: Finalize deletion.
    */
   executeDelete() {
-    const id = this.reviewToDelete();
-    if (id) {
-      this.service.deleteReview(id);
+    const review = this.reviewToDelete();
+    if (review) {
+      this.service.deleteReview(review.venueId._id, review._id);
       this.closeDeleteModal();
     }
   }

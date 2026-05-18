@@ -1,5 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Booking, BookingState } from '../models/booking.model';
+import { initialPagination, Pagination } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,18 +9,24 @@ export class BookingStore {
   // ── State ──────────────────────────────────────────────────────────────────
   private readonly _state = signal<BookingState>({
     bookings: [],
+    pagination: initialPagination,
     isLoading: false,
     error: null,
   });
 
   // ── Selectors ──────────────────────────────────────────────────────────────
   readonly bookings = computed(() => this._state().bookings);
+  readonly pagination = computed(() => this._state().pagination);
   readonly isLoading = computed(() => this._state().isLoading);
   readonly error = computed(() => this._state().error);
 
   // ── Actions ────────────────────────────────────────────────────────────────
   setBookings(bookings: Booking[]): void {
     this._state.update((s) => ({ ...s, bookings, isLoading: false, error: null }));
+  }
+
+  setPagination(pagination: Pagination): void {
+    this._state.update((s) => ({ ...s, pagination }));
   }
 
   setLoading(isLoading: boolean): void {

@@ -30,8 +30,8 @@ export class ReviewService {
   /**
    * Approves a review and updates the local state.
    */
-  approveReview(id: string) {
-    return this.api.approve(id).pipe(
+  approveReview(venueId: string, reviewId: string) {
+    return this.api.approve(venueId, reviewId).pipe(
       tap(updated => this.store.updateReview(updated)),
       catchError(err => {
         console.error('Approval failed:', err);
@@ -43,8 +43,8 @@ export class ReviewService {
   /**
    * Rejects a review and updates the local state.
    */
-  rejectReview(id: string) {
-    return this.api.reject(id).pipe(
+  rejectReview(venueId: string, reviewId: string) {
+    return this.api.reject(venueId, reviewId).pipe(
       tap(updated => this.store.updateReview(updated)),
       catchError(err => {
         console.error('Rejection failed:', err);
@@ -56,9 +56,9 @@ export class ReviewService {
   /**
    * Permanently deletes a review from the system.
    */
-  deleteReview(id: string) {
-    return this.api.delete(id).pipe(
-      tap(() => this.store.removeReview(id)),
+  deleteReview(venueId: string, reviewId: string) {
+    return this.api.delete(venueId, reviewId).pipe(
+      tap(() => this.store.removeReview(reviewId)),
       catchError(err => {
         console.error('Deletion failed:', err);
         return of(null);

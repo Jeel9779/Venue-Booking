@@ -6,6 +6,8 @@ import { VenueStore } from '../../core/store/venue.store';
 import { Venue, FilterState } from '../../core/models/venue.model';
 import { Button } from '../../shared/components/button/button';
 import { Card } from '../../shared/components/card/card';
+import { Pagination } from '../../shared/components/pagination/pagination';
+import { initialPagination } from '../../core/models/pagination.model';
 import { Table } from '../../shared/components/table/table';
 import { Model } from '../../shared/components/model/model';
 import { FormInput } from '../../shared/components/form-input/form-input';
@@ -29,7 +31,7 @@ import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-venues',
   standalone: true,
-  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, LucideAngularModule],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, LucideAngularModule, Pagination],
   templateUrl: './venues.html',
   styleUrl: './venues.css',
 })
@@ -61,6 +63,9 @@ export class Venues implements OnInit {
 
   /** Error message if any operation fails */
   readonly error = this.venueStore.error;
+
+  /** Pagination state */
+  readonly pagination = this.venueStore.pagination;
 
   /** Current active filter ('all', 'pending', 'approved', 'rejected') */
   filter = signal<FilterState>('all');
@@ -136,7 +141,11 @@ export class Venues implements OnInit {
    * Initializes the view by triggering the API call to load venues.
    */
   ngOnInit() {
-    this.venueService.loadAll();
+    this.venueService.loadAll(this.pagination().page);
+  }
+
+  onPageChange(page: number) {
+    this.venueService.loadAll(page, this.pagination().limit);
   }
 
   // ── Actions (Methods) ───────────────────────────────────────────────────────

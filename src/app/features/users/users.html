@@ -254,6 +254,15 @@
       }
     </div>
     }
+
+    <!-- PAGINATION -->
+    <app-pagination 
+      [currentPage]="pagination().page"
+      [totalPages]="pagination().totalPages"
+      [totalRecords]="pagination().totalRecords"
+      [limit]="pagination().limit"
+      (onPageChange)="onPageChange($event)">
+    </app-pagination>
   </app-card>
 
   <!-- ── EDIT MODEL ───────────────────────────────────────────────────── -->

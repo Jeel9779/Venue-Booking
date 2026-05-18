@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Vendor } from '../models/vendor.model';
 
 @Injectable({
@@ -8,11 +9,15 @@ import { Vendor } from '../models/vendor.model';
 })
 export class VendorApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.12:3000/vendors';
+  private readonly baseUrl = 'http://192.168.1.9:3000/vendors';
   /*   private readonly baseUrl = 'http://localhost:3000/vendors'; */
 
-  getAll(): Observable<Vendor[]> {
-    return this.http.get<Vendor[]>(this.baseUrl);
+  getAll(page: number = 1, limit: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}?page=${page}&limit=${limit}`).pipe(
+      map(res => {
+        return res;
+      })
+    );
   }
 
   getById(id: string): Observable<Vendor> {

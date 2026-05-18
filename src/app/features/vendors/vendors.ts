@@ -8,6 +8,8 @@ import { Button } from '../../shared/components/button/button';
 import { Card } from '../../shared/components/card/card';
 import { Table } from '../../shared/components/table/table';
 import { Model } from '../../shared/components/model/model';
+import { Pagination } from '../../shared/components/pagination/pagination';
+import { initialPagination } from '../../core/models/pagination.model';
 import { FormInput } from '../../shared/components/form-input/form-input';
 import { RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
@@ -15,7 +17,7 @@ import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-vendors',
   standalone: true,
-  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, RouterLink, LucideAngularModule],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, Pagination, FormInput, RouterLink, LucideAngularModule],
   templateUrl: './vendors.html',
   styleUrl: './vendors.css',
 })
@@ -27,6 +29,7 @@ export class Vendors implements OnInit {
   readonly vendors = this.vendorStore.vendors;
   readonly isLoading = this.vendorStore.isLoading;
   readonly error = this.vendorStore.error;
+  readonly pagination = this.vendorStore.pagination;
 
   search = signal('');
   filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
@@ -80,7 +83,11 @@ export class Vendors implements OnInit {
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
   ngOnInit() {
-    this.vendorService.loadAll();
+    this.vendorService.loadAll(this.pagination().page);
+  }
+
+  onPageChange(page: number) {
+    this.vendorService.loadAll(page, this.pagination().limit);
   }
 
   // ── Actions ────────────────────────────────────────────────────────────────

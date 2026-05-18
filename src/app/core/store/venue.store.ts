@@ -1,5 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Venue } from '../models/venue.model';
+import { initialPagination, Pagination } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -7,11 +8,13 @@ import { Venue } from '../models/venue.model';
 export class VenueStore {
   // ── State (Signals) ────────────────────────────────────────────────────────
   private readonly _venues = signal<Venue[]>([]);
+  private readonly _pagination = signal<Pagination>(initialPagination);
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
 
   // ── Selectors (Computed) ───────────────────────────────────────────────────
   readonly venues = computed(() => this._venues());
+  readonly pagination = computed(() => this._pagination());
   readonly isLoading = computed(() => this._isLoading());
   readonly error = computed(() => this._error());
 
@@ -21,6 +24,10 @@ export class VenueStore {
     this._venues.set(venues);
     this._isLoading.set(false);
     this._error.set(null);
+  }
+
+  setPagination(pagination: Pagination): void {
+    this._pagination.set(pagination);
   }
 
   /** Sets the global loading state. */

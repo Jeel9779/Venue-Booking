@@ -2,11 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription, SubscriptionQueue } from '../models/subscription.model';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class SubscriptionApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.12:3000/subscription';
+  private readonly baseUrl = 'http://192.168.1.9:3000/subscription';
   /*  private readonly baseUrl = 'http://localhost:3000/subscription'; */
 
   purchasePlan(planId: string): Observable<{ success: boolean; message: string; subscription?: Subscription; queueEntry?: SubscriptionQueue; queued: boolean }> {
@@ -23,7 +24,20 @@ export class SubscriptionApi {
 
   // Admin: Monitor all vendor subscriptions
   adminGetAllSubscriptions(): Observable<{ success: boolean; warningWindowDays: number; summary: any; subscriptions: any[] }> {
-    return this.http.get<{ success: boolean; warningWindowDays: number; summary: any; subscriptions: any[] }>(`${this.baseUrl}/all`);
+    return this.http.get<any>(`${this.baseUrl}/all`).pipe(
+      map(res => {
+        // Normalize paginated response to the format expected by the service
+        if (res.data && !res.subscriptions) {
+          return {
+            success: true,
+            warningWindowDays: res.warningWindowDays || 15,
+            summary: res.summary || {},
+            subscriptions: res.data
+          };
+        }
+        return res;
+      })
+    );
   }
 
   // Admin: Get expiring soon

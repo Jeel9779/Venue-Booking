@@ -1,3 +1,5 @@
+import { Pagination, initialPagination } from './pagination.model';
+
 export interface VendorInfo {
   _id: string;
   fullName: string;

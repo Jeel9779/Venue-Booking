@@ -1,3 +1,5 @@
+import { Pagination, initialPagination } from './pagination.model';
+
 export interface Vendor {
   _id: string;
   fullName: string;
@@ -20,6 +22,7 @@ export interface Vendor {
 
 export interface VendorState {
   vendors: Vendor[];
+  pagination: Pagination;
   isLoading: boolean;
   error: string | null;
 }

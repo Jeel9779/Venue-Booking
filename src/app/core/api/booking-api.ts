@@ -1,12 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Booking, BookedDates, UserBookings, VendorBookings } from '../models/booking.model';
 
 @Injectable({ providedIn: 'root' })
 export class BookingApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.12:3000/bookings';
+  private readonly baseUrl = 'http://192.168.1.9:3000/bookings';
   /*  private readonly baseUrl = 'http://localhost:3000/bookings'; */
 
   getBookedDates(venueId: string): Observable<BookedDates> {
@@ -17,8 +18,10 @@ export class BookingApi {
     return this.http.post<{ message: string; booking: Booking }>(this.baseUrl, data);
   }
 
-  getAllBookings(): Observable<{ bookings: Booking[] }> {
-    return this.http.get<{ bookings: Booking[] }>(this.baseUrl);
+  getAllBookings(page: number = 1, limit: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}?page=${page}&limit=${limit}`).pipe(
+      map(res => res)
+    );
   }
 
   getUserBookings(userId: string): Observable<UserBookings> {

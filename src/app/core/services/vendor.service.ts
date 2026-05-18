@@ -11,12 +11,24 @@ export class VendorService {
   private readonly api = inject(VendorApi);
   private readonly store = inject(VendorStore);
 
-  loadAll(): void {
+  loadAll(page: number = 1, limit: number = 10): void {
     this.store.setLoading(true);
-    this.api.getAll()
+    this.api.getAll(page, limit)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
-        next: (vendors) => this.store.setVendors(vendors),
+        next: (res) => {
+          const vendors = Array.isArray(res) ? res : (res.data || []);
+          this.store.setVendors(vendors);
+
+          if (!Array.isArray(res)) {
+            this.store.setPagination({
+              page: res.page || page,
+              limit: res.limit || limit,
+              totalRecords: res.totalRecords || vendors.length,
+              totalPages: res.totalPages || 1
+            });
+          }
+        },
         error: (err) => this.store.setError(err?.message || 'Failed to load vendors'),
       });
   }

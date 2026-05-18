@@ -10,11 +10,13 @@ import { LucideAngularModule } from 'lucide-angular';
 import { Card } from '../../shared/components/card/card';
 import { Button } from '../../shared/components/button/button';
 import { Model } from '../../shared/components/model/model';
+import { Pagination } from '../../shared/components/pagination/pagination';
+import { initialPagination } from '../../core/models/pagination.model';
 
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, Card, Button, Model],
+  imports: [CommonModule, FormsModule, LucideAngularModule, Card, Button, Model, Pagination],
   templateUrl: './bookings.html',
   styleUrl: './bookings.css'
 })
@@ -25,33 +27,25 @@ export class Bookings {
   private readonly cd = inject(ChangeDetectorRef);
   protected readonly Math = Math;
 
-  // ── Declarative Data Loading (Modern Angular Way) ──────────────────────────
-  private readonly bookingsResource = resource({
-    loader: () => firstValueFrom(this.bookingApi.getAllBookings()),
-  });
+  ngOnInit() {
+    this.bookingService.loadAll(this.pagination().page, this.pagination().limit);
+  }
 
-  // Sync resource data to store (Eagerly using effect)
-  private readonly _syncEffect = effect(() => {
-    const res = this.bookingsResource.value();
-    if (res && typeof res === 'object') {
-      const data = (res as any).bookings as Booking[] || [];
-      this.bookingStore.setBookings(data);
-    }
-  });
+  onPageChange(page: number) {
+    this.bookingService.loadAll(page, this.pagination().limit);
+  }
 
   // ── State (Signals) ────────────────────────────────────────────────────────
   readonly bookings = this.bookingStore.bookings;
-  // Resource provides its own loading/error states for better UX
-  readonly isLoading = computed(() => this.bookingsResource.isLoading() || this.bookingStore.isLoading());
-  readonly error = computed(() => (this.bookingsResource.error() as any)?.message || this.bookingStore.error());
+  // Use store signals for loading and error states
+  readonly isLoading = this.bookingStore.isLoading;
+  readonly error = this.bookingStore.error;
 
   search = signal('');
   filter = signal<string>('all');
   dateFilter = signal<string>('allTime');
 
-  // Pagination State
-  currentPage = signal(1);
-  pageSize = signal(10);
+  readonly pagination = this.bookingStore.pagination;
 
   selectedBooking = signal<Booking | null>(null);
   // Controls which tab is active in the booking detail modal:
@@ -135,20 +129,11 @@ export class Bookings {
     });
   });
 
-  /**
-   * Frontend Pagination Logic
-   */
-  paginatedBookings = computed(() => {
-    const list = this.filteredBookings();
-    const startIndex = (this.currentPage() - 1) * this.pageSize();
-    return list.slice(startIndex, startIndex + this.pageSize());
-  });
-
-  totalPages = computed(() => Math.ceil(this.filteredBookings().length / this.pageSize()));
+  totalPages = computed(() => this.pagination().totalPages);
 
   pages = computed(() => {
-    const total = this.totalPages();
-    const current = this.currentPage();
+    const total = this.pagination().totalPages;
+    const current = this.pagination().page;
     const maxVisible = 5;
     
     if (total <= maxVisible) {
@@ -211,11 +196,10 @@ export class Bookings {
 
   // ── Actions ────────────────────────────────────────────────────────────────
   refresh() {
-    this.bookingsResource.reload();
+    this.bookingService.loadAll(this.pagination().page, this.pagination().limit);
   }
   setFilter(f: string) {
     this.filter.set(f);
-    this.currentPage.set(1);
   }
 
   private searchTimeout: any;
@@ -225,30 +209,15 @@ export class Bookings {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.search.set(input.value);
-      this.currentPage.set(1);
     }, 300);
   }
 
   setDateFilter(range: string) {
     this.dateFilter.set(range);
-    this.currentPage.set(1);
-  }
-
-  nextPage() {
-    if (this.currentPage() < this.totalPages()) {
-      this.currentPage.update(p => p + 1);
-    }
-  }
-
-  prevPage() {
-    if (this.currentPage() > 1) {
-      this.currentPage.update(p => p - 1);
-    }
   }
 
   setPageSize(size: number) {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+    this.bookingService.loadAll(1, size);
   }
 
   openDetails(booking: Booking) {

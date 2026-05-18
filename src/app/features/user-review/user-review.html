@@ -237,7 +237,7 @@
           <div
             class="flex items-center gap-2 px-4 py-2 bg-slate-200 rounded-2xl border border-slate-400 text-[0.7rem] font-black text-slate-600 uppercase tracking-widest shadow-inner">
             <lucide-icon name="building-2" size="14" class="text-indigo-500"></lucide-icon>
-            {{ review.venueId.name }}
+            {{ review.venueName || (review.venueId && review.venueId.name) || 'Unknown Venue' }}
           </div>
         </div>
 
@@ -266,20 +266,20 @@
 
       <div class="flex items-center gap-3 w-full sm:w-auto">
         @if (review.status === 'pending' || review.status === 'rejected') {
-        <button (click)="approve(review._id)"
+        <button (click)="approve(review)"
           class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-3.5 rounded-[20px] text-xs font-black uppercase tracking-widest shadow-2xl shadow-slate-200 hover:bg-indigo-600 transition-all active:scale-95 cursor-pointer border-none">
           <lucide-icon name="shield-check" size="16"></lucide-icon>
           Approve
         </button>
         }
         @if (review.status === 'pending' || review.status === 'approved') {
-        <button (click)="reject(review._id)"
+        <button (click)="reject(review)"
           class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white border border-slate-300 text-slate-600 px-8 py-3.5 rounded-[20px] text-xs font-black uppercase tracking-widest hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all active:scale-95 cursor-pointer">
           <lucide-icon name="shield-x" size="16"></lucide-icon>
           Reject
         </button>
         }
-        <button (click)="confirmDelete(review._id)"
+        <button (click)="confirmDelete(review)"
           class="w-12 h-12 bg-white border border-slate-300 text-slate-400 rounded-[20px] flex items-center justify-center hover:bg-rose-500 hover:text-white hover:border-rose-600 transition-all active:scale-90 shadow-sm cursor-pointer group/del">
           <lucide-icon name="trash-2" size="20" class="transition-transform group-hover/del:scale-110"></lucide-icon>
         </button>
