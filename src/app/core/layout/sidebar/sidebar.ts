@@ -70,6 +70,7 @@ export class Sidebar {
   // logout
   logout() {
     localStorage.removeItem('adminId');
+    localStorage.removeItem('admin');
     this.router.navigate(['/login']);
   }
 }

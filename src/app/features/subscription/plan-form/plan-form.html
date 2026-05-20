@@ -1,7 +1,7 @@
-<form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+<form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 p-1">
 
   <!-- Basic Info Section -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
     <app-form-input 
       label="Plan Name" 
       placeholder="e.g. Premium Business" 
@@ -18,10 +18,11 @@
     </app-form-input>
   </div>
 
+  <!-- Duration Section -->
   <div class="space-y-4">
     <div class="flex items-center justify-between">
       <label class="block text-[0.8125rem] font-bold text-slate-700 uppercase tracking-wider">Plan Duration</label>
-      <span class="text-[0.7rem] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">{{ planForm.get('duration_days')?.value }} Days</span>
+      <span class="text-[0.7rem] font-black text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">{{ planForm.get('duration_days')?.value }} Days</span>
     </div>
     
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -29,7 +30,7 @@
         <button 
           type="button"
           (click)="selectDuration(d.days)"
-          [class]="'h-11 rounded-xl text-xs font-bold transition-all border-2 ' + (planForm.get('duration_days')?.value === d.days ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' : 'border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50')">
+          [class]="'h-10 sm:h-11 rounded-xl text-xs font-bold transition-all border-2 ' + (planForm.get('duration_days')?.value === d.days ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' : 'border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50')">
           {{ d.label }}
         </button>
       }
@@ -49,14 +50,34 @@
     </app-form-input>
   </div>
 
-    <div class="flex flex-col">
-      <label class="block text-[0.8125rem] font-bold text-slate-700 mb-2 uppercase tracking-wider">Status</label>
-      <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" formControlName="is_active" class="sr-only peer">
-        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-        <span class="ml-3 text-sm font-bold text-slate-600">{{ planForm.get('is_active')?.value ? 'Active' : 'Inactive' }}</span>
+  <!-- Plan Type Section (From ts form group planType control) -->
+  <div class="flex flex-col">
+    <label class="block text-[0.8125rem] font-bold text-slate-700 mb-2 uppercase tracking-wider">Plan Type</label>
+    <div class="flex items-center gap-4">
+      <label class="inline-flex items-center cursor-pointer">
+        <input type="radio" formControlName="planType" value="base" class="sr-only peer">
+        <div class="px-4 py-2 border-2 border-slate-100 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 rounded-xl text-xs font-bold transition-all bg-white text-slate-500">
+          Base Plan
+        </div>
+      </label>
+      <label class="inline-flex items-center cursor-pointer">
+        <input type="radio" formControlName="planType" value="addon" class="sr-only peer">
+        <div class="px-4 py-2 border-2 border-slate-100 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 rounded-xl text-xs font-bold transition-all bg-white text-slate-500">
+          Add-on Plan
+        </div>
       </label>
     </div>
+  </div>
+
+  <!-- Status Section -->
+  <div class="flex flex-col">
+    <label class="block text-[0.8125rem] font-bold text-slate-700 mb-2 uppercase tracking-wider">Status</label>
+    <label class="relative inline-flex items-center cursor-pointer">
+      <input type="checkbox" formControlName="is_active" class="sr-only peer">
+      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+      <span class="ml-3 text-sm font-bold text-slate-600">{{ planForm.get('is_active')?.value ? 'Active' : 'Inactive' }}</span>
+    </label>
+  </div>
 
   <!-- Features Section -->
   <div class="space-y-4">
@@ -91,9 +112,9 @@
   </div>
 
   <!-- Footer Actions -->
-  <div class="flex items-center justify-end gap-3 mt-4 pt-6 border-t border-slate-100">
-    <app-button variant="secondary" type="button" (onClick)="onCancel.emit()">Cancel</app-button>
-    <app-button type="submit" [loading]="isLoading()" [disabled]="planForm.invalid">
+  <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 mt-4 pt-6 border-t border-slate-100">
+    <app-button variant="secondary" type="button" (onClick)="onCancel.emit()" customClass="w-full sm:w-auto" class="w-full sm:w-auto">Cancel</app-button>
+    <app-button type="submit" [loading]="isLoading()" [disabled]="planForm.invalid" customClass="w-full sm:w-auto" class="w-full sm:w-auto">
       {{ plan() ? 'Update Plan' : 'Create Plan' }}
     </app-button>
   </div>

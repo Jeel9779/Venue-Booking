@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Venue } from '../models/venue.model';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class PartnerApi {
   private readonly http = inject(HttpClient);
-  private readonly api = 'http://192.168.1.9:3000/admin/venues';
-  /* private readonly api = 'http://localhost:3000/admin/venues'; */
+  private readonly api = `${API_BASE_URL}/admin/venues`;
 
 
   approveVenue(id: string) {

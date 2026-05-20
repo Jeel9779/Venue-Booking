@@ -1,21 +1,20 @@
-<div class="subscription-plans-page p-6 sm:p-8 bg-gray-300 min-h-screen">
+<div class="subscription-plans-page p-4 sm:p-6 lg:p-8 bg-gray-300 min-h-screen">
 
   <!-- ── HEADER ── -->
-  <div class="flex items-center justify-between flex-wrap gap-4 mb-10">
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 sm:mb-10">
     <div class="flex items-center gap-4">
-      <div
-        class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200">
+      <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
         </svg>
       </div>
       <div>
         <h1 class="text-2xl font-bold tracking-tight m-0 text-slate-900">Subscription Plans</h1>
-        <p class="text-sm text-slate-500 mt-0.5 m-0 font-medium">Manage membership tiers and pricing</p>
+        <p class="text-xs sm:text-sm text-slate-500 mt-0.5 m-0 font-semibold">Manage membership tiers and pricing</p>
       </div>
     </div>
 
-    <app-button (onClick)="openAddForm()" customClass="shadow-lg shadow-indigo-100">
+    <app-button (onClick)="openAddForm()" customClass="w-full sm:w-auto shadow-lg shadow-indigo-100" class="w-full sm:w-auto">
       <svg class="mr-2" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M12 5v14M5 12h14" />
       </svg>
@@ -31,41 +30,40 @@
   </div>
   } @else if (plans().length === 0) {
   <!-- ── EMPTY STATE ── -->
-  <div
-    class="flex flex-col items-center justify-center py-32 text-center bg-white rounded-[32px] border border-dashed border-slate-300">
-    <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
-      <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+  <div class="flex flex-col items-center justify-center py-20 sm:py-32 text-center bg-white rounded-3xl sm:rounded-[32px] border border-dashed border-slate-300 p-6">
+    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
+      <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="sm:hidden">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+      </svg>
+      <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="hidden sm:block">
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
       </svg>
     </div>
     <h3 class="text-lg font-bold text-slate-900 m-0">No Plans Created</h3>
-    <p class="text-slate-500 text-sm mt-2 max-w-[280px] font-medium leading-relaxed">You haven't defined any
-      subscription plans yet. Start by creating one.</p>
+    <p class="text-slate-500 text-sm mt-2 max-w-[280px] font-medium leading-relaxed">You haven't defined any subscription plans yet. Start by creating one.</p>
     <app-button variant="secondary" customClass="mt-6" (onClick)="openAddForm()">Get Started</app-button>
   </div>
   } @else {
   <!-- ── PLANS GRID ── -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
     @for (plan of plans(); track plan._id; let i = $index) {
-    <div
-      class="w-full p-6 bg-white border border-slate-200 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 relative group flex flex-col">
+    <div class="w-full p-5 sm:p-6 bg-white border border-slate-200 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 relative group flex flex-col">
 
       <!-- Status Badge -->
       @if (!plan.is_active) {
-      <div
-        class="absolute top-6 right-6 px-3 py-1 bg-rose-200 text-rose-600 text-[0.6rem] font-black uppercase tracking-widest rounded-lg border border-rose-100">
+      <div class="absolute top-5 right-5 sm:top-6 sm:right-6 px-3 py-1 bg-rose-200 text-rose-600 text-[0.6rem] font-black uppercase tracking-widest rounded-lg border border-rose-100">
         Inactive
       </div>
       }
 
-      <h5 class="mb-4 text-xl font-bold text-slate-900 pr-16">{{ plan.name }}</h5>
+      <h5 class="mb-4 text-lg sm:text-xl font-bold text-slate-900 pr-16">{{ plan.name }}</h5>
 
-      <div class="flex items-baseline text-slate-900">
-        <span class="text-5xl font-extrabold tracking-tight">₹{{ plan.price }}</span>
-        <span class="ms-2 font-medium text-slate-500">/{{ plan.duration_days }} days</span>
+      <div class="flex items-baseline text-slate-900 flex-wrap">
+        <span class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">₹{{ plan.price }}</span>
+        <span class="ms-2 font-semibold text-slate-500 text-sm">/{{ plan.duration_days }} days</span>
       </div>
 
-      <ul role="list" class="space-y-4 my-8 flex-1">
+      <ul role="list" class="space-y-4 my-6 sm:my-8 flex-1">
         @for (feature of plan.features; track $index) {
         <li class="flex items-start">
           <svg class="w-5 h-5 shrink-0 text-indigo-600 me-3 mt-0.5" aria-hidden="true"
@@ -73,20 +71,20 @@
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
           </svg>
-          <span class="text-slate-600 font-medium">{{ feature }}</span>
+          <span class="text-slate-600 font-semibold text-xs sm:text-sm">{{ feature }}</span>
         </li>
         } @empty {
-        <li class="text-slate-400 italic text-sm font-medium">No features listed</li>
+        <li class="text-slate-400 italic text-xs sm:text-sm font-semibold">No features listed</li>
         }
       </ul>
 
       <!-- Admin Buttons -->
       <div class="flex gap-3 pt-6 border-t border-slate-100 mt-auto">
         <button type="button" (click)="editPlan(plan)"
-          class="w-full text-indigo-700 hover:text-white bg-indigo-300 hover:bg-indigo-400 border border-transparent font-bold rounded-xl text-sm px-4 py-3 transition-colors focus:outline-none">Edit
+          class="w-full text-indigo-700 hover:text-white bg-indigo-300 hover:bg-indigo-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Edit
           Plan</button>
         <button type="button" (click)="deletePlan(plan._id)"
-          class="w-full text-rose-600 hover:text-white bg-rose-300 hover:bg-rose-400 border border-transparent font-bold rounded-xl text-sm px-4 py-3 transition-colors focus:outline-none">Delete</button>
+          class="w-full text-rose-600 hover:text-white bg-rose-300 hover:bg-rose-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Delete</button>
       </div>
     </div>
     }

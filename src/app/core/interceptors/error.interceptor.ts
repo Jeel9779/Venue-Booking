@@ -1,7 +1,11 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
+import { inject } from '@angular/core';
+import { ToastService } from '@core/services/toast.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const toastService = inject(ToastService);
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage = 'An unknown error occurred!';
@@ -15,7 +19,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
       
       console.error(errorMessage);
-      // You could also inject a ToastService here to show a notification
+      toastService.error(errorMessage);
       
       return throwError(() => new Error(errorMessage));
     })

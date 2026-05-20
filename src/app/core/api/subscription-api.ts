@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Subscription, SubscriptionQueue } from '../models/subscription.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class SubscriptionApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.9:3000/subscription';
-  /*  private readonly baseUrl = 'http://localhost:3000/subscription'; */
+  private readonly baseUrl = `${API_BASE_URL}/subscription`;
 
   purchasePlan(planId: string): Observable<{ success: boolean; message: string; subscription?: Subscription; queueEntry?: SubscriptionQueue; queued: boolean }> {
     return this.http.post<{ success: boolean; message: string; subscription?: Subscription; queueEntry?: SubscriptionQueue; queued: boolean }>(`${this.baseUrl}/purchase`, { planId });

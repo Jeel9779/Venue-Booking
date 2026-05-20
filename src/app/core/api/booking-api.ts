@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Booking, BookedDates, UserBookings, VendorBookings } from '../models/booking.model';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class BookingApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.9:3000/bookings';
-  /*  private readonly baseUrl = 'http://localhost:3000/bookings'; */
+  private readonly baseUrl = `${API_BASE_URL}/bookings`;
 
   getBookedDates(venueId: string): Observable<BookedDates> {
     return this.http.get<BookedDates>(`${this.baseUrl}/venue/${venueId}/booked-dates`);

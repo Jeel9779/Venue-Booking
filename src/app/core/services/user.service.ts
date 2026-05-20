@@ -3,6 +3,7 @@ import { finalize } from 'rxjs/operators';
 import { UsersApi } from '../api/users-api';
 import { UsersStore } from '../store/users.store';
 import { User, UpdateUserPayload } from '../models/user.model';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ import { User, UpdateUserPayload } from '../models/user.model';
 export class UserService {
   private readonly api = inject(UsersApi);
   private readonly store = inject(UsersStore);
-  private readonly uploadsBase = 'http://192.168.1.12:3000';
+  private readonly uploadsBase = API_BASE_URL;
 
   loadAll(page: number = 1, limit: number = 10): void {
     this.store.setLoading(true);

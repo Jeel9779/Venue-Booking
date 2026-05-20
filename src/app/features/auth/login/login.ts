@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from '@core/services/toast.service';
+import { API_BASE_URL } from '@core/config/api.config';
 
 /**
  * Login Component
@@ -78,13 +79,22 @@ export class Login implements OnInit {
     this.errorMsg = '';
 
     // API Call to backend
-    /*  this.http.post<any>('http://localhost:3000/admin/login', { */
-    this.http.post<any>('http://192.168.1.9:3000/admin/login', {
+    this.http.post<any>(`${API_BASE_URL}/admin/login`, {
       username,
       password
     }).subscribe({
       next: (res) => {
-        // Save auth token / ID
+        // 🔒 SECURITY SANITIZATION:
+        // Never store sensitive information like passwords or credentials in local storage!
+        // We only extract non-sensitive display fields needed for the frontend header/navigation.
+        const sanitizedAdmin = {
+          _id: res.admin._id,
+          username: res.admin.username,
+          role: res.admin.role || 'admin',
+        };
+
+        // Save sanitized data
+        localStorage.setItem('admin', JSON.stringify(sanitizedAdmin));
         localStorage.setItem('adminId', res.admin._id);
 
         // Handle 'Remember Me' logic

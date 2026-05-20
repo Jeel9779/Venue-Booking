@@ -39,6 +39,8 @@ export interface Venue {
   country: string;
   lat: string;
   lng: string;
+  venueTypes?: string[];
+  eventsSupported?: string[];
   amenities: string[];
   availableFrom: string;
   mediaFiles: string[];

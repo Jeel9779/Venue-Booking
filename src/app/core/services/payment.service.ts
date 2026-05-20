@@ -18,18 +18,14 @@ export class PaymentService {
     this.store.setLoading(true);
     const filters = this.store.snapshot.filters;
 
-    forkJoin({
-      payments: this.api.getAll(filters).pipe(catchError(() => of([]))),
-      stats: this.api.getStats().pipe(catchError(() => of(null))),
-    })
+    this.api.getAll(filters)
       .pipe(
-        tap(({ payments, stats }) => {
+        tap((payments) => {
           if (payments) this.store.setPayments(payments);
-          if (stats) this.store.setStats(stats);
         }),
         catchError((err) => {
           this.store.setError(err.message || 'Failed to load payment data');
-          return of(null);
+          return of([]);
         }),
         finalize(() => this.store.setLoading(false))
       )

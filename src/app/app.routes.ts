@@ -20,8 +20,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('@core/layout/admin-layout/admin-layout').then((m) => m.AdminLayout),
 
-    /* incomplate role guard  */
-    /* canActivate: [authGuard, () => roleGuard(['admin'])], */
+    /* Secure routes with authGuard */
     canActivate: [authGuard],
 
     children: [

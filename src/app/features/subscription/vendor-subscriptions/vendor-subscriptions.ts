@@ -43,7 +43,8 @@ export class VendorSubscriptions {
 
     const vRes = this.vendorsResource.value();
     if (vRes) {
-      this.vendorStore.setVendors(vRes);
+      const vendorsArray = Array.isArray(vRes) ? vRes : (vRes.data || []);
+      this.vendorStore.setVendors(vendorsArray);
     }
   });
 

@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from '@core/services/toast.service';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Component({
   selector: 'app-register',
@@ -47,8 +48,7 @@ export class Register {
 
     const { username, password } = this.form.value;
 
-    this.http.post<any>('http://192.168.1.9:3000/admin/register', {
-      /*     this.http.post<any>('http://localhost:3000/admin/register', { */
+    this.http.post<any>(`${API_BASE_URL}/admin/register`, {
       username,
       password
     }).subscribe({

@@ -27,20 +27,29 @@
 
   </div>
 
-  <!-- CENTER DESKTOP NAVIGATION (Cosmetic/Semantic) -->
+  <!-- CENTER DESKTOP NAVIGATION (Real Dynamic Anchors) -->
   <nav aria-label="Quick Navigation"
-    class="hidden lg:flex items-center gap-1 px-2 py-1 mx-4 bg-white border border-gray-200 rounded-full shadow-sm">
+    class="hidden lg:flex items-center gap-1 px-2 py-1 mx-4 bg-white border border-gray-200 rounded-full shadow-xs">
 
+    <!--   <a [routerLink]="['/dashboard']" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-xs"
+      class="px-4 py-1.5 text-xs font-black uppercase tracking-wider text-slate-500 hover:text-[#6C63FF] hover:bg-slate-50/80 rounded-full transition-all duration-200 ease-in-out cursor-pointer decoration-none">
+      Overview
+    </a> -->
 
-    <button tabindex="0"
-      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-green-500">
-      Overview</button>
+    <a [routerLink]="['/venues']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-xs"
+      class="px-4 py-1.5 text-xs font-black uppercase tracking-wider text-slate-500 hover:text-[#6C63FF] hover:bg-slate-50/80 rounded-full transition-all duration-200 ease-in-out cursor-pointer decoration-none">
+      Venues
+    </a>
 
-    <button tabindex="0"
-      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-[#6C63FF]/40">Reports</button>
-    <button tabindex="0"
-      class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-white/60 rounded-full cursor-pointer transition-all hover:outline-none hover:ring-2 hover:ring-[#6C63FF]/40">Audit
-      Logs</button>
+    <a [routerLink]="['/vendors']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-xs"
+      class="px-4 py-1.5 text-xs font-black uppercase tracking-wider text-slate-500 hover:text-[#6C63FF] hover:bg-slate-50/80 rounded-full transition-all duration-200 ease-in-out cursor-pointer decoration-none">
+      Vendors
+    </a>
+
+    <a [routerLink]="['/user-review']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-xs"
+      class="px-4 py-1.5 text-xs font-black uppercase tracking-wider text-slate-500 hover:text-[#6C63FF] hover:bg-slate-50/80 rounded-full transition-all duration-200 ease-in-out cursor-pointer decoration-none">
+      Reviews
+    </a>
   </nav>
 
   <!-- RIGHT SECTION -->
@@ -73,27 +82,21 @@
       </div>
     </div>
 
-    <!-- Global Search -->
-
-
-    <div class="hidden lg:flex items-center relative group">
-      <div
-        class="absolute left-3 text-gray-400 group-focus-within:text-green-500 transition-colors pointer-events-none">
+    <!-- Global Search (Trigger command palette) -->
+    <div (click)="toggleSearchPalette()" class="hidden lg:flex items-center relative group cursor-pointer select-none">
+      <div class="absolute left-3 text-gray-400 group-hover:text-[#6C63FF] transition-colors pointer-events-none">
         <lucide-icon [img]="icons.search" size="16"></lucide-icon>
       </div>
-      <input type="text" placeholder="Search..." aria-label="Global Search" class="h-10 w-48 xl:w-64 pl-9 pr-4 rounded-xl bg-white border border-gray-200 
-           focus:bg-white focus:border-[#6C63FF] 
-           focus:ring-4 focus:ring-[#6C63FF]/10 
-           text-sm text-gray-800 placeholder-gray-400 
-           transition-all duration-200 ease-in-out outline-none">
-      <div class="absolute right-2.5 flex items-center pointer-events-none">
-        <kbd
-          class="hidden xl:inline-block px-1.5 py-0.5 text-[0.65rem] font-mono font-medium text-gray-400 bg-white border border-gray-200 rounded shadow-xs">⌘K</kbd>
+      <input type="text" readonly placeholder="Search (Ctrl + K)..." aria-label="Global Search" 
+             class="h-10 w-48 xl:w-64 pl-9 pr-16 rounded-xl bg-white border border-gray-200 hover:border-[#6C63FF]/60 cursor-pointer text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 outline-none">
+      <div class="absolute right-2.5 flex items-center pointer-events-none gap-0.5">
+        <kbd class="px-1.5 py-0.5 text-[0.6rem] font-mono font-black text-slate-400 bg-slate-50 border border-slate-200 rounded shadow-xs">Ctrl</kbd>
+        <kbd class="px-1.5 py-0.5 text-[0.6rem] font-mono font-black text-slate-400 bg-slate-50 border border-slate-200 rounded shadow-xs">K</kbd>
       </div>
     </div>
 
-    <!-- Quick action: Search Mobile-->
-    <button aria-label="Search"
+    <!-- Quick action: Search Mobile (Trigger command palette) -->
+    <button (click)="toggleSearchPalette()" aria-label="Search"
       class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-200">
       <lucide-icon [img]="icons.search" size="18"></lucide-icon>
     </button>
@@ -126,9 +129,9 @@
 
         <!-- Text details -->
         <div class="hidden md:flex flex-col items-start justify-center min-w-0 pr-1">
-          <p class="text-sm font-bold text-gray-900 leading-tight truncate">Jeel Vadukiya</p>
-          <p class="text-[0.65rem] text-gray-500 font-semibold mt-0.5 truncate uppercase tracking-widest">Principal
-            Admin</p>
+          <p class="text-sm font-bold text-gray-900 leading-tight truncate">{{ adminName() }}</p>
+          <p class="text-[0.65rem] text-gray-500 font-semibold mt-0.5 truncate uppercase tracking-widest">{{ adminRole()
+            }}</p>
         </div>
 
         <lucide-icon [img]="icons.chevronDown" size="14"
@@ -142,8 +145,8 @@
 
         <!-- Dropdown Header -->
         <div class="px-4 py-3 border-b border-gray-100/80 mb-1">
-          <p class="text-sm font-semibold text-gray-900">Jeel Vadukiya</p>
-          <p class="text-xs text-gray-500 truncate mt-0.5" aria-label="Email">jeel@bookmyvenue.com</p>
+          <p class="text-sm font-semibold text-gray-900">{{ adminName() }}</p>
+          <p class="text-xs text-gray-500 truncate mt-0.5" aria-label="Email">{{ adminEmail() }}</p>
         </div>
 
         <!-- Menu Links -->
@@ -166,7 +169,7 @@
         <div class="border-t border-gray-100/80 my-1"></div>
 
         <!-- Logout Action -->
-        <button tabindex="0"
+        <button (click)="logout()" tabindex="0"
           class="flex items-center gap-3 w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50/80 cursor-pointer transition-colors focus:bg-red-50 focus:outline-none group/logout">
           <lucide-icon [img]="icons.logOut" size="16"
             class="text-red-500 group-hover/logout:-translate-x-0.5 transition-transform"></lucide-icon>
@@ -179,6 +182,99 @@
   </div>
 
 </header>
+
+<!-- ── SPOTLIGHT OMNI-SEARCH COMMAND PALETTE OVERLAY ── -->
+@if (showSearchPalette()) {
+  <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] flex items-start justify-center p-4 sm:p-10 pt-20 sm:pt-28" (click)="closeSearchPalette()">
+    <div class="bg-white w-full max-w-2xl rounded-3xl border border-slate-100/50 shadow-2xl shadow-slate-900/20 overflow-hidden flex flex-col max-h-[70vh] transition-all duration-300 transform scale-100" (click)="$event.stopPropagation()">
+      
+      <!-- Search Input Header -->
+      <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
+        <lucide-icon [img]="icons.search" size="20" class="text-slate-400 shrink-0"></lucide-icon>
+        <input 
+          id="palette-input"
+          type="text" 
+          [value]="searchQuery()" 
+          (input)="searchQuery.set($any($event.target).value)"
+          placeholder="Search dashboard, venues, and vendors..." 
+          class="w-full text-slate-800 placeholder-slate-400 text-base font-medium outline-none border-none bg-transparent"
+          autocomplete="off">
+        <button (click)="closeSearchPalette()" class="w-8 h-8 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center border-none bg-transparent cursor-pointer">
+          <lucide-icon [img]="icons.x" size="16"></lucide-icon>
+        </button>
+      </div>
+
+      <!-- Search Body (Scrollable Results) -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 max-h-[45vh]">
+        @if (filteredResults().length === 0) {
+          <div class="flex flex-col items-center justify-center py-10 gap-3">
+            <lucide-icon [img]="icons.search" size="32" class="text-slate-300"></lucide-icon>
+            <p class="text-xs font-black text-slate-400">No results found for "{{ searchQuery() }}"</p>
+          </div>
+        } @else {
+          <!-- Results List -->
+          <div class="space-y-1">
+            @for (item of filteredResults(); track $index) {
+              <div 
+                (click)="selectItem(item)"
+                [class]="'flex items-center justify-between p-3.5 rounded-2xl cursor-pointer transition-all duration-155 ' + ($index === activeIndex() ? 'bg-[#E8E9FF] text-[#6C63FF] translate-x-1.5 shadow-xs' : 'text-slate-600 hover:bg-slate-50')"
+                (mouseenter)="activeIndex.set($index)">
+                
+                <div class="flex items-center gap-3.5 min-w-0">
+                  <div [class]="'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ' + ($index === activeIndex() ? 'bg-white text-[#6C63FF]' : 'bg-slate-50 text-slate-400')">
+                    <lucide-icon [img]="getIcon(item.icon)" size="16"></lucide-icon>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-xs font-black m-0 leading-normal">{{ item.title }}</p>
+                    @if (item.subtitle) {
+                      <p class="text-[10px] font-bold text-slate-400 m-0 mt-0.5 leading-normal truncate">{{ item.subtitle }}</p>
+                    }
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-100 text-slate-500">
+                    {{ item.category }}
+                  </span>
+                  @if ($index === activeIndex()) {
+                    <lucide-icon [img]="icons.chevronRight" size="14" class="text-[#6C63FF] animate-pulse"></lucide-icon>
+                  }
+                </div>
+
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Search Footer (Keyboard guide) -->
+      <div class="px-5 py-3.5 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400">
+        <div class="flex items-center gap-4">
+          <span class="flex items-center gap-1.5">
+            <lucide-icon [img]="icons.command" size="12" class="text-slate-400"></lucide-icon>
+            Ctrl + K to toggle
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="px-1.5 py-0.5 bg-white border border-slate-200 rounded">↑</span>
+            <span class="px-1.5 py-0.5 bg-white border border-slate-200 rounded">↓</span>
+            to navigate
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="px-1.5 py-0.5 bg-white border border-slate-200 rounded flex items-center gap-0.5">
+              Enter
+              <lucide-icon [img]="icons.cornerDownLeft" size="8"></lucide-icon>
+            </span>
+            to select
+          </span>
+        </div>
+        <span>
+          Esc to close
+        </span>
+      </div>
+
+    </div>
+  </div>
+}
 
 
 

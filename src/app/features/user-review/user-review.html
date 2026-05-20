@@ -1,363 +1,499 @@
-<div class="user-review-dashboard p-6 max-w-[1400px] mx-auto min-h-screen animate-in fade-in duration-500">
-  <!-- 
-    MODERATION HEADER 
-    Displays the main title and a pulse indicator if there are pending reviews requiring attention.
-  -->
-<div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
-  <div class="flex items-center gap-4">
-    <div
-      class="w-14 h-14 bg-emerald-600 rounded-[22px] flex items-center justify-center text-white shadow-2xl shadow-indigo-200">
-      <lucide-icon name="message-square" size="28"></lucide-icon>
-    </div>
-    <div>
-      <h1 class="text-3xl font-black text-slate-900 tracking-tight m-0">Review Moderation</h1>
-      <p class="text-sm text-slate-500 font-medium mt-1">Manage, verify, and maintain listing quality</p>
-    </div>
-  </div>
-
-  @if (stats().awaitingReview > 0) {
-  <div
-    class="bg-amber-200 text-amber-800 px-5 py-2.5 rounded-2xl text-[0.8125rem] font-black flex items-center gap-2 border border-amber-400 shadow-sm">
-    <div class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></div>
-    {{ stats().awaitingReview }} PENDING REVIEWS
-  </div>
-  }
-</div>
-
-<!-- 
-    KPI ANALYTICS GRID 
-    Displays global stats for the moderation queue. 
-    Note: 'Live Avg Score' only accounts for 'approved' reviews to maintain data integrity.
-  -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-  <app-card [padding]="true"
-    customClass="bg-slate-200 border-slate-400 shadow-none group hover:bg-slate-300 transition-all h-full">
-    <div class="flex justify-between items-start mb-4">
-      <div
-        class="p-3 bg-white rounded-2xl text-slate-700 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-        <lucide-icon name="list" size="20"></lucide-icon>
-      </div>
-      <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Global</span>
-    </div>
-    <div class="text-3xl font-black text-slate-900 tracking-tighter">{{ stats().totalReviews }}</div>
-    <div class="text-[0.7rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Total Reviews</div>
-  </app-card>
-
-  <app-card [padding]="true"
-    customClass="bg-slate-200 border-slate-400 shadow-none group hover:border-amber-400 transition-all h-full">
-    <div class="flex justify-between items-start mb-4">
-      <div
-        class="p-3 bg-amber-200 rounded-2xl text-amber-700 group-hover:bg-amber-500 group-hover:text-white transition-colors">
-        <lucide-icon name="clock" size="20"></lucide-icon>
-      </div>
-      <span class="text-[10px] font-black text-amber-600 uppercase tracking-widest mt-1">Action Req.</span>
-    </div>
-    <div class="text-3xl font-black text-slate-900 tracking-tighter">{{ stats().awaitingReview }}</div>
-    <div class="text-[0.7rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Awaiting Review</div>
-  </app-card>
-
-  <app-card [padding]="true"
-    customClass="bg-slate-200 border-slate-400 shadow-none group hover:border-emerald-400 transition-all h-full">
-    <div class="flex justify-between items-start mb-4">
-      <div
-        class="p-3 bg-emerald-200 rounded-2xl text-emerald-700 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-        <lucide-icon name="check-circle" size="20"></lucide-icon>
-      </div>
-      <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">Live</span>
-    </div>
-    <div class="text-3xl font-black text-slate-900 tracking-tighter">{{ stats().approvedContent }}</div>
-    <div class="text-[0.7rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Approved Content</div>
-  </app-card>
-
-  <app-card [padding]="true"
-    customClass="bg-slate-200 border-slate-400 shadow-none group hover:border-indigo-400 transition-all h-full">
-    <div class="flex justify-between items-start mb-4">
-      <div
-        class="p-3 bg-indigo-200 rounded-2xl text-indigo-700 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-        <lucide-icon name="star" size="20"></lucide-icon>
-      </div>
-      <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mt-1">Quality</span>
-    </div>
-    <div class="text-3xl font-black text-slate-900 tracking-tighter">{{ stats().liveAvgScore }}</div>
-    <div class="text-[0.7rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Live Avg Score</div>
-    <div class="text-[10px] text-slate-500 font-medium mt-1 italic">Based on approved reviews</div>
-  </app-card>
-</div>
-
-<!-- 
-    ANALYTICS SECTION
-    A compact view of the rating distribution and status breakdown.
--->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10 items-stretch">
-  <div class="lg:col-span-2 h-full">
-    <app-chart 
-      title="Rating Distribution" 
-      description="Frequency of star ratings across all venues" 
-      [labels]="['1 Star', '2 Star', '3 Star', '4 Star', '5 Star']"
-      [data]="chartData()"
-      class="h-full">
-    </app-chart>
-  </div>
+<div class="user-review-dashboard p-4 md:p-6 max-w-[1400px] mx-auto min-h-screen animate-in fade-in duration-500">
   
-  <div class="h-full">
-    <app-card [padding]="true" customClass="h-full bg-indigo-900 text-white border-none shadow-none flex flex-col">
-      <div class="flex-1">
-        <h3 class="text-xs font-black uppercase tracking-[0.2em] mb-6 text-indigo-300">Moderation Progress</h3>
-        <div class="space-y-6">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider text-indigo-200">Moderated (Approved)</span>
-              <span class="text-xl font-black text-emerald-400">{{ stats().approvedContent }}</span>
-            </div>
-            <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-              <div class="h-full bg-emerald-400 rounded-full transition-all duration-1000" [style.width.%]="(stats().approvedContent / stats().totalReviews) * 100 || 0"></div>
-            </div>
-          </div>
-          
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider text-indigo-200">Pending Review</span>
-              <span class="text-xl font-black text-amber-400">{{ stats().awaitingReview }}</span>
-            </div>
-            <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-              <div class="h-full bg-amber-400 rounded-full transition-all duration-1000" [style.width.%]="(stats().awaitingReview / stats().totalReviews) * 100 || 0"></div>
-            </div>
-          </div>
-        </div>
+  <!-- ── MODERATION HEADER ── -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 md:w-14 md:h-14 bg-indigo-600 rounded-[20px] md:rounded-[22px] flex items-center justify-center text-white shadow-lg shadow-indigo-100">
+        <lucide-icon name="message-square" size="24"></lucide-icon>
       </div>
-
-      <div class="mt-8 pt-6 border-t border-white/10">
-        <p class="text-[10px] font-medium text-indigo-300 italic leading-relaxed">
-          This summary tracks the efficiency of the moderation queue. It compares "Approved Content" against "Pending Actions" to show current workload.
-        </p>
+      <div>
+        <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight m-0">Review Moderation</h1>
+        <p class="text-xs md:text-sm text-slate-500 font-medium mt-1">Manage, verify, and maintain listing quality</p>
       </div>
-    </app-card>
-  </div>
-</div>
+    </div>
 
-<!-- ── TOOLBAR & SEARCH ── -->
-<div
-  class="flex flex-col lg:flex-row items-center justify-between gap-6 mb-8 bg-white/50 p-4 rounded-[32px] border border-slate-300 backdrop-blur-xl shadow-sm">
-  <!-- Filters -->
-  <div class="flex flex-wrap items-center gap-2">
-    <button (click)="setFilter('all')"
-      [class]="currentFilter() === 'all' ? 'bg-slate-900 text-white shadow-lg scale-105' : 'bg-transparent text-slate-500 hover:bg-white hover:text-slate-900'"
-      class="px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 border-none cursor-pointer">
-      All
-    </button>
-    <button (click)="setFilter('pending')"
-      [class]="currentFilter() === 'pending' ? 'bg-amber-500 text-white shadow-lg scale-105' : 'bg-transparent text-slate-500 hover:bg-amber-50 hover:text-amber-600'"
-      class="px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 border-none cursor-pointer">
-      Pending
-    </button>
-    <button (click)="setFilter('approved')"
-      [class]="currentFilter() === 'approved' ? 'bg-emerald-500 text-white shadow-lg scale-105' : 'bg-transparent text-slate-500 hover:bg-emerald-50 hover:text-emerald-600'"
-      class="px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 border-none cursor-pointer">
-      Approved
-    </button>
-    <button (click)="setFilter('rejected')"
-      [class]="currentFilter() === 'rejected' ? 'bg-red-500 text-white shadow-lg scale-105' : 'bg-transparent text-slate-500 hover:bg-red-50 hover:text-red-600'"
-      class="px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 border-none cursor-pointer">
-      Rejected
-    </button>
-  </div>
-
-  <!-- Search Bar -->
-  <div class="relative w-full lg:max-w-md">
-    <lucide-icon name="search" size="18" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></lucide-icon>
-    <input type="text" [ngModel]="searchTerm()" (ngModelChange)="onSearch($event)"
-      placeholder="Search reviews by user, venue, or feedback..."
-      class="w-full bg-white border border-slate-300 rounded-[22px] pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all shadow-inner">
-    @if (searchTerm()) {
-    <button (click)="onSearch('')"
-      class="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-lg text-slate-400 transition-colors">
-      <lucide-icon name="x" size="14"></lucide-icon>
-    </button>
+    @if (stats().awaitingReview > 0) {
+      <div class="bg-amber-50 text-amber-800 px-4 py-2 rounded-2xl text-[0.75rem] md:text-[0.8125rem] font-black flex items-center gap-2 border border-amber-200 shadow-xs self-start md:self-auto">
+        <div class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></div>
+        {{ stats().awaitingReview }} PENDING REVIEWS
+      </div>
     }
   </div>
-</div>
 
-<!-- ── REVIEW QUEUE ── -->
-<div class="space-y-6">
-  @if (isLoading()) {
-  <div
-    class="flex flex-col items-center justify-center py-32 gap-6 bg-white rounded-[40px] border border-slate-300 border-dashed">
-    <div class="w-16 h-16 border-[5px] border-slate-100 border-t-indigo-600 rounded-full animate-spin shadow-inner">
-    </div>
-    <div class="text-center">
-      <p class="text-lg font-black text-slate-900 m-0">Synchronizing Queue</p>
-      <p class="text-sm text-slate-400 font-medium animate-pulse">Fetching latest user submissions...</p>
-    </div>
-  </div>
-  }
-
-  @for (review of reviews(); track review._id) {
-  <div
-    class="review-card bg-slate-200 backdrop-blur-md rounded-[40px] border border-slate-400 p-8 shadow-none hover:bg-slate-300 transition-all duration-500 group relative overflow-hidden">
-
-    <!-- Status Glow -->
-    <div
-      [class]="'absolute top-0 right-0 w-24 h-24 rounded-bl-full -mr-12 -mt-12 transition-all opacity-20 ' + review.status">
-    </div>
-
-    <div class="flex flex-col lg:flex-row gap-8 relative z-10">
-      <!-- Profile & Basic Info -->
-      <div class="flex items-center gap-5 lg:min-w-[280px]">
-        <div class="relative">
-          <div
-            class="w-15 h-15 rounded-[28px] bg-linear-to-br from-emerald-500 to-emerald-700 text-white flex items-center justify-center text-2xl font-black shadow-xl shadow-indigo-100 group-hover:scale-105 transition-transform duration-500">
-            {{ review.userId.name.charAt(0) }}
-          </div>
-          <div
-            [class]="'absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-slate-300 shadow-md flex items-center justify-center ' + review.status">
-            <lucide-icon
-              [name]="review.status === 'approved' ? 'check' : (review.status === 'rejected' ? 'x' : 'clock')" size="10"
-              class="text-white"></lucide-icon>
-          </div>
-        </div>
-        <div>
-          <h3 class="text-xl font-black text-slate-900 leading-none group-hover:text-indigo-600 transition-colors">{{
-            review.userId.name }}</h3>
-          <p class="text-[0.8125rem] text-slate-500 font-black mt-2 uppercase tracking-wider">{{ review.userId.email }}
-          </p>
-        </div>
-      </div>
-
-      <!-- Rating & Content -->
-      <div class="flex-1 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <div class="flex gap-1">
-            @for (star of getStars(5); track star) {
-            <lucide-icon name="star" [size]="18"
-              [class]="star <= review.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-300'"
-              class="transition-all duration-300 group-hover:scale-110"
-              [style.transitionDelay]="star * 50 + 'ms'"></lucide-icon>
-            }
-          </div>
-          <div
-            class="flex items-center gap-2 px-4 py-2 bg-slate-200 rounded-2xl border border-slate-400 text-[0.7rem] font-black text-slate-600 uppercase tracking-widest shadow-inner">
-            <lucide-icon name="building-2" size="14" class="text-indigo-500"></lucide-icon>
-            {{ review.venueName || (review.venueId && review.venueId.name) || 'Unknown Venue' }}
-          </div>
-        </div>
-
-        <div
-          class="feedback-bubble bg-white p-6 rounded-[32px] border border-slate-300 shadow-inner group-hover:bg-white transition-colors duration-500">
-          <p class="text-[0.9375rem] text-slate-700 font-semibold italic leading-relaxed m-0">
-            "{{ review.feedback || 'The user provided a rating without additional commentary.' }}"
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Meta & Actions -->
-    <div
-      class="mt-8 pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
-      <div class="flex items-center gap-6 text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">
-        <div class="flex items-center gap-2">
-          <lucide-icon name="calendar" size="14" class="text-slate-300"></lucide-icon>
-          {{ review.createdAt | date:'d MMM yyyy' }}
-        </div>
-        <div class="flex items-center gap-2">
-          <lucide-icon name="clock" size="14" class="text-slate-300"></lucide-icon>
-          {{ review.createdAt | date:'hh:mm a' }}
-        </div>
-      </div>
-
-      <div class="flex items-center gap-3 w-full sm:w-auto">
-        @if (review.status === 'pending' || review.status === 'rejected') {
-        <button (click)="approve(review)"
-          class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-3.5 rounded-[20px] text-xs font-black uppercase tracking-widest shadow-2xl shadow-slate-200 hover:bg-indigo-600 transition-all active:scale-95 cursor-pointer border-none">
-          <lucide-icon name="shield-check" size="16"></lucide-icon>
-          Approve
-        </button>
-        }
-        @if (review.status === 'pending' || review.status === 'approved') {
-        <button (click)="reject(review)"
-          class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white border border-slate-300 text-slate-600 px-8 py-3.5 rounded-[20px] text-xs font-black uppercase tracking-widest hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all active:scale-95 cursor-pointer">
-          <lucide-icon name="shield-x" size="16"></lucide-icon>
-          Reject
-        </button>
-        }
-        <button (click)="confirmDelete(review)"
-          class="w-12 h-12 bg-white border border-slate-300 text-slate-400 rounded-[20px] flex items-center justify-center hover:bg-rose-500 hover:text-white hover:border-rose-600 transition-all active:scale-90 shadow-sm cursor-pointer group/del">
-          <lucide-icon name="trash-2" size="20" class="transition-transform group-hover/del:scale-110"></lucide-icon>
-        </button>
-      </div>
-    </div>
-  </div>
-  } @empty {
-  @if (!isLoading()) {
-  <div
-    class="flex flex-col items-center justify-center py-40 gap-6 bg-white rounded-[40px] border border-slate-300 border-dashed animate-in zoom-in duration-700">
-    <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center shadow-inner">
-      <lucide-icon name="message-square-off" size="48" class="text-slate-200"></lucide-icon>
-    </div>
-    <div class="text-center">
-      <h3 class="text-2xl font-black text-slate-900 m-0">Moderation Queue Clear</h3>
-      <p class="text-slate-400 font-bold mt-2">No reviews match your current selection.</p>
-    </div>
-    <app-button variant="secondary" (onClick)="setFilter('all')" customClass="rounded-2xl px-8">View All
-      Activity</app-button>
-  </div>
-  }
-  }
-</div>
-
-<!-- ── DELETE CONFIRMATION MODAL ── -->
-@if (showDeleteModal()) {
-<div
-  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-  <div
-    class="bg-white w-full max-w-md rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in slide-in-from-bottom-8 duration-300">
-    <div class="p-8 text-center">
-      <div
-        class="w-20 h-20 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-        <lucide-icon name="trash-2" size="32"></lucide-icon>
-      </div>
-      <h2 class="text-2xl font-black text-slate-900 mb-2">Delete Review?</h2>
-      <p class="text-slate-500 font-medium leading-relaxed">
-        Are you sure you want to permanently remove this user review? This action cannot be undone and will affect the
-        venue's overall rating.
+  <!-- ── EXPLANATION BANNER ── -->
+  <div class="bg-indigo-50/50 border border-indigo-100 rounded-3xl p-5 mb-8 flex gap-4">
+    <lucide-icon name="info" class="text-indigo-600 shrink-0 mt-0.5" size="20"></lucide-icon>
+    <div>
+      <h4 class="text-xs font-black text-indigo-900 uppercase tracking-wider mb-1">Platform Moderation Hub</h4>
+      <p class="text-xs text-indigo-700/80 leading-relaxed font-semibold m-0">
+        This portal allows administrators to review, approve, or reject testimonials left by users for different venues. Active reviews remain <strong>Pending</strong> and are hidden from public venue pages until approved to protect the ecosystem from spam. Click on any <strong>Venue Badge</strong> to view full details of the corresponding property.
       </p>
     </div>
-    <div class="p-8 bg-slate-50 border-t border-slate-200 flex gap-3">
-      <button (click)="closeDeleteModal()"
-        class="flex-1 px-6 py-4 bg-white border border-slate-300 rounded-2xl text-sm font-black text-slate-600 hover:bg-slate-100 transition-all active:scale-95 border-none cursor-pointer">
-        Cancel
-      </button>
-      <button (click)="executeDelete()"
-        class="flex-1 px-6 py-4 bg-rose-500 text-white rounded-2xl text-sm font-black text-slate-100 shadow-xl shadow-rose-200 hover:bg-rose-600 transition-all active:scale-95 border-none cursor-pointer">
-        Confirm Delete
-      </button>
+  </div>
+
+  <!-- ── KPI ANALYTICS GRID ── -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+    <app-card [padding]="true" customClass="bg-white border border-slate-100 shadow-xs hover:shadow-md hover:border-slate-200 transition-all duration-300 h-full">
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-3 bg-slate-50 rounded-xl text-slate-600 transition-colors">
+          <lucide-icon name="list" size="18"></lucide-icon>
+        </div>
+        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Global</span>
+      </div>
+      <div class="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">{{ stats().totalReviews }}</div>
+      <div class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Total Reviews</div>
+    </app-card>
+
+    <app-card [padding]="true" customClass="bg-white border border-slate-100 shadow-xs hover:shadow-md hover:border-slate-200 transition-all duration-300 h-full">
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-3 bg-amber-50 rounded-xl text-amber-600 transition-colors">
+          <lucide-icon name="clock" size="18"></lucide-icon>
+        </div>
+        <span class="text-[9px] font-black text-amber-500 uppercase tracking-widest mt-1">Action Req.</span>
+      </div>
+      <div class="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">{{ stats().awaitingReview }}</div>
+      <div class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Awaiting Review</div>
+    </app-card>
+
+    <app-card [padding]="true" customClass="bg-white border border-slate-100 shadow-xs hover:shadow-md hover:border-slate-200 transition-all duration-300 h-full">
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-3 bg-emerald-50 rounded-xl text-emerald-600 transition-colors">
+          <lucide-icon name="check-circle" size="18"></lucide-icon>
+        </div>
+        <span class="text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-1">Live</span>
+      </div>
+      <div class="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">{{ stats().approvedContent }}</div>
+      <div class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Approved Content</div>
+    </app-card>
+
+    <app-card [padding]="true" customClass="bg-white border border-slate-100 shadow-xs hover:shadow-md hover:border-slate-200 transition-all duration-300 h-full">
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-3 bg-indigo-50 rounded-xl text-indigo-600 transition-colors">
+          <lucide-icon name="star" size="18"></lucide-icon>
+        </div>
+        <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest mt-1">Quality</span>
+      </div>
+      <div class="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">{{ stats().liveAvgScore }}</div>
+      <div class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Live Avg Score</div>
+      <div class="text-[9px] text-slate-400 font-medium mt-0.5 italic">Based on approved reviews</div>
+    </app-card>
+  </div>
+
+  <!-- ── ANALYTICS DISTRIBUTION SECTION ── -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 items-stretch">
+    <div class="lg:col-span-2 h-full flex flex-col gap-4">
+      <app-chart 
+        title="Rating Distribution Breakdown" 
+        description="Frequency of star ratings across all customer testimonials" 
+        [labels]="['1 Star', '2 Star', '3 Star', '4 Star', '5 Star']"
+        [data]="chartData()"
+        class="flex-1">
+      </app-chart>
+      <div class="bg-white border border-slate-100 rounded-3xl p-4 text-[11px] text-slate-500 font-semibold leading-relaxed shadow-xs">
+        <div class="flex items-center gap-2 mb-1.5">
+          <lucide-icon name="trending-up" class="text-indigo-600" size="14"></lucide-icon>
+          <strong class="text-slate-800 uppercase tracking-wider text-[9px] font-black">Analytics Explanation</strong>
+        </div>
+        This frequency chart maps all submitted client ratings (1 to 5 stars) from database feedback. It allows admin monitors to track high-level platform reputation health and spot negative feedback spikes instantly.
+      </div>
+    </div>
+    
+    <div class="h-full">
+      <app-card [padding]="true" customClass="h-full bg-slate-900 text-white border-none shadow-xs flex flex-col rounded-3xl">
+        <div class="flex-1">
+          <h3 class="text-xs font-black uppercase tracking-[0.2em] mb-6 text-slate-400">Moderation Progress</h3>
+          <div class="space-y-6">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Moderated (Approved)</span>
+                <span class="text-lg font-black text-emerald-400">{{ stats().approvedContent }}</span>
+              </div>
+              <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-400 rounded-full transition-all duration-1000" [style.width.%]="(stats().approvedContent / stats().totalReviews) * 100 || 0"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Pending Review</span>
+                <span class="text-lg font-black text-amber-400">{{ stats().awaitingReview }}</span>
+              </div>
+              <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div class="h-full bg-amber-400 rounded-full transition-all duration-1000" [style.width.%]="(stats().awaitingReview / stats().totalReviews) * 100 || 0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-white/10">
+          <p class="text-[10px] font-medium text-slate-400 italic leading-relaxed">
+            This dashboard metrics represent active platform benchmarks. Approved postings adjust public indicators reactively in real time.
+          </p>
+        </div>
+      </app-card>
     </div>
   </div>
-</div>
-}
+
+  <!-- ── TOOLBAR & FILTERS ── -->
+  <div class="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8 bg-white p-4 rounded-3xl border border-slate-100 shadow-xs">
+    
+    <!-- Filter status buttons -->
+    <div class="flex flex-wrap items-center gap-1.5 w-full lg:w-auto">
+      <button (click)="setFilter('all')"
+        [class]="currentFilter() === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-900'"
+        class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all active:scale-95 border-none cursor-pointer">
+        All
+      </button>
+      <button (click)="setFilter('pending')"
+        [class]="currentFilter() === 'pending' ? 'bg-amber-500 text-white shadow-sm' : 'bg-transparent text-slate-500 hover:bg-amber-50 hover:text-amber-600'"
+        class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all active:scale-95 border-none cursor-pointer">
+        Pending
+      </button>
+      <button (click)="setFilter('approved')"
+        [class]="currentFilter() === 'approved' ? 'bg-emerald-500 text-white shadow-sm' : 'bg-transparent text-slate-500 hover:bg-emerald-50 hover:text-emerald-600'"
+        class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all active:scale-95 border-none cursor-pointer">
+        Approved
+      </button>
+      <button (click)="setFilter('rejected')"
+        [class]="currentFilter() === 'rejected' ? 'bg-red-500 text-white shadow-sm' : 'bg-transparent text-slate-500 hover:bg-red-50 hover:text-red-600'"
+        class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all active:scale-95 border-none cursor-pointer">
+        Rejected
+      </button>
+    </div>
+
+    <!-- Search box -->
+    <div class="relative w-full lg:max-w-md">
+      <lucide-icon name="search" size="16" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></lucide-icon>
+      <input type="text" [ngModel]="searchTerm()" (ngModelChange)="onSearch($event)"
+        placeholder="Search reviews by user, email, venue..."
+        class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-10 py-3 text-xs font-semibold text-slate-700 focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 focus:bg-white outline-none transition-all">
+      @if (searchTerm()) {
+        <button (click)="onSearch('')"
+          class="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-lg text-slate-400 transition-colors cursor-pointer border-none bg-transparent">
+          <lucide-icon name="x" size="12"></lucide-icon>
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ── REVIEWS FEED ── -->
+  <div class="space-y-4">
+    @if (isLoading()) {
+      <div class="flex flex-col items-center justify-center py-24 gap-4 bg-white rounded-3xl border border-slate-100 shadow-xs">
+        <div class="w-10 h-10 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
+        <p class="text-xs font-black text-slate-700 m-0">Synchronizing Moderation Queue...</p>
+      </div>
+    }
+
+    @for (review of reviews(); track review._id) {
+      <div class="review-card bg-white rounded-[32px] border border-slate-100 p-6 md:p-8 shadow-xs hover:shadow-md hover:border-slate-200/80 transition-all duration-300 group relative overflow-hidden">
+
+        <div class="flex flex-col lg:flex-row gap-6 items-start">
+          
+          <!-- Profile block -->
+          <div class="flex items-center gap-4 w-full lg:w-72 shrink-0">
+            <div class="relative shrink-0">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-lg font-black shadow-inner">
+                {{ review.userId ? review.userId.name.charAt(0) : 'U' }}
+              </div>
+              <div [class]="'absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white shadow-xs flex items-center justify-center text-white ' + review.status">
+                <lucide-icon [name]="review.status === 'approved' ? 'check' : (review.status === 'rejected' ? 'x' : 'clock')" size="8"></lucide-icon>
+              </div>
+            </div>
+            <div class="min-w-0 flex-1">
+              <h3 class="text-base font-black text-slate-900 leading-tight truncate m-0 group-hover:text-indigo-600 transition-colors">
+                {{ review.userId ? review.userId.name : 'Unknown User' }}
+              </h3>
+              <p class="text-[10px] text-slate-400 font-bold tracking-wide uppercase truncate mt-1 break-all">
+                {{ review.userId ? review.userId.email : 'No email provided' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Content block -->
+          <div class="flex-1 min-w-0 w-full space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <!-- Rating Stars -->
+              <div class="flex gap-0.5">
+                @for (star of getStars(5); track star) {
+                  <lucide-icon name="star" [size]="15"
+                    [class]="star <= review.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'"
+                    class="transition-transform group-hover:scale-110"
+                    [style.transitionDelay]="star * 30 + 'ms'"></lucide-icon>
+                }
+              </div>
+              
+              <!-- Clickable Venue Tag -->
+              <button (click)="openVenueDetails(review.venueId)"
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl border border-indigo-100 text-[10px] font-black uppercase tracking-wider transition-colors cursor-pointer self-start sm:self-auto">
+                <lucide-icon name="building" size="12" class="text-indigo-600"></lucide-icon>
+                {{ review.venueName || (review.venueId && review.venueId.name) || 'Unknown Venue' }}
+              </button>
+            </div>
+
+            <!-- Feedback bubble -->
+            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100/80 shadow-inner">
+              <p class="text-[13px] text-slate-700 font-medium italic leading-relaxed m-0 break-words">
+                "{{ review.feedback || 'The user provided a rating without additional commentary.' }}"
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meta & Actions footer -->
+        <div class="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <!-- Timestamps & Status -->
+          <div class="flex flex-wrap items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider self-start sm:self-auto">
+            <div class="flex items-center gap-1.5">
+              <lucide-icon name="calendar" size="12" class="text-slate-300"></lucide-icon>
+              {{ review.createdAt | date:'d MMM yyyy' }}
+            </div>
+            <div class="flex items-center gap-1.5">
+              <lucide-icon name="clock" size="12" class="text-slate-300"></lucide-icon>
+              {{ review.createdAt | date:'hh:mm a' }}
+            </div>
+            <span [class]="'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider text-white ' + review.status">
+              {{ review.status }}
+            </span>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            @if (review.status === 'pending' || review.status === 'rejected') {
+              <button (click)="approve(review)"
+                class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-colors cursor-pointer border-none shadow-xs">
+                <lucide-icon name="check-circle" size="14"></lucide-icon>
+                Approve
+              </button>
+            }
+            @if (review.status === 'pending' || review.status === 'approved') {
+              <button (click)="reject(review)"
+                class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-pointer">
+                <lucide-icon name="x-circle" size="14"></lucide-icon>
+                Reject
+              </button>
+            }
+            <button (click)="confirmDelete(review)"
+              class="w-10 h-10 bg-white border border-slate-200 text-slate-400 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white hover:border-rose-600 transition-all cursor-pointer group/del shrink-0">
+              <lucide-icon name="trash-2" size="16" class="transition-transform group-hover/del:scale-110"></lucide-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      @if (!isLoading()) {
+        <div class="flex flex-col items-center justify-center py-32 gap-4 bg-white rounded-3xl border border-slate-100 shadow-xs border-dashed">
+          <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center">
+            <lucide-icon name="message-square" size="28" class="text-slate-300"></lucide-icon>
+          </div>
+          <div class="text-center">
+            <h3 class="text-lg font-black text-slate-900 m-0">No Reviews Found</h3>
+            <p class="text-xs text-slate-400 font-bold mt-1">No reviews match your current search filters.</p>
+          </div>
+          <button (click)="setFilter('all')" class="mt-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-colors cursor-pointer">
+            View All Reviews
+          </button>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- ── DELETE CONFIRMATION MODAL ── -->
+  @if (showDeleteModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+      <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in slide-in-from-bottom-8 duration-300">
+        <div class="p-6 text-center">
+          <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+            <lucide-icon name="trash-2" size="24"></lucide-icon>
+          </div>
+          <h2 class="text-xl font-black text-slate-900 mb-1">Delete Review?</h2>
+          <p class="text-xs text-slate-500 font-semibold leading-relaxed m-0">
+            Are you sure you want to permanently remove this user review? This action cannot be undone and will affect the venue's overall rating.
+          </p>
+        </div>
+        <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-2">
+          <button (click)="closeDeleteModal()"
+            class="flex-1 px-4 py-3 bg-white border border-slate-200 rounded-xl text-xs font-black text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer">
+            Cancel
+          </button>
+          <button (click)="executeDelete()"
+            class="flex-1 px-4 py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-black transition-colors cursor-pointer border-none">
+            Confirm Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── VENUE DETAILS OVERLAY MODAL ── -->
+  @if (showVenueModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+      <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in slide-in-from-bottom-8 duration-300 max-h-[90vh] flex flex-col">
+        
+        <!-- Header -->
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 shrink-0">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+              <lucide-icon name="building" size="18"></lucide-icon>
+            </div>
+            <div>
+              <h3 class="text-base font-black text-slate-900 m-0">Venue Details</h3>
+              <p class="text-[10px] text-slate-400 font-bold mt-0.5 uppercase tracking-wide">Property specifications and analytics</p>
+            </div>
+          </div>
+          <button (click)="closeVenueModal()" class="w-9 h-9 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center cursor-pointer border-none bg-transparent">
+            <lucide-icon name="x" size="18"></lucide-icon>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+          @if (isLoadingVenue()) {
+            <div class="flex flex-col items-center justify-center py-20 gap-4">
+              <div class="w-10 h-10 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
+              <p class="text-xs font-black text-slate-500">Retrieving venue attributes...</p>
+            </div>
+          } @else {
+            @if (selectedVenue()) {
+              <!-- Media Gallery Cover (Interactive Carousel) -->
+              @if (selectedVenue().mediaFiles && selectedVenue().mediaFiles.length > 0) {
+                <div class="relative h-40 sm:h-52 rounded-2xl overflow-hidden shadow-inner bg-slate-100 group/carousel">
+                  <!-- Main Image -->
+                  <img [src]="getImageUrl(selectedVenue().mediaFiles[activeImageIndex()])" alt="Venue Photo" class="w-full h-full object-cover transition-all duration-300">
+
+                  <!-- Carousel Controls -->
+                  @if (selectedVenue().mediaFiles.length > 1) {
+                    <!-- Left Arrow -->
+                    <button (click)="prevImage(selectedVenue().mediaFiles.length)" class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-950/40 hover:bg-slate-950/70 backdrop-blur-md text-white flex items-center justify-center border-none transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 z-10">
+                      <lucide-icon name="chevron-left" size="16"></lucide-icon>
+                    </button>
+
+                    <!-- Right Arrow -->
+                    <button (click)="nextImage(selectedVenue().mediaFiles.length)" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-950/40 hover:bg-slate-950/70 backdrop-blur-md text-white flex items-center justify-center border-none transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 z-10">
+                      <lucide-icon name="chevron-right" size="16"></lucide-icon>
+                    </button>
+
+                    <!-- Navigation Dots -->
+                    <div class="absolute bottom-3 right-3 flex gap-1.5 bg-slate-950/50 backdrop-blur-md px-2.5 py-1.5 rounded-full z-10">
+                      @for (img of selectedVenue().mediaFiles; track $index) {
+                        <button (click)="setActiveImage($index)" 
+                          [class]="$index === activeImageIndex() ? 'w-2 h-2 bg-white rounded-full scale-110 transition-all border-none p-0 cursor-pointer' : 'w-2 h-2 bg-white/40 hover:bg-white/70 rounded-full transition-all border-none p-0 cursor-pointer'">
+                        </button>
+                      }
+                    </div>
+                  }
+
+                  <!-- Photo Counter Tag -->
+                  <div class="absolute bottom-3 left-3 bg-slate-950/60 backdrop-blur-md text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 z-10">
+                    <lucide-icon name="image" size="12"></lucide-icon>
+                    Image {{ activeImageIndex() + 1 }} of {{ selectedVenue().mediaFiles.length }}
+                  </div>
+                </div>
+              }
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Left Attributes -->
+                <div class="space-y-4">
+                  <div>
+                    <span class="text-[9px] font-black uppercase tracking-wider text-slate-400">Venue Name</span>
+                    <h4 class="text-lg font-black text-slate-900 m-0 mt-0.5 leading-snug">{{ selectedVenue().name }}</h4>
+                  </div>
+
+                  <div>
+                    <span class="text-[9px] font-black uppercase tracking-wider text-slate-400">Address / Location</span>
+                    <p class="text-xs text-slate-600 font-semibold m-0 mt-0.5 flex items-start gap-1.5 leading-relaxed">
+                      <lucide-icon name="map-pin" size="14" class="text-slate-400 shrink-0 mt-0.5"></lucide-icon>
+                      <span>
+                        {{ selectedVenue().address }}, {{ selectedVenue().city }}, {{ selectedVenue().state }} {{ selectedVenue().zip || selectedVenue().zipCode }}
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3 pt-2">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100/50">
+                      <span class="text-[9px] font-black uppercase tracking-wider text-slate-400 block mb-1">Capacity</span>
+                      <div class="flex items-center gap-1.5 text-slate-800">
+                        <lucide-icon name="users" size="14" class="text-indigo-500"></lucide-icon>
+                        <span class="text-xs font-black">{{ selectedVenue().capacity || 'N/A' }} Guests</span>
+                      </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100/50">
+                      <span class="text-[9px] font-black uppercase tracking-wider text-slate-400 block mb-1">Pricing</span>
+                      <div class="flex items-center gap-1.5 text-slate-800">
+                        <lucide-icon name="dollar-sign" size="14" class="text-emerald-500"></lucide-icon>
+                        <span class="text-xs font-black">{{ (selectedVenue().pricePerDay || selectedVenue().price) | currency:'USD':'symbol':'1.0-0' }}/day</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Attributes -->
+                <div class="space-y-4">
+                  <div>
+                    <span class="text-[9px] font-black uppercase tracking-wider text-slate-400">Status</span>
+                    <div class="mt-1">
+                      <span [class]="'inline-flex items-center gap-1 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider text-white ' + (selectedVenue().status || 'approved')">
+                        <div class="w-1 h-1 rounded-full bg-white animate-pulse"></div>
+                        {{ selectedVenue().status || 'Approved' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  @if (selectedVenue().description) {
+                    <div>
+                      <span class="text-[9px] font-black uppercase tracking-wider text-slate-400">Description</span>
+                      <p class="text-[11px] text-slate-500 font-semibold leading-relaxed m-0 mt-0.5 max-h-24 overflow-y-auto pr-1">
+                        {{ selectedVenue().description }}
+                      </p>
+                    </div>
+                  }
+
+                  @if (selectedVenue().amenities && selectedVenue().amenities.length > 0) {
+                    <div>
+                      <span class="text-[9px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">Amenities Offered</span>
+                      <div class="flex flex-wrap gap-1">
+                        @for (amenity of selectedVenue().amenities; track amenity) {
+                          <span class="px-2 py-0.5 bg-slate-50 border border-slate-100 rounded-lg text-[9px] font-bold text-slate-600">
+                            {{ amenity }}
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            } @else {
+              <div class="text-center py-12">
+                <lucide-icon name="alert-triangle" size="28" class="text-amber-500 mx-auto mb-2"></lucide-icon>
+                <p class="text-xs font-bold text-slate-500">Venue details could not be resolved from the current query.</p>
+              </div>
+            }
+          }
+        </div>
+
+        <!-- Footer -->
+        <div class="p-5 bg-slate-50 border-t border-slate-100 flex justify-end shrink-0">
+          <button (click)="closeVenueModal()" class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-wider hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 cursor-pointer border-none">
+            Dismiss Details
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
 </div>
 
 <style>
   .pending {
-    background: #f59e0b;
+    background: #f59e0b !important;
   }
 
   .approved {
-    background: #10b981;
+    background: #10b981 !important;
   }
 
   .rejected {
-    background: #ef4444;
-  }
-
-  .review-card:hover .pending {
-    box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
-  }
-
-  .review-card:hover .approved {
-    box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
-  }
-
-  .review-card:hover .rejected {
-    box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+    background: #ef4444 !important;
   }
 </style>

@@ -31,19 +31,28 @@ export class ReviewStore {
 
     // 1. Status Filter
     if (status !== 'all') {
-      filtered = filtered.filter(r => r.status === status);
+      filtered = filtered.filter(r => r && r.status === status);
     }
 
     // 2. Multi-field Search
     if (query) {
-      filtered = filtered.filter(r => 
-        r.userId.name.toLowerCase().includes(query) ||
-        r.userId.email.toLowerCase().includes(query) ||
-        r.venueId.name.toLowerCase().includes(query) ||
-        (r.feedback && r.feedback.toLowerCase().includes(query)) ||
-        r.rating.toString().includes(query) ||
-        r.status.toLowerCase().includes(query)
-      );
+      filtered = filtered.filter(r => {
+        if (!r) return false;
+        
+        const userName = r.userId && typeof r.userId === 'object' ? (r.userId.name || '') : '';
+        const userEmail = r.userId && typeof r.userId === 'object' ? (r.userId.email || '') : '';
+        const venueName = r.venueName || (r.venueId && typeof r.venueId === 'object' ? (r.venueId.name || '') : '');
+        const feedback = r.feedback || '';
+        const rating = r.rating ? r.rating.toString() : '';
+        const statusStr = r.status || '';
+
+        return userName.toLowerCase().includes(query) ||
+               userEmail.toLowerCase().includes(query) ||
+               venueName.toLowerCase().includes(query) ||
+               feedback.toLowerCase().includes(query) ||
+               rating.includes(query) ||
+               statusStr.toLowerCase().includes(query);
+      });
     }
 
     return filtered;

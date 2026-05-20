@@ -2,14 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Payment, PaymentStats, PaymentFilters } from '../models/payment.model';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.9:3000/payments';   // Matching the pattern in venue-api
-  /*  private readonly baseUrl = 'http://localhost:3000/payments'; */
+  private readonly baseUrl = `${API_BASE_URL}/payments`;   // Matching the pattern in venue-api
 
   /**
    * Fetches all payments with optional filtering

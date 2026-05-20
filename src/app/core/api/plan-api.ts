@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Plan } from '@core/models/subscription.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class PlanApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://192.168.1.9:3000/plans';     // cards
-  /*  private readonly baseUrl = 'http://localhost:3000/plans'; */
+  private readonly baseUrl = `${API_BASE_URL}/plans`;     // cards
   // Public/Vendor: Browse active plans
   getActivePlans(): Observable<{ success: boolean; plans: Plan[] }> {
     return this.http.get<{ success: boolean; plans: Plan[] }>(this.baseUrl);

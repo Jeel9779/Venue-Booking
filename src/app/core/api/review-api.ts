@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Review } from '../models/review.model';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewApi {
   private readonly http = inject(HttpClient);
-  /*  private readonly baseUrl = 'http://localhost:3000/ratings'; */
-  private readonly baseUrl = 'http://192.168.1.9:3000/admin/reviews';
+  private readonly baseUrl = `${API_BASE_URL}/admin/reviews`;
 
   /**
    * Fetches all reviews, optionally filtered by status.

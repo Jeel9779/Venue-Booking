@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PartnerStore } from '../../core/store/partner.store'; 
 import { PartnerService } from '../../core/services/partner.service';
 import { Venue } from '../../core/models/venue.model';
+import { API_BASE_URL } from '@core/config/api.config';
 import { Model } from '../../shared/components/model/model';
 import { LucideAngularModule } from 'lucide-angular';
 
@@ -236,8 +237,7 @@ export class Partners implements OnInit {
     if (!img) return '';
     let url = img.replace(/\\/g, '/'); // Fix Windows paths
     if (url.startsWith('http')) return url;
-    const root = 'http://192.168.1.7:3000';
-    return root + '/' + url.replace(/^\/+/, '');
+    return API_BASE_URL + '/' + url.replace(/^\/+/, '');
   }
 
   /** 

@@ -1,20 +1,21 @@
-<div class="subscription-monitor-page p-4 sm:p-10 bg-gray-300 min-h-screen">
+<div class="subscription-monitor-page p-4 sm:p-6 lg:p-10 bg-gray-300 text-slate-800 min-h-screen">
 
   <!-- ── HEADER ── -->
-  <div class="flex items-center justify-between mb-10">
-    <div class="flex items-center gap-5">
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 sm:mb-10">
+    <div class="flex items-center gap-4 sm:gap-5">
       <div
-        class="w-16 h-16 bg-emerald-600 rounded-[22px] flex items-center justify-center text-white shadow-lg shadow-emerald-200">
-        <lucide-icon name="scroll-text" size="32"></lucide-icon>
+        class="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-600 rounded-[18px] sm:rounded-[22px] flex items-center justify-center text-white shadow-lg shadow-emerald-200 hover:scale-105 transition-transform duration-300">
+        <lucide-icon name="scroll-text" size="24" class="sm:hidden"></lucide-icon>
+        <lucide-icon name="scroll-text" size="32" class="hidden sm:block"></lucide-icon>
       </div>
       <div>
-        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Subscription Monitor</h1>
-        <p class="text-sm font-bold text-slate-500">Track and manage vendor subscription lifecycles</p>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Subscription Monitor</h1>
+        <p class="text-xs sm:text-sm font-semibold text-slate-500">Track and manage vendor subscription lifecycles</p>
       </div>
     </div>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 w-full sm:w-auto">
       <button (click)="loadAll()"
-        class="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-black text-slate-700 hover:bg-slate-50 transition-all cursor-pointer shadow-sm">
+        class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-black text-slate-700 hover:bg-slate-50 transition-all cursor-pointer shadow-sm active:scale-95">
         <lucide-icon name="refresh-cw" size="14" [class.animate-spin]="isLoading()"></lucide-icon>
         Refresh Data
       </button>
@@ -22,12 +23,14 @@
   </div>
 
   <!-- ── TOP KPI CARDS ── -->
-  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-10">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-8 sm:mb-10">
     <!-- Total -->
     <div
-      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
-      <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Total Subs</p>
-      <h3 class="text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.total || 0 }}</h3>
+      class="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      <p class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 sm:mb-4">Total Subs
+      </p>
+      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.total || 0
+        }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-indigo-500 transition-all duration-1000" [style.width.%]="100"></div>
       </div>
@@ -35,9 +38,11 @@
 
     <!-- Active -->
     <div
-      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
-      <p class="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-4">Active</p>
-      <h3 class="text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.active || 0 }}</h3>
+      class="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      <p class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Active
+      </p>
+      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.active || 0
+        }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-emerald-500 transition-all duration-1000"
           [style.width.%]="(summary()?.active / (summary()?.total || 1)) * 100"></div>
@@ -46,9 +51,11 @@
 
     <!-- Expiring -->
     <div
-      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
-      <p class="text-[10px] font-black text-rose-600 uppercase tracking-[0.2em] mb-4">Expiring Soon</p>
-      <h3 class="text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.expiringWithin15Days || 0 }}</h3>
+      class="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      <p class="text-[9px] sm:text-[10px] font-black text-rose-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Expiring
+        Soon</p>
+      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-2 leading-none">{{
+        summary()?.expiringWithin15Days || 0 }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-rose-500 transition-all duration-1000"
           [style.width.%]="(summary()?.expiringWithin15Days / (summary()?.total || 1)) * 100"></div>
@@ -57,9 +64,11 @@
 
     <!-- Grace -->
     <div
-      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
-      <p class="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-4">In Grace</p>
-      <h3 class="text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.grace || 0 }}</h3>
+      class="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      <p class="text-[9px] sm:text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">In Grace
+      </p>
+      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.grace || 0
+        }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-amber-500 transition-all duration-1000"
           [style.width.%]="(summary()?.grace / (summary()?.total || 1)) * 100"></div>
@@ -68,9 +77,11 @@
 
     <!-- Revenue -->
     <div
-      class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
-      <p class="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-4">Total Revenue</p>
-      <h3 class="text-4xl font-black text-slate-900 mb-2 leading-none">₹{{ totalRevenue() | number }}</h3>
+      class="col-span-1 sm:col-span-2 lg:col-span-1 bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      <p class="text-[9px] sm:text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Total
+        Revenue</p>
+      <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 mb-2 leading-none">₹{{ totalRevenue() |
+        number }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-indigo-600 transition-all duration-1000" [style.width.%]="100"></div>
       </div>
@@ -79,32 +90,33 @@
 
   <!-- ── FILTERS & SEARCH ── -->
   <div
-    class="flex items-center justify-between flex-wrap gap-4 mb-8 bg-white p-3 rounded-[28px] border border-slate-200 shadow-sm">
-    <div class="flex items-center gap-1">
+    class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-8 bg-white p-4 rounded-3xl border border-slate-200 shadow-sm">
+    <div class="flex flex-wrap items-center gap-1.5 w-full lg:w-auto">
       <button (click)="filter.set('all')"
-        class="px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer"
+        class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
         [class]="filter() === 'all' ? 'bg-emerald-600 text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'">
         All
       </button>
       <button (click)="filter.set('active')"
-        class="px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer"
+        class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
         [class]="filter() === 'active' ? 'bg-emerald-500 text-white' : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-600'">
         Active
       </button>
       <button (click)="filter.set('grace')"
-        class="px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer"
+        class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
         [class]="filter() === 'grace' ? 'bg-amber-500 text-white' : 'text-slate-500 hover:bg-amber-50 hover:text-amber-600'">
         Grace
       </button>
       <button (click)="filter.set('expired')"
-        class="px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer"
+        class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
         [class]="filter() === 'expired' ? 'bg-rose-500 text-white' : 'text-slate-500 hover:bg-rose-50 hover:text-rose-600'">
         Expired
       </button>
     </div>
 
-    <div class="flex items-center gap-4 px-4 border-l border-slate-100">
-      <div class="relative w-72 group">
+    <div
+      class="w-full lg:w-auto flex items-center border-t lg:border-t-0 lg:border-l border-slate-100 pt-4 lg:pt-0 lg:pl-4">
+      <div class="relative w-full lg:w-72 group">
         <lucide-icon name="search" size="16"
           class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors"></lucide-icon>
         <input type="text" [value]="search()" (input)="search.set($any($event.target).value)"
@@ -114,8 +126,8 @@
     </div>
   </div>
 
-  <!-- ── SUBSCRIPTION TABLE ── -->
-  <div class="bg-white rounded-[40px] border border-slate-200 overflow-hidden">
+  <!-- ── SUBSCRIPTION TABLE (Desktop View) ── -->
+  <div class="hidden lg:block bg-white rounded-[40px] border border-slate-200 overflow-hidden shadow-sm">
     <div class="overflow-x-auto hide-scrollbar">
       <table class="w-full text-left border-collapse min-w-[1100px]">
         <thead>
@@ -132,335 +144,453 @@
         </thead>
         <tbody class="divide-y divide-slate-100">
           @if (isLoading() && filteredSubscriptions().length === 0) {
-            @for (i of [1,2,3,4,5]; track i) {
-            <tr class="animate-pulse">
-              <td class="px-8 py-7" colspan="8">
-                <div class="h-12 bg-slate-50 rounded-2xl w-full"></div>
-              </td>
-            </tr>
-            }
+          @for (i of [1,2,3,4,5]; track i) {
+          <tr class="animate-pulse">
+            <td class="px-8 py-7" colspan="8">
+              <div class="h-12 bg-slate-50 rounded-2xl w-full"></div>
+            </td>
+          </tr>
+          }
           } @else {
-            @for (sub of filteredSubscriptions(); track sub._id) {
-            <tr (click)="openDetails(sub)" class="hover:bg-emerald-50/30 transition-all cursor-pointer group border-l-4 border-l-transparent hover:border-l-emerald-400">
+          @for (sub of filteredSubscriptions(); track sub._id) {
+          <tr (click)="openDetails(sub)"
+            class="hover:bg-emerald-50/30 transition-all cursor-pointer group border-l-4 border-l-transparent hover:border-l-emerald-400">
 
-              <!-- Vendor: Avatar + Business Name + Vendor Full Name + Email + Phone -->
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shrink-0">
-                    {{ (sub.vendorDetails?.businessName || sub.vendorDetails?.fullName || 'V').trim().charAt(0).toUpperCase() }}
-                  </div>
-                  <div>
-                    <h4 class="text-sm font-black text-slate-900 leading-tight">
-                      {{ sub.vendorDetails?.businessName || 'Unknown' }}
-                    </h4>
-                    <p class="text-[11px] font-bold text-slate-600 mt-0.5">{{ sub.vendorDetails?.fullName }}</p>
-                    <p class="text-[11px] font-bold text-slate-400 mt-0.5">{{ sub.vendorDetails?.email }}</p>
-                    <p class="text-[10px] font-bold text-slate-400">{{ sub.vendorDetails?.phone }}</p>
-                  </div>
+            <!-- Vendor: Avatar + Business Name + Vendor Full Name + Email + Phone -->
+            <td class="px-8 py-6">
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shrink-0">
+                  {{ (sub.vendorDetails?.businessName || sub.vendorDetails?.fullName ||
+                  'V').trim().charAt(0).toUpperCase() }}
                 </div>
-              </td>
+                <div>
+                  <h4 class="text-sm font-black text-slate-900 leading-tight">
+                    {{ sub.vendorDetails?.businessName || 'Unknown' }}
+                  </h4>
+                  <p class="text-[11px] font-bold text-slate-600 mt-0.5">{{ sub.vendorDetails?.fullName }}</p>
+                  <p class="text-[11px] font-bold text-slate-400 mt-0.5">{{ sub.vendorDetails?.email }}</p>
+                  <p class="text-[10px] font-bold text-slate-400">{{ sub.vendorDetails?.phone }}</p>
+                </div>
+              </div>
+            </td>
 
-              <!-- Business Type + Location -->
-              <td class="px-6 py-6">
-                <p class="text-xs font-black text-slate-800">{{ sub.vendorDetails?.businessType || '—' }}</p>
-                <p class="text-[11px] font-bold text-slate-400 mt-0.5">
-                  {{ sub.vendorDetails?.state || '—' }}
-                </p>
-                <!-- Vendor account status -->
-                <span class="mt-1.5 inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest"
-                  [ngClass]="{
+            <!-- Business Type + Location -->
+            <td class="px-6 py-6">
+              <p class="text-xs font-black text-slate-800">{{ sub.vendorDetails?.businessType || '—' }}</p>
+              <p class="text-[11px] font-bold text-slate-400 mt-0.5">
+                {{ sub.vendorDetails?.state || '—' }}
+              </p>
+              <!-- Vendor account status -->
+              <span class="mt-1.5 inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest"
+                [ngClass]="{
                     'bg-emerald-50 text-emerald-700 border border-emerald-200': sub.vendorDetails?.status === 'approved',
                     'bg-amber-50 text-amber-700 border border-amber-200': sub.vendorDetails?.status === 'pending',
                     'bg-rose-50 text-rose-700 border border-rose-200': sub.vendorDetails?.status === 'rejected'
                   }">
-                  {{ sub.vendorDetails?.status || 'unknown' }}
-                </span>
-              </td>
+                {{ sub.vendorDetails?.status || 'unknown' }}
+              </span>
+            </td>
 
-              <!-- Plan Name + Price + Duration -->
-              <td class="px-6 py-6">
-                <p class="text-sm font-black text-slate-900">{{ sub.planSnapshot?.name }}</p>
-                <p class="text-[11px] font-bold text-indigo-600 mt-0.5">₹{{ sub.planSnapshot?.price | number }}</p>
-                <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ sub.planSnapshot?.duration_days }}d plan</p>
-              </td>
+            <!-- Plan Name + Price + Duration -->
+            <td class="px-6 py-6">
+              <p class="text-sm font-black text-slate-900">{{ sub.planSnapshot?.name }}</p>
+              <p class="text-[11px] font-bold text-indigo-600 mt-0.5">₹{{ sub.planSnapshot?.price | number }}</p>
+              <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ sub.planSnapshot?.duration_days }}d plan</p>
+            </td>
 
-              <!-- Start Date -->
-              <td class="px-6 py-6">
-                <p class="text-xs font-black text-slate-900">{{ sub.startDate | date:'dd MMM yyyy' }}</p>
-                <p class="text-[10px] font-bold text-slate-400 mt-1">{{ sub.startDate | date:'EEEE' }}</p>
-              </td>
+            <!-- Start Date -->
+            <td class="px-6 py-6">
+              <p class="text-xs font-black text-slate-900">{{ sub.startDate | date:'dd MMM yyyy' }}</p>
+              <p class="text-[10px] font-bold text-slate-400 mt-1">{{ sub.startDate | date:'EEEE' }}</p>
+            </td>
 
-              <!-- End Date -->
-              <td class="px-6 py-6">
-                <p class="text-xs font-black text-slate-900">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
-                <p class="text-[10px] font-bold text-slate-400 mt-1">{{ sub.endDate | date:'EEEE' }}</p>
-              </td>
+            <!-- End Date -->
+            <td class="px-6 py-6">
+              <p class="text-xs font-black text-slate-900">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
+              <p class="text-[10px] font-bold text-slate-400 mt-1">{{ sub.endDate | date:'EEEE' }}</p>
+            </td>
 
-              <!-- Days Left Pill -->
-              <td class="px-6 py-6">
-                @if (sub.status === 'expired') {
-                  <div class="text-center">
-                    <span class="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-[10px] font-black uppercase">Expired</span>
-                  </div>
-                } @else {
-                  <div class="text-center">
-                    <p class="text-2xl font-black"
-                      [class.text-emerald-600]="sub.daysLeft > 15"
-                      [class.text-amber-500]="sub.daysLeft <= 15 && sub.daysLeft > 5"
-                      [class.text-rose-600]="sub.daysLeft <= 5">
-                      {{ sub.daysLeft }}
-                    </p>
-                    <p class="text-[9px] font-black uppercase tracking-widest mt-0.5"
-                      [class.text-emerald-400]="sub.daysLeft > 15"
-                      [class.text-amber-400]="sub.daysLeft <= 15 && sub.daysLeft > 5"
-                      [class.text-rose-400]="sub.daysLeft <= 5">
-                      {{ sub.daysLabel }}
-                    </p>
-                  </div>
-                }
-              </td>
+            <!-- Days Left Pill -->
+            <td class="px-6 py-6">
+              @if (sub.status === 'expired') {
+              <div class="text-center">
+                <span
+                  class="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-[10px] font-black uppercase">Expired</span>
+              </div>
+              } @else {
+              <div class="text-center">
+                <p class="text-2xl font-black" [class.text-emerald-600]="sub.daysLeft > 15"
+                  [class.text-amber-500]="sub.daysLeft <= 15 && sub.daysLeft > 5"
+                  [class.text-rose-600]="sub.daysLeft <= 5">
+                  {{ sub.daysLeft }}
+                </p>
+                <p class="text-[9px] font-black uppercase tracking-widest mt-0.5"
+                  [class.text-emerald-400]="sub.daysLeft > 15"
+                  [class.text-amber-400]="sub.daysLeft <= 15 && sub.daysLeft > 5"
+                  [class.text-rose-400]="sub.daysLeft <= 5">
+                  {{ sub.daysLabel }}
+                </p>
+              </div>
+              }
+            </td>
 
-              <!-- Subscription Status -->
-              <td class="px-6 py-6">
-                <div class="flex flex-col gap-2">
-                  <div [class]="'px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border inline-flex items-center gap-1.5 w-fit ' + getStatusClass(sub.status)">
-                    <span class="w-1.5 h-1.5 rounded-full inline-block"
-                      [class.bg-emerald-500]="sub.status === 'active'"
-                      [class.bg-amber-500]="sub.status === 'grace'"
-                      [class.bg-rose-500]="sub.status === 'expired'"></span>
-                    {{ sub.status }}
-                  </div>
-                  @if (sub.isExpiring) {
-                    <span class="text-[9px] font-black text-rose-500 uppercase tracking-widest flex items-center gap-1">
-                      <lucide-icon name="alert-triangle" size="10"></lucide-icon>
-                      Expiring Soon
-                    </span>
-                  }
+            <!-- Subscription Status -->
+            <td class="px-6 py-6">
+              <div class="flex flex-col gap-2">
+                <div
+                  [class]="'px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border inline-flex items-center gap-1.5 w-fit ' + getStatusClass(sub.status)">
+                  <span class="w-1.5 h-1.5 rounded-full inline-block" [class.bg-emerald-500]="sub.status === 'active'"
+                    [class.bg-amber-500]="sub.status === 'grace'" [class.bg-rose-500]="sub.status === 'expired'"></span>
+                  {{ sub.status }}
                 </div>
-              </td>
-
-              <!-- Next Queued Plan -->
-              <td class="px-6 py-6">
-                @if (sub.queueCount > 0) {
-                  <div>
-                    <p class="text-xs font-black text-amber-700">{{ sub.pendingQueue[0]?.planSnapshot?.name }}</p>
-                    <p class="text-[10px] font-bold text-amber-500 mt-0.5">₹{{ sub.pendingQueue[0]?.planSnapshot?.price | number }}</p>
-                    @if (sub.queueCount > 1) {
-                      <p class="text-[9px] font-black text-slate-400 mt-1">+{{ sub.queueCount - 1 }} more</p>
-                    }
-                  </div>
-                } @else {
-                  <span class="text-[11px] font-bold text-slate-300">—</span>
+                @if (sub.isExpiring) {
+                <span class="text-[9px] font-black text-rose-500 uppercase tracking-widest flex items-center gap-1">
+                  <lucide-icon name="alert-triangle" size="10"></lucide-icon>
+                  Expiring Soon
+                </span>
                 }
-              </td>
+              </div>
+            </td>
 
-            </tr>
-            }
+            <!-- Next Queued Plan -->
+            <td class="px-6 py-6">
+              @if (sub.queueCount > 0) {
+              <div>
+                <p class="text-xs font-black text-amber-700">{{ sub.pendingQueue[0]?.planSnapshot?.name }}</p>
+                <p class="text-[10px] font-bold text-amber-500 mt-0.5">₹{{ sub.pendingQueue[0]?.planSnapshot?.price |
+                  number }}</p>
+                @if (sub.queueCount > 1) {
+                <p class="text-[9px] font-black text-slate-400 mt-1">+{{ sub.queueCount - 1 }} more</p>
+                }
+              </div>
+              } @else {
+              <span class="text-[11px] font-bold text-slate-300">—</span>
+              }
+            </td>
+
+          </tr>
+          }
           }
         </tbody>
       </table>
     </div>
+  </div>
 
-    <!-- Empty State -->
-    @if (!isLoading() && filteredSubscriptions().length === 0) {
-    <div class="py-32 flex flex-col items-center justify-center text-center">
-      <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6 border border-slate-100">
-        <lucide-icon name="shield-off" size="48" class="text-slate-200"></lucide-icon>
+  <!-- ── SUBSCRIPTION CARDS (Mobile & Tablet View) ── -->
+  <div class="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+    @if (isLoading() && filteredSubscriptions().length === 0) {
+    @for (i of [1,2,3,4]; track i) {
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-pulse space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-slate-200"></div>
+        <div class="flex-1 space-y-2">
+          <div class="h-4 bg-slate-200 rounded w-2/3"></div>
+          <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+        </div>
       </div>
-      <h3 class="text-xl font-black text-slate-900 mb-2">No results found</h3>
-      <p class="text-sm font-bold text-slate-400 max-w-xs">We couldn't find any subscriptions matching your search.</p>
-      <button (click)="filter.set('all'); search.set('')"
-        class="mt-8 text-indigo-600 text-[10px] font-black uppercase tracking-widest hover:underline cursor-pointer">
-        Reset all filters
-      </button>
+      <div class="h-px bg-slate-100 my-2"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="h-4 bg-slate-100 rounded w-1/2"></div>
+        <div class="h-4 bg-slate-100 rounded w-1/2 ml-auto"></div>
+      </div>
     </div>
     }
+    } @else {
+    @for (sub of filteredSubscriptions(); track sub._id) {
+    <div (click)="openDetails(sub)"
+      class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200 active:scale-[0.98] cursor-pointer flex flex-col justify-between">
+      <div>
+        <div class="flex justify-between items-start gap-2 mb-4">
+          <div class="flex items-center gap-3 min-w-0">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center text-white font-black text-sm shrink-0">
+              {{ (sub.vendorDetails?.businessName || sub.vendorDetails?.fullName || 'V').trim().charAt(0).toUpperCase()
+              }}
+            </div>
+            <div class="min-w-0">
+              <h4 class="font-black text-slate-900 text-sm truncate">{{ sub.vendorDetails?.businessName || 'Unknown' }}
+              </h4>
+              <p class="text-[10px] text-slate-400 truncate">{{ sub.vendorDetails?.email }}</p>
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-1 shrink-0">
+            <div
+              [class]="'px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border ' + getStatusClass(sub.status)">
+              {{ sub.status }}
+            </div>
+            @if (sub.isExpiring) {
+            <span class="text-[8px] font-black text-rose-500 uppercase tracking-widest flex items-center gap-0.5">
+              ⚠️ Expiring
+            </span>
+            }
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex justify-between items-center mb-4">
+          <div>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Active Plan</p>
+            <p class="text-xs font-black text-slate-800">{{ sub.planSnapshot?.name }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Rate</p>
+            <p class="text-xs font-black text-indigo-600">₹{{ sub.planSnapshot?.price | number }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-3 border-t border-slate-50 text-[10px] font-bold text-slate-500">
+        <div>
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">End Date</p>
+          <p class="text-slate-800 mt-0.5">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
+        </div>
+        <div class="text-right">
+          @if (sub.status === 'expired') {
+          <span class="text-rose-600 uppercase">Expired</span>
+          } @else {
+          <span class="font-black" [class.text-emerald-600]="sub.daysLeft > 15"
+            [class.text-amber-500]="sub.daysLeft <= 15 && sub.daysLeft > 5" [class.text-rose-600]="sub.daysLeft <= 5">
+            {{ sub.daysLeft }} {{ sub.daysLabel }}
+          </span>
+          }
+        </div>
+      </div>
+    </div>
+    }
+    }
   </div>
+
+  <!-- Empty State -->
+  @if (!isLoading() && filteredSubscriptions().length === 0) {
+  <div
+    class="py-20 flex flex-col items-center justify-center text-center bg-white rounded-3xl border border-slate-200 mt-6 shadow-sm">
+    <div
+      class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100 shadow-inner">
+      <lucide-icon name="shield-off" size="32" class="text-slate-300"></lucide-icon>
+    </div>
+    <h3 class="text-lg font-black text-slate-900 mb-1">No subscriptions found</h3>
+    <p class="text-xs font-semibold text-slate-500 max-w-xs">We couldn't find any subscription entries matching your
+      search criteria.</p>
+    <button (click)="filter.set('all'); search.set('')"
+      class="mt-6 px-6 py-2.5 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
+      Reset filters
+    </button>
+  </div>
+  }
+
 </div>
 
 <!-- ── DETAIL MODAL ── -->
 @if (selectedSubscription(); as sub) {
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-300">
-  <div class="absolute inset-0 bg-slate-900/10" (click)="closeDetails()"></div>
-  <app-model [title]="'Subscription Overview'" maxWidth="2xl" [hasFooter]="true" (onClose)="closeDetails()" class="relative z-10 shadow-2xl">
-  <div class="modal-content overflow-y-auto max-h-[75vh] pr-1 -mr-1 space-y-6 relative hide-scrollbar">
+  <div class="absolute inset-0 bg-slate-900/60" (click)="closeDetails()"></div>
+  <app-model [title]="'Subscription Overview'" maxWidth="2xl" [hasFooter]="true" (onClose)="closeDetails()"
+    class="relative z-10 shadow-2xl">
+    <div class="modal-content overflow-y-auto max-h-[70vh] pr-1 -mr-1 space-y-6 relative hide-scrollbar">
 
-    <!-- 1. VENDOR PREMIUM HEADER (Softened) -->
-    <div
-      class="relative overflow-hidden bg-slate-50 border border-slate-400 rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 text-slate-900">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-100/50 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-      <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
-        <div
-          class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-3xl flex items-center justify-center text-3xl font-black text-white shadow-xl shrink-0">
-          {{ (sub?.vendorDetails?.businessName || sub?.vendorDetails?.fullName || 'V').trim().charAt(0).toUpperCase() }}
-        </div>
-        <div class="flex-1">
-          <div class="flex flex-wrap items-center gap-3 mb-2">
-            <h3 class="text-xl sm:text-2xl font-black tracking-tight">
-              {{ sub?.vendorDetails?.businessName || sub?.vendorDetails?.fullName || 'Unknown Vendor' }}
-            </h3>
-            <span
-              class="px-3 py-1 bg-white border border-slate-400 rounded-full text-[10px] font-black uppercase tracking-widest">
-              ID: {{ sub?._id?.slice(-8) || 'N/A' }}
-            </span>
+      <!-- 1. VENDOR PREMIUM HEADER -->
+      <div
+        class="relative overflow-hidden bg-slate-50 border border-slate-200 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 text-slate-900">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-100/50 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center gap-5">
+          <div
+            class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-lg shrink-0">
+            {{ (sub?.vendorDetails?.businessName || sub?.vendorDetails?.fullName || 'V').trim().charAt(0).toUpperCase()
+            }}
           </div>
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-600 font-bold">
-            <div class="flex items-center gap-1.5 text-xs">
-              <lucide-icon name="mail" size="14"></lucide-icon>
-              {{ sub?.vendorDetails?.email || 'No email provided' }}
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-1.5">
+              <h3 class="text-lg sm:text-xl font-black tracking-tight truncate m-0">
+                {{ sub?.vendorDetails?.businessName || sub?.vendorDetails?.fullName || 'Unknown Vendor' }}
+              </h3>
+              <span
+                class="px-2 py-0.5 bg-white border border-slate-200 rounded-full text-[9px] font-black uppercase tracking-widest shrink-0">
+                ID: {{ sub?._id?.slice(-8) || 'N/A' }}
+              </span>
             </div>
-            @if (sub?.vendorDetails?.phone) {
-            <div class="flex items-center gap-1.5 text-xs">
-              <lucide-icon name="phone" size="14"></lucide-icon>
-              {{ sub?.vendorDetails?.phone }}
+            <div
+              class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-500 font-semibold text-[11px] sm:text-xs">
+              <div class="flex items-center gap-1.5 truncate">
+                <lucide-icon name="mail" size="12" class="text-slate-400 shrink-0"></lucide-icon>
+                <span class="truncate break-all">{{ sub?.vendorDetails?.email || 'No email provided' }}</span>
+              </div>
+              @if (sub?.vendorDetails?.phone) {
+              <div class="flex items-center gap-1.5 shrink-0">
+                <lucide-icon name="phone" size="12" class="text-slate-400 shrink-0"></lucide-icon>
+                <span>{{ sub?.vendorDetails?.phone }}</span>
+              </div>
+              }
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. STATUS & PLAN QUICK CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+        <!-- Current Plan Card -->
+        <div class="bg-white p-5 sm:p-6 rounded-2xl sm:rounded-[32px] border border-slate-200/80 shadow-xs">
+          <div class="flex items-center justify-between mb-3">
+            <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+              <lucide-icon name="layers" size="18"></lucide-icon>
+            </div>
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Current Plan</p>
+          </div>
+          <h4 class="text-lg font-black text-slate-900 m-0">{{ sub?.planSnapshot?.name || 'No Active Plan' }}</h4>
+          <div class="flex items-baseline gap-1.5 mt-1.5">
+            <span class="text-xl sm:text-2xl font-black text-indigo-600">₹{{ (sub?.planSnapshot?.price || 0) | number
+              }}</span>
+            <span class="text-[9px] font-bold text-slate-400 uppercase">/ {{ sub?.planSnapshot?.duration_days || 0 }}
+              Days</span>
+          </div>
+        </div>
+
+        <!-- Service Status Card -->
+        <div class="bg-white p-5 sm:p-6 rounded-2xl sm:rounded-[32px] border border-slate-200/80 shadow-xs">
+          <div class="flex items-center justify-between mb-3">
+            <div class="p-2.5 bg-slate-100 text-slate-600 rounded-xl">
+              <lucide-icon name="activity" size="18"></lucide-icon>
+            </div>
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Service Status</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              [class]="'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border inline-block ' + getStatusClass(sub?.status || 'unknown')">
+              {{ sub?.status || 'Unknown' }}
+            </span>
+            @if (sub?.isExpiring) {
+            <span class="flex items-center gap-1 text-[9px] font-black text-rose-600 uppercase tracking-wide shrink-0">
+              <lucide-icon name="alert-triangle" size="10"></lucide-icon>
+              Expiring Soon
+            </span>
             }
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. STATUS & PLAN QUICK CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      <!-- Current Plan Card -->
-      <div class="bg-white p-6 rounded-[32px] border border-slate-400 transition-shadow">
-        <div class="flex items-center justify-between mb-4">
-          <div class="p-3 bg-indigo-100 text-indigo-700 rounded-2xl">
-            <lucide-icon name="layers" size="20"></lucide-icon>
-          </div>
-          <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Current Plan</p>
-        </div>
-        <h4 class="text-xl font-black text-slate-900">{{ sub?.planSnapshot?.name || 'No Active Plan' }}</h4>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span class="text-2xl font-black text-indigo-600">₹{{ (sub?.planSnapshot?.price || 0) | number }}</span>
-          <span class="text-[10px] font-bold text-slate-400 uppercase">/ {{ sub?.planSnapshot?.duration_days || 0 }} Days</span>
+          <p class="text-[11px] font-semibold text-slate-500 mt-3 flex items-center gap-1.5">
+            <lucide-icon name="clock" size="12" class="text-slate-400"></lucide-icon>
+            {{ sub?.daysLeft || 0 }} {{ sub?.daysLabel || 'days' }} remaining in cycle
+          </p>
         </div>
       </div>
 
-      <!-- Service Status Card -->
-      <div class="bg-white p-6 rounded-[32px] border border-slate-400 transition-shadow">
-        <div class="flex items-center justify-between mb-4">
-          <div class="p-3 bg-slate-200 text-slate-700 rounded-2xl">
-            <lucide-icon name="activity" size="20"></lucide-icon>
+      <!-- 3. TIMELINE & PROGRESS -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5">
+        <!-- Timeline Container -->
+        <div
+          class="lg:col-span-3 bg-white p-6 sm:p-8 rounded-2xl sm:rounded-[32px] border border-slate-200/80 shadow-xs timeline-container">
+          <h4 class="text-xs font-black text-slate-900 mb-6 uppercase tracking-widest flex items-center gap-2 m-0">
+            <lucide-icon name="calendar" size="14" class="text-indigo-600"></lucide-icon>
+            Subscription Timeline
+          </h4>
+
+          <div
+            class="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 sm:gap-0 mt-8 sm:mt-10 min-h-[140px] sm:min-h-0">
+            <!-- Timeline connection lines -->
+            <div class="timeline-line-vertical"></div>
+            <div class="absolute left-0 right-0 h-1 bg-slate-100 top-3 z-0 rounded-full hidden sm:block"></div>
+
+            <!-- Start Node -->
+            <div class="relative z-10 flex sm:flex-col items-center sm:text-center gap-4 sm:gap-0">
+              <div class="w-6 h-6 bg-indigo-600 rounded-full border-4 border-white shadow-md sm:mb-3 shrink-0"></div>
+              <div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest sm:mb-1">Started</p>
+                <p class="text-xs font-black text-slate-800 m-0">{{ sub.startDate | date:'dd MMM yyyy' }}</p>
+              </div>
+            </div>
+
+            <!-- End Node -->
+            <div class="relative z-10 flex sm:flex-col items-center sm:text-center gap-4 sm:gap-0">
+              <div class="w-6 h-6 bg-white border-4 border-slate-400 rounded-full shadow-md sm:mb-3 shrink-0"></div>
+              <div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest sm:mb-1">Expires</p>
+                <p class="text-xs font-black text-slate-800 m-0">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
+              </div>
+            </div>
+
+            <!-- Grace Node -->
+            <div class="relative z-10 flex sm:flex-col items-center sm:text-center gap-4 sm:gap-0">
+              <div class="w-6 h-6 bg-white border-4 border-rose-500 rounded-full shadow-md sm:mb-3 shrink-0"></div>
+              <div>
+                <p class="text-[9px] font-black text-rose-500 uppercase tracking-widest sm:mb-1">Grace Ends</p>
+                <p class="text-xs font-black text-slate-800 m-0">{{ sub.graceEndDate | date:'dd MMM yyyy' }}</p>
+              </div>
+            </div>
           </div>
-          <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Service Status</p>
         </div>
-        <div class="flex items-center gap-3">
-          <span [class]="'px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border ' + getStatusClass(sub?.status || 'unknown')">
-            {{ sub?.status || 'Unknown' }}
-          </span>
-          @if (sub?.isExpiring) {
-          <span class="flex items-center gap-1 text-[10px] font-black text-rose-600 uppercase">
-            <lucide-icon name="alert-triangle" size="12"></lucide-icon>
-            Expiring Soon
-          </span>
+
+        <!-- Progress / Usage Percentage -->
+        <div
+          class="lg:col-span-2 bg-indigo-50/50 p-6 sm:p-8 rounded-2xl sm:rounded-[32px] text-indigo-900 flex flex-col justify-between border border-indigo-100 shadow-xs">
+          <div>
+            <p class="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-1">Usage Progress</p>
+            <h4 class="text-xl sm:text-2xl font-black m-0 text-slate-800">{{ sub?.daysLeft ?? 0 }} {{ sub?.daysLabel }}
+            </h4>
+          </div>
+          <div class="mt-6">
+            <div class="flex justify-between text-[10px] font-black uppercase mb-2 text-indigo-500">
+              <span>Consumed</span>
+              <span>{{ (sub?.totalDays ? Math.round((sub.totalDays - sub.daysLeft) / sub.totalDays * 100) : 0)
+                }}%</span>
+            </div>
+            <div class="h-2.5 bg-indigo-100 rounded-full overflow-hidden">
+              <div class="h-full bg-indigo-600 rounded-full transition-all duration-1000"
+                [style.width.%]="(sub?.totalDays ? Math.max(0, Math.min(100, (sub.totalDays - sub.daysLeft) / sub.totalDays * 100)) : 0)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. UPCOMING QUEUE -->
+      @if (sub.pendingQueue?.length > 0) {
+      <div class="p-5 sm:p-8 bg-amber-50 border border-amber-200/80 rounded-2xl sm:rounded-[32px]">
+        <h4
+          class="text-xs font-black text-amber-800 mb-4 sm:mb-6 uppercase tracking-widest flex items-center gap-2 m-0">
+          <lucide-icon name="arrow-up-circle" size="14" class="text-amber-600"></lucide-icon>
+          Pending Plan Activation
+        </h4>
+        <div class="space-y-3">
+          @for (item of sub.pendingQueue; track item._id) {
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-2xl border border-amber-200/70 shadow-xs group hover:border-amber-400 transition-colors gap-3">
+            <div class="flex items-center gap-3.5 min-w-0">
+              <div
+                class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center font-black shrink-0 text-sm">
+                Q{{ $index + 1 }}
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-black text-slate-900 truncate m-0">{{ item.planSnapshot?.name }}</p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Purchased: {{
+                  item.purchasedAt | date:'dd MMM yyyy' }}</p>
+              </div>
+            </div>
+            <div class="text-left sm:text-right shrink-0">
+              <p class="text-sm font-black text-amber-700 m-0">₹{{ item.planSnapshot?.price | number }}</p>
+              <div class="flex items-center sm:justify-end gap-1.5 mt-1">
+                <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+                <span class="text-[9px] font-black uppercase text-amber-700 tracking-wider">Queued</span>
+              </div>
+            </div>
+          </div>
           }
         </div>
-        <p class="text-[11px] font-bold text-slate-500 mt-3 flex items-center gap-1.5">
-          <lucide-icon name="clock" size="12"></lucide-icon>
-          {{ sub?.daysLeft || 0 }} {{ sub?.daysLabel || 'days' }} remaining in current cycle
-        </p>
       </div>
+      }
     </div>
-
-    <!-- 3. TIMELINE & PROGRESS -->
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
-      <!-- Timeline -->
-      <div class="lg:col-span-3 bg-white p-8 rounded-[32px] border border-slate-400">
-        <h4 class="text-xs font-black text-slate-900 mb-8 uppercase tracking-widest flex items-center gap-2">
-          <lucide-icon name="calendar" size="14" class="text-indigo-600"></lucide-icon>
-          Subscription Timeline
-        </h4>
-        <div class="relative flex items-center justify-between">
-          <div class="absolute left-0 right-0 h-1 bg-slate-400 top-2.5 z-0 rounded-full"></div>
-
-          <div class="relative z-10 text-center">
-            <div class="w-6 h-6 bg-indigo-600 rounded-full border-4 border-white shadow-md mb-3 mx-auto"></div>
-            <p class="text-[9px] font-black text-slate-600 uppercase mb-1">Started</p>
-            <p class="text-xs font-black text-slate-900">{{ sub.startDate | date:'MMM dd, yyyy' }}</p>
-          </div>
-
-          <div class="relative z-10 text-center">
-            <div class="w-6 h-6 bg-white border-4 border-slate-600 rounded-full shadow-md mb-3 mx-auto"></div>
-            <p class="text-[9px] font-black text-slate-600 uppercase mb-1">Expires</p>
-            <p class="text-xs font-black text-slate-900">{{ sub.endDate | date:'MMM dd, yyyy' }}</p>
-          </div>
-
-          <div class="relative z-10 text-center">
-            <div class="w-6 h-6 bg-white border-4 border-rose-500 rounded-full shadow-md mb-3 mx-auto"></div>
-            <p class="text-[9px] font-black text-rose-600 uppercase mb-1">Grace Ends</p>
-            <p class="text-xs font-black text-slate-900">{{ sub.graceEndDate | date:'MMM dd, yyyy' }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Progress / Days Left -->
-      <div class="lg:col-span-2 bg-indigo-50 p-8 rounded-[32px] text-indigo-900 flex flex-col justify-between border border-indigo-200">
-        <div>
-          <p class="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-500 mb-1">Usage Progress</p>
-          <h4 class="text-2xl font-black">{{ sub?.daysLeft ?? 0 }} {{ sub?.daysLabel }}</h4>
-        </div>
-        <div class="mt-6">
-          <div class="flex justify-between text-[10px] font-black uppercase mb-2 text-indigo-500">
-            <span>Consumed</span>
-            <span>{{ (sub?.totalDays ? Math.round((sub.totalDays - sub.daysLeft) / sub.totalDays * 100) : 0) }}%</span>
-          </div>
-          <div class="h-2.5 bg-indigo-200 rounded-full overflow-hidden">
-            <div class="h-full bg-indigo-600 rounded-full transition-all duration-1000"
-              [style.width.%]="(sub?.totalDays ? Math.max(0, Math.min(100, (sub.totalDays - sub.daysLeft) / sub.totalDays * 100)) : 0)">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. UPCOMING QUEUE (If any) -->
-    @if (sub.pendingQueue?.length > 0) {
-    <div class="p-8 bg-amber-100 border border-amber-200 rounded-[32px]">
-      <h4 class="text-xs font-black text-amber-900 mb-6 uppercase tracking-widest flex items-center gap-2">
-        <lucide-icon name="arrow-up-circle" size="14" class="text-amber-700"></lucide-icon>
-        Pending Plan Activation
-      </h4>
-      <div class="space-y-3">
-        @for (item of sub.pendingQueue; track item._id) {
-        <div
-          class="flex items-center justify-between p-5 bg-white rounded-2xl border border-amber-200 shadow-sm group hover:border-amber-400 transition-colors">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-amber-200 text-amber-700 rounded-xl flex items-center justify-center font-black">
-              Q{{ $index + 1 }}
-            </div>
-            <div>
-              <p class="text-sm font-black text-slate-900">{{ item.planSnapshot?.name }}</p>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Purchased on {{
-                item.purchasedAt | date:'MMMM dd' }}</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="text-sm font-black text-amber-700">₹{{ item.planSnapshot?.price | number }}</p>
-            <div class="flex items-center gap-1.5 mt-1">
-              <span class="w-1.5 h-1.5 bg-amber-600 rounded-full animate-pulse"></span>
-              <span class="text-[9px] font-black uppercase text-amber-800 tracking-widest">Awaiting Activation</span>
-            </div>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
-    }
-  </div>
-</app-model>
+  </app-model>
 </div>
 }
 
 <style>
   :host {
     display: block;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
   }
 
   :host::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
+    /* Chrome/Safari */
   }
 
   .hide-scrollbar {
@@ -483,5 +613,22 @@
   .overflow-x-auto::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 10px;
+  }
+
+  /* Timeline line vertical details */
+  .timeline-line-vertical {
+    position: absolute;
+    left: 11px;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background-color: #cbd5e1;
+    z-index: 0;
+  }
+
+  @media (min-width: 640px) {
+    .timeline-line-vertical {
+      display: none;
+    }
   }
 </style>

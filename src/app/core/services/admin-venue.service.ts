@@ -1,14 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Venue } from '../models/venue-types.model';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminVenueService {
   private http = inject(HttpClient);
-    private api = 'http://192.168.1.11:3000/admin/venues'; 
- /*  private api = 'http://localhost:3000/admin/venues'; */
+  private api = `${API_BASE_URL}/admin/venues`;
 
 
   approveVenue(id: string) {
