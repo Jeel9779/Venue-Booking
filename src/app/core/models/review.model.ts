@@ -4,6 +4,10 @@ export interface Review {
     _id: string;
     name: string;
     vendorId: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
   };
   userId: {
     _id: string;
@@ -23,6 +27,7 @@ export interface ReviewStats {
   totalReviews: number;
   awaitingReview: number;
   approvedContent: number;
+  rejectedContent: number;
   liveAvgScore: number;
   distribution: { [key: number]: number };
 }

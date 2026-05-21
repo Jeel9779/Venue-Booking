@@ -14,6 +14,8 @@ export class ReviewStore {
   readonly filterStatus = signal<string>('all');
   /** Current search query string. */
   readonly searchTerm = signal<string>('');
+  // ── Reactive UI State (signals) ──
+  readonly showDeleteModal = signal(false);
 
   // ── Derived State (Computed Signals) ──
   /**
@@ -42,16 +44,35 @@ export class ReviewStore {
         const userName = r.userId && typeof r.userId === 'object' ? (r.userId.name || '') : '';
         const userEmail = r.userId && typeof r.userId === 'object' ? (r.userId.email || '') : '';
         const venueName = r.venueName || (r.venueId && typeof r.venueId === 'object' ? (r.venueId.name || '') : '');
+        const venueAddress = `${(r.venueId as any).address || ''} ${(r.venueId as any).city || ''} ${(r.venueId as any).state || ''} ${(r.venueId as any).zip || ''}`;
         const feedback = r.feedback || '';
         const rating = r.rating ? r.rating.toString() : '';
         const statusStr = r.status || '';
+        
+        let dateMatch = false;
+        if (r.createdAt) {
+          const dateObj = new Date(r.createdAt);
+          const formattedDateUS = dateObj.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }).toLowerCase();
+          const formattedDateIN = dateObj.toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }).toLowerCase();
+          dateMatch = formattedDateUS.includes(query) || formattedDateIN.includes(query) || r.createdAt.toLowerCase().includes(query);
+        }
 
         return userName.toLowerCase().includes(query) ||
                userEmail.toLowerCase().includes(query) ||
                venueName.toLowerCase().includes(query) ||
+               venueAddress.toLowerCase().includes(query) ||
                feedback.toLowerCase().includes(query) ||
                rating.includes(query) ||
-               statusStr.toLowerCase().includes(query);
+               statusStr.toLowerCase().includes(query) ||
+               dateMatch;
       });
     }
 
@@ -71,20 +92,19 @@ export class ReviewStore {
    */
   private calculateAdminStats(reviews: Review[]): ReviewStats {
     const totalReviews = reviews.length;
-    const awaitingReview = reviews.filter(r => r.status === 'pending').length;
-    const approvedReviews = reviews.filter(r => r.status === 'approved');
+    const awaitingReview = reviews.filter(r => r && r.status === 'pending').length;
+    const approvedReviews = reviews.filter(r => r && r.status === 'approved');
     const approvedContent = approvedReviews.length;
+    const rejectedContent = reviews.filter(r => r && r.status === 'rejected').length;
 
     // Live Avg Score: Sum of ratings / Total count ONLY for approved reviews
-    const totalApprovedRating = approvedReviews.reduce((acc, r) => acc + r.rating, 0);
-    const liveAvgScore = approvedContent > 0 
-      ? Number((totalApprovedRating / approvedContent).toFixed(1))
-      : 0;
+    const totalApprovedRating = approvedReviews.reduce((acc, r) => acc + (r.rating ?? 0), 0);
+    const liveAvgScore = approvedContent > 0 ? Number((totalApprovedRating / approvedContent).toFixed(1)) : 0;
 
     // Distribution breakdown for 1-5 stars
     const distribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     reviews.forEach(r => {
-      if (r.rating >= 1 && r.rating <= 5) {
+      if (r && r.rating >= 1 && r.rating <= 5) {
         distribution[Math.floor(r.rating)]++;
       }
     });
@@ -93,6 +113,7 @@ export class ReviewStore {
       totalReviews,
       awaitingReview,
       approvedContent,
+      rejectedContent,
       liveAvgScore,
       distribution
     };

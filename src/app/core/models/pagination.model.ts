@@ -9,5 +9,5 @@ export const initialPagination: Pagination = {
   page: 1,
   limit: 10,
   totalRecords: 0,
-  totalPages: 0
+  totalPages: 1
 };

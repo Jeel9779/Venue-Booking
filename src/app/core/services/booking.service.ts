@@ -16,21 +16,33 @@ export class BookingService {
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: (res) => {
+          // Determine bookings array and pagination metadata
           const bookings = Array.isArray(res) ? res : (res.data || res.bookings || []);
           this.store.setBookings(bookings);
 
-          if (!Array.isArray(res)) {
+          // If API did not provide pagination object, infer it
+          if (Array.isArray(res)) {
+            const totalRecords = bookings.length;
+            const totalPages = Math.max(1, Math.ceil(totalRecords / limit));
+            this.store.setPagination({
+              page,
+              limit,
+              totalRecords,
+              totalPages,
+            });
+          } else {
             this.store.setPagination({
               page: res.page || page,
               limit: res.limit || limit,
               totalRecords: res.totalRecords || bookings.length,
-              totalPages: res.totalPages || 1
+              totalPages: res.totalPages || Math.max(1, Math.ceil((res.totalRecords || bookings.length) / (res.limit || limit)))
             });
           }
         },
         error: (err) => this.store.setError(err?.message || 'Failed to load bookings'),
       });
   }
+
 
   updateStatus(id: string, status: 'pending' | 'success' | 'failed'): void {
     // ⚡ OPTIMISTIC: Update UI immediately

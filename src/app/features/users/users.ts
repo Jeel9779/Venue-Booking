@@ -56,12 +56,32 @@ export class Users implements OnInit {
     // Search
     const q = this.search().toLowerCase().trim();
     if (q) {
-      result = result.filter(u =>
-        u.name.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q) ||
-        (u.city || '').toLowerCase().includes(q) ||
-        (u.phone || '').includes(q)
-      );
+      result = result.filter(u => {
+        const nameMatch = u.name.toLowerCase().includes(q);
+        const emailMatch = u.email.toLowerCase().includes(q);
+        const cityMatch = (u.city || '').toLowerCase().includes(q);
+        const phoneMatch = (u.phone || '').includes(q);
+        const pinMatch = (u.pinCode || '').toLowerCase().includes(q);
+        const addressMatch = (u.address || '').toLowerCase().includes(q);
+        
+        let dateMatch = false;
+        if (u.createdAt) {
+          const dateObj = new Date(u.createdAt);
+          const formattedDateUS = dateObj.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }).toLowerCase();
+          const formattedDateIN = dateObj.toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }).toLowerCase();
+          dateMatch = formattedDateUS.includes(q) || formattedDateIN.includes(q) || u.createdAt.toLowerCase().includes(q);
+        }
+
+        return nameMatch || emailMatch || cityMatch || phoneMatch || pinMatch || addressMatch || dateMatch;
+      });
     }
 
     // Status filter

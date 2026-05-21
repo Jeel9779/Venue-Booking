@@ -65,7 +65,10 @@ export class Vendors implements OnInit {
         v.phone.includes(q) ||
         v.businessType.toLowerCase().includes(q) ||
         v.state.toLowerCase().includes(q) ||
-        new Date(v.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(q)
+        v.address.toLowerCase().includes(q) ||
+        v.pincode.includes(q) ||
+        new Date(v.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(q) ||
+        new Date(v.updatedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(q)
       );
     }
     return list;

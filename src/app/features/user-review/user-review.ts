@@ -1,3 +1,4 @@
+
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,6 +27,7 @@ export class UserReview implements OnInit {
   private readonly venueService = inject(VenueService);
   private readonly venueStore = inject(VenueStore);
 
+
   // ── Reactive Properties (Exposing Store Signals) ──
   readonly reviews = this.store.filteredReviews;
   readonly stats = this.store.stats;
@@ -35,16 +37,16 @@ export class UserReview implements OnInit {
   readonly chartData = this.store.ratingChartData;
   readonly apiBaseUrl = API_BASE_URL;
 
-  // ── Local UI State ──
-  readonly searchTerm = this.store.searchTerm;
-  showDeleteModal = signal(false);
-  reviewToDelete = signal<any | null>(null);
+  // ── Reactive UI State (signals) ──
+  readonly showDeleteModal = signal(false);
+  readonly reviewToDelete = signal<any | null>(null);
 
-  // ── Venue Details Modal State ──
-  showVenueModal = signal(false);
-  isLoadingVenue = signal(false);
-  selectedVenue = signal<any | null>(null);
-  activeImageIndex = signal(0);
+  // ── UI State continued ──
+  readonly showVenueModal = signal(false);
+  readonly isLoadingVenue = signal(false);
+  readonly selectedVenue = signal<any | null>(null);
+  readonly activeImageIndex = signal(0);
+  readonly searchTerm = this.store.searchTerm;
 
   ngOnInit() {
     this.service.loadAll();
@@ -75,17 +77,19 @@ export class UserReview implements OnInit {
 
     // 2. Network Fallback
     this.isLoadingVenue.set(true);
+    // Handle error from venue API and show toast
     this.venueApi.getById(id).subscribe({
       next: (fullVenue) => {
         this.selectedVenue.set(fullVenue);
         this.isLoadingVenue.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load venue details', err);
-        // Fallback to basic object on failure
-        this.selectedVenue.set(typeof venue === 'object' ? venue : { _id: id, name: 'Venue Details' });
-        this.isLoadingVenue.set(false);
-      }
+        error: (err: any) => {
+          console.error('Failed to load venue details', err);
+          console.error('Unable to load venue details');
+          // Fallback to basic object on failure
+          this.selectedVenue.set(typeof venue === 'object' ? venue : { _id: id, name: 'Venue Details' });
+          this.isLoadingVenue.set(false);
+        }
     });
   }
 
