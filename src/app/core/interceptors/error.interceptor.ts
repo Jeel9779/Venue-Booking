@@ -18,7 +18,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         errorMessage = error.error?.message || `Error Code: ${error.status}\nMessage: ${error.message}`;
       }
       
-      console.error(errorMessage);
+      // console.error removed - using toast service for notifications
       toastService.error(errorMessage);
       
       return throwError(() => new Error(errorMessage));

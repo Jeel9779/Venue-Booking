@@ -1,0 +1,135 @@
+<div class="p-8 max-w-[1200px] mx-auto bg-gray-300 min-h-screen">
+  
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Complaint Management</h1>
+    <p class="text-gray-500 mt-2">Review, investigate, and resolve service disputes to maintain the premium standards of Book My Venue.</p>
+  </div>
+
+  <!-- Critical Banner -->
+  <div class="bg-rose-800 rounded-2xl p-6 mb-8 text-white flex justify-between items-center shadow-lg">
+    <div>
+      <div class="flex items-center gap-2 font-bold text-lg mb-2">
+        <lucide-icon [img]="icons.alertTriangle" size="20"></lucide-icon>
+        CRITICAL INVESTIGATION REQUIRED
+      </div>
+      <p class="text-rose-100 max-w-2xl">
+        Grand Majestic Ballroom reported for "Severe Safety Violations" by 4 independent users within the last 2 hours.
+      </p>
+    </div>
+    <button class="bg-rose-700 hover:bg-rose-600 transition-colors px-6 py-3 rounded-lg font-medium flex items-center gap-2">
+      Prioritize Case
+      <lucide-icon [img]="icons.arrowRight" size="18"></lucide-icon>
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column (Active Complaints) -->
+    <div class="lg:col-span-2">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Active Complaints</h2>
+        <div class="flex gap-4 text-sm font-medium">
+          <span class="text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full cursor-pointer">All Cases</span>
+          <span class="text-gray-500 hover:text-gray-900 cursor-pointer">Urgent</span>
+          <span class="text-gray-500 hover:text-gray-900 cursor-pointer">Pending Review</span>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        @for (complaint of activeComplaints; track complaint.id) {
+          <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex gap-6">
+            <img [src]="complaint.image" alt="Venue Image" class="w-40 h-32 object-cover rounded-xl shrink-0">
+            
+            <div class="flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="font-bold text-lg text-gray-900">{{complaint.venueName}}</h3>
+                    <p class="text-sm text-gray-500 mt-1">Ticket {{complaint.id}} • User: {{complaint.user}}</p>
+                  </div>
+                  <span class="text-xs font-bold px-3 py-1 rounded-full uppercase" [ngClass]="complaint.urgencyClass">
+                    {{complaint.urgency}}
+                  </span>
+                </div>
+                
+                <p class="text-gray-600 mt-3 text-sm line-clamp-2">
+                  {{complaint.description}}
+                </p>
+              </div>
+
+              <div class="mt-4">
+                <div class="flex justify-between text-xs font-bold text-gray-500 uppercase mb-2">
+                  <span>Investigation Progress</span>
+                  <span>{{complaint.progress}}%</span>
+                </div>
+                <div class="h-2 bg-gray-100 rounded-full w-full overflow-hidden mb-4">
+                  <div class="h-full bg-indigo-600 rounded-full" [style.width.%]="complaint.progress"></div>
+                </div>
+
+                <div class="flex gap-2 text-sm font-medium">
+                  <button class="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors">Review Case</button>
+                  <button class="px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Warn</button>
+                  <button class="px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">Suspend</button>
+                  <button class="px-4 py-2 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">Restrict</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="space-y-6 mt-14">
+      
+      <!-- Stats -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-indigo-500 text-white rounded-2xl p-6 shadow-sm">
+          <lucide-icon [img]="icons.checkCircle" size="24" class="mb-4 text-indigo-200"></lucide-icon>
+          <div class="text-4xl font-bold mb-1">142</div>
+          <div class="text-indigo-100 font-medium text-sm leading-tight">Cleared<br>Cases</div>
+        </div>
+        <div class="bg-[#8B5CF6] text-white rounded-2xl p-6 shadow-sm">
+          <lucide-icon [img]="icons.trendingUp" size="24" class="mb-4 text-purple-200"></lucide-icon>
+          <div class="text-4xl font-bold mb-1">28</div>
+          <div class="text-purple-100 font-medium text-sm leading-tight">Escalated<br>Today</div>
+        </div>
+      </div>
+
+      <!-- Enforcement Activity -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-900 mb-6">Enforcement Activity</h3>
+        
+        <div class="space-y-6">
+          @for (activity of enforcementActivities; track activity.action) {
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1" [ngClass]="activity.iconClass">
+                <lucide-icon [img]="icons.alertCircle" size="18" *ngIf="activity.action !== 'Suspended' && activity.action !== 'Restriction Applied'"></lucide-icon>
+                <lucide-icon [img]="icons.ban" size="18" *ngIf="activity.action === 'Restriction Applied'"></lucide-icon>
+                <div class="font-bold text-lg" *ngIf="activity.action === 'Suspended'">A</div> <!-- Just a placeholder icon style -->
+              </div>
+              <div>
+                <div class="font-bold text-gray-900 text-sm">{{activity.action}}</div>
+                <div class="text-sm font-medium text-gray-600 mt-0.5">{{activity.venue}}</div>
+                <div class="text-xs text-gray-400 mt-0.5" *ngIf="activity.violation">Violation: {{activity.violation}}</div>
+                <div class="text-[0.65rem] font-bold text-gray-400 uppercase mt-2">{{activity.timeAgo}}</div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <button class="text-indigo-600 font-medium text-sm mt-6 hover:underline">View Full Enforcement Audit</button>
+      </div>
+
+      <!-- Concierge Insight -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+        <h3 class="font-bold text-indigo-600 mb-3 text-sm">Concierge Insight</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          Complaint volume is up 12% this weekend. Suggest activating the automated "Review Request" for all...
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>

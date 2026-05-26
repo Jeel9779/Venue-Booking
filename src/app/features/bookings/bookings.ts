@@ -1,22 +1,23 @@
-import { Component, signal, computed, inject, ChangeDetectorRef, resource, effect } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { BookingApi } from '../../core/api/booking-api';
+import { Component, inject, ChangeDetectorRef, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BookingService } from '../../core/services/booking.service';
-import { BookingStore } from '../../core/store/booking.store';
-import { Booking, BookingStats } from '../../core/models/booking.model';
+import { RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { Card } from '../../shared/components/card/card';
 import { Button } from '../../shared/components/button/button';
 import { Model } from '../../shared/components/model/model';
 import { Pagination } from '../../shared/components/pagination/pagination';
-import { initialPagination } from '../../core/models/pagination.model';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+
+import { BookingService } from '../../core/services/booking.service';
+import { BookingStore } from '../../core/store/booking.store';
+import { BookingApi } from '../../core/api/booking-api';
+import { Booking, BookingStats } from '../../core/models/booking.model';
 
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, Card, Button, Model, Pagination],
+  imports: [CommonModule, FormsModule, LucideAngularModule, Card, Button, Model, Pagination, LoadingSpinnerComponent],
   templateUrl: './bookings.html',
   styleUrl: './bookings.css'
 })
@@ -84,12 +85,22 @@ export class Bookings {
     const todayTime = today.getTime();
     
     let yesterdayTime = 0;
+    let twoDaysAgoTime = 0;
+    let threeDaysAgoTime = 0;
     let sevenDaysAgoTime = 0;
 
     if (dateRange === 'yesterday') {
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
       yesterdayTime = yesterday.getTime();
+    } else if (dateRange === 'last2days') {
+      const twoDaysAgo = new Date(today);
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+      twoDaysAgoTime = twoDaysAgo.getTime();
+    } else if (dateRange === 'last3days') {
+      const threeDaysAgo = new Date(today);
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      threeDaysAgoTime = threeDaysAgo.getTime();
     } else if (dateRange === 'last7days') {
       const sevenDaysAgo = new Date(today);
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -110,6 +121,8 @@ export class Bookings {
 
         if (dateRange === 'today' && bookingTime !== todayTime) return false;
         if (dateRange === 'yesterday' && bookingTime !== yesterdayTime) return false;
+        if (dateRange === 'last2days' && bookingTime < twoDaysAgoTime) return false;
+        if (dateRange === 'last3days' && bookingTime < threeDaysAgoTime) return false;
         if (dateRange === 'last7days' && bookingTime < sevenDaysAgoTime) return false;
       }
 

@@ -11,6 +11,7 @@ import { VendorService } from '@core/services/vendor.service';
 import { VendorStore } from '@core/store/vendor.store';
 import { UserService } from '@core/services/user.service';
 import { UsersStore } from '@core/store/users.store';
+import { ToastService } from '@core/services/toast.service';
 
 export interface SearchItem {
   title: string;
@@ -36,6 +37,7 @@ export class Header implements OnInit {
   private vendorService = inject(VendorService);
   private vendorStore = inject(VendorStore);
   private userService = inject(UserService);
+  private toastService = inject(ToastService);
   private usersStore = inject(UsersStore);
 
   // Real admin data signals
@@ -85,14 +87,14 @@ export class Header implements OnInit {
       raw: v
     }));
 
-    const users: SearchItem[] = this.usersStore.snapshot.users.map(u => ({
-      title: u.name,
-      subtitle: `${u.email} • ${u.phone || 'No phone'}`,
-      path: '/users',
-      category: '👤 Registered Users',
-      icon: 'users',
-      raw: u
-    }));
+    const users: SearchItem[] = this.usersStore.snapshot.users.map((u: any) => ({
+        title: u.name,
+        subtitle: `${u.email} • ${u.phone || 'No phone'}`,
+        path: '/users',
+        category: '👤 Registered Users',
+        icon: 'users',
+        raw: u
+      }));
 
     const allItems: SearchItem[] = [...this.navLinks, ...venues, ...vendors, ...users];
 

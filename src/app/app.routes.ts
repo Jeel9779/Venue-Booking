@@ -89,13 +89,17 @@ export const routes: Routes = [
       {
         path: 'user-review',
         loadComponent: () => import('@features/user-review/user-review').then(m => m.UserReview)
+      },
+      {
+        path: 'complain',
+        loadComponent: () => import('@features/complain/complain.component').then(m => m.ComplainComponent)
       }
 
     ],
   },
   //  DEFAULT REDIRECT
   {
-    path: '**', // wildcard route  
-    redirectTo: 'login',
-  },
+    path: '**',
+    redirectTo: 'dashboard'
+  }
 ];

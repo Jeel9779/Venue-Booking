@@ -177,6 +177,8 @@
             <option value="allTime">All Time</option>
             <option value="today">Today</option>
             <option value="yesterday">Yesterday</option>
+            <option value="last2days">Last 2 Days</option>
+            <option value="last3days">Last 3 Days</option>
             <option value="last7days">Last 7 Days</option>
           </select>
         </div>
@@ -345,6 +347,9 @@
       
       <!-- Header -->
       <div class="p-5 sm:p-6 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-emerald-50 to-white shrink-0">
+        @if (isLoading()) {
+          <app-loading-spinner size="md"></app-loading-spinner>
+        }
         <div class="flex items-center gap-3.5">
           <div class="w-11 h-11 sm:w-12 sm:h-12 bg-emerald-700 rounded-xl flex items-center justify-center text-white shadow-xl shadow-emerald-100 shrink-0">
             <lucide-icon name="file-text" size="20"></lucide-icon>

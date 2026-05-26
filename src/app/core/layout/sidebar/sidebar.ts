@@ -15,7 +15,8 @@ import {
   HelpCircle,
   LogOut,
   ListChecks,
-  Activity
+  Activity,
+  AlertTriangle
 } from 'lucide-angular';
 
 @Component({
@@ -45,7 +46,8 @@ export class Sidebar {
     help: HelpCircle,
     logout: LogOut,
     plans: ListChecks,
-    subscriptions: Activity
+    subscriptions: Activity,
+    complaints: AlertTriangle
   };
 
   //constructor for router and window resize
