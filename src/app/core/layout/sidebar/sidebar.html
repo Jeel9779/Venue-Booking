@@ -1,3 +1,4 @@
+<!-- Purpose: Template: Defines the visual layout and structure for the component. -->
 <!-- SIDEBAR — always visible, no overlay, no close button -->
 <aside class="h-screen bg-[#F5F6F8] border-r border-gray-300 flex flex-col
   shadow-sm transition-all duration-300 ease-in-out
@@ -177,6 +178,16 @@
             @if (!collapsed()) { <span class="tracking-wide">Complaints</span> }
           </a>
 
+          <a [routerLink]="['/terms']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+            font-medium text-gray-600 hover:bg-[#EAECF0] hover:text-[#0F1117]
+            transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
+            [class.py-3]="collapsed()" title="Terms & Conditions">
+            <lucide-icon [img]="icons.terms" size="20" class="shrink-0 transition-transform duration-300
+              group-hover:scale-110 group-hover:text-[#6C63FF]">
+            </lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Terms & Conditions</span> }
+          </a>
+
         </div>
       </div>
     </div>
@@ -277,9 +288,6 @@
   </div>
 
 </aside>
-
-
-
 
 <!-- need improve  -->
 <!--  Mobile dropdown will not work -->

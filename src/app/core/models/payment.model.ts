@@ -1,3 +1,4 @@
+// Purpose: Model: Defines data structures and types for the application.
 export interface Payment {
   _id: string;
   vendorId: {
@@ -23,6 +24,7 @@ export interface Payment {
   updatedAt: string;
 }
 
+// Defines the data model structure
 export interface PaymentStats {
   totalRevenue: number;
   revenueChange: number;
@@ -33,6 +35,7 @@ export interface PaymentStats {
   successfulCount: number;
 }
 
+// Defines the data model structure
 export interface PaymentFilters {
   type: string;
   paymentStatus: string;

@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for payment-api.
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
@@ -7,6 +8,7 @@ import { API_BASE_URL } from '@core/config/api.config';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class PaymentApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${API_BASE_URL}/payments`;   // Matching the pattern in venue-api

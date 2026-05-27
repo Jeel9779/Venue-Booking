@@ -1,3 +1,4 @@
+/* Purpose: Styles: Contains component-specific styling and layout rules. */
 .glass-card {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);

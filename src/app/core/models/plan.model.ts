@@ -1,3 +1,4 @@
+// Purpose: Model: Defines data structures and types for the application.
 export interface Plan {
   id?: string;              // json-server auto id
   name: string;             // Basic / Premium / Gold

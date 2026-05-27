@@ -1,3 +1,4 @@
+// Purpose: Store: Manages global/local state and reactivity for booking.
 import { Injectable, signal, computed } from '@angular/core';
 import { Booking, BookingState } from '../models/booking.model';
 import { initialPagination, Pagination } from '../models/pagination.model';
@@ -5,6 +6,7 @@ import { initialPagination, Pagination } from '../models/pagination.model';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class BookingStore {
   // ── State ──────────────────────────────────────────────────────────────────
   private readonly _state = signal<BookingState>({

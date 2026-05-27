@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for login.
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -17,6 +18,7 @@ import { API_BASE_URL } from '@core/config/api.config';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
+// Defines the structure and behavior of this class
 export class Login implements OnInit {
   // Dependency Injections
   private fb = inject(FormBuilder);

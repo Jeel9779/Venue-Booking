@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for venues.
 import { Component, OnInit, signal, computed, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -35,6 +36,7 @@ import { LucideAngularModule } from 'lucide-angular';
   templateUrl: './venues.html',
   styleUrl: './venues.css',
 })
+// Defines the structure and behavior of this class
 export class Venues implements OnInit {
 
   // ── Dependency Injection ──────────────────────────────────────────────────

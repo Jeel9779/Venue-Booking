@@ -1,3 +1,4 @@
+// Purpose: Model: Defines data structures and types for the application.
 export interface Review {
   _id: string;
   venueId: {
@@ -23,6 +24,7 @@ export interface Review {
   updatedAt: string;
 }
 
+// Defines the data model structure
 export interface ReviewStats {
   totalReviews: number;
   awaitingReview: number;

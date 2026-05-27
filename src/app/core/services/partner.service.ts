@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for partner.
 import { inject, Injectable } from '@angular/core';
 import { PartnerApi } from '../api/partner-api';
 import { PartnerStore } from '../store/partner.store';
@@ -5,6 +6,7 @@ import { finalize } from 'rxjs';
 import { Venue } from '../models/venue.model';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class PartnerService {
   private readonly api = inject(PartnerApi);
   private readonly store = inject(PartnerStore);

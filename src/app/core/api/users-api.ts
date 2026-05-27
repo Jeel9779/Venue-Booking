@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for users-api.
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -8,6 +9,7 @@ import { API_BASE_URL } from '@core/config/api.config';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class UsersApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${API_BASE_URL}/users`;

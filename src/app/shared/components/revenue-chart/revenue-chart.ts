@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for revenue-chart.
 import { Component } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
@@ -8,6 +9,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
   templateUrl: './revenue-chart.html',
   styleUrl: './revenue-chart.css',
 })
+// Defines the structure and behavior of this class
 export class RevenueChart {
    // ✅ Chart Data (API-ready)
   chartData: ChartConfiguration<'line'>['data'] = {

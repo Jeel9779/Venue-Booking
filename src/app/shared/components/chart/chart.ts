@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for chart.
 import { Component, Input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -8,6 +9,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './chart.html',
   styleUrl: './chart.css',
 })
+// Defines the structure and behavior of this class
 export class Chart {
   @Input() title: string = 'Analytics';
   @Input() description: string = 'Overview of data';

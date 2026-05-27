@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for plan-list.
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlanService } from '@core/services/plan.service';  // plan service
@@ -15,6 +16,7 @@ import { Plan } from '@core/models/subscription.model';   // subscription model
   templateUrl: './plan-list.html',
   styleUrl: './plan-list.css',
 })
+// Defines the structure and behavior of this class
 export class PlanList implements OnInit {
   private readonly planService = inject(PlanService);
   private readonly planStore = inject(PlanStore);

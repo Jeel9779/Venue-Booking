@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for header.
 import { Component, Output, EventEmitter, inject, OnInit, signal, computed, HostListener } from '@angular/core';
 import { 
   LucideAngularModule, Bell, Menu, Search, ChevronDown, Settings, User, LogOut, 
@@ -13,6 +14,7 @@ import { UserService } from '@core/services/user.service';
 import { UsersStore } from '@core/store/users.store';
 import { ToastService } from '@core/services/toast.service';
 
+// Defines the data model structure
 export interface SearchItem {
   title: string;
   subtitle?: string;
@@ -28,6 +30,7 @@ export interface SearchItem {
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
+// Defines the structure and behavior of this class
 export class Header implements OnInit {
   @Output() menuClick = new EventEmitter<void>();
   

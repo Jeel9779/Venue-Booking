@@ -1,3 +1,4 @@
+// Purpose: Configuration: Sets up global providers and settings.
 /**
  * Global API Configuration
  * Serves as the single source of truth for the backend API endpoints.

@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for payment.
 import { inject, Injectable } from '@angular/core';
 import { catchError, finalize, forkJoin, of, tap } from 'rxjs';
 import { PaymentApi } from '../api/payment-api';
@@ -7,6 +8,7 @@ import { PaymentFilters } from '../models/payment.model';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class PaymentService {
   private readonly api = inject(PaymentApi);
   private readonly store = inject(PaymentStore);

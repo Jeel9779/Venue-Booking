@@ -1,7 +1,9 @@
+// Purpose: Store: Manages global/local state and reactivity for subscription.
 import { Injectable, signal, computed } from '@angular/core';
 import { Subscription, SubscriptionQueue } from '@core/models/subscription.model';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class SubscriptionStore {
   // ── State ──
   private readonly _currentSubscription = signal<Subscription | null>(null);

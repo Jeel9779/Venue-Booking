@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for admin-venue.
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Venue } from '../models/venue-types.model';
@@ -6,6 +7,7 @@ import { API_BASE_URL } from '@core/config/api.config';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class AdminVenueService {
   private http = inject(HttpClient);
   private api = `${API_BASE_URL}/admin/venues`;

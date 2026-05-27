@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for plan.
 import { inject, Injectable } from '@angular/core';
 import { PlanApi } from '@core/api/plan-api';
 import { PlanStore } from '@core/store/plan.store';
@@ -5,6 +6,7 @@ import { finalize } from 'rxjs';
 import { Plan } from '@core/models/subscription.model';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class PlanService {
   private readonly api = inject(PlanApi);
   private readonly store = inject(PlanStore);

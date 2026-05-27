@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for booking.
 import { inject, Injectable } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BookingApi } from '../api/booking-api';
@@ -6,6 +7,7 @@ import { BookingStore } from '../store/booking.store';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class BookingService {
   private readonly api = inject(BookingApi);
   private readonly store = inject(BookingStore);

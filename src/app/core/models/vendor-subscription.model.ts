@@ -1,3 +1,4 @@
+// Purpose: Model: Defines data structures and types for the application.
 export interface VendorSubscription {
 
   id: string;

@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for toast.
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '@core/services/toast.service';
@@ -55,6 +56,7 @@ import { ToastService } from '@core/services/toast.service';
     }
   `]
 })
+// Defines the structure and behavior of this class
 export class ToastComponent {
   toastService = inject(ToastService);
 }

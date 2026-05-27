@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for add-vendor.
 import { Component, inject, signal, effect, computed } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -15,6 +16,7 @@ import { FormInput } from '../../../shared/components/form-input/form-input';
   templateUrl: './add-vendor.html',
   styleUrl: './add-vendor.css',
 })
+// Defines the structure and behavior of this class
 export class AddVendor {
   private readonly vendorService = inject(VendorService);
   private readonly vendorStore = inject(VendorStore);

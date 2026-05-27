@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for pagination.
 import { Component, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
@@ -62,6 +63,7 @@ import { LucideAngularModule } from 'lucide-angular';
     button:disabled { cursor: not-allowed; }
   `]
 })
+// Defines the structure and behavior of this class
 export class Pagination {
   currentPage = input<number>(1);
   totalPages = input<number>(1);

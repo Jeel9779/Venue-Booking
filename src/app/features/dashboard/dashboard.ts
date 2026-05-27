@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for dashboard.
 import { Component, inject, OnInit, OnDestroy, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -38,6 +39,7 @@ import { LucideAngularModule } from 'lucide-angular';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
+// Defines the structure and behavior of this class
 export class Dashboard implements OnInit, OnDestroy {
   // ── Dependency Injection ──────────────────────────────────────────────────
   readonly venueStore = inject(VenueStore);

@@ -1,3 +1,4 @@
+// Purpose: Routing: Defines application navigation and route configurations.
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { roleGuard } from '@core/guards/role.guard';
@@ -93,6 +94,10 @@ export const routes: Routes = [
       {
         path: 'complain',
         loadComponent: () => import('@features/complain/complain.component').then(m => m.ComplainComponent)
+      },
+      {
+        path: 'terms',
+        loadComponent: () => import('@features/terms/terms').then(m => m.Terms)
       }
 
     ],

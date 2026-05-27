@@ -1,6 +1,8 @@
+// Purpose: Service: Handles business logic and API communication for complain.
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
+// Defines the data model structure
 export interface Complaint {
   name: string;
   email: string;
@@ -11,6 +13,7 @@ export interface Complaint {
 @Injectable({
   providedIn: 'root'
 })
+// Defines the structure and behavior of this class
 export class ComplainService {
   constructor() {}
 

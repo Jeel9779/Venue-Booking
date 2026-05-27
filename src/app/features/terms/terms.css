@@ -1,0 +1,4 @@
+/* Purpose: Styles: Contains component-specific styling for the Terms component. */
+:host {
+  display: block;
+}

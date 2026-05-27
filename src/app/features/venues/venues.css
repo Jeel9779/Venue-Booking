@@ -1,3 +1,4 @@
+/* Purpose: Styles: Contains component-specific styling and layout rules. */
 /* Targeting the custom modal component internal body if possible */
 :host ::ng-deep .modal-body,
 :host ::ng-deep .modal-content,

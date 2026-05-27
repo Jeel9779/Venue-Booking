@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for table.
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -26,6 +27,7 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
 })
+// Defines the structure and behavior of this class
 export class Table {
   columns = input<string[]>([]);
 }

@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for booking-api.
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,6 +7,7 @@ import { Booking, BookedDates, UserBookings, VendorBookings } from '../models/bo
 import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class BookingApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${API_BASE_URL}/bookings`;

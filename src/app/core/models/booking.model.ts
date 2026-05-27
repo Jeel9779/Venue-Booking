@@ -1,5 +1,7 @@
+// Purpose: Model: Defines data structures and types for the application.
 import { Pagination, initialPagination } from './pagination.model';
 
+// Defines the data model structure
 export interface Booking {
   _id: string;
   userId: {
@@ -38,6 +40,7 @@ export interface Booking {
   updatedAt: string;
 }
 
+// Defines the data model structure
 export interface BookingStats {
   totalRevenue: number;
   collected: number;
@@ -49,18 +52,22 @@ export interface BookingStats {
   todayCount: number;
 }
 
+// Defines the data model structure
 export interface BookedDates {
   dates: string[];
 }
 
+// Defines the data model structure
 export interface UserBookings {
   bookings: Booking[];
 }
 
+// Defines the data model structure
 export interface VendorBookings {
   bookings: Booking[];
 }
 
+// Defines the data model structure
 export interface BookingState {
   bookings: Booking[];
   pagination: Pagination;

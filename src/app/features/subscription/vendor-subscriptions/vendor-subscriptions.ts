@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for vendor-subscriptions.
 import { Component, inject, signal, computed, ChangeDetectorRef, resource, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
@@ -16,6 +17,7 @@ import { LucideAngularModule } from 'lucide-angular';
   templateUrl: './vendor-subscriptions.html',
   styleUrl: './vendor-subscriptions.css'
 })
+// Defines the structure and behavior of this class
 export class VendorSubscriptions {
   private readonly subStore = inject(SubscriptionStore);
   private readonly vendorStore = inject(VendorStore);

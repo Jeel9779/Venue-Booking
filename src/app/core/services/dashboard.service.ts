@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for dashboard.
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DashboardResponse } from '@core/models/dashboard.model';
@@ -7,6 +8,7 @@ import { Observable, shareReplay } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class DashboardService {
   stats = signal([
     { title: 'Total Bookings', value: 1284, change: '+12.5%', color: 'indigo' },

@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for button.
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -22,6 +23,7 @@ import { CommonModule } from '@angular/common';
     :host { display: inline-block; }
   `]
 })
+// Defines the structure and behavior of this class
 export class Button {
   type = input<'button' | 'submit' | 'reset'>('button');
   variant = input<'primary' | 'secondary' | 'danger' | 'ghost' | 'success'>('primary');

@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for payment.
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -20,6 +21,7 @@ import {
   templateUrl: './payment.html',
   styleUrl: './payment.css',
 })
+// Defines the structure and behavior of this class
 export class Payments implements OnInit {
   private readonly service = inject(PaymentService);
   private readonly store = inject(PaymentStore);

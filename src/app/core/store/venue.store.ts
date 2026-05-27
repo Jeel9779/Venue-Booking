@@ -1,3 +1,4 @@
+// Purpose: Store: Manages global/local state and reactivity for venue.
 import { Injectable, signal, computed } from '@angular/core';
 import { Venue } from '../models/venue.model';
 import { initialPagination, Pagination } from '../models/pagination.model';
@@ -5,6 +6,7 @@ import { initialPagination, Pagination } from '../models/pagination.model';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class VenueStore {
   // ── State (Signals) ────────────────────────────────────────────────────────
   private readonly _venues = signal<Venue[]>([]);

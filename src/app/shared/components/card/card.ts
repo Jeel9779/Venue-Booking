@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for card.
 import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -19,6 +20,7 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
 })
+// Defines the structure and behavior of this class
 export class Card {
   title = input('');
   padding = input(true);

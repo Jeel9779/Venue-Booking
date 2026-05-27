@@ -1,3 +1,4 @@
+// Purpose: Model: Defines data structures and types for the application.
 import { Component, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -47,6 +48,7 @@ import { CommonModule } from '@angular/common';
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   `]
 })
+// Defines the structure and behavior of this class
 export class Model {
   title = input('');
   maxWidth = input<'sm' | 'md' | 'lg' | 'xl' | '2xl'>('md');

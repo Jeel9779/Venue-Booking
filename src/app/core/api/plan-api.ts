@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for plan-api.
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Plan } from '@core/models/subscription.model';
@@ -6,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class PlanApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${API_BASE_URL}/plans`;     // cards

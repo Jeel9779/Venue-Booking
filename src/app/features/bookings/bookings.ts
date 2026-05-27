@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for bookings.
 import { Component, inject, ChangeDetectorRef, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +22,7 @@ import { Booking, BookingStats } from '../../core/models/booking.model';
   templateUrl: './bookings.html',
   styleUrl: './bookings.css'
 })
+// Defines the structure and behavior of this class
 export class Bookings {
   private readonly bookingService = inject(BookingService);
   private readonly bookingStore = inject(BookingStore);

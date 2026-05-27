@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for user.
 import { inject, Injectable } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { UsersApi } from '../api/users-api';
@@ -8,6 +9,7 @@ import { API_BASE_URL } from '@core/config/api.config';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class UserService {
   private readonly api = inject(UsersApi);
   private readonly store = inject(UsersStore);

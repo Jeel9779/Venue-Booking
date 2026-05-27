@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for partner-api.
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,6 +7,7 @@ import { Venue } from '../models/venue.model';
 import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class PartnerApi {
   private readonly http = inject(HttpClient);
   private readonly api = `${API_BASE_URL}/admin/venues`;

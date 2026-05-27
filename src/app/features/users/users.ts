@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for users.
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +24,7 @@ type SortOrder = 'asc' | 'desc';
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
+// Defines the structure and behavior of this class
 export class Users implements OnInit {
   private readonly userService = inject(UserService);
   private readonly usersStore = inject(UsersStore);

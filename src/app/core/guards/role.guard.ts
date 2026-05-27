@@ -1,3 +1,4 @@
+// Purpose: Guard: Protects routes and ensures proper authorization for role.
 /* import { CanActivateFn } from '@angular/router';
 
 export const roleGuard: CanActivateFn = (route, state) => {

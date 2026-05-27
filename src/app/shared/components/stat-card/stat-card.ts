@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for stat-card.
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
@@ -8,6 +9,7 @@ import { LucideAngularModule } from 'lucide-angular';
   templateUrl: './stat-card.html',
   styleUrl: './stat-card.css',
 })
+// Defines the structure and behavior of this class
 export class StatCard {
   @Input() title!: string;
   @Input() value!: any;

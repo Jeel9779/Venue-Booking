@@ -1,7 +1,9 @@
+// Purpose: Service: Handles business logic and API communication for toast.
 import { Injectable, signal } from '@angular/core';
 
 export type ToastType = 'success' | 'error' | 'info';
 
+// Defines the data model structure
 export interface Toast {
   message: string;
   type: ToastType;
@@ -11,6 +13,7 @@ export interface Toast {
 @Injectable({
   providedIn: 'root'
 })
+// Defines the structure and behavior of this class
 export class ToastService {
   toasts = signal<Toast[]>([]);
   private idCounter = 0;

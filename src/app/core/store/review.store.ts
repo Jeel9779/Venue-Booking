@@ -1,7 +1,9 @@
+// Purpose: Store: Manages global/local state and reactivity for review.
 import { Injectable, signal, computed } from '@angular/core';
 import { Review, ReviewStats } from '../models/review.model';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class ReviewStore {
   // ── State (Signals) ──
   /** The full list of reviews fetched from the server. */

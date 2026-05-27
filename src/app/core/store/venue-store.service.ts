@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for venue-store.
 import { Injectable, signal, computed, inject } from '@angular/core';
 /* import { VenueService } from '../services/venue.service'; */
 import { AdminVenueService } from '../services/admin-venue.service';
@@ -6,6 +7,7 @@ import type { Venue, VenueVM, Partner } from '../models/venue-types.model'
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class VenueStoreService {
   /*  private venueService = inject(VenueService); */ //  uses YOUR existing serv
 

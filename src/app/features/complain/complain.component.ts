@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for complain.component.
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, AlertTriangle, CheckCircle2, TrendingUp, XCircle, AlertCircle, ArrowRight } from 'lucide-angular';
@@ -9,6 +10,7 @@ import { LucideAngularModule, AlertTriangle, CheckCircle2, TrendingUp, XCircle, 
   templateUrl: './complain.component.html',
   styleUrls: ['./complain.component.css'],
 })
+// Defines the structure and behavior of this class
 export class ComplainComponent {
   icons = {
     alertTriangle: AlertTriangle,

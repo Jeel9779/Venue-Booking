@@ -1,8 +1,10 @@
+// Purpose: Store: Manages global/local state and reactivity for partner.
 import { Injectable, signal, computed } from '@angular/core';
 import { Venue, VendorInfo } from '../models/venue.model';
 import { Partner, PartnerKPI } from '../models/partner.model';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class PartnerStore {
   // ── State (Private Signals) ──
   // Holds the raw list of venues fetched from the API

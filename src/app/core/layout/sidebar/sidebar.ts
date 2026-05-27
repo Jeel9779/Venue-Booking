@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for sidebar.
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Router } from '@angular/router';
@@ -16,7 +17,8 @@ import {
   LogOut,
   ListChecks,
   Activity,
-  AlertTriangle
+  AlertTriangle,
+  ScrollText
 } from 'lucide-angular';
 
 @Component({
@@ -25,6 +27,7 @@ import {
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
+// Defines the structure and behavior of this class
 export class Sidebar {
 
   // icon-only on mobile & tablet, full on desktop
@@ -47,7 +50,8 @@ export class Sidebar {
     logout: LogOut,
     plans: ListChecks,
     subscriptions: Activity,
-    complaints: AlertTriangle
+    complaints: AlertTriangle,
+    terms: ScrollText
   };
 
   //constructor for router and window resize

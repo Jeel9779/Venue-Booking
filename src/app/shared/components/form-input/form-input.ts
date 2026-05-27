@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for form-input.
 import { Component, input, forwardRef, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
@@ -52,6 +53,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
     },
   ],
 })
+// Defines the structure and behavior of this class
 export class FormInput implements ControlValueAccessor {
   label = input('');
   placeholder = input('');

@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for partners.
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +16,7 @@ import { LucideAngularModule } from 'lucide-angular';
   templateUrl: './partners.html',
   styleUrl: './partners.css'
 })
+// Defines the structure and behavior of this class
 export class Partners implements OnInit {
   private readonly store = inject(PartnerStore);
   private readonly service = inject(PartnerService);

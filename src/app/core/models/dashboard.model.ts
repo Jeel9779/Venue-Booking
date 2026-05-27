@@ -1,4 +1,6 @@
+// Purpose: Model: Defines data structures and types for the application.
 // models/dashboard.model.ts
+// Defines the data model structure
 export interface Stat {
     title: string;
     value: string | number;
@@ -6,6 +8,7 @@ export interface Stat {
     icon: string;
 }
 
+// Defines the data model structure
 export interface TableItem {
     id: number;
     name: string;
@@ -18,6 +21,7 @@ export interface TableItem {
     image: string;
 }
 
+// Defines the data model structure
 export interface DashboardResponse {
     stats: Stat[];
     chart: number[];

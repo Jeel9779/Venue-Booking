@@ -1,4 +1,6 @@
+// Purpose: Model: Defines data structures and types for the application.
 // src/app/core/models/venue-types.ts
+// Defines the data model structure
 export interface Venue {
     _id: string;
     vendorId: string | { _id: string; fullName: string; email: string; };
@@ -23,6 +25,7 @@ export interface Venue {
     updatedAt: string;
 }
 
+// Defines the data model structure
 export interface Partner {
     id: string;
     name?: string;
@@ -30,6 +33,7 @@ export interface Partner {
     spaces: Venue[];
 }
 
+// Defines the data model structure
 export interface VenueVM {
     partners: Partner[];
     kpi: {

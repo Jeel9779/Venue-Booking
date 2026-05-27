@@ -1,3 +1,4 @@
+// Purpose: Store: Manages global/local state and reactivity for payment.
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { Payment, PaymentStats, PaymentFilters } from '../models/payment.model';
@@ -29,6 +30,7 @@ const initialState: PaymentState = {
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class PaymentStore {
   private readonly state$ = new BehaviorSubject<PaymentState>(initialState);
 

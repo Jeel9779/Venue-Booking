@@ -1,3 +1,4 @@
+// Purpose: Model: Defines data structures and types for the application.
 export interface Plan {
   _id: string;
   name: string;
@@ -12,6 +13,7 @@ export interface Plan {
 
 export type SubscriptionStatus = 'active' | 'grace' | 'expired';
 
+// Defines the data model structure
 export interface Subscription {
   _id: string;
   vendorId: string;
@@ -32,6 +34,7 @@ export interface Subscription {
   updatedAt?: string;
 }
 
+// Defines the data model structure
 export interface SubscriptionQueue {
   _id: string;
   vendorId: string;

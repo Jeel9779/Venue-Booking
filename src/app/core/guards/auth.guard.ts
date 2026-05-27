@@ -1,3 +1,4 @@
+// Purpose: Guard: Protects routes and ensures proper authorization for auth.
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 

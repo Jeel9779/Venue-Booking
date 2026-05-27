@@ -1,5 +1,7 @@
+// Purpose: Model: Defines data structures and types for the application.
 import { Pagination, initialPagination } from './pagination.model';
 
+// Defines the data model structure
 export interface VendorInfo {
   _id: string;
   fullName: string;
@@ -13,6 +15,7 @@ export interface VendorInfo {
   state: string;
 }
 
+// Defines the data model structure
 export interface Review {
   userId: string;
   rating: number;
@@ -21,6 +24,7 @@ export interface Review {
   createdAt: string;
 }
 
+// Defines the data model structure
 export interface Venue {
   _id: string;
   vendorId: string | VendorInfo;

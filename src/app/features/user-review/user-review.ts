@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for user-review.
 
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -19,6 +20,7 @@ import { VenueStore } from '../../core/store/venue.store';
   templateUrl: './user-review.html',
   styleUrl: './user-review.css'
 })
+// Defines the structure and behavior of this class
 export class UserReview implements OnInit {
   // ── Dependency Injection ──
   private readonly service = inject(ReviewService);

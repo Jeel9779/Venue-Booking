@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for vendors.
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +22,7 @@ import { LucideAngularModule } from 'lucide-angular';
   templateUrl: './vendors.html',
   styleUrl: './vendors.css',
 })
+// Defines the structure and behavior of this class
 export class Vendors implements OnInit {
   private readonly vendorService = inject(VendorService);
   private readonly vendorStore = inject(VendorStore);

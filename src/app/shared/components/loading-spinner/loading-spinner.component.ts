@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for loading-spinner.component.
 // src/app/shared/components/loading-spinner/loading-spinner.component.ts
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -34,6 +35,7 @@ import { CommonModule } from '@angular/common';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+// Defines the structure and behavior of this class
 export class LoadingSpinnerComponent {
   /** Size of the spinner – defaults to md */
   @Input() size: 'sm' | 'md' | 'lg' = 'md';

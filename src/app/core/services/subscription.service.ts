@@ -1,9 +1,11 @@
+// Purpose: Service: Handles business logic and API communication for subscription.
 import { inject, Injectable } from '@angular/core';
 import { SubscriptionApi } from '@core/api/subscription-api';
 import { SubscriptionStore } from '@core/store/subscription.store';
 import { finalize } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class SubscriptionService {
   private readonly api = inject(SubscriptionApi);
   private readonly store = inject(SubscriptionStore);

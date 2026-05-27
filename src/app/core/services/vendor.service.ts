@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for vendor.
 import { inject, Injectable } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { VendorApi } from '../api/vendor-api';
@@ -7,6 +8,7 @@ import { Vendor } from '../models/vendor.model';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class VendorService {
   private readonly api = inject(VendorApi);
   private readonly store = inject(VendorStore);

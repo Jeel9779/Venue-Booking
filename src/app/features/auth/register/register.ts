@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for register.
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
@@ -12,6 +13,7 @@ import { API_BASE_URL } from '@core/config/api.config';
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
+// Defines the structure and behavior of this class
 export class Register {
   private fb = inject(FormBuilder);
   private router = inject(Router);

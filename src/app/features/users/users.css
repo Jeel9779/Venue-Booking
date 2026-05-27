@@ -1,3 +1,4 @@
+/* Purpose: Styles: Contains component-specific styling and layout rules. */
 /* ── ANIMATIONS ───────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }

@@ -1,3 +1,4 @@
+// Purpose: Store: Manages global/local state and reactivity for users.
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,6 +15,7 @@ const initialState: UserState = {
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class UsersStore {
   private readonly state$ = new BehaviorSubject<UserState>(initialState);
 

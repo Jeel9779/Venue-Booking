@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for plan-form.
 import { Component, OnInit, inject, input, output, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
@@ -13,6 +14,7 @@ import { FormInput } from '@shared/components/form-input/form-input';
   imports: [CommonModule, ReactiveFormsModule, FormsModule, Button, FormInput],
   templateUrl: './plan-form.html',
 })
+// Defines the structure and behavior of this class
 export class PlanForm implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly planService = inject(PlanService);

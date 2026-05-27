@@ -1,3 +1,4 @@
+// Purpose: Configuration: Sets up global providers and settings.
 import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
@@ -13,7 +14,7 @@ import {
   MessageSquareOff, ShieldX, CheckCircle, TrendingUp, Wallet,
   CalendarCheck, Download, ClipboardList, CalendarX, RefreshCw, ShieldOff, ScrollText,
   ChevronLeft, CreditCard, Layers, Activity, ArrowUpCircle, Utensils, LayoutDashboard,
-  DollarSign, Image, Command, CornerDownLeft, Briefcase, CalendarRange
+  DollarSign, Image, Command, CornerDownLeft, Briefcase, CalendarRange, Edit
 } from 'lucide-angular';
 
 
@@ -31,7 +32,7 @@ export const appConfig: ApplicationConfig = {
       MessageSquareOff, ShieldX, CheckCircle, TrendingUp, Wallet,
       CalendarCheck, Download, ClipboardList, CalendarX, RefreshCw, ShieldOff, ScrollText,
       ChevronLeft, CreditCard, Layers, Activity, ArrowUpCircle, Utensils, LayoutDashboard,
-      DollarSign, Image, Command, CornerDownLeft, Briefcase, CalendarRange
+      DollarSign, Image, Command, CornerDownLeft, Briefcase, CalendarRange, Edit
     }))
   ]
 };

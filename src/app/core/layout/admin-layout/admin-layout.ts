@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for admin-layout.
 import { Component } from '@angular/core';
 import { Sidebar } from '@core/layout/sidebar/sidebar';
 import { Header } from '@core/layout/header/header';
@@ -9,6 +10,7 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.css',
 })
+// Defines the structure and behavior of this class
 export class AdminLayout {
 
 }

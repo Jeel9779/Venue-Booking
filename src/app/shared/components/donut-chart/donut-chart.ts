@@ -1,3 +1,4 @@
+// Purpose: Component/Logic: Handles UI behavior and user interactions for donut-chart.
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -6,6 +7,7 @@ import { Component, Input } from '@angular/core';
   templateUrl: './donut-chart.html',
   styleUrl: './donut-chart.css',
 })
+// Defines the structure and behavior of this class
 export class DonutChart {
   @Input() totalAmount: number = 0;
   @Input() activeAmount: number = 0;

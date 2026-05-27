@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for venue.
 import { inject, Injectable } from '@angular/core';
 import { finalize, tap, catchError, of } from 'rxjs';
 import { VenueApi } from '../api/venue-api';
@@ -7,6 +8,7 @@ import { Venue } from '../models/venue.model';
 @Injectable({
   providedIn: 'root',
 })
+// Defines the structure and behavior of this class
 export class VenueService {
   // DI
   private readonly api = inject(VenueApi);

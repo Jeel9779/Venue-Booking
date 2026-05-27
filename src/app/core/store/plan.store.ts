@@ -1,7 +1,9 @@
+// Purpose: Store: Manages global/local state and reactivity for plan.
 import { Injectable, signal, computed } from '@angular/core';
 import { Plan } from '@core/models/subscription.model';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class PlanStore {
   // ── State ──
   private readonly _plans = signal<Plan[]>([]);

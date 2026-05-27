@@ -1,3 +1,4 @@
+// Purpose: Interceptor: Intercepts HTTP requests/responses for error.
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { inject } from '@angular/core';

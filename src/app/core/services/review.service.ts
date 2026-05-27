@@ -1,3 +1,4 @@
+// Purpose: Service: Handles business logic and API communication for review.
 import { Injectable, inject } from '@angular/core';
 import { ReviewApi } from '../api/review-api';
 import { ReviewStore } from '../store/review.store';
@@ -5,6 +6,7 @@ import { tap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
+// Defines the structure and behavior of this class
 export class ReviewService {
   private readonly api = inject(ReviewApi);
   private readonly store = inject(ReviewStore);

@@ -1,3 +1,4 @@
+// Purpose: Interceptor: Intercepts HTTP requests/responses for auth.
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
