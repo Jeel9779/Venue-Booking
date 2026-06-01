@@ -1,0 +1,70 @@
+<div class="p-6 md:p-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+  
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-slate-100 tracking-tight">My Profile</h1>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">View your administrative account details and roles.</p>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden">
+    
+    <!-- Header/Banner -->
+    <div class="h-32 bg-gradient-to-r from-indigo-500 via-[#6C63FF] to-purple-500 relative">
+      <div class="absolute -bottom-12 left-8">
+        <div class="p-1 bg-white dark:bg-slate-900 rounded-full shadow-lg">
+          <img src="https://i.pravatar.cc/150?u=a04258" alt="Admin Avatar" class="w-24 h-24 rounded-full object-cover" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Info Content -->
+    <div class="pt-16 pb-8 px-8">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-slate-100">{{ adminName() }}</h2>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8E9FF] text-[#4E4CFF] text-xs font-bold tracking-widest uppercase mt-2">
+            <lucide-icon [img]="icons.shield" size="12"></lucide-icon>
+            {{ adminRole() }}
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Info Card: Username -->
+        <div class="p-5 rounded-2xl bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 shadow-sm dark:shadow-none flex items-center justify-center text-gray-400 shrink-0">
+            <lucide-icon [img]="icons.user" size="20"></lucide-icon>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">Display Name</p>
+            <p class="text-base font-semibold text-gray-900 dark:text-slate-100">{{ adminName() }}</p>
+          </div>
+        </div>
+
+        <!-- Info Card: Email -->
+        <div class="p-5 rounded-2xl bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 shadow-sm dark:shadow-none flex items-center justify-center text-gray-400 shrink-0">
+            <lucide-icon [img]="icons.mail" size="20"></lucide-icon>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">Email Address</p>
+            <p class="text-base font-semibold text-gray-900 dark:text-slate-100">{{ adminEmail() }}</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- System Notice -->
+      <div class="mt-8 p-4 rounded-xl bg-amber-50 border border-amber-200 flex gap-3">
+        <lucide-icon [img]="icons.alertCircle" size="20" class="text-amber-500 shrink-0 mt-0.5"></lucide-icon>
+        <div>
+          <h4 class="text-sm font-bold text-amber-800">Read-Only Profile</h4>
+          <p class="text-sm text-amber-700 mt-1">Profile editing is currently managed by system administrators. If you need to change your email or role, please contact technical support.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,9 +1,10 @@
 /* Purpose: Styles: Contains component-specific styling and layout rules. */
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
 
 body {
   font-family: "", sans-serif;
-  @apply text-slate-900 bg-slate-50/50;
+  @apply text-slate-900 bg-slate-50/50 dark:text-slate-100 dark:bg-slate-950 transition-colors duration-300;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
 }

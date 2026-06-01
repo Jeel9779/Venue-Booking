@@ -26,6 +26,8 @@ export class PlanForm implements OnInit {
   onCancel = output<void>();
 
   // ── State ──
+  // Define active base plans for dropdown (only active and non-add-on)
+  readonly activeBasePlans = this.planStore.basePlans;
   readonly isLoading = this.planStore.isLoading;
   readonly error = this.planStore.error;
 
@@ -37,7 +39,9 @@ export class PlanForm implements OnInit {
     price: [0, [Validators.required, Validators.min(0)]],
     planType: ['base', [Validators.required]],
     is_active: [true],
-    features: [[] as string[]]
+    features: [[] as string[]],
+    // New field – only required when planType is 'addon'
+    parentPlanId: [null] as any,
   });
 
   durations = [
@@ -52,7 +56,7 @@ export class PlanForm implements OnInit {
   }
 
   constructor() {
-    // Sync form with input plan
+    // Sync form with input plan and set up dynamic validation for add‑on parent selection
     effect(() => {
       const p = this.plan();
       if (p) {
@@ -62,11 +66,24 @@ export class PlanForm implements OnInit {
           price: p.price,
           planType: p.planType || 'base',
           is_active: p.is_active,
-          features: p.features
+          features: p.features,
+          parentPlanId: p.parentPlanId || null
         });
       } else {
-        this.planForm.reset({ duration_days: 30, price: 0, planType: 'base', is_active: true, features: [] });
+        this.planForm.reset({ duration_days: 30, price: 0, planType: 'base', is_active: true, features: [], parentPlanId: null });
       }
+    });
+
+    // When the plan type changes, adjust validation for parentPlanId
+    this.planForm.get('planType')?.valueChanges.subscribe(type => {
+      const parentCtrl = this.planForm.get('parentPlanId');
+      if (type === 'addon') {
+        parentCtrl?.setValidators([Validators.required]);
+      } else {
+        parentCtrl?.clearValidators();
+        parentCtrl?.setValue(null);
+      }
+      parentCtrl?.updateValueAndValidity();
     });
   }
 
@@ -96,6 +113,12 @@ export class PlanForm implements OnInit {
     }
 
     const payload = this.planForm.value as Partial<Plan>;
+    // Normalize parentPlanId: send null if empty string or undefined
+    if (!payload.parentPlanId) {
+      payload.parentPlanId = null;
+    }
+    // Ensure we don't send undefined parentPlanId for base plans
+    if (payload.parentPlanId === undefined) delete payload.parentPlanId;
     const p = this.plan();
 
     if (p?._id) {

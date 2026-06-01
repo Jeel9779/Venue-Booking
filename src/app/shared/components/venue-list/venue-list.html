@@ -1,7 +1,7 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl transition-all duration-200 hover:shadow-md">
+<div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 shadow-sm dark:shadow-none p-6 rounded-3xl transition-all duration-200 hover:shadow-md">
     <div class="flex justify-between mb-4">
-        <h3 class="font-bold text-gray-900">Popular Venues</h3>
+        <h3 class="font-bold text-gray-900 dark:text-slate-100">Popular Venues</h3>
     </div>
 
     <div class="space-y-4">
@@ -9,18 +9,18 @@
             <div class="flex gap-3 items-center">
                 <!-- If image exists, show it. On error, hide it and show the initials block. -->
                 <img *ngIf="v.img" [src]="v.img" 
-                     class="w-10 h-10 rounded-xl object-cover shadow-sm" 
+                     class="w-10 h-10 rounded-xl object-cover shadow-sm dark:shadow-none" 
                      onerror="this.style.display='none'; this.parentElement.querySelector('.initials-fallback').style.display='flex';" />
                 
                 <!-- Initials block (shown if no image, or if image fails to load via JS) -->
                 <div [class.hidden]="v.img" 
-                     class="initials-fallback w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center shadow-sm"
+                     class="initials-fallback w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center shadow-sm dark:shadow-none"
                      [ngStyle]="{'display': v.img ? 'none' : 'flex'}">
                     {{ (v.name || 'V').substring(0, 1).toUpperCase() }}
                 </div>
                 
                 <div>
-                    <p class="font-bold text-sm text-slate-900">{{v.name}}</p>
+                    <p class="font-bold text-sm text-slate-900 dark:text-slate-100">{{v.name}}</p>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{v.bookings || 0}} bookings</p>
                 </div>
             </div>

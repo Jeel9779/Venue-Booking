@@ -10,8 +10,8 @@
         </svg>
       </div>
       <div>
-        <h1 class="text-2xl font-bold tracking-tight m-0 text-slate-900">Subscription Plans</h1>
-        <p class="text-xs sm:text-sm text-slate-500 mt-0.5 m-0 font-semibold">Manage membership tiers and pricing</p>
+        <h1 class="text-2xl font-bold tracking-tight m-0 text-slate-900 dark:text-slate-100">Subscription Plans</h1>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5 m-0 font-semibold">Manage membership tiers and pricing</p>
       </div>
     </div>
 
@@ -31,8 +31,8 @@
   </div>
   } @else if (plans().length === 0) {
   <!-- ── EMPTY STATE ── -->
-  <div class="flex flex-col items-center justify-center py-20 sm:py-32 text-center bg-white rounded-3xl sm:rounded-[32px] border border-dashed border-slate-300 p-6">
-    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-slate-50 flex items-center justify-center mb-6 text-slate-300">
+  <div class="flex flex-col items-center justify-center py-20 sm:py-32 text-center bg-white dark:bg-slate-900 rounded-3xl sm:rounded-[32px] border border-dashed border-slate-300 dark:border-slate-700 p-6">
+    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-300">
       <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="sm:hidden">
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
       </svg>
@@ -40,54 +40,71 @@
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
       </svg>
     </div>
-    <h3 class="text-lg font-bold text-slate-900 m-0">No Plans Created</h3>
-    <p class="text-slate-500 text-sm mt-2 max-w-[280px] font-medium leading-relaxed">You haven't defined any subscription plans yet. Start by creating one.</p>
+    <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0">No Plans Created</h3>
+    <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-[280px] font-medium leading-relaxed">You haven't defined any subscription plans yet. Start by creating one.</p>
     <app-button variant="secondary" customClass="mt-6" (onClick)="openAddForm()">Get Started</app-button>
   </div>
   } @else {
   <!-- ── PLANS GRID ── -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
     @for (plan of plans(); track plan._id; let i = $index) {
-    <div class="w-full p-5 sm:p-6 bg-white border border-slate-200 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 relative group flex flex-col">
+<ng-container *ngIf="plan.planType !== 'addon'">
+  <div class="w-full p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-sm dark:shadow-none hover:shadow-xl transition-all duration-300 relative group flex flex-col">
 
-      <!-- Status Badge -->
-      @if (!plan.is_active) {
-      <div class="absolute top-5 right-5 sm:top-6 sm:right-6 px-3 py-1 bg-rose-200 text-rose-600 text-[0.6rem] font-black uppercase tracking-widest rounded-lg border border-rose-100">
-        Inactive
-      </div>
+    <!-- Status Badge -->
+    @if (!plan.is_active) {
+    <div class="absolute top-5 right-5 sm:top-6 sm:right-6 px-3 py-1 bg-rose-200 text-rose-600 text-[0.6rem] font-black uppercase tracking-widest rounded-lg border border-rose-100">
+      Inactive
+    </div>
+    }
+
+    <h5 class="mb-4 text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 pr-16">{{ plan.name }}</h5>
+
+    <div class="flex items-baseline text-slate-900 dark:text-slate-100 flex-wrap">
+      <span class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">₹{{ plan.price }}</span>
+      <span class="ms-2 font-semibold text-slate-500 dark:text-slate-400 text-sm">/{{ plan.duration_days }} days</span>
+    </div>
+
+    <ul role="list" class="space-y-4 my-6 sm:my-8 flex-1">
+      @for (feature of plan.features; track $index) {
+      <li class="flex items-start">
+        <svg class="w-5 h-5 shrink-0 text-indigo-600 me-3 mt-0.5" aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        <span class="text-slate-600 dark:text-slate-400 font-semibold text-xs sm:text-sm">{{ feature }}</span>
+      </li>
+      } @empty {
+      <li class="text-slate-400 italic text-xs sm:text-sm font-semibold">No features listed</li>
       }
+    </ul>
 
-      <h5 class="mb-4 text-lg sm:text-xl font-bold text-slate-900 pr-16">{{ plan.name }}</h5>
+    <!-- Admin Buttons -->
+    <div class="flex gap-3 pt-6 border-t border-slate-100 mt-auto">
+      <button type="button" (click)="editPlan(plan)"
+        class="w-full text-indigo-700 hover:text-white bg-indigo-300 hover:bg-indigo-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Edit
+        Plan</button>
+      <button type="button" (click)="deletePlan(plan._id)"
+        class="w-full text-rose-600 hover:text-white bg-rose-300 hover:bg-rose-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Delete</button>
+    </div>
+  </div>
 
-      <div class="flex items-baseline text-slate-900 flex-wrap">
-        <span class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">₹{{ plan.price }}</span>
-        <span class="ms-2 font-semibold text-slate-500 text-sm">/{{ plan.duration_days }} days</span>
+  <!-- Add‑on Plans for this base -->
+  <div *ngIf="getAddons(plan._id).length > 0" class="ml-6 mt-2 border-l-2 pl-4">
+    <h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-2">Add‑on Plans</h4>
+    <div *ngFor="let addon of getAddons(plan._id)" class="flex items-center justify-between py-2 border border-slate-200 dark:border-slate-700 rounded-md px-3 mb-2">
+      <div class="flex flex-col">
+        <span class="font-medium text-slate-800 dark:text-slate-200">{{ addon.name }}</span>
+        <span class="text-xs text-slate-500 dark:text-slate-400">₹{{ addon.price }} – {{ addon.duration_days }} days</span>
       </div>
-
-      <ul role="list" class="space-y-4 my-6 sm:my-8 flex-1">
-        @for (feature of plan.features; track $index) {
-        <li class="flex items-start">
-          <svg class="w-5 h-5 shrink-0 text-indigo-600 me-3 mt-0.5" aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-          <span class="text-slate-600 font-semibold text-xs sm:text-sm">{{ feature }}</span>
-        </li>
-        } @empty {
-        <li class="text-slate-400 italic text-xs sm:text-sm font-semibold">No features listed</li>
-        }
-      </ul>
-
-      <!-- Admin Buttons -->
-      <div class="flex gap-3 pt-6 border-t border-slate-100 mt-auto">
-        <button type="button" (click)="editPlan(plan)"
-          class="w-full text-indigo-700 hover:text-white bg-indigo-300 hover:bg-indigo-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Edit
-          Plan</button>
-        <button type="button" (click)="deletePlan(plan._id)"
-          class="w-full text-rose-600 hover:text-white bg-rose-300 hover:bg-rose-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Delete</button>
+      <div class="flex gap-2">
+        <button type="button" (click)="editPlan(addon)" class="btn-primary btn-sm">Edit</button>
+        <button type="button" (click)="deletePlan(addon._id)" class="btn-danger btn-sm">Delete</button>
       </div>
     </div>
+  </div>
+</ng-container>
     }
   </div>
   }

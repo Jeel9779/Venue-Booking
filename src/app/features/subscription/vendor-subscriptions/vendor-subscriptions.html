@@ -1,5 +1,5 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="subscription-monitor-page p-4 sm:p-6 lg:p-10 bg-gray-300 text-slate-800 min-h-screen">
+<div class="subscription-monitor-page p-4 sm:p-6 lg:p-10 bg-gray-300 text-slate-800 dark:text-slate-200 min-h-screen">
 
   <!-- ── HEADER ── -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 sm:mb-10">
@@ -10,13 +10,13 @@
         <lucide-icon name="scroll-text" size="32" class="hidden sm:block"></lucide-icon>
       </div>
       <div>
-        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Subscription Monitor</h1>
-        <p class="text-xs sm:text-sm font-semibold text-slate-500">Track and manage vendor subscription lifecycles</p>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Subscription Monitor</h1>
+        <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">Track and manage vendor subscription lifecycles</p>
       </div>
     </div>
     <div class="flex items-center gap-3 w-full sm:w-auto">
       <button (click)="loadAll()"
-        class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-black text-slate-700 hover:bg-slate-50 transition-all cursor-pointer shadow-sm active:scale-95">
+        class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs font-black text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-800 transition-all cursor-pointer shadow-sm dark:shadow-none active:scale-95">
         <lucide-icon name="refresh-cw" size="14" [class.animate-spin]="isLoading()"></lucide-icon>
         Refresh Data
       </button>
@@ -27,10 +27,10 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-8 sm:mb-10">
     <!-- Total -->
     <div
-      class="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm dark:shadow-none relative overflow-hidden group hover:shadow-md hover:border-slate-300 dark:border-slate-700 transition-all">
       <p class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 sm:mb-4">Total Subs
       </p>
-      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.total || 0
+      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.total || 0
         }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-indigo-500 transition-all duration-1000" [style.width.%]="100"></div>
@@ -39,10 +39,10 @@
 
     <!-- Active -->
     <div
-      class="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm dark:shadow-none relative overflow-hidden group hover:shadow-md hover:border-slate-300 dark:border-slate-700 transition-all">
       <p class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Active
       </p>
-      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.active || 0
+      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.active || 0
         }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-emerald-500 transition-all duration-1000"
@@ -52,10 +52,10 @@
 
     <!-- Expiring -->
     <div
-      class="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm dark:shadow-none relative overflow-hidden group hover:shadow-md hover:border-slate-300 dark:border-slate-700 transition-all">
       <p class="text-[9px] sm:text-[10px] font-black text-rose-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Expiring
         Soon</p>
-      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-2 leading-none">{{
+      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{
         summary()?.expiringWithin15Days || 0 }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-rose-500 transition-all duration-1000"
@@ -65,10 +65,10 @@
 
     <!-- Grace -->
     <div
-      class="bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm dark:shadow-none relative overflow-hidden group hover:shadow-md hover:border-slate-300 dark:border-slate-700 transition-all">
       <p class="text-[9px] sm:text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">In Grace
       </p>
-      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-2 leading-none">{{ summary()?.grace || 0
+      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.grace || 0
         }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-amber-500 transition-all duration-1000"
@@ -78,10 +78,10 @@
 
     <!-- Revenue -->
     <div
-      class="col-span-1 sm:col-span-2 lg:col-span-1 bg-white rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden group hover:shadow-md hover:border-slate-300 transition-all">
+      class="col-span-1 sm:col-span-2 lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm dark:shadow-none relative overflow-hidden group hover:shadow-md hover:border-slate-300 dark:border-slate-700 transition-all">
       <p class="text-[9px] sm:text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Total
         Revenue</p>
-      <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 mb-2 leading-none">₹{{ totalRevenue() |
+      <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">₹{{ totalRevenue() |
         number }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-indigo-600 transition-all duration-1000" [style.width.%]="100"></div>
@@ -91,26 +91,26 @@
 
   <!-- ── FILTERS & SEARCH ── -->
   <div
-    class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-8 bg-white p-4 rounded-3xl border border-slate-200 shadow-sm">
+    class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-8 bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
     <div class="flex flex-wrap items-center gap-1.5 w-full lg:w-auto">
       <button (click)="filter.set('all')"
         class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
-        [class]="filter() === 'all' ? 'bg-emerald-600 text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'">
+        [class]="filter() === 'all' ? 'bg-emerald-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-300'">
         All
       </button>
       <button (click)="filter.set('active')"
         class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
-        [class]="filter() === 'active' ? 'bg-emerald-500 text-white' : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-600'">
+        [class]="filter() === 'active' ? 'bg-emerald-500 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-emerald-50 hover:text-emerald-600'">
         Active
       </button>
       <button (click)="filter.set('grace')"
         class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
-        [class]="filter() === 'grace' ? 'bg-amber-500 text-white' : 'text-slate-500 hover:bg-amber-50 hover:text-amber-600'">
+        [class]="filter() === 'grace' ? 'bg-amber-500 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-amber-50 hover:text-amber-600'">
         Grace
       </button>
       <button (click)="filter.set('expired')"
         class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
-        [class]="filter() === 'expired' ? 'bg-rose-500 text-white' : 'text-slate-500 hover:bg-rose-50 hover:text-rose-600'">
+        [class]="filter() === 'expired' ? 'bg-rose-500 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-rose-50 hover:text-rose-600'">
         Expired
       </button>
     </div>
@@ -122,17 +122,17 @@
           class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors"></lucide-icon>
         <input type="text" [value]="search()" (input)="search.set($any($event.target).value)"
           placeholder="Search by vendor or plan..."
-          class="w-full bg-slate-50 border border-transparent focus:border-indigo-100 focus:bg-white outline-none py-3 pl-12 pr-4 text-xs font-bold text-slate-900 placeholder:text-slate-400 rounded-xl transition-all">
+          class="w-full bg-slate-50 dark:bg-slate-800 border border-transparent focus:border-indigo-100 focus:bg-white dark:bg-slate-900 outline-none py-3 pl-12 pr-4 text-xs font-bold text-slate-900 dark:text-slate-100 placeholder:text-slate-400 rounded-xl transition-all">
       </div>
     </div>
   </div>
 
   <!-- ── SUBSCRIPTION TABLE (Desktop View) ── -->
-  <div class="hidden lg:block bg-white rounded-[40px] border border-slate-200 overflow-hidden shadow-sm">
+  <div class="hidden lg:block bg-white dark:bg-slate-900 rounded-[40px] border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm dark:shadow-none">
     <div class="overflow-x-auto hide-scrollbar">
       <table class="w-full text-left border-collapse min-w-[1100px]">
         <thead>
-          <tr class="border-b border-slate-100 bg-slate-50/50">
+          <tr class="border-b border-slate-100 bg-slate-50 dark:bg-slate-800/50">
             <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Vendor</th>
             <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Business</th>
             <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Plan</th>
@@ -148,7 +148,7 @@
           @for (i of [1,2,3,4,5]; track i) {
           <tr class="animate-pulse">
             <td class="px-8 py-7" colspan="8">
-              <div class="h-12 bg-slate-50 rounded-2xl w-full"></div>
+              <div class="h-12 bg-slate-50 dark:bg-slate-800 rounded-2xl w-full"></div>
             </td>
           </tr>
           }
@@ -166,10 +166,10 @@
                   'V').trim().charAt(0).toUpperCase() }}
                 </div>
                 <div>
-                  <h4 class="text-sm font-black text-slate-900 leading-tight">
+                  <h4 class="text-sm font-black text-slate-900 dark:text-slate-100 leading-tight">
                     {{ sub.vendorDetails?.businessName || 'Unknown' }}
                   </h4>
-                  <p class="text-[11px] font-bold text-slate-600 mt-0.5">{{ sub.vendorDetails?.fullName }}</p>
+                  <p class="text-[11px] font-bold text-slate-600 dark:text-slate-400 mt-0.5">{{ sub.vendorDetails?.fullName }}</p>
                   <p class="text-[11px] font-bold text-slate-400 mt-0.5">{{ sub.vendorDetails?.email }}</p>
                   <p class="text-[10px] font-bold text-slate-400">{{ sub.vendorDetails?.phone }}</p>
                 </div>
@@ -178,7 +178,7 @@
 
             <!-- Business Type + Location -->
             <td class="px-6 py-6">
-              <p class="text-xs font-black text-slate-800">{{ sub.vendorDetails?.businessType || '—' }}</p>
+              <p class="text-xs font-black text-slate-800 dark:text-slate-200">{{ sub.vendorDetails?.businessType || '—' }}</p>
               <p class="text-[11px] font-bold text-slate-400 mt-0.5">
                 {{ sub.vendorDetails?.state || '—' }}
               </p>
@@ -195,20 +195,20 @@
 
             <!-- Plan Name + Price + Duration -->
             <td class="px-6 py-6">
-              <p class="text-sm font-black text-slate-900">{{ sub.planSnapshot?.name }}</p>
+              <p class="text-sm font-black text-slate-900 dark:text-slate-100">{{ sub.planSnapshot?.name }}</p>
               <p class="text-[11px] font-bold text-indigo-600 mt-0.5">₹{{ sub.planSnapshot?.price | number }}</p>
               <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ sub.planSnapshot?.duration_days }}d plan</p>
             </td>
 
             <!-- Start Date -->
             <td class="px-6 py-6">
-              <p class="text-xs font-black text-slate-900">{{ sub.startDate | date:'dd MMM yyyy' }}</p>
+              <p class="text-xs font-black text-slate-900 dark:text-slate-100">{{ sub.startDate | date:'dd MMM yyyy' }}</p>
               <p class="text-[10px] font-bold text-slate-400 mt-1">{{ sub.startDate | date:'EEEE' }}</p>
             </td>
 
             <!-- End Date -->
             <td class="px-6 py-6">
-              <p class="text-xs font-black text-slate-900">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
+              <p class="text-xs font-black text-slate-900 dark:text-slate-100">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
               <p class="text-[10px] font-bold text-slate-400 mt-1">{{ sub.endDate | date:'EEEE' }}</p>
             </td>
 
@@ -282,7 +282,7 @@
   <div class="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
     @if (isLoading() && filteredSubscriptions().length === 0) {
     @for (i of [1,2,3,4]; track i) {
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-pulse space-y-4">
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none animate-pulse space-y-4">
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-xl bg-slate-200"></div>
         <div class="flex-1 space-y-2">
@@ -300,7 +300,7 @@
     } @else {
     @for (sub of filteredSubscriptions(); track sub._id) {
     <div (click)="openDetails(sub)"
-      class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200 active:scale-[0.98] cursor-pointer flex flex-col justify-between">
+      class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none hover:shadow-md hover:border-slate-300 dark:border-slate-700 transition-all duration-200 active:scale-[0.98] cursor-pointer flex flex-col justify-between">
       <div>
         <div class="flex justify-between items-start gap-2 mb-4">
           <div class="flex items-center gap-3 min-w-0">
@@ -310,7 +310,7 @@
               }}
             </div>
             <div class="min-w-0">
-              <h4 class="font-black text-slate-900 text-sm truncate">{{ sub.vendorDetails?.businessName || 'Unknown' }}
+              <h4 class="font-black text-slate-900 dark:text-slate-100 text-sm truncate">{{ sub.vendorDetails?.businessName || 'Unknown' }}
               </h4>
               <p class="text-[10px] text-slate-400 truncate">{{ sub.vendorDetails?.email }}</p>
             </div>
@@ -328,10 +328,10 @@
           </div>
         </div>
 
-        <div class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex justify-between items-center mb-4">
+        <div class="bg-slate-50 dark:bg-slate-800 border border-slate-100 p-3 rounded-xl flex justify-between items-center mb-4">
           <div>
             <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Active Plan</p>
-            <p class="text-xs font-black text-slate-800">{{ sub.planSnapshot?.name }}</p>
+            <p class="text-xs font-black text-slate-800 dark:text-slate-200">{{ sub.planSnapshot?.name }}</p>
           </div>
           <div class="text-right">
             <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Rate</p>
@@ -340,10 +340,10 @@
         </div>
       </div>
 
-      <div class="flex justify-between items-center pt-3 border-t border-slate-50 text-[10px] font-bold text-slate-500">
+      <div class="flex justify-between items-center pt-3 border-t border-slate-50 text-[10px] font-bold text-slate-500 dark:text-slate-400">
         <div>
           <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">End Date</p>
-          <p class="text-slate-800 mt-0.5">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
+          <p class="text-slate-800 dark:text-slate-200 mt-0.5">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
         </div>
         <div class="text-right">
           @if (sub.status === 'expired') {
@@ -364,13 +364,13 @@
   <!-- Empty State -->
   @if (!isLoading() && filteredSubscriptions().length === 0) {
   <div
-    class="py-20 flex flex-col items-center justify-center text-center bg-white rounded-3xl border border-slate-200 mt-6 shadow-sm">
+    class="py-20 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-700 mt-6 shadow-sm dark:shadow-none">
     <div
-      class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100 shadow-inner">
+      class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 border border-slate-100 shadow-inner">
       <lucide-icon name="shield-off" size="32" class="text-slate-300"></lucide-icon>
     </div>
-    <h3 class="text-lg font-black text-slate-900 mb-1">No subscriptions found</h3>
-    <p class="text-xs font-semibold text-slate-500 max-w-xs">We couldn't find any subscription entries matching your
+    <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 mb-1">No subscriptions found</h3>
+    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 max-w-xs">We couldn't find any subscription entries matching your
       search criteria.</p>
     <button (click)="filter.set('all'); search.set('')"
       class="mt-6 px-6 py-2.5 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-md">
@@ -391,7 +391,7 @@
 
       <!-- 1. VENDOR PREMIUM HEADER -->
       <div
-        class="relative overflow-hidden bg-slate-50 border border-slate-200 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 text-slate-900">
+        class="relative overflow-hidden bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 text-slate-900 dark:text-slate-100">
         <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-100/50 rounded-full -mr-20 -mt-20 blur-3xl"></div>
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-center gap-5">
           <div
@@ -405,12 +405,12 @@
                 {{ sub?.vendorDetails?.businessName || sub?.vendorDetails?.fullName || 'Unknown Vendor' }}
               </h3>
               <span
-                class="px-2 py-0.5 bg-white border border-slate-200 rounded-full text-[9px] font-black uppercase tracking-widest shrink-0">
+                class="px-2 py-0.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full text-[9px] font-black uppercase tracking-widest shrink-0">
                 ID: {{ sub?._id?.slice(-8) || 'N/A' }}
               </span>
             </div>
             <div
-              class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-500 font-semibold text-[11px] sm:text-xs">
+              class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-500 dark:text-slate-400 font-semibold text-[11px] sm:text-xs">
               <div class="flex items-center gap-1.5 truncate">
                 <lucide-icon name="mail" size="12" class="text-slate-400 shrink-0"></lucide-icon>
                 <span class="truncate break-all">{{ sub?.vendorDetails?.email || 'No email provided' }}</span>
@@ -429,14 +429,14 @@
       <!-- 2. STATUS & PLAN QUICK CARDS -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
         <!-- Current Plan Card -->
-        <div class="bg-white p-5 sm:p-6 rounded-2xl sm:rounded-[32px] border border-slate-200/80 shadow-xs">
+        <div class="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl sm:rounded-[32px] border border-slate-200 dark:border-slate-700/80 shadow-xs">
           <div class="flex items-center justify-between mb-3">
             <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
               <lucide-icon name="layers" size="18"></lucide-icon>
             </div>
             <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Current Plan</p>
           </div>
-          <h4 class="text-lg font-black text-slate-900 m-0">{{ sub?.planSnapshot?.name || 'No Active Plan' }}</h4>
+          <h4 class="text-lg font-black text-slate-900 dark:text-slate-100 m-0">{{ sub?.planSnapshot?.name || 'No Active Plan' }}</h4>
           <div class="flex items-baseline gap-1.5 mt-1.5">
             <span class="text-xl sm:text-2xl font-black text-indigo-600">₹{{ (sub?.planSnapshot?.price || 0) | number
               }}</span>
@@ -446,9 +446,9 @@
         </div>
 
         <!-- Service Status Card -->
-        <div class="bg-white p-5 sm:p-6 rounded-2xl sm:rounded-[32px] border border-slate-200/80 shadow-xs">
+        <div class="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl sm:rounded-[32px] border border-slate-200 dark:border-slate-700/80 shadow-xs">
           <div class="flex items-center justify-between mb-3">
-            <div class="p-2.5 bg-slate-100 text-slate-600 rounded-xl">
+            <div class="p-2.5 bg-slate-100 text-slate-600 dark:text-slate-400 rounded-xl">
               <lucide-icon name="activity" size="18"></lucide-icon>
             </div>
             <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Service Status</p>
@@ -465,7 +465,7 @@
             </span>
             }
           </div>
-          <p class="text-[11px] font-semibold text-slate-500 mt-3 flex items-center gap-1.5">
+          <p class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-3 flex items-center gap-1.5">
             <lucide-icon name="clock" size="12" class="text-slate-400"></lucide-icon>
             {{ sub?.daysLeft || 0 }} {{ sub?.daysLabel || 'days' }} remaining in cycle
           </p>
@@ -476,8 +476,8 @@
       <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5">
         <!-- Timeline Container -->
         <div
-          class="lg:col-span-3 bg-white p-6 sm:p-8 rounded-2xl sm:rounded-[32px] border border-slate-200/80 shadow-xs timeline-container">
-          <h4 class="text-xs font-black text-slate-900 mb-6 uppercase tracking-widest flex items-center gap-2 m-0">
+          class="lg:col-span-3 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl sm:rounded-[32px] border border-slate-200 dark:border-slate-700/80 shadow-xs timeline-container">
+          <h4 class="text-xs font-black text-slate-900 dark:text-slate-100 mb-6 uppercase tracking-widest flex items-center gap-2 m-0">
             <lucide-icon name="calendar" size="14" class="text-indigo-600"></lucide-icon>
             Subscription Timeline
           </h4>
@@ -493,25 +493,25 @@
               <div class="w-6 h-6 bg-indigo-600 rounded-full border-4 border-white shadow-md sm:mb-3 shrink-0"></div>
               <div>
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest sm:mb-1">Started</p>
-                <p class="text-xs font-black text-slate-800 m-0">{{ sub.startDate | date:'dd MMM yyyy' }}</p>
+                <p class="text-xs font-black text-slate-800 dark:text-slate-200 m-0">{{ sub.startDate | date:'dd MMM yyyy' }}</p>
               </div>
             </div>
 
             <!-- End Node -->
             <div class="relative z-10 flex sm:flex-col items-center sm:text-center gap-4 sm:gap-0">
-              <div class="w-6 h-6 bg-white border-4 border-slate-400 rounded-full shadow-md sm:mb-3 shrink-0"></div>
+              <div class="w-6 h-6 bg-white dark:bg-slate-900 border-4 border-slate-400 rounded-full shadow-md sm:mb-3 shrink-0"></div>
               <div>
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest sm:mb-1">Expires</p>
-                <p class="text-xs font-black text-slate-800 m-0">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
+                <p class="text-xs font-black text-slate-800 dark:text-slate-200 m-0">{{ sub.endDate | date:'dd MMM yyyy' }}</p>
               </div>
             </div>
 
             <!-- Grace Node -->
             <div class="relative z-10 flex sm:flex-col items-center sm:text-center gap-4 sm:gap-0">
-              <div class="w-6 h-6 bg-white border-4 border-rose-500 rounded-full shadow-md sm:mb-3 shrink-0"></div>
+              <div class="w-6 h-6 bg-white dark:bg-slate-900 border-4 border-rose-500 rounded-full shadow-md sm:mb-3 shrink-0"></div>
               <div>
                 <p class="text-[9px] font-black text-rose-500 uppercase tracking-widest sm:mb-1">Grace Ends</p>
-                <p class="text-xs font-black text-slate-800 m-0">{{ sub.graceEndDate | date:'dd MMM yyyy' }}</p>
+                <p class="text-xs font-black text-slate-800 dark:text-slate-200 m-0">{{ sub.graceEndDate | date:'dd MMM yyyy' }}</p>
               </div>
             </div>
           </div>
@@ -522,7 +522,7 @@
           class="lg:col-span-2 bg-indigo-50/50 p-6 sm:p-8 rounded-2xl sm:rounded-[32px] text-indigo-900 flex flex-col justify-between border border-indigo-100 shadow-xs">
           <div>
             <p class="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-1">Usage Progress</p>
-            <h4 class="text-xl sm:text-2xl font-black m-0 text-slate-800">{{ sub?.daysLeft ?? 0 }} {{ sub?.daysLabel }}
+            <h4 class="text-xl sm:text-2xl font-black m-0 text-slate-800 dark:text-slate-200">{{ sub?.daysLeft ?? 0 }} {{ sub?.daysLabel }}
             </h4>
           </div>
           <div class="mt-6">
@@ -551,14 +551,14 @@
         <div class="space-y-3">
           @for (item of sub.pendingQueue; track item._id) {
           <div
-            class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-2xl border border-amber-200/70 shadow-xs group hover:border-amber-400 transition-colors gap-3">
+            class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-2xl border border-amber-200/70 shadow-xs group hover:border-amber-400 transition-colors gap-3">
             <div class="flex items-center gap-3.5 min-w-0">
               <div
                 class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center font-black shrink-0 text-sm">
                 Q{{ $index + 1 }}
               </div>
               <div class="min-w-0">
-                <p class="text-sm font-black text-slate-900 truncate m-0">{{ item.planSnapshot?.name }}</p>
+                <p class="text-sm font-black text-slate-900 dark:text-slate-100 truncate m-0">{{ item.planSnapshot?.name }}</p>
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Purchased: {{
                   item.purchasedAt | date:'dd MMM yyyy' }}</p>
               </div>

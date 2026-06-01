@@ -10,11 +10,36 @@ export class PlanStore {
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
 
+  // Pagination & search state
+  readonly currentPage = signal<number>(1);
+  readonly pageSize = signal<number>(10);
+  readonly searchTerm = signal<string>('');
+
   // ── Selectors (Computed) ──
   readonly plans = computed(() => this._plans());
   readonly activePlans = computed(() => this._plans().filter(p => p.is_active));
   readonly isLoading = computed(() => this._isLoading());
   readonly error = computed(() => this._error());
+
+  // Filtered & paginated plans
+  readonly filteredPlans = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    return this._plans().filter(p => p.name.toLowerCase().includes(term));
+  });
+  readonly paginatedPlans = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredPlans().slice(start, start + this.pageSize());
+  });
+
+  // ── Additional selectors ──
+  // Active base plans (non-addon and active)
+  readonly basePlans = computed(() => this._plans().filter(p => p.planType !== 'addon' && p.is_active));
+  readonly addonPlans = computed(() => this._plans().filter(p => p.planType === 'addon'));
+
+  /** Returns add‑ons belonging to a specific base plan */
+  getAddonsForBase(baseId: string) {
+    return this._plans().filter(p => p.parentPlanId === baseId);
+  }
 
   // ── Updaters ──
   setPlans(plans: Plan[]) {

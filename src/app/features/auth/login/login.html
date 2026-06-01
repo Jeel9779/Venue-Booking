@@ -4,7 +4,7 @@
   <div class="flex flex-col items-center justify-center w-full max-w-md sm:max-w-lg">
 
     <!-- Brand / Logo Area -->
-    <a href="#" class="flex items-center mb-6 text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight transition-transform hover:scale-105">
+    <a href="#" class="flex items-center mb-6 text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100 tracking-tight transition-transform hover:scale-105">
       <div class="brand-icon mr-3 w-10 h-10 shadow-md flex items-center justify-center rounded-lg">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -15,7 +15,7 @@
     </a>
 
     <!-- Login Card (Responsive max width, padding adjusts for mobile/tablet) -->
-    <div class="w-full bg-white rounded-2xl shadow-xl border border-gray-300 relative overflow-hidden">
+    <div class="w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-300 relative overflow-hidden">
       <!-- Top Decorative Line for premium feel -->
       <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
       
@@ -24,10 +24,10 @@
 
         <!-- Title & Subtitle -->
         <div class="text-center">
-          <h1 class="text-xl sm:text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
+          <h1 class="text-xl sm:text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-slate-100 md:text-3xl">
             Admin Portal Access
           </h1>
-          <p class="text-xs sm:text-sm text-gray-500 mt-2">Sign in to manage venues, bookings, and users.</p>
+          <p class="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-2">Sign in to manage venues, bookings, and users.</p>
         </div>
 
         <!-- Authentication Form -->
@@ -35,7 +35,7 @@
 
           <!-- Email / Username Field -->
           <div>
-            <label for="username" class="block mb-1.5 text-sm font-semibold text-gray-900">
+            <label for="username" class="block mb-1.5 text-sm font-semibold text-gray-900 dark:text-slate-100">
               Username or Email
             </label>
             <input
@@ -59,7 +59,7 @@
 
           <!-- Password Field with Visibility Toggle -->
           <div>
-            <label for="password" class="block mb-1.5 text-sm font-semibold text-gray-900">
+            <label for="password" class="block mb-1.5 text-sm font-semibold text-gray-900 dark:text-slate-100">
               Password
             </label>
             <div class="relative">
@@ -77,7 +77,7 @@
               <button 
                 type="button" 
                 (click)="togglePassword()"
-                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 focus:outline-none transition-colors"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:text-slate-300 focus:outline-none transition-colors"
                 aria-label="Toggle password visibility">
                 @if (showPassword()) {
                   <!-- Eye Off Icon -->
@@ -110,11 +110,11 @@
                   id="remember"
                   type="checkbox"
                   formControlName="remember"
-                  class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 cursor-pointer"
+                  class="w-4 h-4 border border-gray-300 rounded bg-gray-50 dark:bg-slate-800 focus:ring-3 focus:ring-primary-300 cursor-pointer"
                 />
               </div>
               <div class="ml-3 text-sm">
-                <label for="remember" class="text-gray-600 font-medium cursor-pointer">Remember my device</label>
+                <label for="remember" class="text-gray-600 dark:text-slate-400 font-medium cursor-pointer">Remember my device</label>
               </div>
             </div>
             <a href="#" class="text-sm font-semibold text-primary-600 hover:text-primary-700 hover:underline transition-colors">Forgot password?</a>
@@ -155,11 +155,11 @@
 
           <!-- Navigation Back Link -->
           <div class="text-center mt-4 space-y-2">
-            <p class="text-sm font-medium text-gray-500">
+            <p class="text-sm font-medium text-gray-500 dark:text-slate-400">
               Don't have an admin account?
               <a routerLink="/register" class="text-primary-600 hover:text-primary-700 hover:underline transition-colors">Sign up</a>
             </p>
-            <p class="text-sm font-medium text-gray-500">
+            <p class="text-sm font-medium text-gray-500 dark:text-slate-400">
               Not an admin?
               <a href="#" class="text-primary-600 hover:text-primary-700 hover:underline transition-colors">Return to Main Site</a>
             </p>
@@ -170,7 +170,7 @@
     </div>
 
     <!-- Footer Copyright -->
-    <div class="mt-8 text-center text-xs sm:text-sm text-gray-500">
+    <div class="mt-8 text-center text-xs sm:text-sm text-gray-500 dark:text-slate-400">
       &copy; 2026 Book My Venue. All rights reserved.
     </div>
 

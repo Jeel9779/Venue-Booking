@@ -22,7 +22,7 @@
   <!-- Duration Section -->
   <div class="space-y-4">
     <div class="flex items-center justify-between">
-      <label class="block text-[0.8125rem] font-bold text-slate-700 uppercase tracking-wider">Plan Duration</label>
+      <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Plan Duration</label>
       <span class="text-[0.7rem] font-black text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">{{ planForm.get('duration_days')?.value }} Days</span>
     </div>
     
@@ -31,7 +31,7 @@
         <button 
           type="button"
           (click)="selectDuration(d.days)"
-          [class]="'h-10 sm:h-11 rounded-xl text-xs font-bold transition-all border-2 ' + (planForm.get('duration_days')?.value === d.days ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' : 'border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50')">
+          [class]="'h-10 sm:h-11 rounded-xl text-xs font-bold transition-all border-2 ' + (planForm.get('duration_days')?.value === d.days ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm dark:shadow-none' : 'border-slate-100 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:bg-slate-800')">
           {{ d.label }}
         </button>
       }
@@ -53,36 +53,49 @@
 
   <!-- Plan Type Section (From ts form group planType control) -->
   <div class="flex flex-col">
-    <label class="block text-[0.8125rem] font-bold text-slate-700 mb-2 uppercase tracking-wider">Plan Type</label>
+    <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">Plan Type</label>
     <div class="flex items-center gap-4">
       <label class="inline-flex items-center cursor-pointer">
         <input type="radio" formControlName="planType" value="base" class="sr-only peer">
-        <div class="px-4 py-2 border-2 border-slate-100 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 rounded-xl text-xs font-bold transition-all bg-white text-slate-500">
+        <div class="px-4 py-2 border-2 border-slate-100 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
           Base Plan
         </div>
       </label>
       <label class="inline-flex items-center cursor-pointer">
         <input type="radio" formControlName="planType" value="addon" class="sr-only peer">
-        <div class="px-4 py-2 border-2 border-slate-100 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 rounded-xl text-xs font-bold transition-all bg-white text-slate-500">
+        <div class="px-4 py-2 border-2 border-slate-100 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
           Add-on Plan
         </div>
       </label>
     </div>
   </div>
 
+  <!-- Parent Plan Selection (Only for Add-ons) -->
+  @if (planForm.get('planType')?.value === 'addon') {
+    <div class="flex flex-col">
+      <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">Select Parent Plan</label>
+        <select formControlName="parentPlanId" class="w-full h-11 px-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-sm dark:shadow-none ring-1 ring-slate-200">
+          <option [ngValue]="null">None</option>
+          @for (plan of activeBasePlans(); track plan._id) {
+            <option [value]="plan._id">{{ plan.name }}</option>
+          }
+        </select>
+    </div>
+  }
+
   <!-- Status Section -->
   <div class="flex flex-col">
-    <label class="block text-[0.8125rem] font-bold text-slate-700 mb-2 uppercase tracking-wider">Status</label>
+    <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">Status</label>
     <label class="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" formControlName="is_active" class="sr-only peer">
-      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-      <span class="ml-3 text-sm font-bold text-slate-600">{{ planForm.get('is_active')?.value ? 'Active' : 'Inactive' }}</span>
+      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-slate-900 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+      <span class="ml-3 text-sm font-bold text-slate-600 dark:text-slate-400">{{ planForm.get('is_active')?.value ? 'Active' : 'Inactive' }}</span>
     </label>
   </div>
 
   <!-- Features Section -->
   <div class="space-y-4">
-    <label class="block text-[0.8125rem] font-bold text-slate-700 uppercase tracking-wider">Plan Features</label>
+    <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Plan Features</label>
     
     <div class="flex gap-2">
       <input 
@@ -91,7 +104,7 @@
         [ngModelOptions]="{standalone: true}"
         (keyup.enter)="addFeature()"
         placeholder="Add a feature (e.g. Unlimited Listings)" 
-        class="flex-1 h-11 px-4 border border-slate-300 rounded-xl bg-white text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-sm ring-1 ring-slate-200">
+        class="flex-1 h-11 px-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-sm dark:shadow-none ring-1 ring-slate-200">
       <app-button type="button" (onClick)="addFeature()">Add</app-button>
     </div>
 

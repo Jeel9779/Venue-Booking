@@ -98,6 +98,18 @@ export const routes: Routes = [
       {
         path: 'terms',
         loadComponent: () => import('@features/terms/terms').then(m => m.Terms)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('@features/profile/profile').then(m => m.Profile)
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('@features/settings/settings').then(m => m.Settings)
+      },
+      {
+        path: 'help-center',
+        loadComponent: () => import('@features/help-center/help-center').then(m => m.HelpCenter)
       }
 
     ],

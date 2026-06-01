@@ -1,0 +1,63 @@
+<div class="p-6 md:p-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+  
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-slate-100 tracking-tight">Help Center</h1>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Platform documentation and frequently asked questions.</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- FAQ Section (Takes up 2 columns on large screens) -->
+    <div class="lg:col-span-2 space-y-4">
+      <h2 class="text-lg font-bold text-gray-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+        <lucide-icon [img]="icons.bookOpen" size="20" class="text-[#6C63FF]"></lucide-icon>
+        Frequently Asked Questions
+      </h2>
+
+      @for (faq of faqs; track $index) {
+        <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl overflow-hidden transition-all duration-200 hover:border-gray-300">
+          <button 
+            (click)="toggleFaq($index)"
+            class="w-full flex items-center justify-between p-5 text-left focus:outline-none">
+            <span class="font-semibold text-gray-900 dark:text-slate-100">{{ faq.question }}</span>
+            <div class="text-gray-400 shrink-0 ml-4">
+              @if (expandedFaq() === $index) {
+                <lucide-icon [img]="icons.chevronUp" size="20"></lucide-icon>
+              } @else {
+                <lucide-icon [img]="icons.chevronDown" size="20"></lucide-icon>
+              }
+            </div>
+          </button>
+          
+          <div 
+            class="overflow-hidden transition-all duration-300 ease-in-out"
+            [class.max-h-0]="expandedFaq() !== $index"
+            [class.max-h-[500px]]="expandedFaq() === $index">
+            <div class="p-5 pt-0 text-sm text-gray-600 dark:text-slate-400 leading-relaxed border-t border-gray-100 dark:border-slate-700 mt-1">
+              {{ faq.answer }}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Contact Support Card -->
+    <div class="lg:col-span-1">
+      <div class="bg-gradient-to-b from-[#6C63FF] to-[#4E4CFF] rounded-3xl p-6 text-white shadow-xl shadow-[#6C63FF]/20 sticky top-24">
+        <div class="w-12 h-12 bg-white dark:bg-slate-900/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
+          <lucide-icon [img]="icons.messageSquare" size="24" class="text-white"></lucide-icon>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Need more help?</h3>
+        <p class="text-white/80 text-sm mb-6 leading-relaxed">
+          If you encounter a bug or need clarification on a platform feature, our technical team is here to support you.
+        </p>
+        <button class="w-full py-2.5 px-4 bg-white dark:bg-slate-900 text-[#6C63FF] hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 font-bold rounded-xl shadow-sm dark:shadow-none transition-colors duration-200">
+          Contact Support
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -73,10 +73,22 @@ export class Sidebar {
     this.openGroup.update(v => v === name ? null : name);
   }
 
+  // modal state
+  showLogoutModal = signal(false);
+
   // logout
   logout() {
+    this.showLogoutModal.set(true);
+  }
+
+  cancelLogout() {
+    this.showLogoutModal.set(false);
+  }
+
+  confirmLogout() {
     localStorage.removeItem('adminId');
     localStorage.removeItem('admin');
+    this.showLogoutModal.set(false);
     this.router.navigate(['/login']);
   }
 }

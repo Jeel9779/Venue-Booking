@@ -6,6 +6,11 @@ export interface Plan {
   price: number;
   planType?: 'base' | 'addon';
   is_active: boolean;
+  /**
+   * When this plan is an add‑on, stores the `_id` of the base plan it extends.
+   * Not present for base plans. Optional to keep compatibility with existing data.
+   */
+  parentPlanId?: string | null;
   features: string[];
   createdAt?: string;
   updatedAt?: string;

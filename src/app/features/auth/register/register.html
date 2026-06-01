@@ -4,7 +4,7 @@
   <div class="flex flex-col items-center justify-center w-full max-w-md sm:max-w-lg">
 
     <!-- Brand / Logo Area -->
-    <a href="#" class="flex items-center mb-6 text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight transition-transform hover:scale-105">
+    <a href="#" class="flex items-center mb-6 text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100 tracking-tight transition-transform hover:scale-105">
       <div class="brand-icon mr-3 w-10 h-10 shadow-md flex items-center justify-center rounded-lg">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -15,7 +15,7 @@
     </a>
 
     <!-- Register Card -->
-    <div class="w-full bg-white rounded-2xl shadow-xl border border-gray-300 relative overflow-hidden">
+    <div class="w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-300 relative overflow-hidden">
       <!-- Top Decorative Line -->
       <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 via-teal-500 to-blue-500"></div>
       
@@ -23,10 +23,10 @@
 
         <!-- Title & Subtitle -->
         <div class="text-center">
-          <h1 class="text-xl sm:text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
+          <h1 class="text-xl sm:text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-slate-100 md:text-3xl">
             Admin Registration
           </h1>
-          <p class="text-xs sm:text-sm text-gray-500 mt-2">Create a new administrative portal account.</p>
+          <p class="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-2">Create a new administrative portal account.</p>
         </div>
 
         <!-- Registration Form -->
@@ -34,7 +34,7 @@
 
           <!-- Username Field -->
           <div>
-            <label for="username" class="block mb-1.5 text-sm font-semibold text-gray-900">
+            <label for="username" class="block mb-1.5 text-sm font-semibold text-gray-900 dark:text-slate-100">
               Username
             </label>
             <input
@@ -57,7 +57,7 @@
 
           <!-- Password Field -->
           <div>
-            <label for="password" class="block mb-1.5 text-sm font-semibold text-gray-900">
+            <label for="password" class="block mb-1.5 text-sm font-semibold text-gray-900 dark:text-slate-100">
               Password
             </label>
             <div class="relative">
@@ -74,7 +74,7 @@
               <button 
                 type="button" 
                 (click)="togglePassword()"
-                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 focus:outline-none transition-colors"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:text-slate-300 focus:outline-none transition-colors"
                 aria-label="Toggle password visibility">
                 @if (showPassword()) {
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +98,7 @@
 
           <!-- Confirm Password Field -->
           <div>
-            <label for="confirmPassword" class="block mb-1.5 text-sm font-semibold text-gray-900">
+            <label for="confirmPassword" class="block mb-1.5 text-sm font-semibold text-gray-900 dark:text-slate-100">
               Confirm Password
             </label>
             <input
@@ -164,7 +164,7 @@
 
           <!-- Login Link -->
           <div class="text-center mt-4">
-            <p class="text-sm font-medium text-gray-500">
+            <p class="text-sm font-medium text-gray-500 dark:text-slate-400">
               Already have an account?
               <a routerLink="/login" class="text-primary-600 hover:text-primary-700 hover:underline transition-colors">Sign in here</a>
             </p>

@@ -1,15 +1,15 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="bg-white border border-slate-200 shadow-sm p-8 rounded-[2.5rem] transition-all duration-300 hover:shadow-md h-full flex flex-col">
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none p-8 rounded-[2.5rem] transition-all duration-300 hover:shadow-md h-full flex flex-col">
     <div class="flex items-center justify-between mb-8">
         <div>
-            <h3 class="text-xl font-black text-slate-900 tracking-tight">{{ title }}</h3>
+            <h3 class="text-xl font-black text-slate-900 dark:text-slate-100 tracking-tight">{{ title }}</h3>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{{ description }}</p>
         </div>
     </div>
 
     <div class="flex gap-6 h-64">
         <!-- Y-Axis Labels -->
-        <div class="flex flex-col justify-between text-[10px] font-black text-slate-500 uppercase w-8 h-56">
+        <div class="flex flex-col justify-between text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase w-8 h-56">
             @for (label of yAxisLabels; track label) {
                 <span>{{ label }}</span>
             }
@@ -36,14 +36,14 @@
 
                     <!-- The Bar -->
                     <div class="flex-1 w-full flex items-end mb-4">
-                        <div class="w-full rounded-t-xl transition-all duration-500 hover:scale-x-110 shadow-sm bg-indigo-500" 
+                        <div class="w-full rounded-t-xl transition-all duration-500 hover:scale-x-110 shadow-sm dark:shadow-none bg-indigo-500" 
                              [style.height.%]="getPercentage(val)">
                         </div>
                     </div>
                     
                     <!-- X-Axis Label -->
                     @if (labels[$index]) {
-                        <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest whitespace-nowrap">
+                        <span class="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">
                             {{ labels[$index] }}
                         </span>
                     }

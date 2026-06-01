@@ -14,17 +14,17 @@
         <lucide-icon name="building-2" size="20"></lucide-icon>
       </div>
       <div class="flex-1 min-w-0">
-        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 truncate">Venue
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Venue
           Verification</h1>
-        <p class="text-[0.8125rem] text-slate-500 mt-0.5 mb-0">Review and manage venue listings for quality control</p>
+        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Review and manage venue listings for quality control</p>
       </div>
     </div>
 
     <div
-      class="header-stats flex gap-2 flex-wrap bg-white/80 p-1.5 rounded-2xl border border-slate-300 backdrop-blur-sm">
+      class="header-stats flex gap-2 flex-wrap bg-white dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-300 dark:border-slate-700 backdrop-blur-sm">
       <div
         class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
-        [class]="filter() === 'all' ? 'bg-sky-500 text-white shadow-sm shadow-gray-200' : 'bg-sky-200 text-sky-700 hover:bg-sky-300'"
+        [class]="filter() === 'all' ? 'bg-sky-500 text-white shadow-sm dark:shadow-none shadow-gray-200' : 'bg-sky-200 text-sky-700 hover:bg-sky-300'"
         (click)="filter.set('all')">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().all }} All
@@ -62,12 +62,12 @@
       <lucide-icon name="search" size="18"
         class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></lucide-icon>
       <input type="text"
-        class="w-full py-3 pl-11 pr-11 border border-slate-200 rounded-2xl bg-white text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 box-border placeholder:text-slate-400 shadow-sm"
+        class="w-full py-3 pl-11 pr-11 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-slate-100 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 box-border placeholder:text-slate-400 shadow-sm dark:shadow-none"
         placeholder="Search venues by name, city, or type..." [value]="search()"
         (input)="search.set($any($event.target).value)" />
       @if (search()) {
       <button
-        class="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-100 border-none cursor-pointer text-slate-400 flex p-1.5 rounded-lg hover:text-slate-700 hover:bg-slate-200 transition-colors"
+        class="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-100 border-none cursor-pointer text-slate-400 flex p-1.5 rounded-lg hover:text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-colors"
         (click)="search.set('')">
         <lucide-icon name="x" size="14"></lucide-icon>
       </button>
@@ -100,7 +100,7 @@
       <!-- LOADING -->
       @if (isLoading()) {
       <div
-        class="flex flex-col items-center justify-center py-24 text-slate-400 gap-4 text-sm w-full bg-white rounded-[24px]">
+        class="flex flex-col items-center justify-center py-24 text-slate-400 gap-4 text-sm w-full bg-white dark:bg-slate-900 rounded-[24px]">
         <div class="w-10 h-10 border-[3px] border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
         <p class="font-medium animate-pulse">Fetching latest venues...</p>
       </div>
@@ -108,13 +108,13 @@
 
       <!-- EMPTY STATE -->
       @if (!isLoading() && filteredVenues().length === 0 && !error()) {
-      <div class="flex flex-col items-center justify-center py-24 gap-4 text-center w-full bg-white rounded-[24px]">
+      <div class="flex flex-col items-center justify-center py-24 gap-4 text-center w-full bg-white dark:bg-slate-900 rounded-[24px]">
         <div
           class="w-[84px] h-[84px] rounded-[28px] bg-indigo-200 text-indigo-700 flex items-center justify-center mb-2 shadow-inner">
           <lucide-icon name="building-2" size="42" [strokeWidth]="1.5"></lucide-icon>
         </div>
-        <h3 class="text-xl font-bold text-slate-900 m-0">No venues found</h3>
-        <p class="text-slate-600 text-[0.9375rem] max-w-xs mx-auto m-0 leading-relaxed font-semibold">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 m-0">No venues found</h3>
+        <p class="text-slate-600 dark:text-slate-400 text-[0.9375rem] max-w-xs mx-auto m-0 leading-relaxed font-semibold">
           {{ search() ? 'We couldn\'t find any venues matching your search query.' : 'There are currently no venues in
           this category.' }}
         </p>
@@ -135,12 +135,12 @@
               <td class="px-5 py-4">
                 <div class="flex items-center gap-3.5">
                   <div
-                    class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-green-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
+                    class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-green-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm dark:shadow-none">
                     {{ v.name.charAt(0) }}
                   </div>
                   <div>
                     <div
-                      class="font-bold text-slate-900 leading-snug group-hover:text-indigo-600 transition-colors whitespace-nowrap">
+                      class="font-bold text-slate-900 dark:text-slate-100 leading-snug group-hover:text-indigo-600 transition-colors whitespace-nowrap">
                       {{ v.name
                       }}</div>
                     <div class="text-[0.75rem] text-slate-400 mt-0.5 flex items-center gap-1 whitespace-nowrap">
@@ -152,7 +152,7 @@
               </td>
               <td class="px-5 py-4">
                 <div>
-                  <div class="font-semibold text-sm text-slate-800 leading-snug whitespace-nowrap">{{ getVendorName(v)
+                  <div class="font-semibold text-sm text-slate-800 dark:text-slate-200 leading-snug whitespace-nowrap">{{ getVendorName(v)
                     }}</div>
                   <div class="text-[0.7rem] text-slate-400 mt-0.5 truncate max-w-[140px] sm:max-w-[180px]">{{
                     getVendorEmail(v) }}</div>
@@ -160,12 +160,12 @@
               </td>
               <td class="px-5 py-4">
                 <span
-                  class="inline-flex px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg text-[0.7rem] font-bold uppercase tracking-wider whitespace-nowrap">
+                  class="inline-flex px-2.5 py-1 bg-slate-100 text-slate-600 dark:text-slate-400 rounded-lg text-[0.7rem] font-bold uppercase tracking-wider whitespace-nowrap">
                   {{ v.type }}
                 </span>
               </td>
-              <td class="px-5 py-4 text-slate-600 font-medium whitespace-nowrap">{{ v.capacity | number }}</td>
-              <td class="px-5 py-4 font-bold text-slate-900 whitespace-nowrap">₹{{ v.pricePerDay | number }}</td>
+              <td class="px-5 py-4 text-slate-600 dark:text-slate-400 font-medium whitespace-nowrap">{{ v.capacity | number }}</td>
+              <td class="px-5 py-4 font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap">₹{{ v.pricePerDay | number }}</td>
               <td class="px-5 py-4">
                 <span
                   [class]="'px-2.5 py-1 rounded-lg text-[0.7rem] font-extrabold uppercase tracking-widest whitespace-nowrap ' + v.status">
@@ -189,16 +189,16 @@
       <!-- MOBILE CARD LIST -->
       <div class="md:hidden flex flex-col divide-y divide-slate-100">
         @for (v of filteredVenues(); track v._id) {
-        <div class="p-4 flex flex-col gap-3 cursor-pointer hover:bg-slate-50 transition-colors"
+        <div class="p-4 flex flex-col gap-3 cursor-pointer hover:bg-slate-50 dark:bg-slate-800 transition-colors"
           (click)="openDetails(v)">
           <div class="flex justify-between items-start gap-2">
             <div class="flex items-center gap-3 min-w-0">
               <div
-                class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-green-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
+                class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-green-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm dark:shadow-none">
                 {{ v.name.charAt(0) }}
               </div>
               <div class="min-w-0">
-                <div class="font-bold text-slate-900 leading-snug truncate">{{ v.name }}</div>
+                <div class="font-bold text-slate-900 dark:text-slate-100 leading-snug truncate">{{ v.name }}</div>
                 <div class="text-[0.75rem] text-slate-400 mt-0.5 flex items-center gap-1 truncate">
                   <lucide-icon name="map-pin" size="10" class="shrink-0"></lucide-icon>
                   <span class="truncate">{{ v.city }}</span>
@@ -214,11 +214,11 @@
           <div class="flex justify-between items-center text-sm pt-2">
             <div class="flex flex-col min-w-0 flex-1">
               <span class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400">Vendor</span>
-              <span class="font-semibold text-slate-700 truncate pr-2">{{ getVendorName(v) }}</span>
+              <span class="font-semibold text-slate-700 dark:text-slate-300 truncate pr-2">{{ getVendorName(v) }}</span>
             </div>
             <div class="flex flex-col items-end shrink-0">
               <span class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400">Price / Day</span>
-              <span class="font-bold text-slate-900">₹{{ v.pricePerDay | number }}</span>
+              <span class="font-bold text-slate-900 dark:text-slate-100">₹{{ v.pricePerDay | number }}</span>
             </div>
           </div>
         </div>
@@ -242,7 +242,7 @@
     <div class="flex flex-col gap-8">
       <!-- Header Info -->
       <div
-        class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-slate-50 p-5 rounded-[24px] border border-slate-100 shadow-xs">
+        class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-slate-50 dark:bg-slate-800 p-5 rounded-[24px] border border-slate-100 shadow-xs">
         <div class="flex items-center gap-4 w-full sm:w-auto flex-1">
           <div
             class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 text-2xl font-bold flex items-center justify-center shrink-0 border border-indigo-100/50">
@@ -250,7 +250,7 @@
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-1">
-              <h2 class="text-xl sm:text-2xl font-black text-slate-900 m-0 truncate leading-tight">{{
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 m-0 truncate leading-tight">{{
                 venue.name }}</h2>
               <div class="flex items-center gap-2">
                 <span
@@ -259,7 +259,7 @@
                 </span>
               </div>
             </div>
-            <p class="text-[0.875rem] font-medium text-slate-500 flex items-center gap-1.5 m-0 truncate">
+            <p class="text-[0.875rem] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 m-0 truncate">
               <lucide-icon name="map-pin" size="14" class="text-indigo-500"></lucide-icon>
               <span class="truncate">{{ venue.address }}, {{ venue.city }}, {{ venue.state }} - {{ venue.zip || '—' }}, {{ venue.country || '—' }}</span>
             </p>
@@ -271,12 +271,12 @@
       @if (venue.status === 'pending' || venue.status === 'rejected') {
       <div class="bg-amber-50/60 border border-amber-100 rounded-2xl p-5">
         <div class="flex items-center gap-3 mb-3">
-          <div class="w-8 h-8 bg-white border border-amber-100 text-amber-600 rounded-lg flex items-center justify-center shadow-xs">
+          <div class="w-8 h-8 bg-white dark:bg-slate-900 border border-amber-100 text-amber-600 rounded-lg flex items-center justify-center shadow-xs">
             <lucide-icon name="shield-check" size="18"></lucide-icon>
           </div>
           <div>
-            <h4 class="text-sm font-bold text-slate-900">Verification Required</h4>
-            <p class="text-xs text-slate-500">Please review the details below before approving this listing.</p>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100">Verification Required</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Please review the details below before approving this listing.</p>
           </div>
         </div>
         @if (venue.status === 'rejected' && venue.adminDescription) {
@@ -293,21 +293,21 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Vendor Card -->
         <div
-          class="flex items-center gap-4 bg-slate-50 px-5 py-4 rounded-2xl border border-slate-100 group cursor-default transition-colors hover:bg-slate-100/40">
+          class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 px-5 py-4 rounded-2xl border border-slate-100 group cursor-default transition-colors hover:bg-slate-100/40">
           <div
-            class="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 text-lg font-black flex items-center justify-center shrink-0 border border-slate-200/30">
+            class="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 dark:text-slate-400 text-lg font-black flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700/30">
             {{ getVendorName(selectedVenue()!).charAt(0) }}
           </div>
           <div class="flex-1 min-w-0">
             <div class="text-[0.65rem] font-black uppercase tracking-widest text-indigo-500 mb-0.5">Vendor
               Representative</div>
-            <div class="text-base font-bold text-slate-800 leading-tight">{{ getVendorName(selectedVenue()!) }}</div>
+            <div class="text-base font-bold text-slate-800 dark:text-slate-200 leading-tight">{{ getVendorName(selectedVenue()!) }}</div>
             <div class="text-xs text-indigo-600/70 truncate">{{ getVendorEmail(selectedVenue()!) }}</div>
           </div>
         </div>
 
         <!-- Rating Card -->
-        <div class="flex items-center gap-4 bg-slate-50 px-5 py-4 rounded-2xl border border-slate-100">
+        <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 px-5 py-4 rounded-2xl border border-slate-100">
           <div
             class="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0">
             <lucide-icon name="star" size="24" class="fill-current"></lucide-icon>
@@ -316,7 +316,7 @@
             <div class="text-[0.65rem] font-black uppercase tracking-widest text-amber-600 mb-0.5">Performance Score
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-xl font-black text-slate-900">{{ venue.averageRating || 0 }}</span>
+              <span class="text-xl font-black text-slate-900 dark:text-slate-100">{{ venue.averageRating || 0 }}</span>
               <div class="flex gap-0.5">
                 @for (star of [1,2,3,4,5]; track star) {
                 <lucide-icon name="star" size="12"
@@ -333,42 +333,42 @@
       <!-- Info Grid -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div
-          class="p-4 bg-slate-50 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200/50">
+          class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="tag" size="10"></lucide-icon>
             Type
           </div>
-          <div class="text-base font-bold text-slate-800">{{ venue.type }}</div>
+          <div class="text-base font-bold text-slate-800 dark:text-slate-200">{{ venue.type }}</div>
         </div>
         <div
-          class="p-4 bg-slate-50 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200/50">
+          class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="users" size="10"></lucide-icon>
             Capacity
           </div>
-          <div class="text-base font-bold text-slate-800">{{ venue.capacity | number }} <span
-              class="text-[10px] font-medium text-slate-500">Guests</span></div>
+          <div class="text-base font-bold text-slate-800 dark:text-slate-200">{{ venue.capacity | number }} <span
+              class="text-[10px] font-medium text-slate-500 dark:text-slate-400">Guests</span></div>
         </div>
         <div
-          class="p-4 bg-slate-50 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200/50">
+          class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="indian-rupee" size="10"></lucide-icon>
             Pricing
           </div>
-          <div class="text-base font-bold text-slate-800">₹{{ venue.pricePerDay | number }}<span
-              class="text-[10px] font-medium text-slate-500">/day</span></div>
+          <div class="text-base font-bold text-slate-800 dark:text-slate-200">₹{{ venue.pricePerDay | number }}<span
+              class="text-[10px] font-medium text-slate-500 dark:text-slate-400">/day</span></div>
         </div>
         <div
-          class="p-4 bg-slate-50 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200/50">
+          class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="calendar" size="10"></lucide-icon>
             Available
           </div>
-          <div class="text-base font-bold text-slate-800">{{ (venue.availableFrom || venue.createdAt) | date:'d MMM y' }}</div>
+          <div class="text-base font-bold text-slate-800 dark:text-slate-200">{{ (venue.availableFrom || venue.createdAt) | date:'d MMM y' }}</div>
           <div class="text-[0.6rem] text-slate-400 mt-1">Last updated: {{ venue.updatedAt | date:'shortTime'
             }}</div>
         </div>
@@ -399,7 +399,7 @@
           Description
         </h4>
         <div
-          class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-[0.875rem] leading-relaxed text-slate-600 max-h-48 overflow-y-auto scrollbar-hide">
+          class="bg-slate-50 dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 text-[0.875rem] leading-relaxed text-slate-600 dark:text-slate-400 max-h-48 overflow-y-auto scrollbar-hide">
           {{ venue.description }}
         </div>
       </div>
@@ -413,7 +413,7 @@
         <div class="flex flex-wrap gap-2">
           @for (a of venue.amenities; track a) {
           <span
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-indigo-700 rounded-xl text-xs font-bold border border-slate-100 hover:bg-indigo-50/50 transition-colors cursor-default">
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-indigo-700 rounded-xl text-xs font-bold border border-slate-100 hover:bg-indigo-50/50 transition-colors cursor-default">
             <lucide-icon name="check" size="12" [strokeWidth]="3" class="text-indigo-500"></lucide-icon>
             {{ a }}
           </span>
@@ -467,14 +467,14 @@
           <lucide-icon name="map-pin" size="12"></lucide-icon>
           Geographical Coordinates
         </h4>
-        <div class="flex flex-wrap items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-          <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
-            <span class="px-2 py-1 bg-white border border-slate-200 rounded-lg shadow-xs">Latitude</span>
-            <span class="text-slate-900">{{ venue.lat || '—' }}</span>
+        <div class="flex flex-wrap items-center gap-4 bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-100">
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400">
+            <span class="px-2 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xs">Latitude</span>
+            <span class="text-slate-900 dark:text-slate-100">{{ venue.lat || '—' }}</span>
           </div>
-          <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
-            <span class="px-2 py-1 bg-white border border-slate-200 rounded-lg shadow-xs">Longitude</span>
-            <span class="text-slate-900">{{ venue.lng || '—' }}</span>
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400">
+            <span class="px-2 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xs">Longitude</span>
+            <span class="text-slate-900 dark:text-slate-100">{{ venue.lng || '—' }}</span>
           </div>
         </div>
       </div>
@@ -489,7 +489,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
           @for (img of venue.mediaFiles; track img) {
           <div
-            class="aspect-square rounded-2xl overflow-hidden cursor-pointer group relative border border-slate-300"
+            class="aspect-square rounded-2xl overflow-hidden cursor-pointer group relative border border-slate-300 dark:border-slate-700"
             (click)="openImage(img)">
             <img [src]="getImageUrl(img)" (error)="handleImageError($event)"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -503,7 +503,7 @@
         </div>
       </div>
       } @else {
-      <div class="p-12 text-center bg-slate-200 rounded-3xl border-2 border-dashed border-slate-300">
+      <div class="p-12 text-center bg-slate-200 rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-700">
         <lucide-icon name="image-off" size="32" class="mx-auto text-slate-300 mb-3"></lucide-icon>
         <p class="text-slate-400 font-bold text-sm">No images provided for this venue</p>
       </div>
@@ -529,7 +529,7 @@
   <!-- ── REJECT MODAL ── -->
   @if (showRejectModal() && selectedVenue(); as venue) {
   <app-model [title]="'Reject Venue Listing'" maxWidth="sm" (onClose)="closeRejectModal()" [hasFooter]="true">
-    <p class="text-[0.9375rem] text-slate-600 mb-6 leading-relaxed">
+    <p class="text-[0.9375rem] text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
       Please provide a clear reason for rejection. This feedback will be shared with the venue owner to help them
       improve their listing.
     </p>
@@ -554,8 +554,8 @@
         class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-emerald-50">
         <lucide-icon name="check-circle-2" size="32" [strokeWidth]="2.5"></lucide-icon>
       </div>
-      <h3 class="text-lg font-bold text-slate-900 mb-2">Publish listing?</h3>
-      <p class="text-[0.9375rem] text-slate-600 leading-relaxed max-w-sm">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">Publish listing?</h3>
+      <p class="text-[0.9375rem] text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm">
         Are you sure you want to approve <strong>{{ venue.name }}</strong>? This listing will become visible
         to all users immediately.
       </p>
@@ -575,7 +575,7 @@
   <div class="fixed inset-0 z-10001 bg-slate-950/95 flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease]"
     (click)="closeImage()">
     <button
-      class="absolute top-6 right-6 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all border border-white/10 backdrop-blur-md">
+      class="absolute top-6 right-6 w-10 h-10 bg-white dark:bg-slate-900/10 hover:bg-white dark:bg-slate-900/20 text-white rounded-full flex items-center justify-center transition-all border border-white/10 backdrop-blur-md">
       <lucide-icon name="x" size="24"></lucide-icon>
     </button>
     <img [src]="previewImage()" (error)="handleImageError($event)"

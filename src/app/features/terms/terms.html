@@ -3,8 +3,8 @@
   <!-- Header Section -->
   <div class="flex justify-between items-center mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Terms & Conditions</h1>
-      <p class="text-sm text-gray-500 mt-1">Manage active and past versions of Terms & Conditions.</p>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-slate-100">Terms & Conditions</h1>
+      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Manage active and past versions of Terms & Conditions.</p>
     </div>
     <app-button variant="primary" (onClick)="openCreateModel()">
       <lucide-icon name="plus" class="w-4 h-4 mr-2"></lucide-icon>
@@ -27,7 +27,7 @@
   <!-- Loading State -->
   <div *ngIf="isLoading()" class="flex flex-col items-center justify-center py-12">
     <lucide-icon name="loader-2" class="w-8 h-8 animate-spin text-gray-400"></lucide-icon>
-    <p class="mt-4 text-gray-500">Loading terms history...</p>
+    <p class="mt-4 text-gray-500 dark:text-slate-400">Loading terms history...</p>
   </div>
 
   <!-- Data Table -->
@@ -35,7 +35,7 @@
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-semibold tracking-wider">
+          <tr class="bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 text-xs uppercase text-gray-500 dark:text-slate-400 font-semibold tracking-wider">
             <th class="p-4">Version</th>
             <th class="p-4">Created Date</th>
             <th class="p-4">Status</th>
@@ -44,16 +44,16 @@
         </thead>
         <tbody class="divide-y divide-gray-200">
           <tr *ngIf="terms().length === 0">
-            <td colspan="4" class="p-8 text-center text-gray-500">
+            <td colspan="4" class="p-8 text-center text-gray-500 dark:text-slate-400">
               No terms found. Create your first version!
             </td>
           </tr>
-          <tr *ngFor="let term of terms()" class="hover:bg-gray-50 transition-colors">
-            <td class="p-4 font-medium text-gray-900">{{ term.version }}</td>
-            <td class="p-4 text-gray-500">{{ term.createdAt | date:'mediumDate' }}</td>
+          <tr *ngFor="let term of terms()" class="hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 transition-colors">
+            <td class="p-4 font-medium text-gray-900 dark:text-slate-100">{{ term.version }}</td>
+            <td class="p-4 text-gray-500 dark:text-slate-400">{{ term.createdAt | date:'mediumDate' }}</td>
             <td class="p-4">
               <span class="px-2.5 py-1 text-xs font-medium rounded-full"
-                    [ngClass]="term.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'">
+                    [ngClass]="term.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'">
                 {{ term.isActive ? 'Active' : 'Archived' }}
               </span>
             </td>
@@ -88,7 +88,7 @@
     ></app-form-input>
 
     <div class="space-y-1">
-      <label class="block text-sm font-medium text-gray-700">Terms Content</label>
+      <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Terms Content</label>
       <textarea
         [(ngModel)]="formData.content"
         rows="8"
@@ -100,12 +100,12 @@
 
     <div class="flex items-center mt-4">
       <input type="checkbox" id="isActive" [(ngModel)]="formData.isActive" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-      <label for="isActive" class="ml-2 text-sm font-medium text-gray-900">Make this the Active version</label>
+      <label for="isActive" class="ml-2 text-sm font-medium text-gray-900 dark:text-slate-100">Make this the Active version</label>
     </div>
-    <p class="text-xs text-gray-500 ml-6 mt-1">Checking this will archive the currently active terms.</p>
+    <p class="text-xs text-gray-500 dark:text-slate-400 ml-6 mt-1">Checking this will archive the currently active terms.</p>
   </div>
 
-  <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl">
+  <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 rounded-b-xl">
     <app-button variant="secondary" (onClick)="closeModel()">Cancel</app-button>
     <app-button variant="primary" (onClick)="submitForm()" [disabled]="!formData.version || !formData.content">
       {{ isEditing() ? 'Update' : 'Create' }}
@@ -119,13 +119,13 @@
     <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
       <lucide-icon name="alert-triangle" class="w-6 h-6 text-red-600"></lucide-icon>
     </div>
-    <h3 class="text-lg font-bold text-gray-900 mb-2">Delete Terms Version?</h3>
-    <p class="text-sm text-gray-500">
+    <h3 class="text-lg font-bold text-gray-900 dark:text-slate-100 mb-2">Delete Terms Version?</h3>
+    <p class="text-sm text-gray-500 dark:text-slate-400">
       Are you sure you want to delete version <span class="font-semibold">{{ selectedTerm()?.version }}</span>? 
       This action cannot be undone.
     </p>
   </div>
-  <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl">
+  <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 rounded-b-xl">
     <app-button variant="secondary" (onClick)="closeDeleteModel()">Cancel</app-button>
     <app-button variant="danger" (onClick)="submitDelete()">Delete</app-button>
   </div>

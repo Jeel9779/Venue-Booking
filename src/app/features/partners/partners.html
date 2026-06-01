@@ -8,13 +8,13 @@
 <div class="max-w-7xl mx-auto px-4 py-8 space-y-5 animate-pulse">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     @for (i of [1,2,3,4]; track i) {
-    <div class="h-24 bg-white border border-slate-200 rounded-2xl"></div>
+    <div class="h-24 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl"></div>
     }
   </div>
-  <div class="h-48 bg-white border border-slate-200 rounded-2xl"></div>
+  <div class="h-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl"></div>
   <div class="space-y-3">
     @for (i of [1,2,3]; track i) {
-    <div class="h-16 bg-white border border-slate-200 rounded-xl"></div>
+    <div class="h-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl"></div>
     }
   </div>
 </div>
@@ -26,8 +26,8 @@
     class="w-20 h-20 rounded-3xl bg-red-50 mx-auto mb-6 flex items-center justify-center text-red-500 shadow-lg shadow-red-100 border border-red-100 ring-4 ring-red-50">
     <lucide-icon name="triangle-alert" class="w-10 h-10"></lucide-icon>
   </div>
-  <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Unable to Load Data</h2>
-  <p class="text-slate-500 text-base font-medium mt-3 max-w-sm mx-auto leading-relaxed">{{ error() }}</p>
+  <h2 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Unable to Load Data</h2>
+  <p class="text-slate-500 dark:text-slate-400 text-base font-medium mt-3 max-w-sm mx-auto leading-relaxed">{{ error() }}</p>
   <button (click)="reload()"
     class="mt-8 bg-emerald-600 text-white px-8 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-widest hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-200">
     Retry Connection
@@ -46,8 +46,8 @@
         <lucide-icon name="building" class="w-5 h-5" [strokeWidth]="2.5"></lucide-icon>
       </div>
       <div>
-        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">Partners Directory</h1>
-        <p class="text-base font-medium text-slate-500 flex items-center gap-1.5 mt-0.5">
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 leading-tight">Partners Directory</h1>
+        <p class="text-base font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
           Analytics & Venue Management
           <span class="w-1 h-1 rounded-full bg-emerald-400 inline-block"></span>
           <span class="text-emerald-600 font-bold">{{ kpi().venues }} Total Venues</span>
@@ -61,53 +61,53 @@
 
     <!-- Vendors KPI -->
     <div
-      class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm dark:shadow-none hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 dark:text-slate-400 shadow-sm dark:shadow-none">
           <lucide-icon name="users" class="w-5 h-5"></lucide-icon>
         </div>
-        <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest">Vendors</span>
+        <span class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Vendors</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none">{{ kpi().vendors }}</p>
-      <p class="text-sm font-semibold text-slate-600 uppercase mt-2 tracking-wider">Active Affiliates</p>
+      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().vendors }}</p>
+      <p class="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase mt-2 tracking-wider">Active Affiliates</p>
     </div>
 
     <!-- Venues KPI -->
     <div
-      class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm dark:shadow-none hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-emerald-600 shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-emerald-600 shadow-sm dark:shadow-none">
           <lucide-icon name="map-pin" class="w-5 h-5"></lucide-icon>
         </div>
         <span class="text-[10px] font-extrabold text-emerald-500 uppercase tracking-widest">Venues</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none">{{ kpi().venues }}</p>
+      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().venues }}</p>
       <p class="text-sm font-semibold text-emerald-500 uppercase mt-2 tracking-wider">{{ kpi().active }} Live Spaces</p>
     </div>
 
     <!-- Reviews KPI -->
     <div
-      class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm dark:shadow-none hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-blue-600 shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-blue-600 shadow-sm dark:shadow-none">
           <lucide-icon name="message-square" class="w-5 h-5"></lucide-icon>
         </div>
         <span class="text-[10px] font-extrabold text-blue-500 uppercase tracking-widest">Reviews</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none">{{ kpi().totalReviews }}</p>
+      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().totalReviews }}</p>
       <p class="text-sm font-semibold text-blue-500 uppercase mt-2 tracking-wider">Verified Reviews</p>
     </div>
 
     <!-- Quality KPI -->
     <div
-      class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm dark:shadow-none hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-purple-600 shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-purple-600 shadow-sm dark:shadow-none">
           <lucide-icon name="star" class="w-5 h-5"></lucide-icon>
         </div>
         <span class="text-[10px] font-extrabold text-purple-500 uppercase tracking-widest">Quality</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none">{{ kpi().avgRating }}</p>
+      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().avgRating }}</p>
       <p class="text-sm font-semibold text-purple-500 uppercase mt-2 tracking-wider">Average Rating</p>
     </div>
 
@@ -115,14 +115,14 @@
 
   <!-- ANALYTICS CHART -->
   @if (chartData().length > 0) {
-  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+  <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm dark:shadow-none">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
       <div>
-        <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Venue Distribution</h3>
-        <p class="text-base text-slate-500 uppercase tracking-widest mt-0.5">Status breakdown per partner</p>
+        <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Venue Distribution</h3>
+        <p class="text-base text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">Status breakdown per partner</p>
       </div>
       <div
-        class="flex items-center gap-4 text-[10px] font-extrabold uppercase tracking-widest border border-slate-100 rounded-xl px-4 py-2.5 bg-slate-50">
+        class="flex items-center gap-4 text-[10px] font-extrabold uppercase tracking-widest border border-slate-100 rounded-xl px-4 py-2.5 bg-slate-50 dark:bg-slate-800">
         <span class="flex items-center gap-1.5 text-emerald-600"><span
             class="w-2 h-2 rounded-full bg-emerald-500"></span> Approved</span>
         <span class="flex items-center gap-1.5 text-amber-500"><span class="w-2 h-2 rounded-full bg-amber-400"></span>
@@ -135,10 +135,10 @@
     <div class="space-y-4">
       @for (row of chartData(); track row.label) {
       <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
-        <div class="w-36 shrink-0 text-[11px] font-extrabold text-slate-600 uppercase tracking-wide truncate">{{
+        <div class="w-36 shrink-0 text-[11px] font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-wide truncate">{{
           row.label
           }}</div>
-        <div class="flex-1 h-8 flex gap-1 rounded-xl overflow-hidden bg-slate-100 p-1 border border-slate-200">
+        <div class="flex-1 h-8 flex gap-1 rounded-xl overflow-hidden bg-slate-100 p-1 border border-slate-200 dark:border-slate-700">
           @if (row.approved > 0) {
           <div
             class="h-full bg-emerald-400 rounded-lg flex items-center justify-center text-[10px] font-extrabold text-white transition-all duration-500"
@@ -161,7 +161,7 @@
           </div>
           }
         </div>
-        <div class="hidden lg:block w-8 text-right text-sm font-extrabold text-slate-500">{{ row.value }}</div>
+        <div class="hidden lg:block w-8 text-right text-sm font-extrabold text-slate-500 dark:text-slate-400">{{ row.value }}</div>
       </div>
       }
     </div>
@@ -171,17 +171,17 @@
   <!-- DIRECTORY CONTROLS -->
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4">
     <div>
-      <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Partner Ecosystem</h2>
-      <p class="text-base text-slate-500 mt-0.5">Manage vendor permissions and venue visibility</p>
+      <h2 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Partner Ecosystem</h2>
+      <p class="text-base text-slate-500 dark:text-slate-400 mt-0.5">Manage vendor permissions and venue visibility</p>
     </div>
     <div class="relative group max-w-sm w-full">
       <div
-        class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-emerald-500 transition-colors">
+        class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 dark:text-slate-400 group-focus-within:text-emerald-500 transition-colors">
         <lucide-icon name="search" class="w-4 h-4"></lucide-icon>
       </div>
       <input type="text" [ngModel]="search()" (ngModelChange)="search.set($event)"
         placeholder="Search by vendor, venue or city..."
-        class="w-full bg-white border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm font-medium text-slate-700 placeholder:text-slate-500 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all outline-none shadow-sm">
+        class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-10 pr-4 text-sm font-medium text-slate-700 dark:text-slate-300 placeholder:text-slate-500 dark:text-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all outline-none shadow-sm dark:shadow-none">
     </div>
   </div>
 
@@ -189,38 +189,38 @@
   <div class="space-y-3">
     @for (partner of filteredPartners(); track partner.id) {
     <div
-      class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none hover:shadow-md transition-all duration-300 overflow-hidden group">
       <!-- VENDOR ROW -->
       <div
-        class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50/80 transition-colors"
+        class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-800/80 transition-colors"
         (click)="toggle(partner.id)" (keydown.enter)="toggle(partner.id)" role="button">
         <div class="flex items-center gap-4">
           <div
-            class="w-11 h-11 rounded-xl flex items-center justify-center text-gray-500 text-xl font-extrabold select-none shrink-0 bg-transparent">
+            class="w-11 h-11 rounded-xl flex items-center justify-center text-gray-500 dark:text-slate-400 text-xl font-extrabold select-none shrink-0 bg-transparent">
             {{ getInitials(partner.name) }}
           </div>
           <div class="min-w-0">
             <!-- Subtitle: fullName + email -->
-            <p class="text-base font-semibold text-slate-500 flex items-center gap-1.5 mb-0.5">
-              <span class="text-sm font-extrabold text-slate-900">{{ partner.name }}</span>
+            <p class="text-base font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-0.5">
+              <span class="text-sm font-extrabold text-slate-900 dark:text-slate-100">{{ partner.name }}</span>
               <span class="w-1 h-1 rounded-full bg-slate-300 inline-block"></span>
               {{ partner.email }}
             </p>
             <!-- Primary heading: businessName -->
-            <h4 class="text-sm font-normal text-slate-600 leading-tight tracking-tight truncate">
+            <h4 class="text-sm font-normal text-slate-600 dark:text-slate-400 leading-tight tracking-tight truncate">
               {{ partner.businessName || 'Independent Partner' }}
             </h4>
             <div class="flex flex-wrap items-center gap-1.5 mt-2">
               <span
-                class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700">
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">
                 {{ getVendorStatus(partner.spaces) }}
               </span>
               @if (partner.isSubscriptionActive) {
               <span
-                class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700">Subscribed</span>
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">Subscribed</span>
               }
               <span
-                class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 bg-gray-200 border border-gray-300 px-2.5 py-1 rounded-full">
+                class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-gray-200 border border-gray-300 px-2.5 py-1 rounded-full">
                 <lucide-icon name="map-pin" class="w-3 h-3 text-emerald-500"></lucide-icon>
                 {{ partner.spaces.length }} {{ partner.spaces.length === 1 ? 'Venue' : 'Venues' }}
               </span>
@@ -239,19 +239,19 @@
           <div class="hidden lg:flex -space-x-2">
             @for (s of partner.spaces.slice(0,3); track s._id) {
             <div
-              class="w-8 h-8 rounded-lg bg-white border-2 border-white shadow-sm flex items-center justify-center text-[9px] font-extrabold text-slate-500 uppercase select-none overflow-hidden ring-1 ring-slate-200">
+              class="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border-2 border-white shadow-sm dark:shadow-none flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 uppercase select-none overflow-hidden ring-1 ring-slate-200">
               {{ getInitials(s.name) }}
             </div>
             }
             @if (partner.spaces.length > 3) {
             <div
-              class="w-8 h-8 rounded-lg bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-[9px] font-extrabold text-slate-500 ring-1 ring-slate-200">
+              class="w-8 h-8 rounded-lg bg-slate-100 border-2 border-white shadow-sm dark:shadow-none flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 ring-1 ring-slate-200">
               +{{ partner.spaces.length - 3 }}
             </div>
             }
           </div>
           <div
-            class="w-7 h-7 rounded-lg border border-slate-200 bg-white flex items-center justify-center text-slate-500 group-hover:text-emerald-600 transition-all duration-300 shadow-sm"
+            class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:text-emerald-600 transition-all duration-300 shadow-sm dark:shadow-none"
             [class.rotate-180]="expandedMap()[partner.id]">
             <lucide-icon name="chevron-down" class="w-4 h-4"></lucide-icon>
           </div>
@@ -261,54 +261,54 @@
       <!-- EXPANDED VENUE GRID -->
       @if (expandedMap()[partner.id]) {
       <div
-        class="border-t border-slate-200 bg-slate-100 px-5 py-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
+        class="border-t border-slate-200 dark:border-slate-700 bg-slate-100 px-5 py-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
         @for (space of partner.spaces; track space._id) {
         <div
-          class="bg-white rounded-2xl border border-gray-300 p-4 flex flex-col gap-3 shadow-md hover:-translate-y-1 transition-all duration-300 group/venue">
+          class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-300 p-4 flex flex-col gap-3 shadow-md hover:-translate-y-1 transition-all duration-300 group/venue">
           <div class="flex items-start justify-between">
             <div class="flex items-start gap-3">
               <div
-                class="w-9 h-9 rounded-xl bg-gray-200 border border-gray-300 flex items-center justify-center shrink-0 text-slate-600 transition-colors">
+                class="w-9 h-9 rounded-xl bg-gray-200 border border-gray-300 flex items-center justify-center shrink-0 text-slate-600 dark:text-slate-400 transition-colors">
                 <lucide-icon name="building" class="w-5 h-5"></lucide-icon>
               </div>
               <div class="min-w-0">
-                <p class="text-sm font-extrabold text-slate-900 truncate tracking-tight">{{ space.name }}</p>
-                <p class="text-xs font-semibold text-slate-500 mt-0.5">{{ space.city }}, {{ space.state }}</p>
+                <p class="text-sm font-extrabold text-slate-900 dark:text-slate-100 truncate tracking-tight">{{ space.name }}</p>
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">{{ space.city }}, {{ space.state }}</p>
               </div>
             </div>
             <span
-              class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700">
+              class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">
               {{ getStatus(space.status) }}
             </span>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div class="bg-gray-200 border border-gray-300 p-3 rounded-xl">
-              <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest mb-0.5">Price</p>
-              <p class="text-sm font-extrabold text-slate-800">₹{{ space.pricePerDay }}<span
-                  class="text-[9px] text-slate-500 ml-0.5">/day</span></p>
+              <p class="text-[9px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-0.5">Price</p>
+              <p class="text-sm font-extrabold text-slate-800 dark:text-slate-200">₹{{ space.pricePerDay }}<span
+                  class="text-[9px] text-slate-500 dark:text-slate-400 ml-0.5">/day</span></p>
             </div>
             <div class="min-w-0 text-right bg-gray-200 border border-gray-300 p-3 rounded-xl">
-              <p class="text-[9px] font-semibold text-slate-600 uppercase tracking-widest mb-0.5">Capacity</p>
-              <p class="text-sm font-extrabold text-slate-800">{{ space.capacity }} <span
-                  class="text-[9px] text-slate-500">Guests</span></p>
+              <p class="text-[9px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-0.5">Capacity</p>
+              <p class="text-sm font-extrabold text-slate-800 dark:text-slate-200">{{ space.capacity }} <span
+                  class="text-[9px] text-slate-500 dark:text-slate-400">Guests</span></p>
             </div>
           </div>
 
-          <div class="flex items-center gap-2 border-t border-slate-200 pt-3">
+          <div class="flex items-center gap-2 border-t border-slate-200 dark:border-slate-700 pt-3">
             <button (click)="openModal(space, $event)"
-              class="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-xl py-2.5 transition-all">
+              class="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-800 rounded-xl py-2.5 transition-all">
               <lucide-icon name="eye" class="w-4 h-4"></lucide-icon>
               View Details
             </button>
             <button (click)="deleteVenue(space, $event)"
-              class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-red-50 rounded-xl transition-all">
+              class="w-8 h-8 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-red-50 rounded-xl transition-all">
               <lucide-icon name="trash-2" class="w-4 h-4"></lucide-icon>
             </button>
           </div>
         </div>
         } @empty {
-        <div class="col-span-full py-10 text-center bg-white border border-dashed border-slate-200 rounded-3xl">
+        <div class="col-span-full py-10 text-center bg-white dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-700 rounded-3xl">
           <p class="text-xs font-extrabold text-slate-300 uppercase tracking-[0.2em]">No venues added yet</p>
         </div>
         }
@@ -318,12 +318,12 @@
     }
 
     @if (filteredPartners().length === 0) {
-    <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
-      <div class="w-14 h-14 rounded-2xl bg-slate-50 mx-auto mb-5 flex items-center justify-center text-slate-300">
+    <div class="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
+      <div class="w-14 h-14 rounded-2xl bg-slate-50 dark:bg-slate-800 mx-auto mb-5 flex items-center justify-center text-slate-300">
         <lucide-icon name="search" class="w-7 h-7"></lucide-icon>
       </div>
-      <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">No results found</h3>
-      <p class="text-base text-slate-500 mt-1.5">No partners matching <span class="font-semibold text-slate-700">"{{
+      <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">No results found</h3>
+      <p class="text-base text-slate-500 dark:text-slate-400 mt-1.5">No partners matching <span class="font-semibold text-slate-700 dark:text-slate-300">"{{
           search() }}"</span></p>
       <button (click)="search.set('')"
         class="mt-5 text-xs font-extrabold uppercase tracking-widest text-emerald-600 hover:text-emerald-700 underline underline-offset-4">Clear
@@ -343,26 +343,26 @@
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-slate-100 pb-6">
       <div class="flex-1">
         <div class="flex items-center gap-2 mb-2">
-          <span class="badge-premium border border-gray-300 bg-gray-200 text-slate-700">{{ selectedVenue()!.type ||
+          <span class="badge-premium border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">{{ selectedVenue()!.type ||
             'VENUE' }}</span>
           @if (selectedPartner()?.isSubscriptionActive) {
-          <span class="badge-premium border border-gray-300 bg-gray-200 text-slate-700">Premium Partner</span>
+          <span class="badge-premium border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">Premium Partner</span>
           }
         </div>
-        <h4 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">{{ selectedVenue()!.name }}</h4>
-        <p class="text-base text-slate-500 mt-1.5 flex items-center gap-2">
+        <h4 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">{{ selectedVenue()!.name }}</h4>
+        <p class="text-base text-slate-500 dark:text-slate-400 mt-1.5 flex items-center gap-2">
           <lucide-icon name="map-pin" class="w-4 h-4 text-emerald-500"></lucide-icon>
           {{ selectedVenue()!.city }}, {{ selectedVenue()!.state }}
         </p>
       </div>
       <div class="flex flex-col items-end gap-2 shrink-0">
-        <span class="badge-premium text-[10px] px-4 py-1.5 border border-gray-300 bg-gray-200 text-slate-700 shadow-sm">
+        <span class="badge-premium text-[10px] px-4 py-1.5 border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300 shadow-sm dark:shadow-none">
           {{ getStatus(selectedVenue()!.status) }}
         </span>
         @if (selectedVenue()!.averageRating > 0) {
-        <div class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+        <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
           <span class="text-amber-500 text-sm">★</span>
-          <span class="text-sm font-extrabold text-slate-700">{{ selectedVenue()!.averageRating }}</span>
+          <span class="text-sm font-extrabold text-slate-700 dark:text-slate-300">{{ selectedVenue()!.averageRating }}</span>
           <span class="text-[10px] font-bold text-slate-300">/ 5.0</span>
         </div>
         }
@@ -372,10 +372,10 @@
     <!-- MEDIA GALLERY -->
     @if (selectedVenue()!.mediaFiles && selectedVenue()!.mediaFiles.length > 0) {
     <div>
-      <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-3">Gallery</p>
+      <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Gallery</p>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
         @for (img of selectedVenue()!.mediaFiles; track img) {
-        <div class="aspect-video rounded-xl overflow-hidden border border-slate-200 group cursor-pointer"
+        <div class="aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 group cursor-pointer"
           (click)="openImagePreview(getImageUrl(img))">
           <img [src]="getImageUrl(img)" (error)="handleImageError($event)" alt="Venue"
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -387,40 +387,40 @@
 
     <!-- STATS ROW -->
     <div class="grid grid-cols-3 gap-3">
-      <div class="bg-white border border-gray-300 p-4 rounded-2xl">
-        <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-1">Price</p>
-        <p class="text-base font-extrabold text-slate-500">₹{{ selectedVenue()!.pricePerDay }}<span
-            class="text-[10px] text-slate-500 ml-0.5">/day</span></p>
+      <div class="bg-white dark:bg-slate-900 border border-gray-300 p-4 rounded-2xl">
+        <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Price</p>
+        <p class="text-base font-extrabold text-slate-500 dark:text-slate-400">₹{{ selectedVenue()!.pricePerDay }}<span
+            class="text-[10px] text-slate-500 dark:text-slate-400 ml-0.5">/day</span></p>
       </div>
-      <div class="bg-white border border-gray-300 p-4 rounded-2xl">
-        <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-1">Capacity</p>
-        <p class="text-base font-extrabold text-slate-500">{{ selectedVenue()!.capacity }} <span
-            class="text-[10px] text-slate-500">Guests</span></p>
+      <div class="bg-white dark:bg-slate-900 border border-gray-300 p-4 rounded-2xl">
+        <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Capacity</p>
+        <p class="text-base font-extrabold text-slate-500 dark:text-slate-400">{{ selectedVenue()!.capacity }} <span
+            class="text-[10px] text-slate-500 dark:text-slate-400">Guests</span></p>
       </div>
-      <div class="bg-white border border-gray-300 p-4 rounded-2xl">
-        <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-1">Available</p>
-        <p class="text-sm font-extrabold text-slate-500">{{ selectedVenue()!.availableFrom | date:'mediumDate' }}</p>
+      <div class="bg-white dark:bg-slate-900 border border-gray-300 p-4 rounded-2xl">
+        <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Available</p>
+        <p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">{{ selectedVenue()!.availableFrom | date:'mediumDate' }}</p>
       </div>
     </div>
 
     <!-- DESCRIPTION -->
-    <div class="bg-slate-50 border border-gray-300 p-5 rounded-2xl">
-      <p class="text-sm font-semibold text-slate-600 uppercase tracking-widest mb-2 flex items-center gap-2">
+    <div class="bg-slate-50 dark:bg-slate-800 border border-gray-300 p-5 rounded-2xl">
+      <p class="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
         <lucide-icon name="info" class="w-4 h-4 text-emerald-500"></lucide-icon>
         Description
       </p>
-      <p class="text-base text-slate-700 leading-relaxed">{{ selectedVenue()!.description || 'No description provided.'
+      <p class="text-base text-slate-700 dark:text-slate-300 leading-relaxed">{{ selectedVenue()!.description || 'No description provided.'
         }}
       </p>
     </div>
 
     <!-- AMENITIES -->
     <div>
-      <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-3">Amenities & Services</p>
+      <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Amenities & Services</p>
       <div class="flex flex-wrap gap-2">
         @for (amenity of getAmenities(selectedVenue()!); track amenity) {
         <span
-          class="px-3 py-1.5 bg-slate-300 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:border-emerald-300 hover:text-emerald-700 transition-colors">{{
+          class="px-3 py-1.5 bg-slate-300 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-emerald-300 hover:text-emerald-700 transition-colors">{{
           amenity }}</span>
         }
       </div>
@@ -429,10 +429,10 @@
     <!-- REVIEWS -->
     @if (selectedVenue()!.reviews && selectedVenue()!.reviews.length > 0) {
     <div class="border-t border-slate-100 pt-5">
-      <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Customer Reviews</p>
+      <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">Customer Reviews</p>
       <div class="space-y-3">
         @for (rev of selectedVenue()!.reviews; track rev._id) {
-        <div class="p-4 rounded-xl bg-white border border-slate-100 shadow-sm">
+        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 shadow-sm dark:shadow-none">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-0.5">
               @for (star of [1,2,3,4,5]; track star) {
@@ -440,10 +440,10 @@
                 [class.text-slate-200]="star > rev.rating">★</span>
               }
             </div>
-            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ rev.createdAt |
+            <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ rev.createdAt |
               date:'mediumDate' }}</span>
           </div>
-          <p class="text-sm text-slate-600 italic leading-relaxed">"{{ rev.feedback }}"</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 italic leading-relaxed">"{{ rev.feedback }}"</p>
         </div>
         }
       </div>
@@ -480,7 +480,7 @@
       }
       @if (selectedVenue()!.status !== 'rejected') {
       <button (click)="openRejectFlow()" [disabled]="actionLoading()"
-        class="bg-white text-red-600 border border-red-200 px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-50 transition-all disabled:opacity-50 active:scale-95">
+        class="bg-white dark:bg-slate-900 text-red-600 border border-red-200 px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-50 transition-all disabled:opacity-50 active:scale-95">
         Reject Venue
       </button>
       }
@@ -495,13 +495,13 @@
   <div class="space-y-5">
     <div class="p-4 rounded-xl bg-red-100 border border-red-300 flex items-start gap-4">
       <div
-        class="w-9 h-9 rounded-lg bg-white border border-red-300 flex items-center justify-center text-red-500 shrink-0">
+        class="w-9 h-9 rounded-lg bg-white dark:bg-slate-900 border border-red-300 flex items-center justify-center text-red-500 shrink-0">
         <lucide-icon name="alert-triangle" class="w-5 h-5"></lucide-icon>
       </div>
       <div>
-        <h5 class="text-lg font-extrabold text-slate-900">Rejection Notice</h5>
+        <h5 class="text-lg font-extrabold text-slate-900 dark:text-slate-100">Rejection Notice</h5>
         <p class="text-base text-red-600 font-medium mt-1 leading-relaxed">
-          Provide a reason for rejecting <span class="text-slate-900 font-extrabold">"{{ selectedVenue()?.name
+          Provide a reason for rejecting <span class="text-slate-900 dark:text-slate-100 font-extrabold">"{{ selectedVenue()?.name
             }}"</span>.
           This will be sent to the vendor.
         </p>
@@ -509,14 +509,14 @@
     </div>
 
     <div>
-      <label class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-2 block">Rejection
+      <label class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 block">Rejection
         Message</label>
       <textarea [ngModel]="rejectReason()" (ngModelChange)="rejectReason.set($event)"
         placeholder="e.g. Image quality is low, description is insufficient..."
-        class="w-full h-36 bg-slate-100 border border-slate-300 rounded-xl p-4 text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:bg-white focus:ring-4 focus:ring-emerald-500/8 transition-all outline-none resize-none"></textarea>
+        class="w-full h-36 bg-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl p-4 text-sm font-medium text-slate-700 dark:text-slate-300 placeholder:text-slate-300 focus:bg-white dark:bg-slate-900 focus:ring-4 focus:ring-emerald-500/8 transition-all outline-none resize-none"></textarea>
       <div class="flex justify-between items-center mt-2 px-1">
         <p class="text-[10px] font-bold"
-          [class]="rejectReason().trim().length >= 10 ? 'text-emerald-500' : 'text-slate-500'">
+          [class]="rejectReason().trim().length >= 10 ? 'text-emerald-500' : 'text-slate-500 dark:text-slate-400'">
           {{ rejectReason().trim().length >= 10 ? '✓ Ready to submit' : 'Minimum 10 characters required' }}
         </p>
         <p class="text-[10px] font-extrabold text-slate-300">{{ rejectReason().trim().length }} / 500</p>
@@ -526,7 +526,7 @@
 
   <div footer class="flex justify-end gap-3 w-full pt-3">
     <button (click)="closeRejectModal()"
-      class="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 hover:text-slate-600 transition-colors px-4 py-2.5">Cancel</button>
+      class="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:text-slate-400 transition-colors px-4 py-2.5">Cancel</button>
     <button (click)="submitReject()" [disabled]="rejectReason().trim().length < 10 || actionLoading()"
       class="bg-red-600 text-white px-8 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-lg shadow-red-100 hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
       @if (actionLoading()) {
@@ -547,9 +547,9 @@
       <lucide-icon name="trash-2" class="w-8 h-8"></lucide-icon>
     </div>
     <div class="text-center">
-      <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Delete Venue?</h3>
-      <p class="text-xs text-slate-500 font-medium mt-2 leading-relaxed px-4">
-        Are you sure you want to delete <span class="text-slate-900 font-extrabold">"{{ venueToDelete()?.name
+      <h3 class="text-base font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Delete Venue?</h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-2 leading-relaxed px-4">
+        Are you sure you want to delete <span class="text-slate-900 dark:text-slate-100 font-extrabold">"{{ venueToDelete()?.name
           }}"</span>?
         This action is permanent and cannot be undone.
       </p>
@@ -558,7 +558,7 @@
 
   <div footer class="flex gap-3 w-full pt-4">
     <button (click)="venueToDelete.set(null)" [disabled]="actionLoading()"
-      class="flex-1 text-[11px] font-extrabold uppercase tracking-widest text-slate-500 hover:text-slate-600 transition-colors py-3">Cancel</button>
+      class="flex-1 text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:text-slate-400 transition-colors py-3">Cancel</button>
     <button (click)="confirmDelete()" [disabled]="actionLoading()"
       class="flex-1 bg-red-600 text-white rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-lg shadow-red-100 hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2 py-3">
       @if (actionLoading()) {

@@ -244,10 +244,22 @@ export class Header implements OnInit {
     this.router.navigate([item.path]);
   }
 
+  // Modal state
+  showLogoutModal = signal(false);
+
   // Logout method matching the sidebar perfectly!
   logout() {
+    this.showLogoutModal.set(true);
+  }
+
+  cancelLogout() {
+    this.showLogoutModal.set(false);
+  }
+
+  confirmLogout() {
     localStorage.removeItem('adminId');
     localStorage.removeItem('admin');
+    this.showLogoutModal.set(false);
     this.router.navigate(['/login']);
   }
 }

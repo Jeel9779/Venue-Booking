@@ -71,50 +71,79 @@ export class Login implements OnInit {
    * Handles the form submission to authenticate the admin.
    */
   login() {
-    // Prevent submission if form is invalid or already loading
     if (this.form.invalid || this.isLoading()) return;
 
     const { username, password, remember } = this.form.value;
-
-    // Reset states
     this.isLoading.set(true);
     this.errorMsg = '';
 
-    // API Call to backend
+    const cleanUsername = username ? username.trim() : '';
+    const cleanPassword = password ? password.trim() : '';
+
+    // Create an array of possible username cases to try
+    const titleCase = cleanUsername.charAt(0).toUpperCase() + cleanUsername.slice(1).toLowerCase();
+    const casesToTry = [
+      cleanUsername,               // 1. As typed
+      cleanUsername.toLowerCase(), // 2. All lowercase
+      titleCase,                   // 3. Title Case
+      cleanUsername.toUpperCase()  // 4. All uppercase
+    ];
+
+    // Remove duplicates to avoid redundant API calls
+    const uniqueCases = [...new Set(casesToTry)];
+
+    this.attemptLogin(uniqueCases, cleanPassword, !!remember, 0);
+  }
+
+  /**
+   * Recursively attempts to login with different casing formats
+   * This provides a frontend-simulated case-insensitive login
+   */
+  private attemptLogin(usernameCases: string[], password: string, remember: boolean, index: number) {
+    if (index >= usernameCases.length) {
+      // All attempts failed
+      this.errorMsg = 'Invalid credentials. Please try again.';
+      this.isLoading.set(false);
+      return;
+    }
+
+    const currentUsername = usernameCases[index];
+    console.log(`Attempting login with username: '${currentUsername}'`);
+
     this.http.post<any>(`${API_BASE_URL}/admin/login`, {
-      username,
-      password
+      username: currentUsername,
+      password: password
     }).subscribe({
       next: (res) => {
-        // 🔒 SECURITY SANITIZATION:
-        // Never store sensitive information like passwords or credentials in local storage!
-        // We only extract non-sensitive display fields needed for the frontend header/navigation.
+        // Success! Save data and redirect
         const sanitizedAdmin = {
           _id: res.admin._id,
           username: res.admin.username,
           role: res.admin.role || 'admin',
         };
 
-        // Save sanitized data
         localStorage.setItem('admin', JSON.stringify(sanitizedAdmin));
         localStorage.setItem('adminId', res.admin._id);
 
-        // Handle 'Remember Me' logic
         if (remember) {
-          localStorage.setItem('rememberedAdminUsername', username || '');
+          localStorage.setItem('rememberedAdminUsername', this.form.value.username || '');
         } else {
           localStorage.removeItem('rememberedAdminUsername');
         }
 
         this.isLoading.set(false);
-        this.toastService.success('Login successful! Welcome back.');
-        this.router.navigate(['/dashboard']); // Redirect to dashboard
+        this.toastService.success(`Login successful! Welcome back, ${res.admin.username}.`);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        // Display error message from backend or fallback
-        this.errorMsg = err?.error?.message || 'Login failed. Please try again.';
-        this.toastService.error(this.errorMsg);
-        this.isLoading.set(false);
+        // If it's a 400 error (Invalid credentials), try the next case
+        if (err.status === 400 || err.status === 401) {
+          this.attemptLogin(usernameCases, password, remember, index + 1);
+        } else {
+          // For server errors (500) or network errors, stop and show error
+          this.errorMsg = err?.error?.message || 'Login failed. Please try again.';
+          this.isLoading.set(false);
+        }
       }
     });
   }

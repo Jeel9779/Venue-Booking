@@ -3,8 +3,8 @@
   
   <!-- Header -->
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Complaint Management</h1>
-    <p class="text-gray-500 mt-2">Review, investigate, and resolve service disputes to maintain the premium standards of Book My Venue.</p>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Complaint Management</h1>
+    <p class="text-gray-500 dark:text-slate-400 mt-2">Review, investigate, and resolve service disputes to maintain the premium standards of Book My Venue.</p>
   </div>
 
   <!-- Critical Banner -->
@@ -28,50 +28,50 @@
     <!-- Left Column (Active Complaints) -->
     <div class="lg:col-span-2">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">Active Complaints</h2>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-slate-100">Active Complaints</h2>
         <div class="flex gap-4 text-sm font-medium">
           <span class="text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full cursor-pointer">All Cases</span>
-          <span class="text-gray-500 hover:text-gray-900 cursor-pointer">Urgent</span>
-          <span class="text-gray-500 hover:text-gray-900 cursor-pointer">Pending Review</span>
+          <span class="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 cursor-pointer">Urgent</span>
+          <span class="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 cursor-pointer">Pending Review</span>
         </div>
       </div>
 
       <div class="space-y-6">
         @for (complaint of activeComplaints; track complaint.id) {
-          <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex gap-6">
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700 flex gap-6">
             <img [src]="complaint.image" alt="Venue Image" class="w-40 h-32 object-cover rounded-xl shrink-0">
             
             <div class="flex-1 flex flex-col justify-between">
               <div>
                 <div class="flex justify-between items-start">
                   <div>
-                    <h3 class="font-bold text-lg text-gray-900">{{complaint.venueName}}</h3>
-                    <p class="text-sm text-gray-500 mt-1">Ticket {{complaint.id}} • User: {{complaint.user}}</p>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-slate-100">{{complaint.venueName}}</h3>
+                    <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Ticket {{complaint.id}} • User: {{complaint.user}}</p>
                   </div>
                   <span class="text-xs font-bold px-3 py-1 rounded-full uppercase" [ngClass]="complaint.urgencyClass">
                     {{complaint.urgency}}
                   </span>
                 </div>
                 
-                <p class="text-gray-600 mt-3 text-sm line-clamp-2">
+                <p class="text-gray-600 dark:text-slate-400 mt-3 text-sm line-clamp-2">
                   {{complaint.description}}
                 </p>
               </div>
 
               <div class="mt-4">
-                <div class="flex justify-between text-xs font-bold text-gray-500 uppercase mb-2">
+                <div class="flex justify-between text-xs font-bold text-gray-500 dark:text-slate-400 uppercase mb-2">
                   <span>Investigation Progress</span>
                   <span>{{complaint.progress}}%</span>
                 </div>
-                <div class="h-2 bg-gray-100 rounded-full w-full overflow-hidden mb-4">
+                <div class="h-2 bg-gray-100 dark:bg-slate-800 rounded-full w-full overflow-hidden mb-4">
                   <div class="h-full bg-indigo-600 rounded-full" [style.width.%]="complaint.progress"></div>
                 </div>
 
                 <div class="flex gap-2 text-sm font-medium">
-                  <button class="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors">Review Case</button>
+                  <button class="px-4 py-2 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 rounded-lg transition-colors">Review Case</button>
                   <button class="px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Warn</button>
                   <button class="px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">Suspend</button>
-                  <button class="px-4 py-2 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">Restrict</button>
+                  <button class="px-4 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 rounded-lg transition-colors">Restrict</button>
                 </div>
               </div>
             </div>
@@ -85,12 +85,12 @@
       
       <!-- Stats -->
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-indigo-500 text-white rounded-2xl p-6 shadow-sm">
+        <div class="bg-indigo-500 text-white rounded-2xl p-6 shadow-sm dark:shadow-none">
           <lucide-icon [img]="icons.checkCircle" size="24" class="mb-4 text-indigo-200"></lucide-icon>
           <div class="text-4xl font-bold mb-1">142</div>
           <div class="text-indigo-100 font-medium text-sm leading-tight">Cleared<br>Cases</div>
         </div>
-        <div class="bg-[#8B5CF6] text-white rounded-2xl p-6 shadow-sm">
+        <div class="bg-[#8B5CF6] text-white rounded-2xl p-6 shadow-sm dark:shadow-none">
           <lucide-icon [img]="icons.trendingUp" size="24" class="mb-4 text-purple-200"></lucide-icon>
           <div class="text-4xl font-bold mb-1">28</div>
           <div class="text-purple-100 font-medium text-sm leading-tight">Escalated<br>Today</div>
@@ -98,8 +98,8 @@
       </div>
 
       <!-- Enforcement Activity -->
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <h3 class="font-bold text-gray-900 mb-6">Enforcement Activity</h3>
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700">
+        <h3 class="font-bold text-gray-900 dark:text-slate-100 mb-6">Enforcement Activity</h3>
         
         <div class="space-y-6">
           @for (activity of enforcementActivities; track activity.action) {
@@ -110,8 +110,8 @@
                 <div class="font-bold text-lg" *ngIf="activity.action === 'Suspended'">A</div> <!-- Just a placeholder icon style -->
               </div>
               <div>
-                <div class="font-bold text-gray-900 text-sm">{{activity.action}}</div>
-                <div class="text-sm font-medium text-gray-600 mt-0.5">{{activity.venue}}</div>
+                <div class="font-bold text-gray-900 dark:text-slate-100 text-sm">{{activity.action}}</div>
+                <div class="text-sm font-medium text-gray-600 dark:text-slate-400 mt-0.5">{{activity.venue}}</div>
                 <div class="text-xs text-gray-400 mt-0.5" *ngIf="activity.violation">Violation: {{activity.violation}}</div>
                 <div class="text-[0.65rem] font-bold text-gray-400 uppercase mt-2">{{activity.timeAgo}}</div>
               </div>
@@ -123,10 +123,10 @@
       </div>
 
       <!-- Concierge Insight -->
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative overflow-hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
         <h3 class="font-bold text-indigo-600 mb-3 text-sm">Concierge Insight</h3>
-        <p class="text-sm text-gray-600 leading-relaxed">
+        <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">
           Complaint volume is up 12% this weekend. Suggest activating the automated "Review Request" for all...
         </p>
       </div>
