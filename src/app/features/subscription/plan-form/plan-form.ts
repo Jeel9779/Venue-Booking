@@ -112,13 +112,18 @@ export class PlanForm implements OnInit {
       return;
     }
 
-    const payload = this.planForm.value as Partial<Plan>;
-    // Normalize parentPlanId: send null if empty string or undefined
-    if (!payload.parentPlanId) {
-      payload.parentPlanId = null;
+    const payload = { ...this.planForm.value } as Partial<Plan>;
+    
+    // Normalize parentPlanId
+    if (payload.planType === 'base') {
+      // Remove parentPlanId completely for base plans so Mongoose doesn't try to cast null to ObjectId
+      delete payload.parentPlanId;
+    } else {
+      // For add-on plans, if empty string or undefined, send null (or handle depending on backend)
+      if (!payload.parentPlanId) {
+        payload.parentPlanId = null;
+      }
     }
-    // Ensure we don't send undefined parentPlanId for base plans
-    if (payload.parentPlanId === undefined) delete payload.parentPlanId;
     const p = this.plan();
 
     if (p?._id) {

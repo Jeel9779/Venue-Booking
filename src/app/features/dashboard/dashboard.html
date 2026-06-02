@@ -1,13 +1,13 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="p-6 sm:p-10 bg-gray-300 text-slate-800 dark:text-slate-200 min-h-screen font-sans selection:bg-indigo-500 selection:text-white">
+<div class="w-full p-4 sm:p-6 text-slate-800 dark:text-slate-200 font-sans selection:bg-indigo-500 selection:text-white">
 
-  <div class="max-w-[1600px] mx-auto">
+  <div class="w-full">
 
     <!-- ── HEADER ── -->
     <div class="flex flex-col gap-4 sm:flex-row items-start sm:items-center justify-between mb-10">
       <div class="flex items-center gap-5">
         <div
-          class="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-indigo-100 hover:scale-105 transition-transform duration-300">
+          class="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-white hover:scale-105 transition-transform duration-300">
           <lucide-icon name="layout-dashboard" size="30"></lucide-icon>
         </div>
         <div>
@@ -18,7 +18,7 @@
       </div>
 
       <div class="flex items-center gap-4">
-        <div class="px-5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center gap-3 shadow-sm dark:shadow-none">
+        <div class="px-5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center gap-3 dark:">
           <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
           <span class="text-xs font-black text-slate-700 dark:text-slate-300 tracking-wider uppercase">Live Sync Active</span>
         </div>
@@ -29,7 +29,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
       @for (s of newStats(); track s.title) {
       <div
-        class="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-700/80 shadow-sm dark:shadow-none hover:shadow-md hover:border-slate-300 dark:border-slate-700 transition-all duration-300 transform hover:-translate-y-1"
+        class="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-700/80 dark: hover: hover:border-slate-300 dark:border-slate-700 transition-all duration-300 transform hover:-translate-y-1"
         [ngClass]="s.accentClass">
         <div class="flex justify-between items-start mb-4">
           <div
@@ -68,7 +68,7 @@
         <div class="grid sm:grid-cols-2 gap-8">
 
           <!-- Question 1: Are bookings increasing? -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none flex flex-col justify-between">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark: flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">Booking Growth Velocity</h3>
@@ -120,7 +120,7 @@
           </div>
 
           <!-- Question 6: Which city grows fastest? -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark:">
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">Top Growing Cities</h3>
               <lucide-icon name="map-pin" size="20" class="text-indigo-500"></lucide-icon>
@@ -162,7 +162,7 @@
         </div>
 
         <!-- Question 4: PENDING APPROVALS SECTION -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark:">
           <div class="flex items-center justify-between mb-6">
             <div>
               <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">Pending Approvals Action Queue</h3>
@@ -220,7 +220,7 @@
         <div class="grid sm:grid-cols-2 gap-8">
 
           <!-- Most booked days Chart -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark:">
             <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-2">Most Booked Days</h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Distribution of bookings by day of the week.</p>
 
@@ -236,7 +236,7 @@
                 <div class="w-full px-2 flex justify-center relative">
                   <!-- Tooltip -->
                   <div
-                    class="absolute bottom-full mb-2 bg-slate-900 text-white font-black text-[10px] py-1 px-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">
+                    class="absolute bottom-full mb-2 bg-slate-900 text-white font-black text-[10px] py-1 px-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     {{ mostBookedDays().data[idx] }} bookings
                   </div>
                   <!-- Animated bar -->
@@ -253,7 +253,7 @@
           </div>
 
           <!-- Peak booking hours Chart -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark:">
             <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-2">Peak Booking Hours</h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Aggregate booking registrations grouped by time slots.</p>
 
@@ -291,7 +291,7 @@
       <div class="space-y-8">
 
         <!-- Question 2: Which vendors perform best? -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark:">
           <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-1">Top Performing Vendors</h3>
           <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Sorted by booking transaction volume & revenue generation.</p>
 
@@ -330,7 +330,7 @@
         </div>
 
         <!-- Question 3 & SUBSCRIPTION ANALYTICS: Which subscriptions earn most? -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark:">
           <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-1">Subscription Revenue Model</h3>
           <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Active subscription volumes grouped by package tiers.</p>
 
@@ -370,7 +370,7 @@
         </div>
 
         <!-- Question 5: Any payment issues? -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark:">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">Payment Issues & Alerts</h3>
             <lucide-icon name="alert-triangle" size="20" class="text-rose-500"></lucide-icon>
@@ -412,7 +412,7 @@
         </div>
 
         <!-- LIVE ACTIVITY SECTION -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] shadow-sm dark:shadow-none flex flex-col">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] dark: flex flex-col">
           <div class="flex items-center justify-between mb-6">
             <div>
               <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">Real-Time Platform Activity</h3>

@@ -5,7 +5,7 @@
 
 <!-- LOADING STATE -->
 @if (loading()) {
-<div class="max-w-7xl mx-auto px-4 py-8 space-y-5 animate-pulse">
+<div class="w-full px-4 sm:px-6 py-8 space-y-5 animate-pulse">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     @for (i of [1,2,3,4]; track i) {
     <div class="h-24 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl"></div>
@@ -21,28 +21,28 @@
 }
 
 @if (error()) {
-<div class="max-w-7xl mx-auto px-4 py-20 text-center">
+<div class="w-full px-4 sm:px-6 py-20 text-center">
   <div
-    class="w-20 h-20 rounded-3xl bg-red-50 mx-auto mb-6 flex items-center justify-center text-red-500 shadow-lg shadow-red-100 border border-red-100 ring-4 ring-red-50">
+    class="w-20 h-20 rounded-3xl bg-red-50 mx-auto mb-6 flex items-center justify-center text-red-500 border border-red-100 ring-4 ring-red-50">
     <lucide-icon name="triangle-alert" class="w-10 h-10"></lucide-icon>
   </div>
   <h2 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Unable to Load Data</h2>
   <p class="text-slate-500 dark:text-slate-400 text-base font-medium mt-3 max-w-sm mx-auto leading-relaxed">{{ error() }}</p>
   <button (click)="reload()"
-    class="mt-8 bg-emerald-600 text-white px-8 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-widest hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-200">
+    class="mt-8 bg-emerald-600 text-white px-8 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-widest hover:bg-emerald-700 transition-all active:scale-95">
     Retry Connection
   </button>
 </div>
 }
 
 @if (!loading() && !error()) {
-<div class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+<div class="w-full px-4 sm:px-6 py-6 space-y-6">
 
   <!-- PAGE HEADER -->
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5">
     <div class="flex items-center gap-3">
       <div
-        class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shrink-0 shadow-lg shadow-emerald-200">
+        class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shrink-0">
         <lucide-icon name="building" class="w-5 h-5" [strokeWidth]="2.5"></lucide-icon>
       </div>
       <div>
@@ -61,9 +61,9 @@
 
     <!-- Vendors KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm dark:shadow-none hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 dark: hover: hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 dark:text-slate-400 shadow-sm dark:shadow-none">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 dark:text-slate-400 dark:">
           <lucide-icon name="users" class="w-5 h-5"></lucide-icon>
         </div>
         <span class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Vendors</span>
@@ -74,9 +74,9 @@
 
     <!-- Venues KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm dark:shadow-none hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 dark: hover: hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-emerald-600 shadow-sm dark:shadow-none">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-emerald-600 dark:">
           <lucide-icon name="map-pin" class="w-5 h-5"></lucide-icon>
         </div>
         <span class="text-[10px] font-extrabold text-emerald-500 uppercase tracking-widest">Venues</span>
@@ -87,9 +87,9 @@
 
     <!-- Reviews KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm dark:shadow-none hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 dark: hover: hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-blue-600 shadow-sm dark:shadow-none">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-blue-600 dark:">
           <lucide-icon name="message-square" class="w-5 h-5"></lucide-icon>
         </div>
         <span class="text-[10px] font-extrabold text-blue-500 uppercase tracking-widest">Reviews</span>
@@ -100,9 +100,9 @@
 
     <!-- Quality KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm dark:shadow-none hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 dark: hover: hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-purple-600 shadow-sm dark:shadow-none">
+        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-purple-600 dark:">
           <lucide-icon name="star" class="w-5 h-5"></lucide-icon>
         </div>
         <span class="text-[10px] font-extrabold text-purple-500 uppercase tracking-widest">Quality</span>
@@ -115,7 +115,7 @@
 
   <!-- ANALYTICS CHART -->
   @if (chartData().length > 0) {
-  <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm dark:shadow-none">
+  <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 dark:">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
       <div>
         <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Venue Distribution</h3>
@@ -181,7 +181,7 @@
       </div>
       <input type="text" [ngModel]="search()" (ngModelChange)="search.set($event)"
         placeholder="Search by vendor, venue or city..."
-        class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-10 pr-4 text-sm font-medium text-slate-700 dark:text-slate-300 placeholder:text-slate-500 dark:text-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all outline-none shadow-sm dark:shadow-none">
+        class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-10 pr-4 text-sm font-medium text-slate-700 dark:text-slate-300 placeholder:text-slate-500 dark:text-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all outline-none dark:">
     </div>
   </div>
 
@@ -189,7 +189,7 @@
   <div class="space-y-3">
     @for (partner of filteredPartners(); track partner.id) {
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none hover:shadow-md transition-all duration-300 overflow-hidden group">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 dark: hover: transition-all duration-300 overflow-hidden group">
       <!-- VENDOR ROW -->
       <div
         class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-800/80 transition-colors"
@@ -239,19 +239,19 @@
           <div class="hidden lg:flex -space-x-2">
             @for (s of partner.spaces.slice(0,3); track s._id) {
             <div
-              class="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border-2 border-white shadow-sm dark:shadow-none flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 uppercase select-none overflow-hidden ring-1 ring-slate-200">
+              class="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border-2 border-white dark: flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 uppercase select-none overflow-hidden ring-1 ring-slate-200">
               {{ getInitials(s.name) }}
             </div>
             }
             @if (partner.spaces.length > 3) {
             <div
-              class="w-8 h-8 rounded-lg bg-slate-100 border-2 border-white shadow-sm dark:shadow-none flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 ring-1 ring-slate-200">
+              class="w-8 h-8 rounded-lg bg-slate-100 border-2 border-white dark: flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 ring-1 ring-slate-200">
               +{{ partner.spaces.length - 3 }}
             </div>
             }
           </div>
           <div
-            class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:text-emerald-600 transition-all duration-300 shadow-sm dark:shadow-none"
+            class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:text-emerald-600 transition-all duration-300 dark:"
             [class.rotate-180]="expandedMap()[partner.id]">
             <lucide-icon name="chevron-down" class="w-4 h-4"></lucide-icon>
           </div>
@@ -264,7 +264,7 @@
         class="border-t border-slate-200 dark:border-slate-700 bg-slate-100 px-5 py-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
         @for (space of partner.spaces; track space._id) {
         <div
-          class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-300 p-4 flex flex-col gap-3 shadow-md hover:-translate-y-1 transition-all duration-300 group/venue">
+          class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-300 p-4 flex flex-col gap-3 hover:-translate-y-1 transition-all duration-300 group/venue">
           <div class="flex items-start justify-between">
             <div class="flex items-start gap-3">
               <div
@@ -356,7 +356,7 @@
         </p>
       </div>
       <div class="flex flex-col items-end gap-2 shrink-0">
-        <span class="badge-premium text-[10px] px-4 py-1.5 border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300 shadow-sm dark:shadow-none">
+        <span class="badge-premium text-[10px] px-4 py-1.5 border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300 dark:">
           {{ getStatus(selectedVenue()!.status) }}
         </span>
         @if (selectedVenue()!.averageRating > 0) {
@@ -432,7 +432,7 @@
       <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">Customer Reviews</p>
       <div class="space-y-3">
         @for (rev of selectedVenue()!.reviews; track rev._id) {
-        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 shadow-sm dark:shadow-none">
+        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-0.5">
               @for (star of [1,2,3,4,5]; track star) {
@@ -471,7 +471,7 @@
     <div class="flex gap-3">
       @if (selectedVenue()!.status !== 'approved') {
       <button (click)="approve()" [disabled]="actionLoading()"
-        class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
+        class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-emerald-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
         @if (actionLoading()) {
         <ng-container *ngTemplateOutlet="spinner"></ng-container>
         }
@@ -528,7 +528,7 @@
     <button (click)="closeRejectModal()"
       class="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:text-slate-400 transition-colors px-4 py-2.5">Cancel</button>
     <button (click)="submitReject()" [disabled]="rejectReason().trim().length < 10 || actionLoading()"
-      class="bg-red-600 text-white px-8 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-lg shadow-red-100 hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
+      class="bg-red-600 text-white px-8 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
       @if (actionLoading()) {
       <ng-container *ngTemplateOutlet="spinner"></ng-container>
       }
@@ -560,7 +560,7 @@
     <button (click)="venueToDelete.set(null)" [disabled]="actionLoading()"
       class="flex-1 text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:text-slate-400 transition-colors py-3">Cancel</button>
     <button (click)="confirmDelete()" [disabled]="actionLoading()"
-      class="flex-1 bg-red-600 text-white rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-lg shadow-red-100 hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2 py-3">
+      class="flex-1 bg-red-600 text-white rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2 py-3">
       @if (actionLoading()) {
       <ng-container *ngTemplateOutlet="spinner"></ng-container>
       }
@@ -583,7 +583,7 @@
       <lucide-icon name="x" class="w-8 h-8"></lucide-icon>
     </button>
     <img [src]="previewImage()"
-      class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl border border-white/10" alt="Preview">
+      class="max-w-full max-h-[85vh] object-contain rounded-2xl border border-white/10" alt="Preview">
   </div>
 </div>
 }

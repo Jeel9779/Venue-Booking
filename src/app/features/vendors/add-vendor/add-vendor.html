@@ -1,9 +1,9 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="add-vendor-page min-h-screen bg-gray-300 max-w-[1200px] mx-auto py-8 px-4 sm:px-6">
+<div class="add-vendor-page w-full py-8 px-4 sm:px-6">
 
   <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
   <div class="flex items-center gap-4 mb-8">
-    <button routerLink="/vendors" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-800 hover:text-indigo-600 transition-all shadow-sm dark:shadow-none">
+    <button routerLink="/vendors" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-800 hover:text-indigo-600 transition-all dark:">
       <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M19 12H5M12 19l-7-7 7-7"/>
       </svg>
@@ -18,9 +18,9 @@
     
     <!-- ── FORM SECTION ──────────────────────────────────────────────────── -->
     <div class="lg:col-span-2 space-y-8">
-      <app-card title="Business Information" customClass="shadow-xl shadow-slate-200/50">
+      <app-card title="Business Information" customClass="/50">
         <div class="flex flex-col gap-3">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-sm dark:shadow-none">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Business Name" placeholder="e.g. Grand Plaza Hotels" 
                             [ngModel]="vendorData().businessName" (ngModelChange)="updateField('businessName', $event)"
                             [error]="errors()['businessName']"></app-form-input>
@@ -30,13 +30,13 @@
                             [error]="errors()['businessType']"></app-form-input>
           </div>
           
-          <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-sm dark:shadow-none">
+          <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Full Address" type="textarea" placeholder="Street, landmark, area..." [rows]="3"
                             [ngModel]="vendorData().address" (ngModelChange)="updateField('address', $event)"
                             [error]="errors()['address']"></app-form-input>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-sm dark:shadow-none">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="State" placeholder="e.g. Gujarat" 
                             [ngModel]="vendorData().state" (ngModelChange)="updateField('state', $event)"
                             [error]="errors()['state']"></app-form-input>
@@ -48,15 +48,15 @@
         </div>
       </app-card>
 
-      <app-card title="Owner Details" customClass="shadow-xl shadow-slate-200/50">
+      <app-card title="Owner Details" customClass="/50">
         <div class="flex flex-col gap-3">
-          <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-sm dark:shadow-none">
+          <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Full Name of Owner" placeholder="e.g. John Doe" 
                             [ngModel]="vendorData().fullName" (ngModelChange)="updateField('fullName', $event)"
                             [error]="errors()['fullName']"></app-form-input>
           </div>
           
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-sm dark:shadow-none">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Email Address" type="email" placeholder="john@example.com" 
                             [ngModel]="vendorData().email" (ngModelChange)="updateField('email', $event)"
                             [error]="errors()['email']"></app-form-input>
@@ -71,7 +71,7 @@
 
     <!-- ── SIDEBAR SECTION ───────────────────────────────────────────────── -->
     <div class="space-y-8">
-      <app-card title="Verification" customClass="shadow-xl shadow-slate-200/50">
+      <app-card title="Verification" customClass="/50">
         <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed font-medium">Please upload clear scanned copies of the following documents for verification.</p>
 
         <!-- Gov ID Upload -->

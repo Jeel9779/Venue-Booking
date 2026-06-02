@@ -246,9 +246,15 @@ export class Header implements OnInit {
 
   // Modal state
   showLogoutModal = signal(false);
+  isDropdownOpen = signal(false);
+
+  toggleDropdown() {
+    this.isDropdownOpen.update(v => !v);
+  }
 
   // Logout method matching the sidebar perfectly!
   logout() {
+    this.isDropdownOpen.set(false);
     this.showLogoutModal.set(true);
   }
 

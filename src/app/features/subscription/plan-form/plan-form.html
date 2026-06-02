@@ -31,7 +31,7 @@
         <button 
           type="button"
           (click)="selectDuration(d.days)"
-          [class]="'h-10 sm:h-11 rounded-xl text-xs font-bold transition-all border-2 ' + (planForm.get('duration_days')?.value === d.days ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm dark:shadow-none' : 'border-slate-100 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:bg-slate-800')">
+          [class]="'h-10 sm:h-11 rounded-xl text-xs font-bold transition-all border-2 ' + (planForm.get('duration_days')?.value === d.days ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:' : 'border-slate-100 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:bg-slate-800')">
           {{ d.label }}
         </button>
       }
@@ -74,7 +74,7 @@
   @if (planForm.get('planType')?.value === 'addon') {
     <div class="flex flex-col">
       <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">Select Parent Plan</label>
-        <select formControlName="parentPlanId" class="w-full h-11 px-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-sm dark:shadow-none ring-1 ring-slate-200">
+        <select formControlName="parentPlanId" class="w-full h-11 px-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark: ring-1 ring-slate-200">
           <option [ngValue]="null">None</option>
           @for (plan of activeBasePlans(); track plan._id) {
             <option [value]="plan._id">{{ plan.name }}</option>
@@ -104,7 +104,7 @@
         [ngModelOptions]="{standalone: true}"
         (keyup.enter)="addFeature()"
         placeholder="Add a feature (e.g. Unlimited Listings)" 
-        class="flex-1 h-11 px-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-sm dark:shadow-none ring-1 ring-slate-200">
+        class="flex-1 h-11 px-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark: ring-1 ring-slate-200">
       <app-button type="button" (onClick)="addFeature()">Add</app-button>
     </div>
 
@@ -126,11 +126,20 @@
   </div>
 
   <!-- Footer Actions -->
-  <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 mt-4 pt-6 border-t border-slate-100">
-    <app-button variant="secondary" type="button" (onClick)="onCancel.emit()" customClass="w-full sm:w-auto" class="w-full sm:w-auto">Cancel</app-button>
-    <app-button type="submit" [loading]="isLoading()" [disabled]="planForm.invalid" customClass="w-full sm:w-auto" class="w-full sm:w-auto">
-      {{ plan() ? 'Update Plan' : 'Create Plan' }}
-    </app-button>
+  <div class="flex flex-col gap-3 mt-4 pt-6 border-t border-slate-100">
+    @if (error()) {
+      <div class="bg-rose-50 text-rose-600 p-3 rounded-lg text-sm font-semibold flex items-center gap-2">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        {{ error() }}
+      </div>
+    }
+    
+    <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 w-full">
+      <app-button variant="secondary" type="button" (onClick)="onCancel.emit()" customClass="w-full sm:w-auto" class="w-full sm:w-auto">Cancel</app-button>
+      <app-button type="submit" [loading]="isLoading()" [disabled]="planForm.invalid" customClass="w-full sm:w-auto" class="w-full sm:w-auto">
+        {{ plan() ? 'Update Plan' : 'Create Plan' }}
+      </app-button>
+    </div>
   </div>
 
 </form>

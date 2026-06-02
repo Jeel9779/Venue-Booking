@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden">
+  <div class="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-700 overflow-hidden">
     
     <div class="p-6 md:p-8 space-y-8">
       
@@ -29,7 +29,7 @@
           <div 
             (click)="setTheme('light')"
             [class]="'cursor-pointer border-2 rounded-2xl p-4 flex items-start gap-4 transition-all duration-200 ' + (currentTheme() === 'light' ? 'border-[#6C63FF] bg-[#F4F3FF]' : 'border-gray-200 dark:border-slate-700 hover:border-gray-300')">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-white dark:bg-slate-900 shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-white dark:bg-slate-900 dark: border border-gray-100 dark:border-slate-700">
               <lucide-icon [img]="icons.sun" size="20" class="text-amber-500"></lucide-icon>
             </div>
             <div>
@@ -47,7 +47,7 @@
           <div 
             (click)="setTheme('dark')"
             [class]="'cursor-pointer border-2 rounded-2xl p-4 flex items-start gap-4 transition-all duration-200 ' + (currentTheme() === 'dark' ? 'border-[#6C63FF] bg-gray-800' : 'border-gray-200 dark:border-slate-700 hover:border-gray-300')">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-gray-900 shadow-sm dark:shadow-none border border-gray-700">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-gray-900 dark: border border-gray-700">
               <lucide-icon [img]="icons.moon" size="20" class="text-indigo-400"></lucide-icon>
             </div>
             <div>

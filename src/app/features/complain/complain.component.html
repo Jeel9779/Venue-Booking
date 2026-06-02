@@ -1,5 +1,5 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="p-8 max-w-[1200px] mx-auto bg-gray-300 min-h-screen">
+<div class="w-full p-4 sm:p-6">
   
   <!-- Header -->
   <div class="mb-8">
@@ -8,7 +8,7 @@
   </div>
 
   <!-- Critical Banner -->
-  <div class="bg-rose-800 rounded-2xl p-6 mb-8 text-white flex justify-between items-center shadow-lg">
+  <div class="bg-rose-800 rounded-2xl p-6 mb-8 text-white flex justify-between items-center">
     <div>
       <div class="flex items-center gap-2 font-bold text-lg mb-2">
         <lucide-icon [img]="icons.alertTriangle" size="20"></lucide-icon>
@@ -38,7 +38,7 @@
 
       <div class="space-y-6">
         @for (complaint of activeComplaints; track complaint.id) {
-          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700 flex gap-6">
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 dark: border border-gray-100 dark:border-slate-700 flex gap-6">
             <img [src]="complaint.image" alt="Venue Image" class="w-40 h-32 object-cover rounded-xl shrink-0">
             
             <div class="flex-1 flex flex-col justify-between">
@@ -85,12 +85,12 @@
       
       <!-- Stats -->
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-indigo-500 text-white rounded-2xl p-6 shadow-sm dark:shadow-none">
+        <div class="bg-indigo-500 text-white rounded-2xl p-6 dark:">
           <lucide-icon [img]="icons.checkCircle" size="24" class="mb-4 text-indigo-200"></lucide-icon>
           <div class="text-4xl font-bold mb-1">142</div>
           <div class="text-indigo-100 font-medium text-sm leading-tight">Cleared<br>Cases</div>
         </div>
-        <div class="bg-[#8B5CF6] text-white rounded-2xl p-6 shadow-sm dark:shadow-none">
+        <div class="bg-[#8B5CF6] text-white rounded-2xl p-6 dark:">
           <lucide-icon [img]="icons.trendingUp" size="24" class="mb-4 text-purple-200"></lucide-icon>
           <div class="text-4xl font-bold mb-1">28</div>
           <div class="text-purple-100 font-medium text-sm leading-tight">Escalated<br>Today</div>
@@ -98,7 +98,7 @@
       </div>
 
       <!-- Enforcement Activity -->
-      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 dark: border border-gray-100 dark:border-slate-700">
         <h3 class="font-bold text-gray-900 dark:text-slate-100 mb-6">Enforcement Activity</h3>
         
         <div class="space-y-6">
@@ -123,7 +123,7 @@
       </div>
 
       <!-- Concierge Insight -->
-      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700 relative overflow-hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 dark: border border-gray-100 dark:border-slate-700 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
         <h3 class="font-bold text-indigo-600 mb-3 text-sm">Concierge Insight</h3>
         <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">

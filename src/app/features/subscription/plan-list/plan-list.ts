@@ -28,6 +28,9 @@ export class PlanList implements OnInit {
 
   showForm = signal(false);
   selectedPlan = signal<Plan | null>(null);
+  
+  // Delete modal state
+  planToDelete = signal<string | null>(null);
 
   ngOnInit(): void {
     this.planService.loadAllPlans(); // Admin view
@@ -44,8 +47,18 @@ export class PlanList implements OnInit {
   }
 
   deletePlan(id: string) {
-    if (confirm('Are you sure you want to delete this plan?')) {
+    this.planToDelete.set(id);
+  }
+
+  cancelDelete() {
+    this.planToDelete.set(null);
+  }
+
+  executeDelete() {
+    const id = this.planToDelete();
+    if (id) {
       this.planService.delete(id);
+      this.planToDelete.set(null);
     }
   }
 
