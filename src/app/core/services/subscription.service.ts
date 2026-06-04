@@ -80,6 +80,18 @@ export class SubscriptionService {
       });
   }
 
+  loadAllAddons() {
+    this.store.setLoading(true);
+    this.api.adminGetAllAddons()
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: (res) => {
+          this.store.setAllAddons(res.addons || []);
+        },
+        error: (err) => this.store.setError(err.error?.message || 'Failed to load all addons')
+      });
+  }
+
   adminAssign(data: { vendorId: string; planId: string; startDate?: string; endDate?: string }) {
     this.store.setLoading(true);
     this.api.adminAssign(data)

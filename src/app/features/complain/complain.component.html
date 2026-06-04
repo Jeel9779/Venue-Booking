@@ -1,136 +1,526 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="w-full p-4 sm:p-6">
+<div class="w-full p-4 sm:p-6 bg-gray-300 dark:bg-slate-950 min-h-screen text-slate-700 dark:text-slate-200">
   
   <!-- Header -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">Complaint Management</h1>
-    <p class="text-gray-500 dark:text-slate-400 mt-2">Review, investigate, and resolve service disputes to maintain the premium standards of Book My Venue.</p>
-  </div>
-
-  <!-- Critical Banner -->
-  <div class="bg-rose-800 rounded-2xl p-6 mb-8 text-white flex justify-between items-center">
+  <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
-      <div class="flex items-center gap-2 font-bold text-lg mb-2">
-        <lucide-icon [img]="icons.alertTriangle" size="20"></lucide-icon>
-        CRITICAL INVESTIGATION REQUIRED
-      </div>
-      <p class="text-rose-100 max-w-2xl">
-        Grand Majestic Ballroom reported for "Severe Safety Violations" by 4 independent users within the last 2 hours.
-      </p>
+      <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
+        <lucide-icon [img]="icons.shieldAlert" size="32" class="text-indigo-600 dark:text-indigo-400"></lucide-icon>
+        Complaint Resolution Center
+      </h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-2">Monitor, investigate, and resolve customer complaints to maintain standard of excellence.</p>
     </div>
-    <button class="bg-rose-700 hover:bg-rose-600 transition-colors px-6 py-3 rounded-lg font-medium flex items-center gap-2">
-      Prioritize Case
-      <lucide-icon [img]="icons.arrowRight" size="18"></lucide-icon>
+    <button 
+      (click)="refreshData()"
+      [class.animate-spin]="isLoading()"
+      class="px-4 py-2 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all duration-200 flex items-center gap-2 shadow-sm focus:outline-none"
+      title="Refresh list"
+    >
+      <lucide-icon [img]="icons.refresh" size="18"></lucide-icon>
+      Refresh
     </button>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    <!-- Left Column (Active Complaints) -->
-    <div class="lg:col-span-2">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-slate-100">Active Complaints</h2>
-        <div class="flex gap-4 text-sm font-medium">
-          <span class="text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full cursor-pointer">All Cases</span>
-          <span class="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 cursor-pointer">Urgent</span>
-          <span class="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 cursor-pointer">Pending Review</span>
+  <!-- Dynamic Critical Banner -->
+  @if (criticalComplaint(); as critical) {
+    <div class="bg-gradient-to-r from-rose-800 to-rose-750 text-white rounded-2xl p-6 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg shadow-rose-950/20 border border-rose-900/30">
+      <div>
+        <div class="flex items-center gap-2 font-bold text-lg mb-2">
+          <lucide-icon [img]="icons.alertTriangle" size="20" class="text-rose-200 animate-pulse"></lucide-icon>
+          CRITICAL INVESTIGATION IN PROGRESS
         </div>
+        <p class="text-rose-100 max-w-2xl text-sm font-medium">
+          Ticket for <span class="underline font-bold">{{ critical.venue?.name || 'Platform Service' }}</span>: "{{ critical.title }}" requires review.
+        </p>
       </div>
-
-      <div class="space-y-6">
-        @for (complaint of activeComplaints; track complaint.id) {
-          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 dark: border border-gray-100 dark:border-slate-700 flex gap-6">
-            <img [src]="complaint.image" alt="Venue Image" class="w-40 h-32 object-cover rounded-xl shrink-0">
-            
-            <div class="flex-1 flex flex-col justify-between">
-              <div>
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h3 class="font-bold text-lg text-gray-900 dark:text-slate-100">{{complaint.venueName}}</h3>
-                    <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Ticket {{complaint.id}} • User: {{complaint.user}}</p>
-                  </div>
-                  <span class="text-xs font-bold px-3 py-1 rounded-full uppercase" [ngClass]="complaint.urgencyClass">
-                    {{complaint.urgency}}
-                  </span>
-                </div>
-                
-                <p class="text-gray-600 dark:text-slate-400 mt-3 text-sm line-clamp-2">
-                  {{complaint.description}}
-                </p>
-              </div>
-
-              <div class="mt-4">
-                <div class="flex justify-between text-xs font-bold text-gray-500 dark:text-slate-400 uppercase mb-2">
-                  <span>Investigation Progress</span>
-                  <span>{{complaint.progress}}%</span>
-                </div>
-                <div class="h-2 bg-gray-100 dark:bg-slate-800 rounded-full w-full overflow-hidden mb-4">
-                  <div class="h-full bg-indigo-600 rounded-full" [style.width.%]="complaint.progress"></div>
-                </div>
-
-                <div class="flex gap-2 text-sm font-medium">
-                  <button class="px-4 py-2 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 rounded-lg transition-colors">Review Case</button>
-                  <button class="px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Warn</button>
-                  <button class="px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">Suspend</button>
-                  <button class="px-4 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 rounded-lg transition-colors">Restrict</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
-      </div>
+      <button 
+        (click)="openReviewCase(critical)"
+        class="bg-white/10 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98] transition-all px-6 py-3 rounded-xl font-semibold flex items-center gap-2 text-sm border border-white/20 whitespace-nowrap shrink-0"
+      >
+        Prioritize Case
+        <lucide-icon [img]="icons.arrowRight" size="18"></lucide-icon>
+      </button>
     </div>
+  }
 
-    <!-- Right Column -->
-    <div class="space-y-6 mt-14">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column (Complaints List) -->
+    <div class="lg:col-span-2 space-y-6">
       
-      <!-- Stats -->
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-indigo-500 text-white rounded-2xl p-6 dark:">
-          <lucide-icon [img]="icons.checkCircle" size="24" class="mb-4 text-indigo-200"></lucide-icon>
-          <div class="text-4xl font-bold mb-1">142</div>
-          <div class="text-indigo-100 font-medium text-sm leading-tight">Cleared<br>Cases</div>
+      <!-- List Controls & Filter Tabs -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
+        
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl">
+          @for (filter of ['All', 'Open', 'In Progress', 'Resolved', 'Closed']; track filter) {
+            <button
+              (click)="setFilter(filter)"
+              [class]="currentFilter() === filter 
+                ? 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all' 
+                : 'px-3 py-1.5 text-xs font-medium rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-all'"
+            >
+              {{ filter }}
+            </button>
+          }
         </div>
-        <div class="bg-[#8B5CF6] text-white rounded-2xl p-6 dark:">
-          <lucide-icon [img]="icons.trendingUp" size="24" class="mb-4 text-purple-200"></lucide-icon>
-          <div class="text-4xl font-bold mb-1">28</div>
-          <div class="text-purple-100 font-medium text-sm leading-tight">Escalated<br>Today</div>
+
+        <!-- Search input -->
+        <div class="relative flex-1 max-w-xs">
+          <input
+            type="text"
+            [value]="searchQuery()"
+            (input)="onSearchChange($event)"
+            placeholder="Search by user, venue or keyword..."
+            class="w-full text-xs pl-4 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:text-slate-100 transition-colors"
+          />
         </div>
       </div>
 
-      <!-- Enforcement Activity -->
-      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 dark: border border-gray-100 dark:border-slate-700">
-        <h3 class="font-bold text-gray-900 dark:text-slate-100 mb-6">Enforcement Activity</h3>
-        
-        <div class="space-y-6">
-          @for (activity of enforcementActivities; track activity.action) {
-            <div class="flex gap-4">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1" [ngClass]="activity.iconClass">
-                <lucide-icon [img]="icons.alertCircle" size="18" *ngIf="activity.action !== 'Suspended' && activity.action !== 'Restriction Applied'"></lucide-icon>
-                <lucide-icon [img]="icons.ban" size="18" *ngIf="activity.action === 'Restriction Applied'"></lucide-icon>
-                <div class="font-bold text-lg" *ngIf="activity.action === 'Suspended'">A</div> <!-- Just a placeholder icon style -->
+      <!-- Loading / Error / Empty States -->
+      @if (isLoading() && paginatedComplaints().length === 0) {
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-16 border border-slate-100 dark:border-slate-800 text-center shadow-sm">
+          <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-indigo-600 rounded-full mb-4" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">Fetching complaint registers...</p>
+        </div>
+      } @else if (error()) {
+        <div class="bg-rose-50 dark:bg-rose-950/20 rounded-2xl p-6 border border-rose-200 dark:border-rose-900/50 text-center">
+          <lucide-icon [img]="icons.alertTriangle" size="32" class="text-rose-600 mx-auto mb-3"></lucide-icon>
+          <h4 class="font-semibold text-rose-800 dark:text-rose-300">Synchronization Error</h4>
+          <p class="text-rose-600 dark:text-rose-400 text-sm mt-1 mb-4">{{ error() }}</p>
+          <button (click)="refreshData()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs rounded-lg transition-colors">
+            Try Reconnecting
+          </button>
+        </div>
+      } @else if (paginatedComplaints().length === 0) {
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-16 border border-slate-100 dark:border-slate-800 text-center shadow-sm">
+          <lucide-icon [img]="icons.checkCircle" size="48" class="text-slate-300 dark:text-slate-700 mx-auto mb-4"></lucide-icon>
+          <h4 class="font-bold text-slate-800 dark:text-slate-200 text-lg">Clear Dashboard</h4>
+          <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto mt-2">
+            No complaints found matching the criteria. All standards are fully aligned!
+          </p>
+        </div>
+      } @else {
+        <!-- Complaints list cards -->
+        <div class="space-y-4">
+          @for (complaint of paginatedComplaints(); track trackByComplaintId($index, complaint)) {
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/50 dark:border-slate-800/80 hover:border-indigo-500/30 hover:shadow-md dark:hover:shadow-none transition-all duration-300 flex flex-col md:flex-row gap-6 relative group overflow-hidden">
+              
+              <!-- Subtle status highlight bar -->
+              <div 
+                class="absolute left-0 top-0 bottom-0 w-1.5"
+                [ngClass]="{
+                  'bg-amber-500': complaint.status === 'Open',
+                  'bg-blue-500': complaint.status === 'In Progress',
+                  'bg-emerald-500': complaint.status === 'Resolved',
+                  'bg-slate-400': complaint.status === 'Closed'
+                }"
+              ></div>
+
+              <!-- Visual identifier (First attachment or styled initial icon) -->
+              <div class="w-36 h-28 shrink-0 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 flex items-center justify-center relative">
+                @if (complaint.attachments && complaint.attachments.length > 0) {
+                  <img [src]="complaint.attachments[0]" alt="Attachment preview" class="w-full h-full object-cover">
+                } @else {
+                  <lucide-icon [img]="icons.building" size="28" class="text-slate-400 dark:text-slate-600"></lucide-icon>
+                }
+                
+                @if (complaint.attachments && complaint.attachments.length > 1) {
+                  <div class="absolute bottom-1 right-1 bg-slate-900/85 text-white px-2 py-0.5 rounded text-[10px] font-bold">
+                    +{{ complaint.attachments.length - 1 }}
+                  </div>
+                }
               </div>
-              <div>
-                <div class="font-bold text-gray-900 dark:text-slate-100 text-sm">{{activity.action}}</div>
-                <div class="text-sm font-medium text-gray-600 dark:text-slate-400 mt-0.5">{{activity.venue}}</div>
-                <div class="text-xs text-gray-400 mt-0.5" *ngIf="activity.violation">Violation: {{activity.violation}}</div>
-                <div class="text-[0.65rem] font-bold text-gray-400 uppercase mt-2">{{activity.timeAgo}}</div>
+              
+              <div class="flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex flex-wrap justify-between items-start gap-2">
+                    <div>
+                      <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 hover:text-indigo-600 transition-colors cursor-pointer" (click)="openReviewCase(complaint)">
+                        {{ complaint.venue?.name || 'General Platform Service' }}
+                      </h3>
+                      <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-1.5">
+                        Ticket: #{{ complaint._id.substring(complaint._id.length - 6) | uppercase }} 
+                        <span class="text-slate-300 dark:text-slate-700">•</span>
+                        Client: {{ complaint.user?.name || 'Unknown Client' }}
+                        <span class="text-slate-300 dark:text-slate-700">•</span>
+                        Created: {{ complaint.createdAt | date:'MMM d, h:mm a' }}
+                      </p>
+                    </div>
+                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider" [ngClass]="getStatusClass(complaint.status)">
+                      {{ complaint.status }}
+                    </span>
+                  </div>
+                  
+                  <h4 class="font-semibold text-sm text-slate-700 dark:text-slate-300 mt-3">{{ complaint.title }}</h4>
+                  <p class="text-slate-500 dark:text-slate-400 mt-1 text-xs line-clamp-2 leading-relaxed">
+                    {{ complaint.description }}
+                  </p>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-wrap items-center justify-between gap-4">
+                  <!-- Resolution Status Bar -->
+                  <div class="flex-1 max-w-[200px]">
+                    <div class="flex justify-between text-[10px] font-semibold text-slate-400 uppercase mb-1">
+                      <span>Resolution Phase</span>
+                      <span>{{ getProgressPercentage(complaint.status) }}%</span>
+                    </div>
+                    <div class="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full w-full overflow-hidden">
+                      <div 
+                        class="h-full rounded-full transition-all duration-500" 
+                        [style.width.%]="getProgressPercentage(complaint.status)"
+                        [ngClass]="{
+                          'bg-amber-500': complaint.status === 'Open',
+                          'bg-blue-500': complaint.status === 'In Progress',
+                          'bg-emerald-500': complaint.status === 'Resolved' || complaint.status === 'Closed'
+                        }"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex gap-2">
+                    <button 
+                      (click)="openReviewCase(complaint)"
+                      class="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-950/30 dark:hover:text-indigo-400 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5"
+                    >
+                      <lucide-icon [img]="icons.message" size="14"></lucide-icon>
+                      Review Case & Chat
+                    </button>
+                    @if (complaint.vendor) {
+                      <span class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-400 text-xs font-medium flex items-center gap-1.5">
+                        <lucide-icon [img]="icons.store" size="14"></lucide-icon>
+                        Assigned
+                      </span>
+                    } @else {
+                      <button 
+                        (click)="openReviewCase(complaint)"
+                        class="px-3.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 dark:text-indigo-400 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5"
+                      >
+                        Assign Vendor
+                      </button>
+                    }
+                  </div>
+                </div>
               </div>
             </div>
           }
         </div>
 
-        <button class="text-indigo-600 font-medium text-sm mt-6 hover:underline">View Full Enforcement Audit</button>
+        <!-- Pagination Controls -->
+        @if (totalPages() > 1) {
+          <div class="flex items-center justify-between bg-white dark:bg-slate-900 px-6 py-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/80 shadow-sm mt-6">
+            <span class="text-xs font-medium text-slate-500">
+              Page {{ currentPage() }} of {{ totalPages() }} (Showing {{ paginatedComplaints().length }} of {{ filteredComplaints().length }} records)
+            </span>
+            <div class="flex gap-2">
+              <button 
+                (click)="prevPage()"
+                [disabled]="currentPage() === 1"
+                class="p-2 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:hover:bg-transparent transition-colors focus:outline-none"
+              >
+                <lucide-icon [img]="icons.chevronLeft" size="16"></lucide-icon>
+              </button>
+              <button 
+                (click)="nextPage()"
+                [disabled]="currentPage() === totalPages()"
+                class="p-2 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:hover:bg-transparent transition-colors focus:outline-none"
+              >
+                <lucide-icon [img]="icons.chevronRight" size="16"></lucide-icon>
+              </button>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Right Column (Stats & Log) -->
+    <div class="space-y-6">
+      
+      <!-- Stats Overview Cards -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-2xl p-5 shadow-md shadow-indigo-500/10">
+          <lucide-icon [img]="icons.checkCircle" size="24" class="mb-4 text-indigo-200"></lucide-icon>
+          <div class="text-3xl font-extrabold mb-1 tracking-tight">{{ clearedCasesCount() }}</div>
+          <div class="text-indigo-100 font-semibold text-[11px] uppercase tracking-wider leading-snug">Cleared<br>Tickets</div>
+        </div>
+        <div class="bg-[#8B5CF6] bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] text-white rounded-2xl p-5 shadow-md shadow-purple-500/10">
+          <lucide-icon [img]="icons.trendingUp" size="24" class="mb-4 text-purple-200"></lucide-icon>
+          <div class="text-3xl font-extrabold mb-1 tracking-tight">{{ activeCasesCount() }}</div>
+          <div class="text-purple-100 font-semibold text-[11px] uppercase tracking-wider leading-snug">Under Review<br>Cases</div>
+        </div>
       </div>
 
-      <!-- Concierge Insight -->
-      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 dark: border border-gray-100 dark:border-slate-700 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
-        <h3 class="font-bold text-indigo-600 mb-3 text-sm">Concierge Insight</h3>
-        <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">
-          Complaint volume is up 12% this weekend. Suggest activating the automated "Review Request" for all...
+      <!-- Enforcement Activity Audit -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/60 dark:border-slate-800/80 shadow-sm">
+        <h3 class="font-bold text-slate-850 dark:text-slate-100 mb-6 flex items-center justify-between">
+          <span>Resolution Stream</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+        </h3>
+        
+        <div class="space-y-6 relative border-l-2 border-slate-100 dark:border-slate-800 ml-3.5 pl-6">
+          @for (activity of activities(); track activity.id) {
+            <div class="relative">
+              <!-- Chronology timeline bullet -->
+              <span class="absolute -left-[35px] top-1 rounded-full p-1.5" [ngClass]="activity.iconClass">
+                <lucide-icon [img]="icons.alertCircle" size="12"></lucide-icon>
+              </span>
+              <div>
+                <div class="font-bold text-slate-800 dark:text-slate-200 text-xs leading-none">{{ activity.action }}</div>
+                <div class="text-xs font-semibold text-slate-500 mt-1.5">{{ activity.venue }}</div>
+                <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 truncate" [title]="activity.violation">
+                  "{{ activity.violation }}"
+                </div>
+                <div class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-2.5">{{ activity.timeAgo }}</div>
+              </div>
+            </div>
+          }
+          
+          @if (activities().length === 0) {
+            <div class="text-center py-4 text-slate-400 dark:text-slate-600 text-xs">
+              Waiting for actions...
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Concierge System Insight -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/50 dark:border-slate-800/80 shadow-sm relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1.5 h-full bg-indigo-500"></div>
+        <h3 class="font-bold text-indigo-600 dark:text-indigo-400 mb-3 text-xs uppercase tracking-wider">System Diagnostic</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+          @if (activeCasesCount() > 5) {
+            Warning: Escalated cases are currently high. Prioritize assignations to resolve delays.
+          } @else {
+            All streams are balanced. Normal response intervals apply.
+          }
         </p>
       </div>
 
     </div>
   </div>
 </div>
+
+<!-- Sliding Side Detail Drawer (Case Review & Live Chat) -->
+@if (isDrawerOpen()) {
+  <div class="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 overflow-hidden">
+      <!-- Backdrop with blur -->
+      <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" (click)="closeDrawer()"></div>
+
+      <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+        <div class="pointer-events-auto w-screen max-w-2xl transform transition-transform duration-300 ease-in-out border-l border-slate-200 dark:border-slate-850">
+          <div class="flex h-full flex-col bg-white dark:bg-slate-900 shadow-2xl overflow-y-hidden">
+            
+            <!-- Drawer Header -->
+            <div class="px-6 py-5 bg-slate-50 dark:bg-slate-950 border-b border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide" [ngClass]="getStatusClass(activeComplaint()?.status || '')">
+                    {{ activeComplaint()?.status }}
+                  </span>
+                  <span class="text-xs font-semibold text-slate-400">#{{ activeComplaint()?._id }}</span>
+                </div>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1">
+                  {{ activeComplaint()?.venue?.name || 'General Platform Complaint' }}
+                </h2>
+              </div>
+              <button 
+                (click)="closeDrawer()" 
+                class="rounded-lg p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all focus:outline-none"
+              >
+                <lucide-icon [img]="icons.close" size="20"></lucide-icon>
+              </button>
+            </div>
+
+            <!-- Drawer Scrollable Body -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-6">
+              
+              <!-- Admin Controls Panel -->
+              <div class="bg-indigo-50/50 dark:bg-indigo-950/10 p-5 rounded-2xl border border-indigo-100/60 dark:border-indigo-950/40 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Ticket Status Select -->
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 mb-2">Change Stage</label>
+                  <div class="relative">
+                    <select 
+                      [value]="activeComplaint()?.status"
+                      (change)="onStatusChange($event)"
+                      class="w-full text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-2.5 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    >
+                      <option value="Open">Open (Pending Assignment)</option>
+                      <option value="In Progress">In Progress (Investigation)</option>
+                      <option value="Resolved">Resolved (Settled)</option>
+                      <option value="Closed">Closed (Archived)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Vendor Assign Select -->
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 mb-2">Delegate Case Vendor</label>
+                  <div class="relative">
+                    <select 
+                      [value]="selectedVendorId()"
+                      (change)="onVendorAssignChange($event)"
+                      class="w-full text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-2.5 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    >
+                      <option value="">Unassigned (No Vendor Allocated)</option>
+                      @for (vendor of vendors(); track vendor._id) {
+                        <option [value]="vendor._id">
+                          {{ vendor.businessName || vendor.fullName }} ({{ vendor.email }})
+                        </option>
+                      }
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Ticket Subject & Content -->
+              <div>
+                <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Subject Case</h3>
+                <div class="bg-slate-50 dark:bg-slate-950/40 border border-slate-200/50 dark:border-slate-800 p-5 rounded-2xl">
+                  <h4 class="font-bold text-slate-900 dark:text-slate-100 text-sm mb-2">{{ activeComplaint()?.title }}</h4>
+                  <p class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed whitespace-pre-wrap">{{ activeComplaint()?.description }}</p>
+                </div>
+              </div>
+
+              <!-- User & Venue Details cards -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Client Details -->
+                <div class="border border-slate-200/60 dark:border-slate-800 p-4 rounded-xl space-y-3">
+                  <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <lucide-icon [img]="icons.user" size="14"></lucide-icon>
+                    Plaintiff Client
+                  </h4>
+                  <div>
+                    <div class="font-bold text-slate-800 dark:text-slate-200 text-xs">{{ activeComplaint()?.user?.name }}</div>
+                    <div class="text-[11px] text-slate-500 mt-1">{{ activeComplaint()?.user?.email }}</div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">{{ activeComplaint()?.user?.phone || 'No phone number' }}</div>
+                  </div>
+                </div>
+
+                <!-- Vendor Assigned Details -->
+                <div class="border border-slate-200/60 dark:border-slate-800 p-4 rounded-xl space-y-3">
+                  <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <lucide-icon [img]="icons.store" size="14"></lucide-icon>
+                    Assigned Vendor
+                  </h4>
+                  <div>
+                    @if (activeComplaint()?.vendor; as vendor) {
+                      <div class="font-bold text-slate-800 dark:text-slate-200 text-xs">
+                        {{ vendor.businessName || vendor.fullName }}
+                      </div>
+                      <div class="text-[11px] text-slate-500 mt-1">{{ vendor.email }}</div>
+                      <div class="text-[11px] text-slate-500 mt-0.5">{{ vendor.fullName }}</div>
+                    } @else {
+                      <div class="text-slate-400 text-xs italic font-medium pt-1">
+                        No vendor assigned to this ticket. Use controls above to delegate.
+                      </div>
+                    }
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Attachments Gallery -->
+              @if (activeComplaint()?.attachments && activeComplaint()!.attachments.length > 0) {
+                <div>
+                  <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-1">
+                    <lucide-icon [img]="icons.image" size="14"></lucide-icon>
+                    Evidence Files ({{ activeComplaint()?.attachments?.length }})
+                  </h3>
+                  <div class="flex flex-wrap gap-3">
+                    @for (img of activeComplaint()?.attachments; track img) {
+                      <a 
+                        [href]="img" 
+                        target="_blank"
+                        class="w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 dark:border-slate-800 block hover:ring-2 hover:ring-indigo-500 hover:scale-[1.05] transition-all"
+                      >
+                        <img [src]="img" alt="Evidence" class="w-full h-full object-cover">
+                      </a>
+                    }
+                  </div>
+                </div>
+              }
+
+              <!-- Conversation Feed (Thread messages) -->
+              <div class="border-t border-slate-100 dark:border-slate-800 pt-6">
+                <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-1.5">
+                  <lucide-icon [img]="icons.message" size="14"></lucide-icon>
+                  Investigation Logs & Replies
+                </h3>
+                
+                <!-- Chat Container -->
+                <div 
+                  id="chat-messages-container"
+                  class="bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-800/80 rounded-2xl p-4 h-[280px] overflow-y-auto space-y-4"
+                >
+                  @for (msg of messages(); track msg._id) {
+                    <div 
+                      class="flex flex-col max-w-[85%] rounded-2xl px-4 py-3 text-xs shadow-xs"
+                      [ngClass]="{
+                        'self-end ml-auto bg-indigo-600 text-white rounded-tr-none': msg.senderModel === 'Admin',
+                        'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-tl-none mr-auto': msg.senderModel !== 'Admin',
+                        'border border-purple-500/10 dark:bg-purple-950/10 dark:text-purple-300': msg.senderModel === 'Vendor'
+                      }"
+                    >
+                      <!-- Sender info -->
+                      <div class="flex justify-between items-center gap-4 mb-1 font-bold text-[10px]" [ngClass]="msg.senderModel === 'Admin' ? 'text-indigo-200' : 'text-slate-400 dark:text-slate-500'">
+                        <span>{{ msg.senderName }} ({{ msg.senderModel }})</span>
+                        <span class="font-normal text-[8px]">{{ msg.createdAt | date:'h:mm a' }}</span>
+                      </div>
+                      
+                      <p class="leading-relaxed whitespace-pre-wrap font-medium">{{ msg.message }}</p>
+                    </div>
+                  }
+                  
+                  @if (messages().length === 0) {
+                    <div class="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400 dark:text-slate-600">
+                      <lucide-icon [img]="icons.message" size="32" class="mb-2 opacity-50"></lucide-icon>
+                      <p class="text-xs font-semibold">No discussions recorded.</p>
+                      <p class="text-[10px] mt-0.5">Post an advisory warning or comment below.</p>
+                    </div>
+                  }
+                </div>
+
+                <!-- Chat Reply Box -->
+                <div class="mt-3 flex gap-2">
+                  <textarea
+                    [(ngModel)]="replyText"
+                    placeholder="Provide investigation details or warn parties..."
+                    rows="2"
+                    class="flex-1 text-xs px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:text-slate-100 resize-none"
+                  ></textarea>
+                  <button
+                    (click)="onSendMessage()"
+                    [disabled]="!replyText().trim()"
+                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl disabled:opacity-50 disabled:hover:bg-indigo-600 transition-colors flex items-center justify-center shrink-0 self-end focus:outline-none"
+                    title="Send message"
+                  >
+                    <lucide-icon [img]="icons.send" size="16"></lucide-icon>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Drawer Footer -->
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800 flex justify-end gap-3 shrink-0">
+              <button 
+                (click)="closeDrawer()" 
+                class="px-5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 transition-colors focus:outline-none"
+              >
+                Close View
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

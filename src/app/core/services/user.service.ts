@@ -61,22 +61,27 @@ export class UserService {
       });
   }
 
-  getPhotoUrl(path: string | null | undefined): string {
-    if (!path) return '';
+  private readonly placeholderUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAnklEQVR4Ae3WsQnAMBBD0YWJQ+IxCLnE4EyV5AAEzcT0gJ7O+dukgEBEREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREf8B3qFdCnE4vB0AAAAASUVORK5CYII=';
 
-    // Fix Windows backslashes
+  getPhotoUrl(path: string | null | undefined): string {
+    if (!path) return this.placeholderUrl;
+
+    // Normalize Windows backslashes
     let normalizedPath = path.replace(/\\/g, '/');
 
+    // If already an absolute URL, return it
     if (normalizedPath.startsWith('http')) return normalizedPath;
 
-    // If the path contains a full Windows path (backend error), extract the relative part
+    // If the path already contains the uploads folder, keep the relative part
     if (normalizedPath.includes('uploads/')) {
       const parts = normalizedPath.split('uploads/');
-      const relativePath = 'uploads/' + parts[parts.length - 1];
+      const relativePath = 'uploads/' + parts.pop();
       return `${this.uploadsBase}/${relativePath}`;
     }
 
-    // Ensure no double slash
-    return `${this.uploadsBase}/${normalizedPath.replace(/^\/+/, '')}`;
+    // Otherwise assume the filename is at the end of the path and prepend uploads/
+    const filename = normalizedPath.substring(normalizedPath.lastIndexOf('/') + 1);
+    const relativePath = filename ? `uploads/${filename}` : '';
+    return relativePath ? `${this.uploadsBase}/${relativePath}` : this.placeholderUrl;
   }
 }

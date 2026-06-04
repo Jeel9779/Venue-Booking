@@ -1,5 +1,5 @@
 // Purpose: Component/Logic: Handles UI behavior and user interactions for header.
-import { Component, Output, EventEmitter, inject, OnInit, signal, computed, HostListener } from '@angular/core';
+import { Component, Output, EventEmitter, inject, OnInit, signal, computed, HostListener, ElementRef } from '@angular/core';
 import { 
   LucideAngularModule, Bell, Menu, Search, ChevronDown, Settings, User, LogOut, 
   LifeBuoy, Plus, Sparkles, X, ChevronRight, CornerDownLeft, Command, 
@@ -35,6 +35,7 @@ export class Header implements OnInit {
   @Output() menuClick = new EventEmitter<void>();
   
   private router = inject(Router);
+  private el = inject(ElementRef);
   private venueService = inject(VenueService);
   private venueStore = inject(VenueStore);
   private vendorService = inject(VendorService);
@@ -252,7 +253,15 @@ export class Header implements OnInit {
     this.isDropdownOpen.update(v => !v);
   }
 
-  // Logout method matching the sidebar perfectly!
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: MouseEvent) {
+    const clickedInside = this.el.nativeElement.contains(event.target);
+    if (!clickedInside) {
+      this.isDropdownOpen.set(false);
+    }
+  }
+
+  // Restored logout method for template binding
   logout() {
     this.isDropdownOpen.set(false);
     this.showLogoutModal.set(true);

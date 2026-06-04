@@ -1,22 +1,6 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
 <div class="users-page w-full px-4 sm:px-6 py-6">
 
-  <!-- ── TOASTS ─────────────────────────────────────────────────────────── -->
-  @if (error()) {
-  <div class="fixed top-5 right-5 z-[10001] flex items-center gap-3 bg-white dark:bg-slate-900 border border-red-200
-              text-red-600 px-5 py-3 rounded-2xl text-sm font-semibold
-              animate-[slideDown_0.25s_ease]">
-    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
-    </svg>
-    {{ error() }}
-    <button (click)="dismissError()" class="ml-1 opacity-60 hover:opacity-100">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
-    </button>
-  </div>
-  }
 
   <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
   <div class="flex items-center justify-between flex-wrap gap-4 mb-5">
@@ -126,8 +110,9 @@
             <div class="flex items-center gap-3">
               <div class="avatar-container w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-gradient-to-br
                           from-indigo-600 to-violet-600 flex items-center justify-center dark:">
-                @if (getImageUrl(user.profilePhoto)) {
+                @if (user.profilePhoto) {
                 <img [src]="getImageUrl(user.profilePhoto)" [alt]="user.name"
+                     (error)="user.profilePhoto = null"
                      class="w-full h-full object-cover"/>
                 } @else {
                 <span class="text-white text-sm font-bold">
@@ -199,8 +184,8 @@
         <div class="flex items-start justify-between mb-4">
           <div class="flex items-center gap-3">
             <div class="avatar-container w-12 h-12 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white font-bold text-lg">
-              @if (getImageUrl(user.profilePhoto)) {
-              <img [src]="getImageUrl(user.profilePhoto)" class="w-full h-full object-cover"/>
+              @if (user.profilePhoto) {
+              <img [src]="getImageUrl(user.profilePhoto)" (error)="user.profilePhoto = null" class="w-full h-full object-cover"/>
               } @else {
               {{ (user.name || 'U').trim().charAt(0).toUpperCase() }}
               }
@@ -273,8 +258,8 @@
       <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
         <div class="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-600 to-violet-700
                     flex items-center justify-center text-white font-bold text-xl shrink-0">
-          @if (getImageUrl(selectedUser()?.profilePhoto)) {
-          <img [src]="getImageUrl(selectedUser()?.profilePhoto)" class="w-full h-full object-cover"/>
+          @if (selectedUser()?.profilePhoto) {
+          <img [src]="getImageUrl(selectedUser()?.profilePhoto)" (error)="$event.target.style.display='none'" class="w-full h-full object-cover"/>
           } @else {
           {{ (selectedUser()?.name || 'U').trim().charAt(0).toUpperCase() }}
           }

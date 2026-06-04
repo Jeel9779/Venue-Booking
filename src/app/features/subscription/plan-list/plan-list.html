@@ -45,66 +45,44 @@
     <app-button variant="secondary" customClass="mt-6" (onClick)="openAddForm()">Get Started</app-button>
   </div>
   } @else {
-  <!-- ── PLANS GRID ── -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
     @for (plan of plans(); track plan._id; let i = $index) {
-<ng-container *ngIf="plan.planType !== 'addon'">
-  <div class="w-full p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl dark: hover: transition-all duration-300 relative group flex flex-col">
-
-    <!-- Status Badge -->
-    @if (!plan.is_active) {
-    <div class="absolute top-5 right-5 sm:top-6 sm:right-6 px-3 py-1 bg-rose-200 text-rose-600 text-[0.6rem] font-black uppercase tracking-widest rounded-lg border border-rose-100">
-      Inactive
-    </div>
-    }
-
-    <h5 class="mb-4 text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 pr-16">{{ plan.name }}</h5>
-
-    <div class="flex items-baseline text-slate-900 dark:text-slate-100 flex-wrap">
-      <span class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">₹{{ plan.price }}</span>
-      <span class="ms-2 font-semibold text-slate-500 dark:text-slate-400 text-sm">/{{ plan.duration_days }} days</span>
-    </div>
-
-    <ul role="list" class="space-y-4 my-6 sm:my-8 flex-1">
-      @for (feature of plan.features; track $index) {
-      <li class="flex items-start">
-        <svg class="w-5 h-5 shrink-0 text-indigo-600 me-3 mt-0.5" aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-        </svg>
-        <span class="text-slate-600 dark:text-slate-400 font-semibold text-xs sm:text-sm">{{ feature }}</span>
-      </li>
-      } @empty {
-      <li class="text-slate-400 italic text-xs sm:text-sm font-semibold">No features listed</li>
-      }
-    </ul>
-
-    <!-- Admin Buttons -->
-    <div class="flex gap-3 pt-6 border-t border-slate-100 mt-auto">
-      <button type="button" (click)="editPlan(plan)"
-        class="w-full text-indigo-700 hover:text-white bg-indigo-300 hover:bg-indigo-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Edit
-        Plan</button>
-      <button type="button" (click)="deletePlan(plan._id)"
-        class="w-full text-rose-600 hover:text-white bg-rose-300 hover:bg-rose-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Delete</button>
-    </div>
-  </div>
-
-  <!-- Add‑on Plans for this base -->
-  <div *ngIf="getAddons(plan._id).length > 0" class="ml-6 mt-2 border-l-2 pl-4">
-    <h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-2">Add‑on Plans</h4>
-    <div *ngFor="let addon of getAddons(plan._id)" class="flex items-center justify-between py-2 border border-slate-200 dark:border-slate-700 rounded-md px-3 mb-2">
-      <div class="flex flex-col">
-        <span class="font-medium text-slate-800 dark:text-slate-200">{{ addon.name }}</span>
-        <span class="text-xs text-slate-500 dark:text-slate-400">₹{{ addon.price }} – {{ addon.duration_days }} days</span>
-      </div>
-      <div class="flex gap-2">
-        <button type="button" (click)="editPlan(addon)" class="btn-primary btn-sm">Edit</button>
-        <button type="button" (click)="deletePlan(addon._id)" class="btn-danger btn-sm">Delete</button>
-      </div>
-    </div>
-  </div>
-</ng-container>
+        <div class="w-full p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl hover:shadow-xl transition-all duration-300 relative group flex flex-col">
+  <ng-container *ngIf="plan.planType === 'addon'">
+    <div class="absolute top-2 right-2 px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-full text-[9px] font-black uppercase tracking-widest">Add-on</div>
+  </ng-container>
+          <!-- Status Badge -->
+          @if (!plan.is_active) {
+            <div class="absolute top-5 right-5 sm:top-6 sm:right-6 px-3 py-1 bg-rose-200 text-rose-600 text-[0.6rem] font-black uppercase tracking-widest rounded-lg border border-rose-100">
+              Inactive
+            </div>
+          }
+          <div class="flex items-center gap-2 mb-4">
+            <h5 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 pr-16 m-0">{{ plan.name }}</h5>
+            
+          </div>
+          <div class="flex items-baseline text-slate-900 dark:text-slate-100 flex-wrap">
+            <span class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">₹{{ plan.price }}</span>
+            <span class="ms-2 font-semibold text-slate-500 dark:text-slate-400 text-sm">/{{ plan.duration_days }} days</span>
+          </div>
+          <ul role="list" class="space-y-4 my-6 sm:my-8 flex-1">
+            @for (feature of plan.features; track $index) {
+              <li class="flex items-start">
+                <svg class="w-5 h-5 shrink-0 text-indigo-600 me-3 mt-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                <span class="text-slate-600 dark:text-slate-400 font-semibold text-xs sm:text-sm">{{ feature }}</span>
+              </li>
+            } @empty {
+              <li class="text-slate-400 italic text-xs sm:text-sm font-semibold">No features listed</li>
+            }
+          </ul>
+          <!-- Admin Buttons -->
+          <div class="flex gap-3 pt-6 border-t border-slate-100 mt-auto">
+            <button type="button" (click)="editPlan(plan)" class="w-full text-indigo-700 hover:text-white bg-indigo-300 hover:bg-indigo-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Edit Plan</button>
+            <button type="button" (click)="deletePlan(plan._id)" class="w-full text-rose-600 hover:text-white bg-rose-300 hover:bg-rose-400 border border-transparent font-bold rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus:outline-none">Delete</button>
+          </div>
+        </div>
     }
   </div>
   }

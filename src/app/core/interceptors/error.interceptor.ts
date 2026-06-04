@@ -16,7 +16,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         errorMessage = `Error: ${error.error.message}`;
       } else {
         // Server-side error
-        errorMessage = error.error?.message || `Error Code: ${error.status}\nMessage: ${error.message}`;
+        if (error.status === 0) {
+          errorMessage = 'Unable to connect to the server. Please check your connection or try again later.';
+        } else {
+          errorMessage = error.error?.message || `Error Code: ${error.status}\nMessage: ${error.message}`;
+        }
       }
       
       // console.error removed - using toast service for notifications

@@ -62,11 +62,6 @@ export class PlanList implements OnInit {
     }
   }
 
-  // Returns add‑ons for a given base plan id
-  getAddons(baseId: string) {
-    return this.planStore.getAddonsForBase(baseId);
-  }
-
   onFormClose() {
     this.showForm.set(false);
     this.selectedPlan.set(null);

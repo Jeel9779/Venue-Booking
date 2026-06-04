@@ -1,6 +1,5 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<header id="main-header" role="banner"
-  class="sticky top-0 z-50 h-[72px] bg-[#F5F6F8] border-b border-gray-300 flex items-center justify-between px-4 md:px-6 shadow-sm dark:shadow-none transition-all duration-300 w-full">
+<header id="main-header" role="banner" class="sticky top-0 z-50 h-[72px] bg-[#F5F6F8] dark:bg-slate-900 border-b border-gray-300 dark:border-gray-700 flex items-center justify-between px-4 md:px-6 shadow-sm dark:shadow-none transition-all duration-300 w-full">
 
   <!-- LEFT SECTION -->
   <div class="flex items-center gap-3 sm:gap-4 min-w-0">
@@ -117,8 +116,8 @@
     <div class="hidden sm:block w-px h-6 bg-gray-400 mx-1"></div>
 
     <!-- User Profile Multi-level Dropdown (Angular controlled) -->
-    <div class="relative z-50">
-      <div tabindex="0" (click)="toggleDropdown()" aria-haspopup="true" [attr.aria-expanded]="isDropdownOpen()" aria-label="User menu"
+    <div class="relative z-50" (click)="toggleDropdown()" tabindex="0">
+      <div tabindex="0" aria-haspopup="true" [attr.aria-expanded]="isDropdownOpen()" aria-label="User menu"
         class="flex items-center gap-2 sm:gap-3 pl-1 py-1 rounded-full cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 sm:pr-3 transition-colors border border-transparent hover:border-gray-200 dark:border-slate-700/60 focus:bg-gray-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/40">
 
         <!-- Avatar with online status -->

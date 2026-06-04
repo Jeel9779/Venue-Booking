@@ -75,18 +75,6 @@
     </div>
   </div>
 
-  <!-- ERROR STATE -->
-  @if (error()) {
-  <div class="bg-red-50 border border-red-100 rounded-[24px] p-8 text-center mb-6">
-    <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-      <lucide-icon name="alert-circle" size="28"></lucide-icon>
-    </div>
-    <h3 class="text-lg font-bold text-red-900 mb-1">Oops! Something went wrong</h3>
-    <p class="text-red-600/80 mb-6 max-w-md mx-auto">{{ error() }}</p>
-    <app-button variant="danger" (onClick)="ngOnInit()">Try Again</app-button>
-  </div>
-  }
-
   <!-- 
     MAIN CONTENT AREA
     Displays a data table on desktop and a vertical card list on mobile devices.

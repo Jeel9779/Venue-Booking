@@ -56,4 +56,9 @@ export class SubscriptionApi {
   adminFullPayment(data: { vendorId: string; planId: string; startDate?: string; endDate?: string }): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/admin/full-payment`, data);
   }
+
+  // Admin: Get all addons
+  adminGetAllAddons(): Observable<{ success: boolean; count: number; addons: any[] }> {
+    return this.http.get<{ success: boolean; count: number; addons: any[] }>(`${this.baseUrl}/admin/addons`);
+  }
 }

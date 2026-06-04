@@ -12,17 +12,7 @@
     </app-button>
   </div>
 
-  <!-- Error Alert -->
-  <div *ngIf="error()" class="mb-4 bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg flex items-start gap-3">
-    <lucide-icon name="alert-triangle" class="w-5 h-5 shrink-0 mt-0.5"></lucide-icon>
-    <div class="flex-1">
-      <p class="font-medium">Error loading terms</p>
-      <p class="text-sm mt-1">{{ error() }}</p>
-    </div>
-    <button (click)="dismissError()" class="text-red-400 hover:text-red-600">
-      <lucide-icon name="x" class="w-5 h-5"></lucide-icon>
-    </button>
-  </div>
+
 
   <!-- Loading State -->
   <div *ngIf="isLoading()" class="flex flex-col items-center justify-center py-12">

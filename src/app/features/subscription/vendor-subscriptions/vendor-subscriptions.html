@@ -113,6 +113,11 @@
         [class]="filter() === 'expired' ? 'bg-rose-500 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-rose-50 hover:text-rose-600'">
         Expired
       </button>
+      <button (click)="filter.set('suspended')"
+        class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"
+        [class]="filter() === 'suspended' ? 'bg-orange-500 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-orange-50 hover:text-orange-600'">
+        Suspended
+      </button>
     </div>
 
     <div
@@ -141,6 +146,7 @@
             <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Days Left</th>
             <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
             <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Next Queue</th>
+            <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Add-ons</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
@@ -195,7 +201,9 @@
 
             <!-- Plan Name + Price + Duration -->
             <td class="px-6 py-6">
-              <p class="text-sm font-black text-slate-900 dark:text-slate-100">{{ sub.planSnapshot?.name }}</p>
+              <div class="flex items-center gap-2 mb-1">
+                <p class="text-sm font-black text-slate-900 dark:text-slate-100">{{ sub.planSnapshot?.name }}</p>
+              </div>
               <p class="text-[11px] font-bold text-indigo-600 mt-0.5">₹{{ sub.planSnapshot?.price | number }}</p>
               <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ sub.planSnapshot?.duration_days }}d plan</p>
             </td>
@@ -223,13 +231,15 @@
               <div class="text-center">
                 <p class="text-2xl font-black" [class.text-emerald-600]="sub.daysLeft > 15"
                   [class.text-amber-500]="sub.daysLeft <= 15 && sub.daysLeft > 5"
-                  [class.text-rose-600]="sub.daysLeft <= 5">
+                  [class.text-rose-600]="sub.daysLeft <= 5 && sub.status !== 'suspended'"
+                  [class.text-orange-500]="sub.status === 'suspended'">
                   {{ sub.daysLeft }}
                 </p>
                 <p class="text-[9px] font-black uppercase tracking-widest mt-0.5"
                   [class.text-emerald-400]="sub.daysLeft > 15"
                   [class.text-amber-400]="sub.daysLeft <= 15 && sub.daysLeft > 5"
-                  [class.text-rose-400]="sub.daysLeft <= 5">
+                  [class.text-rose-400]="sub.daysLeft <= 5 && sub.status !== 'suspended'"
+                  [class.text-orange-400]="sub.status === 'suspended'">
                   {{ sub.daysLabel }}
                 </p>
               </div>
@@ -242,9 +252,15 @@
                 <div
                   [class]="'px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border inline-flex items-center gap-1.5 w-fit ' + getStatusClass(sub.status)">
                   <span class="w-1.5 h-1.5 rounded-full inline-block" [class.bg-emerald-500]="sub.status === 'active'"
-                    [class.bg-amber-500]="sub.status === 'grace'" [class.bg-rose-500]="sub.status === 'expired'"></span>
+                    [class.bg-amber-500]="sub.status === 'grace'" [class.bg-rose-500]="sub.status === 'expired'"
+                    [class.bg-orange-500]="sub.status === 'suspended'"></span>
                   {{ sub.status }}
                 </div>
+                @if (sub.suspensionReason && sub.status === 'suspended') {
+                  <span class="text-[9px] font-bold text-orange-600 leading-tight">
+                    {{ sub.suspensionReason }}
+                  </span>
+                }
                 @if (sub.isExpiring) {
                 <span class="text-[9px] font-black text-rose-500 uppercase tracking-widest flex items-center gap-1">
                   <lucide-icon name="alert-triangle" size="10"></lucide-icon>
@@ -267,6 +283,21 @@
               </div>
               } @else {
               <span class="text-[11px] font-bold text-slate-300">—</span>
+              }
+            </td>
+
+            <!-- Active Add-ons -->
+            <td class="px-6 py-6">
+              @if (sub.attachedAddons?.length > 0) {
+                <div class="flex flex-col gap-1.5">
+                  @for (addon of sub.attachedAddons; track addon._id) {
+                    <span class="inline-flex items-center w-fit px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full text-[9px] font-black uppercase tracking-wider whitespace-nowrap">
+                      {{ addon.planSnapshot?.name }}
+                    </span>
+                  }
+                </div>
+              } @else {
+                <span class="text-[11px] font-bold text-slate-300">—</span>
               }
             </td>
 
@@ -330,7 +361,9 @@
 
         <div class="bg-slate-50 dark:bg-slate-800 border border-slate-100 p-3 rounded-xl flex justify-between items-center mb-4">
           <div>
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Active Plan</p>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+              Active Plan
+            </p>
             <p class="text-xs font-black text-slate-800 dark:text-slate-200">{{ sub.planSnapshot?.name }}</p>
           </div>
           <div class="text-right">
@@ -339,6 +372,18 @@
           </div>
         </div>
       </div>
+      
+
+      @if (sub.attachedAddons?.length > 0) {
+        <div class="px-3 py-2 bg-indigo-50/50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 rounded-xl mb-4 mt-2 flex flex-wrap gap-1.5 items-center">
+          <span class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mr-1">Add-ons:</span>
+          @for (addon of sub.attachedAddons; track addon._id) {
+            <span class="inline-flex items-center px-2 py-0.5 bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-700 rounded-full text-[9px] font-black uppercase tracking-wider">
+              {{ addon.planSnapshot?.name }}
+            </span>
+          }
+        </div>
+      }
 
       <div class="flex justify-between items-center pt-3 border-t border-slate-50 text-[10px] font-bold text-slate-500 dark:text-slate-400">
         <div>
@@ -404,10 +449,11 @@
               <h3 class="text-lg sm:text-xl font-black tracking-tight truncate m-0">
                 {{ sub?.vendorDetails?.businessName || sub?.vendorDetails?.fullName || 'Unknown Vendor' }}
               </h3>
-              <span
-                class="px-2 py-0.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full text-[9px] font-black uppercase tracking-widest shrink-0">
-                ID: {{ sub?._id?.slice(-8) || 'N/A' }}
-              </span>
+              <div class="absolute top-2 right-2 flex flex-col items-end gap-1">
+                <span *ngFor="let addon of sub.attachedAddons" class="px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-full text-[9px] font-black uppercase tracking-widest">
+                  {{ addon.planSnapshot?.name }}
+                </span>
+              </div>
             </div>
             <div
               class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-slate-500 dark:text-slate-400 font-semibold text-[11px] sm:text-xs">
@@ -436,7 +482,9 @@
             </div>
             <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Current Plan</p>
           </div>
-          <h4 class="text-lg font-black text-slate-900 dark:text-slate-100 m-0">{{ sub?.planSnapshot?.name || 'No Active Plan' }}</h4>
+          <h4 class="text-lg font-black text-slate-900 dark:text-slate-100 m-0">
+            {{ sub?.planSnapshot?.name || 'No Active Plan' }}
+          </h4>
           <div class="flex items-baseline gap-1.5 mt-1.5">
             <span class="text-xl sm:text-2xl font-black text-indigo-600">₹{{ (sub?.planSnapshot?.price || 0) | number
               }}</span>
@@ -453,16 +501,24 @@
             </div>
             <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Service Status</p>
           </div>
-          <div class="flex items-center gap-2">
-            <span
-              [class]="'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border inline-block ' + getStatusClass(sub?.status || 'unknown')">
-              {{ sub?.status || 'Unknown' }}
-            </span>
-            @if (sub?.isExpiring) {
-            <span class="flex items-center gap-1 text-[9px] font-black text-rose-600 uppercase tracking-wide shrink-0">
-              <lucide-icon name="alert-triangle" size="10"></lucide-icon>
-              Expiring Soon
-            </span>
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <span
+                [class]="'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border inline-block ' + getStatusClass(sub?.status || 'unknown')">
+                {{ sub?.status || 'Unknown' }}
+              </span>
+              @if (sub?.isExpiring) {
+              <span class="flex items-center gap-1 text-[9px] font-black text-rose-600 uppercase tracking-wide shrink-0">
+                <lucide-icon name="alert-triangle" size="10"></lucide-icon>
+                Expiring Soon
+              </span>
+              }
+            </div>
+            @if (sub?.suspensionReason && sub?.status === 'suspended') {
+              <div class="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-1.5 rounded-lg border border-orange-100">
+                <span class="uppercase tracking-widest block text-[8px] text-orange-400 mb-0.5">Suspended Reason:</span>
+                {{ sub.suspensionReason }}
+              </div>
             }
           </div>
           <p class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-3 flex items-center gap-1.5">
@@ -568,6 +624,51 @@
               <div class="flex items-center sm:justify-end gap-1.5 mt-1">
                 <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
                 <span class="text-[9px] font-black uppercase text-amber-700 tracking-wider">Queued</span>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- 5. UNIVERSAL ADD-ONS -->
+      @if (sub.attachedAddons?.length > 0) {
+      <div class="p-5 sm:p-8 bg-indigo-50/60 border border-indigo-100 rounded-2xl sm:rounded-[32px]">
+        <h4
+          class="text-xs font-black text-indigo-800 mb-4 sm:mb-6 uppercase tracking-widest flex items-center gap-2 m-0">
+          <lucide-icon name="plus-circle" size="14" class="text-indigo-600"></lucide-icon>
+          Active Add-ons
+        </h4>
+        <div class="space-y-3">
+          @for (addon of sub.attachedAddons; track addon._id) {
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-2xl border border-indigo-100 group hover:border-indigo-300 transition-colors gap-3">
+            <div class="flex items-center gap-3.5 min-w-0">
+              <div
+                class="w-10 h-10 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center font-black shrink-0">
+                <lucide-icon name="plus" size="18"></lucide-icon>
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-black text-slate-900 dark:text-slate-100 truncate m-0">{{ addon.planSnapshot?.name }}</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span
+                    [class]="'px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border ' + getStatusClass(addon.status)">
+                    {{ addon.status }}
+                  </span>
+                  @if(addon.status === 'suspended') {
+                    <span class="text-[9px] font-bold text-orange-600 truncate">{{ addon.suspensionReason }}</span>
+                  } @else {
+                    <span class="text-[9px] font-bold text-slate-400 truncate">{{ addon.daysLeft }} {{ addon.daysLabel }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+            <div class="text-left sm:text-right shrink-0">
+              <p class="text-sm font-black text-indigo-700 m-0">₹{{ addon.planSnapshot?.price | number }}</p>
+              <div class="mt-1.5 flex flex-col sm:items-end gap-0.5">
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Started: <span class="text-slate-500">{{ addon.startDate | date:'dd MMM yyyy' }}</span></p>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Expires: <span class="text-slate-500">{{ addon.endDate | date:'dd MMM yyyy' }}</span></p>
               </div>
             </div>
           </div>

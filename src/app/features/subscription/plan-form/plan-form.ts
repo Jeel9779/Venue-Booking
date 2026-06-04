@@ -60,6 +60,10 @@ export class PlanForm implements OnInit {
     effect(() => {
       const p = this.plan();
       if (p) {
+        const parentId = typeof p.parentPlanId === 'string'
+          ? p.parentPlanId
+          : (p.parentPlanId as any)?._id?.toString?.() ?? null;
+
         this.planForm.patchValue({
           name: p.name,
           duration_days: p.duration_days,
@@ -67,7 +71,7 @@ export class PlanForm implements OnInit {
           planType: p.planType || 'base',
           is_active: p.is_active,
           features: p.features,
-          parentPlanId: p.parentPlanId || null
+          parentPlanId: parentId
         });
       } else {
         this.planForm.reset({ duration_days: 30, price: 0, planType: 'base', is_active: true, features: [], parentPlanId: null });
@@ -113,6 +117,14 @@ export class PlanForm implements OnInit {
     }
 
     const payload = { ...this.planForm.value } as Partial<Plan>;
+    
+    // Ensure numerical values are correctly typed as backend might reject strings
+    if (payload.price !== undefined && payload.price !== null) {
+      payload.price = Number(payload.price);
+    }
+    if (payload.duration_days !== undefined && payload.duration_days !== null) {
+      payload.duration_days = Number(payload.duration_days);
+    }
     
     // Normalize parentPlanId
     if (payload.planType === 'base') {

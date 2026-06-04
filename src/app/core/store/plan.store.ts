@@ -3,7 +3,6 @@ import { Injectable, signal, computed } from '@angular/core';
 import { Plan } from '@core/models/subscription.model';
 
 @Injectable({ providedIn: 'root' })
-// Defines the structure and behavior of this class
 export class PlanStore {
   // ── State ──
   private readonly _plans = signal<Plan[]>([]);
@@ -21,7 +20,7 @@ export class PlanStore {
   readonly isLoading = computed(() => this._isLoading());
   readonly error = computed(() => this._error());
 
-  // Filtered & paginated plans
+  // Filtered & paginated
   readonly filteredPlans = computed(() => {
     const term = this.searchTerm().toLowerCase();
     return this._plans().filter(p => p.name.toLowerCase().includes(term));
@@ -32,13 +31,22 @@ export class PlanStore {
   });
 
   // ── Additional selectors ──
-  // Active base plans (non-addon and active)
-  readonly basePlans = computed(() => this._plans().filter(p => p.planType !== 'addon' && p.is_active));
+  // Active base plans (must be base type and active)
+  readonly basePlans = computed(() => this._plans().filter(p => p.is_active && p.planType === 'base'));
+  // All addon plans
   readonly addonPlans = computed(() => this._plans().filter(p => p.planType === 'addon'));
 
-  /** Returns add‑ons belonging to a specific base plan */
+  /** Returns add‑ons belonging to a specific base plan. Handles string IDs and populated ObjectId documents. */
+  /** Returns add‑ons belonging to a specific base plan.
+   * Handles string IDs and possible populated objects with an `_id` field.
+   */
   getAddonsForBase(baseId: string) {
-    return this._plans().filter(p => p.parentPlanId === baseId);
+    return this._plans().filter(p => {
+      const pid = typeof p.parentPlanId === 'string'
+        ? p.parentPlanId
+        : (p.parentPlanId as any)?._id?.toString?.() ?? (p.parentPlanId as any)?.toString?.() ?? null;
+      return pid === baseId;
+    });
   }
 
   // ── Updaters ──

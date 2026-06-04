@@ -19,6 +19,11 @@ export class ToastService {
   private idCounter = 0;
 
   show(message: string, type: ToastType = 'info', duration: number = 4000) {
+    // Prevent duplicate messages from stacking
+    if (this.toasts().some(t => t.message === message && t.type === type)) {
+      return;
+    }
+
     const id = this.idCounter++;
     this.toasts.update(t => [...t, { message, type, id }]);
 

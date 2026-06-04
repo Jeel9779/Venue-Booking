@@ -16,7 +16,7 @@ export interface Plan {
   updatedAt?: string;
 }
 
-export type SubscriptionStatus = 'active' | 'grace' | 'expired';
+export type SubscriptionStatus = 'active' | 'grace' | 'expired' | 'suspended' | 'cancelled';
 
 // Defines the data model structure
 export interface Subscription {
@@ -54,4 +54,17 @@ export interface SubscriptionQueue {
   activatedAt: string | null;
   purchasedAt: string;
   createdAt?: string;
+}
+
+export interface AddonSubscription {
+  _id: string;
+  userId: string | any;
+  addonId: string | Plan;
+  baseSubscriptionId: string | Subscription | null;
+  status: SubscriptionStatus;
+  startDate: string;
+  expiryDate: string;
+  suspensionReason?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
