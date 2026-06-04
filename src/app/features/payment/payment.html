@@ -102,38 +102,41 @@
       }
     </div>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <!-- Type Filter -->
-      <div class="space-y-1.5">
-        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Payment Type</label>
-        <select 
-          [(ngModel)]="filterValues.type" 
-          (change)="applyApiFilters()"
-          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:bg-white dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-hidden transition-all appearance-none"
-        >
-          <option value="">All Admin Revenue</option>
-          <option value="subscription">Subscriptions</option>
-          <option value="addon">Add-ons</option>
-        </select>
-      </div>
+    <div class="space-y-4">
+      <!-- Grid for Dropdowns & Dates -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+        <!-- Type Filter -->
+        <div class="space-y-1.5">
+          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Payment Type</label>
+          <select 
+            [(ngModel)]="filterValues.type" 
+            (change)="applyApiFilters()"
+            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:bg-white dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-hidden transition-all appearance-none"
+          >
+            <option value="">All Admin Revenue</option>
+            <option value="subscription">Subscriptions</option>
+            <option value="full payment">Add-ons</option>
+          </select>
+        </div>
 
-      <!-- Status Filter -->
-      <div class="space-y-1.5">
-        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Execution Status</label>
-        <select 
-          [(ngModel)]="filterValues.paymentStatus" 
-          (change)="applyApiFilters()"
-          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:bg-white dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-hidden transition-all appearance-none"
-        >
-          <option value="">All Statuses</option>
-          <option value="success">Successful</option>
-          <option value="pending">Processing</option>
-          <option value="failed">Rejected/Failed</option>
-        </select>
+        <!-- Status Filter -->
+        <div class="space-y-1.5">
+          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Execution Status</label>
+          <select 
+            [(ngModel)]="filterValues.paymentStatus" 
+            (change)="applyApiFilters()"
+            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:bg-white dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-hidden transition-all appearance-none"
+          >
+            <option value="">All Statuses</option>
+            <option value="success">Successful</option>
+            <option value="pending">Processing</option>
+            <option value="failed">Rejected/Failed</option>
+          </select>
+        </div>
       </div>
 
       <!-- Unified Search -->
-      <div class="sm:col-span-2 lg:col-span-2 space-y-1.5">
+      <div class="space-y-1.5">
         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Search Records</label>
         <div class="relative">
           <lucide-icon [img]="icons.search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></lucide-icon>
@@ -141,7 +144,7 @@
             type="text" 
             [ngModel]="searchQuery()" 
             (ngModelChange)="searchQuery.set($event)"
-            placeholder="Search by Vendor, Email or Transaction ID..."
+            placeholder="Search by Vendor, Email, Transaction ID, Type, Status or Amount..."
             class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:bg-white dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-hidden transition-all"
           >
         </div>

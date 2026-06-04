@@ -14,7 +14,7 @@ export interface Vendor {
   address: string;
   governmentId: string; // Matches backend
   licenseDoc: string;   // Matches backend
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'suspended';
   createdAt: string;
   updatedAt: string;
   username?: string;

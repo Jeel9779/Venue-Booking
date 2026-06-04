@@ -45,9 +45,14 @@
       </div>
       <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
                   bg-white dark:bg-slate-900 text-rose-600 border-slate-200 dark:border-slate-700 hover:border-rose-300"
-        [class.ring-2]="filter() === 'rejected'" [class.ring-rose-500]="filter() === 'rejected'"
         [class.border-rose-500]="filter() === 'rejected'" (click)="filter.set('rejected')">
         {{ counts().rejected }} Rejected
+      </div>
+      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
+                  bg-white dark:bg-slate-900 text-orange-600 border-slate-200 dark:border-slate-700 hover:border-orange-300"
+        [class.ring-2]="filter() === 'suspended'" [class.ring-orange-500]="filter() === 'suspended'"
+        [class.border-orange-500]="filter() === 'suspended'" (click)="filter.set('suspended')">
+        {{ counts().suspended }} Suspended
       </div>
     </div>
 
@@ -113,6 +118,7 @@
           <span [class]="'px-2.5 py-1 rounded-lg text-[0.7rem] font-black uppercase tracking-widest border ' + 
                             (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 
                              v.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-100' : 
+                             v.status === 'suspended' ? 'bg-orange-50 text-orange-700 border-orange-100' : 
                              'bg-amber-50 text-amber-700 border-amber-100')">
             {{ v.status }}
           </span>
@@ -162,6 +168,7 @@
             <span [class]="'px-2.5 py-0.5 rounded-lg text-[0.65rem] font-black uppercase tracking-widest border ' + 
                              (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
                               v.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
+                              v.status === 'suspended' ? 'bg-orange-50 text-orange-700 border-orange-100' : 
                               'bg-amber-50 text-amber-700 border-amber-100')">
               {{ v.status }}
             </span>
@@ -278,6 +285,12 @@
         <app-button variant="success" customClass="px-8"
           (onClick)="openApproveModel()">Approve Partner</app-button>
       </div>
+      }
+      @if (v.status === 'approved') {
+        <app-button variant="danger" customClass="px-8" (onClick)="suspendVendor()">Suspend Partner</app-button>
+      }
+      @if (v.status === 'suspended') {
+        <app-button variant="success" customClass="px-8" (onClick)="unsuspendVendor()">Unsuspend Partner</app-button>
       }
     </div>
   </app-model>

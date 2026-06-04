@@ -41,10 +41,18 @@ export class VendorApi {
     return this.http.put<{ message: string; vendor: Vendor }>(`${this.baseUrl}/reject/${id}`, data);
   }
 
-  // NOTE: Backend currently has NO delete route. 
-  // We will keep this commented or as a dummy to avoid build errors if called.
+  // Backend uses PUT /vendors/suspend/:id
+  suspend(id: string): Observable<{ message: string; vendor: Vendor }> {
+    return this.http.put<{ message: string; vendor: Vendor }>(`${this.baseUrl}/suspend/${id}`, {});
+  }
+
+  // Backend uses PUT /vendors/unsuspend/:id
+  unsuspend(id: string): Observable<{ message: string; vendor: Vendor }> {
+    return this.http.put<{ message: string; vendor: Vendor }>(`${this.baseUrl}/unsuspend/${id}`, {});
+  }
+
+  // Backend uses DELETE /vendors/:id (Soft delete)
   delete(id: string): Observable<void> {
-    console.warn('Backend does not support DELETE /vendors/:id yet.');
-    return new Observable(obs => obs.next());
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

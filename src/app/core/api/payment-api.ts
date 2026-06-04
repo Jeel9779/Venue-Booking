@@ -17,15 +17,15 @@ export class PaymentApi {
    * Fetches all payments with optional filtering
    */
   getAll(filters?: Partial<PaymentFilters>): Observable<Payment[]> {
-    let params = new HttpParams();
+    let params = new HttpParams()
+      .set('page', '1')
+      .set('limit', '1000');
     if (filters) {
       if (filters.type) params = params.set('type', filters.type);
       if (filters.paymentStatus) params = params.set('paymentStatus', filters.paymentStatus);
       if (filters.vendorId) params = params.set('vendorId', filters.vendorId);
-      if (filters.startDate) params = params.set('startDate', filters.startDate);
-      if (filters.endDate) params = params.set('endDate', filters.endDate);
     }
-    return this.http.get<{ data: Payment[] }>(this.baseUrl, { params }).pipe(
+    return this.http.get<{ data: Payment[] }>(`${API_BASE_URL}/payments/admin-vendor`, { params }).pipe(
       map(res => res.data)
     );
   }

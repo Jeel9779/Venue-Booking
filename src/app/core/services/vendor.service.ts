@@ -76,6 +76,32 @@ export class VendorService {
     });
   }
 
+  suspend(id: string): void {
+    const originalVendors = [...this.store.vendors()];
+    this.store.optimisticUpdate(id, { status: 'suspended' });
+
+    this.api.suspend(id).subscribe({
+      next: (res) => this.store.updateVendor(res.vendor),
+        error: (err) => {
+          this.store.setVendors(originalVendors);
+          this.store.setError(err?.message || 'Failed to suspend vendor');
+        },
+    });
+  }
+
+  unsuspend(id: string): void {
+    const originalVendors = [...this.store.vendors()];
+    this.store.optimisticUpdate(id, { status: 'approved' });
+
+    this.api.unsuspend(id).subscribe({
+      next: (res) => this.store.updateVendor(res.vendor),
+        error: (err) => {
+          this.store.setVendors(originalVendors);
+          this.store.setError(err?.message || 'Failed to unsuspend vendor');
+        },
+    });
+  }
+
   delete(id: string): void {
     // ⚡ OPTIMISTIC: Remove immediately
     this.store.removeVendor(id);

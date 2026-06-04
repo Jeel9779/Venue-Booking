@@ -34,7 +34,7 @@ export class Vendors implements OnInit {
   readonly pagination = this.vendorStore.pagination;
 
   search = signal('');
-  filter = signal<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  filter = signal<'all' | 'pending' | 'approved' | 'rejected' | 'suspended'>('all');
 
   selectedVendor = signal<Vendor | null>(null);
   showDetailsModel = signal(false);
@@ -83,6 +83,7 @@ export class Vendors implements OnInit {
       pending: list.filter(v => v.status === 'pending').length,
       approved: list.filter(v => v.status === 'approved').length,
       rejected: list.filter(v => v.status === 'rejected').length,
+      suspended: list.filter(v => v.status === 'suspended').length,
     };
   });
 
@@ -134,6 +135,20 @@ export class Vendors implements OnInit {
     if (!v || !this.rejectReason().trim()) return;
     this.vendorService.reject(v._id, { message: this.rejectReason() });
     this.showRejectModel.set(false);
+    this.closeDetails();
+  }
+
+  suspendVendor() {
+    const v = this.selectedVendor();
+    if (!v) return;
+    this.vendorService.suspend(v._id);
+    this.closeDetails();
+  }
+
+  unsuspendVendor() {
+    const v = this.selectedVendor();
+    if (!v) return;
+    this.vendorService.unsuspend(v._id);
     this.closeDetails();
   }
 

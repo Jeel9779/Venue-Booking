@@ -58,8 +58,6 @@ export class Payments implements OnInit {
   filterValues = {
     type:          '',
     paymentStatus: '',
-    startDate:     '',
-    endDate:       '',
   };
 
   selectedPayment: Payment | null = null;
@@ -68,31 +66,26 @@ export class Payments implements OnInit {
   columns = ['Vendor', 'Plan / Type', 'Amount', 'Status', 'Transaction ID', 'Date', 'Actions'];
 
   // ── Deduplication ──────────────────────────────────────────────────────────
-  // Backend creates two records per subscription payment (SUB-xxx + TXN-xxx).
-  // Group by vendorId + amount + 5-minute bucket; keep the SUB- prefixed one.
+  // Backend sometimes creates two records per payment attempt (SUB-xxx + TXN-xxx).
+  // Group by relatedId (Subscription/Add-on ID) to resolve duplicates robustly.
   readonly deduplicatedPayments = computed(() => {
     const all = this.payments();
     const seen = new Map<string, Payment>();
 
     for (const p of all) {
-      if (p.type !== 'subscription' && p.type !== 'addon') continue;
+      if (p.type !== 'subscription' && p.type !== 'addon' && p.type !== 'full payment') continue;
 
-      // Safe key: vendorId can be an object OR a plain string
-      const vendorKey =
-        p.vendorId && typeof p.vendorId === 'object'
-          ? p.vendorId._id
-          : String(p.vendorId);
-
-      const bucket = Math.floor(new Date(p.createdAt).getTime() / (5 * 60 * 1000));
-      const key    = `${vendorKey}_${p.amount}_${bucket}`;
+      const key = p.relatedId ? String(p.relatedId) : p._id;
 
       if (!seen.has(key)) {
         seen.set(key, p);
       } else {
-        const existing    = seen.get(key)!;
-        const newIsSub    = p.transactionId?.startsWith('SUB-');
-        const existingIsSub = existing.transactionId?.startsWith('SUB-');
-        if (newIsSub && !existingIsSub) seen.set(key, p);
+        const existing = seen.get(key)!;
+        const newIsSub = p.transactionId?.startsWith('SUB-') || p.paymentStatus === 'success';
+        const existingIsSub = existing.transactionId?.startsWith('SUB-') || existing.paymentStatus === 'success';
+        if (newIsSub && !existingIsSub) {
+          seen.set(key, p);
+        }
       }
     }
 
@@ -106,10 +99,13 @@ export class Payments implements OnInit {
     if (!q) return items;
 
     return items.filter(p => {
-      const name  = this.vendorName(p).toLowerCase();
-      const email = (p.vendorId?.email || '').toLowerCase();
-      const txn   = (p.transactionId   || '').toLowerCase();
-      return name.includes(q) || email.includes(q) || txn.includes(q);
+      const name   = this.vendorName(p).toLowerCase();
+      const email  = (p.vendorId?.email || '').toLowerCase();
+      const txn    = (p.transactionId   || '').toLowerCase();
+      const type   = (p.type            || '').toLowerCase();
+      const status = (p.paymentStatus   || '').toLowerCase();
+      const amount = String(p.amount);
+      return name.includes(q) || email.includes(q) || txn.includes(q) || type.includes(q) || status.includes(q) || amount.includes(q);
     });
   });
 
@@ -134,7 +130,7 @@ export class Payments implements OnInit {
         successfulAmount += p.amount;
         successfulCount++;
         if (p.type === 'subscription') subscriptionRevenue += p.amount;
-        else if (p.type === 'addon')   addonRevenue        += p.amount;
+        else if (p.type === 'addon' || p.type === 'full payment') addonRevenue += p.amount;
       } else if (p.paymentStatus === 'pending') {
         pendingAmount += p.amount;
         pendingCount++;
@@ -154,7 +150,7 @@ export class Payments implements OnInit {
   readonly hasActiveFilters = computed(() => {
     const f = this.filters();
     const isCustomType = f?.type && f.type !== 'subscription';
-    return !!(isCustomType || f?.paymentStatus || f?.startDate || f?.endDate || this.searchQuery());
+    return !!(isCustomType || f?.paymentStatus || this.searchQuery());
   });
 
   // ──────────────────────────────────────────────────────────────────────────
@@ -166,8 +162,6 @@ export class Payments implements OnInit {
       this.filterValues = {
         type:          f.type          ?? '',
         paymentStatus: f.paymentStatus ?? '',
-        startDate:     f.startDate     ?? '',
-        endDate:       f.endDate       ?? '',
       };
     });
   }
@@ -177,14 +171,12 @@ export class Payments implements OnInit {
     this.service.applyFilters({
       type:          this.filterValues.type,
       paymentStatus: this.filterValues.paymentStatus,
-      startDate:     this.filterValues.startDate || undefined,
-      endDate:       this.filterValues.endDate   || undefined,
     });
   }
 
   // Reset everything: API filters + client-side search
   resetFilters(): void {
-    this.filterValues = { type: '', paymentStatus: '', startDate: '', endDate: '' };
+    this.filterValues = { type: '', paymentStatus: '' };
     this.searchQuery.set('');
     this.service.applyFilters(this.filterValues);
   }

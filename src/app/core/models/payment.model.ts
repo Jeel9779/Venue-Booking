@@ -40,6 +40,4 @@ export interface PaymentFilters {
   type: string;
   paymentStatus: string;
   vendorId: string;
-  startDate?: string;
-  endDate?: string;
 }
