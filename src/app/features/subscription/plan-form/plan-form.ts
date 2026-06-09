@@ -40,6 +40,9 @@ export class PlanForm implements OnInit {
     planType: ['base', [Validators.required]],
     is_active: [true],
     features: [[] as string[]],
+    // New fields for limits
+    maxVenues: [0, [Validators.required, Validators.min(0)]],
+    maxPhotos: [0, [Validators.required, Validators.min(0)]],
     // New field – only required when planType is 'addon'
     parentPlanId: [null] as any,
   });
@@ -82,7 +85,8 @@ export class PlanForm implements OnInit {
     this.planForm.get('planType')?.valueChanges.subscribe(type => {
       const parentCtrl = this.planForm.get('parentPlanId');
       if (type === 'addon') {
-        parentCtrl?.setValidators([Validators.required]);
+        // Universal Add-ons use null, so it cannot be strictly required
+        parentCtrl?.clearValidators();
       } else {
         parentCtrl?.clearValidators();
         parentCtrl?.setValue(null);

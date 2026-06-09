@@ -3,28 +3,35 @@
 
   <!-- Basic Info Section -->
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-    <app-form-input 
-      label="Plan Name" 
-      placeholder="e.g. Premium Business" 
-      formControlName="name"
-      [error]="planForm.get('name')?.touched && planForm.get('name')?.invalid ? 'Valid name required' : null">
-    </app-form-input>
+    <div class="flex flex-col">
+      <app-form-input 
+        label="Plan Name" 
+        placeholder="e.g. Gold Tier, Premium Add-on" 
+        formControlName="name"
+        [error]="planForm.get('name')?.touched && planForm.get('name')?.invalid ? 'Valid name required' : null">
+      </app-form-input>
+      <p class="text-[0.65rem] text-slate-500 mt-1">The visible name of the plan.</p>
+    </div>
 
-    <app-form-input 
-      label="Price (₹)" 
-      type="number" 
-      placeholder="0" 
-      formControlName="price"
-      [error]="planForm.get('price')?.touched && planForm.get('price')?.invalid ? 'Price required' : null">
-    </app-form-input>
+    <div class="flex flex-col">
+      <app-form-input 
+        label="Price (₹)" 
+        type="number" 
+        placeholder="0" 
+        formControlName="price"
+        [error]="planForm.get('price')?.touched && planForm.get('price')?.invalid ? 'Price required' : null">
+      </app-form-input>
+      <p class="text-[0.65rem] text-slate-500 mt-1">The pricing amount (in ₹ or $).</p>
+    </div>
   </div>
 
   <!-- Duration Section -->
-  <div class="space-y-4">
+  <div class="space-y-2">
     <div class="flex items-center justify-between">
       <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Plan Duration</label>
       <span class="text-[0.7rem] font-black text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">{{ planForm.get('duration_days')?.value }} Days</span>
     </div>
+    <p class="text-[0.65rem] text-slate-500 mb-2">Select the billing duration (e.g., 30 Days / 1 Month, 3 Months, 6 Months, or 1 Year).</p>
     
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
       @for (d of durations; track d.days) {
@@ -52,51 +59,78 @@
   </div>
 
   <!-- Plan Type Section (From ts form group planType control) -->
-  <div class="flex flex-col">
-    <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">Plan Type</label>
-    <div class="flex items-center gap-4">
-      <label class="inline-flex items-center cursor-pointer">
-        <input type="radio" formControlName="planType" value="base" class="sr-only peer">
-        <div class="px-4 py-2 border-2 border-slate-100 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
-          Base Plan
-        </div>
+  <div class="flex flex-col space-y-3">
+    <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Plan Type</label>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <label class="relative flex flex-col p-4 border-2 rounded-xl cursor-pointer transition-all"
+             [class]="planForm.get('planType')?.value === 'base' ? 'border-indigo-600 bg-indigo-50/50' : 'border-slate-100 bg-white hover:border-slate-200'">
+        <input type="radio" formControlName="planType" value="base" class="sr-only">
+        <span class="text-sm font-bold text-slate-900 mb-1">Base Plan</span>
+        <span class="text-[0.65rem] text-slate-500 leading-relaxed">Choose this to create a main subscription tier (like Silver, Gold, or Platinum) that vendors must subscribe to.</span>
       </label>
-      <label class="inline-flex items-center cursor-pointer">
-        <input type="radio" formControlName="planType" value="addon" class="sr-only peer">
-        <div class="px-4 py-2 border-2 border-slate-100 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">
-          Add-on Plan
-        </div>
+
+      <label class="relative flex flex-col p-4 border-2 rounded-xl cursor-pointer transition-all"
+             [class]="planForm.get('planType')?.value === 'addon' ? 'border-indigo-600 bg-indigo-50/50' : 'border-slate-100 bg-white hover:border-slate-200'">
+        <input type="radio" formControlName="planType" value="addon" class="sr-only">
+        <span class="text-sm font-bold text-slate-900 mb-1">Add-on Plan</span>
+        <span class="text-[0.65rem] text-slate-500 leading-relaxed">Choose this if you are creating a minor plan upgrade (e.g., extra listings, custom features) that sits on top of an existing plan.</span>
       </label>
     </div>
   </div>
 
   <!-- Parent Plan Selection (Only for Add-ons) -->
   @if (planForm.get('planType')?.value === 'addon') {
-    <div class="flex flex-col">
-      <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">Select Parent Plan</label>
-        <select formControlName="parentPlanId" class="w-full h-11 px-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark: ring-1 ring-slate-200">
-          <option [ngValue]="null">None</option>
+    <div class="flex flex-col p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 space-y-3">
+      <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Select Parent Plan</label>
+      <select formControlName="parentPlanId" class="w-full h-11 px-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+        <option [ngValue]="null">None (Universal Add-on)</option>
+        <optgroup label="Select a Specific Plan (Linked Add-on)">
           @for (plan of activeBasePlans(); track plan._id) {
             <option [value]="plan._id">{{ plan.name }}</option>
           }
-        </select>
+        </optgroup>
+      </select>
+      
+      <div class="text-[0.65rem] text-slate-500 leading-relaxed space-y-1 mt-1">
+        <p><strong>Set to None (Universal Add-on):</strong> Keep this as None if the add-on should be available to all vendors, regardless of which main Base Plan they are currently on.</p>
+        <p><strong>Select a Specific Plan (Linked Add-on):</strong> Select a specific base plan if this add-on should only be purchasable by vendors who are currently subscribed to that specific Base Plan tier.</p>
+      </div>
     </div>
   }
 
   <!-- Status Section -->
   <div class="flex flex-col">
-    <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">Status</label>
+    <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider">Status (Active)</label>
     <label class="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" formControlName="is_active" class="sr-only peer">
       <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-slate-900 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
       <span class="ml-3 text-sm font-bold text-slate-600 dark:text-slate-400">{{ planForm.get('is_active')?.value ? 'Active' : 'Inactive' }}</span>
     </label>
+    <p class="text-[0.65rem] text-slate-500 mt-2">Toggle this on to make the plan immediately visible and purchasable by vendors on the portal.</p>
   </div>
 
   <!-- Features Section -->
-  <div class="space-y-4">
+  <div class="space-y-2">
     <label class="block text-[0.8125rem] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Plan Features</label>
+    <p class="text-[0.65rem] text-slate-500 mb-2">Add specific bullet points describing what the plan offers (e.g., "Up to 5 listings", "Priority Support", etc.).</p>
+    <!-- Limits Section -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+      <app-form-input
+        label="Max Venues"
+        type="number"
+        placeholder="0"
+        formControlName="maxVenues"
+        [error]="planForm.get('maxVenues')?.touched && planForm.get('maxVenues')?.invalid ? 'Must be a non-negative number' : null"></app-form-input>
+      <app-form-input
+        label="Max Photos"
+        type="number"
+        placeholder="0"
+        formControlName="maxPhotos"
+        [error]="planForm.get('maxPhotos')?.touched && planForm.get('maxPhotos')?.invalid ? 'Must be a non-negative number' : null"></app-form-input>
+    </div>
     
+
+
     <div class="flex gap-2">
       <input 
         type="text" 
@@ -109,7 +143,7 @@
     </div>
 
     <!-- Features List -->
-    <div class="flex flex-wrap gap-2">
+    <div class="flex flex-wrap gap-2 mt-2">
       @for (feature of features; track $index) {
         <div class="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100 group">
           {{ feature }}
