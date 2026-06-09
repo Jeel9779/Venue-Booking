@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 // Defines the structure and behavior of this class
 export class VendorSubscriptionServices {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:4000/vendorSubscriptions';
+  private apiUrl = 'http://192.168.1.8:4000/vendorSubscriptions';
 
   // GET all
   getAll(): Observable<VendorSubscription[]> {

@@ -27,6 +27,7 @@ import { ComplaintStore } from '@core/store/complaint.store';
 import { VendorService } from '@core/services/vendor.service';
 import { VendorStore } from '@core/store/vendor.store';
 import { Complaint } from '@core/models/complaint.model';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Component({
   selector: 'app-complain',
@@ -238,9 +239,18 @@ export class ComplainComponent implements OnInit {
     }
   }
 
+  getImageUrl(img?: string): string {
+    if (!img) return '';
+    let url = img.replace(/\\/g, '/');
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('assets/')) return url;
+    const root = API_BASE_URL.replace(/\/+$/, '');
+    return `${root}/${url.replace(/^\/+/, '')}`;
+  }
+
   openImageViewer(url: string | null | undefined): void {
     if (url) {
-      this.viewingImageUrl.set(url);
+      this.viewingImageUrl.set(this.getImageUrl(url));
     }
   }
 

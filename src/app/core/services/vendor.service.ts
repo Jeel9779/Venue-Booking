@@ -5,6 +5,8 @@ import { VendorApi } from '../api/vendor-api';
 import { VendorStore } from '../store/vendor.store';
 import { Vendor } from '../models/vendor.model';
 
+import { API_BASE_URL } from '../config/api.config';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -115,6 +117,10 @@ export class VendorService {
 
   getFileUrl(path?: string): string {
     if (!path) return '';
-    return path; 
+    let url = path.replace(/\\/g, '/');
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('assets/')) return url;
+    const root = API_BASE_URL.replace(/\/+$/, '');
+    return `${root}/${url.replace(/^\/+/, '')}`;
   }
 }

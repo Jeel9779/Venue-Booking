@@ -121,7 +121,7 @@
               <!-- Visual identifier (First attachment or styled initial icon) -->
               <div class="w-36 h-28 shrink-0 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 flex items-center justify-center relative">
                 @if (complaint.attachments && complaint.attachments.length > 0) {
-                  <img [src]="complaint.attachments[0]" alt="Attachment preview" class="w-full h-full object-cover">
+                  <img [src]="getImageUrl(complaint.attachments[0])" alt="Attachment preview" class="w-full h-full object-cover">
                 } @else {
                   <lucide-icon [img]="icons.building" size="28" class="text-slate-400 dark:text-slate-600"></lucide-icon>
                 }
@@ -438,7 +438,7 @@
                         (click)="openImageViewer(img); $event.stopPropagation()"
                         class="w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 dark:border-slate-800 block hover:ring-2 hover:ring-indigo-500 hover:scale-[1.05] transition-all"
                       >
-                        <img [src]="img" alt="Evidence" class="w-full h-full object-cover">
+                        <img [src]="getImageUrl(img)" alt="Evidence" class="w-full h-full object-cover">
                       </button>
                     }
                   </div>
