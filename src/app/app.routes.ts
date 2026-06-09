@@ -96,6 +96,10 @@ export const routes: Routes = [
         loadComponent: () => import('@features/complain/complain.component').then(m => m.ComplainComponent)
       },
       {
+        path: 'reports',
+        loadComponent: () => import('@features/reports/reports').then(m => m.Reports)
+      },
+      {
         path: 'terms',
         loadComponent: () => import('@features/terms/terms').then(m => m.Terms)
       },

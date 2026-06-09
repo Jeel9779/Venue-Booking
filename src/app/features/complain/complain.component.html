@@ -302,16 +302,15 @@
   </div>
 </div>
 
-<!-- Sliding Side Detail Drawer (Case Review & Live Chat) -->
+<!-- Centered Modal (Case Review & Live Chat) -->
 @if (isDrawerOpen()) {
-  <div class="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-    <div class="absolute inset-0 overflow-hidden">
-      <!-- Backdrop with blur -->
-      <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" (click)="closeDrawer()"></div>
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Backdrop with blur -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" (click)="closeDrawer()"></div>
 
-      <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-        <div class="pointer-events-auto w-screen max-w-2xl transform transition-transform duration-300 ease-in-out border-l border-slate-200 dark:border-slate-850">
-          <div class="flex h-full flex-col bg-white dark:bg-slate-900 shadow-2xl overflow-y-hidden">
+    <!-- Modal Panel -->
+    <div class="relative w-full max-w-3xl max-h-[95vh] flex flex-col bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden transform transition-all animate-[scaleIn_0.2s_ease]">
+      
             
             <!-- Drawer Header -->
             <div class="px-6 py-5 bg-slate-50 dark:bg-slate-950 border-b border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
@@ -334,8 +333,8 @@
               </button>
             </div>
 
-            <!-- Drawer Scrollable Body -->
-            <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            <!-- Modal Scrollable Body -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               
               <!-- Admin Controls Panel -->
               <div class="bg-indigo-50/50 dark:bg-indigo-950/10 p-5 rounded-2xl border border-indigo-100/60 dark:border-indigo-950/40 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -435,13 +434,12 @@
                   </h3>
                   <div class="flex flex-wrap gap-3">
                     @for (img of activeComplaint()?.attachments; track img) {
-                      <a 
-                        [href]="img" 
-                        target="_blank"
+                      <button 
+                        (click)="openImageViewer(img); $event.stopPropagation()"
                         class="w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 dark:border-slate-800 block hover:ring-2 hover:ring-indigo-500 hover:scale-[1.05] transition-all"
                       >
                         <img [src]="img" alt="Evidence" class="w-full h-full object-cover">
-                      </a>
+                      </button>
                     }
                   </div>
                 </div>
@@ -507,20 +505,20 @@
               </div>
 
             </div>
-
-            <!-- Drawer Footer -->
-            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800 flex justify-end gap-3 shrink-0">
-              <button 
-                (click)="closeDrawer()" 
-                class="px-5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 transition-colors focus:outline-none"
-              >
-                Close View
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+}
+
+<!-- ── IMAGE PREVIEW ── -->
+@if (viewingImageUrl()) {
+<div class="fixed inset-0 z-[10001] bg-slate-950/95 flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease]"
+  (click)="closeImageViewer()">
+  <button
+    class="absolute top-6 right-6 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all border border-white/10 backdrop-blur-md">
+    <lucide-icon [img]="icons.close" size="24"></lucide-icon>
+  </button>
+  <img [src]="viewingImageUrl()"
+    class="max-h-[85vh] max-w-full rounded-2xl object-contain border border-white/5"
+    (click)="$event.stopPropagation()" alt="Full screen preview" />
+</div>
 }

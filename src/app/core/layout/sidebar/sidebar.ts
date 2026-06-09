@@ -18,7 +18,8 @@ import {
   ListChecks,
   Activity,
   AlertTriangle,
-  ScrollText
+  ScrollText,
+  ShieldAlert
 } from 'lucide-angular';
 
 @Component({
@@ -51,7 +52,8 @@ export class Sidebar {
     plans: ListChecks,
     subscriptions: Activity,
     complaints: AlertTriangle,
-    terms: ScrollText
+    terms: ScrollText,
+    reports: ShieldAlert
   };
 
   //constructor for router and window resize

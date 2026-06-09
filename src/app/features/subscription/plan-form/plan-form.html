@@ -135,7 +135,6 @@
     }
     
     <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 w-full">
-      <app-button variant="secondary" type="button" (onClick)="onCancel.emit()" customClass="w-full sm:w-auto" class="w-full sm:w-auto">Cancel</app-button>
       <app-button type="submit" [loading]="isLoading()" [disabled]="planForm.invalid" customClass="w-full sm:w-auto" class="w-full sm:w-auto">
         {{ plan() ? 'Update Plan' : 'Create Plan' }}
       </app-button>

@@ -28,9 +28,14 @@ export class PlanList implements OnInit {
 
   showForm = signal(false);
   selectedPlan = signal<Plan | null>(null);
-  
-  // Delete modal state
   planToDelete = signal<string | null>(null);
+  
+  // Helper to get base plan name for an add‑on
+  getBasePlanName(parentId: string | null | undefined): string {
+    if (!parentId) return '';
+    const base = this.planStore.basePlans().find(p => p._id === parentId);
+    return base?.name ?? '';
+  }
 
   ngOnInit(): void {
     this.planService.loadAllPlans(); // Admin view

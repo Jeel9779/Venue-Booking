@@ -1,0 +1,357 @@
+<div class="space-y-6 animate-fade-in relative h-[calc(100vh-6rem)] flex flex-col">
+
+  <!-- Header Section -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+    <div>
+      <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+        <lucide-angular [img]="icons.shieldAlert" class="w-8 h-8 text-indigo-600 dark:text-indigo-400"></lucide-angular>
+        Report Management
+      </h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-1">Review and resolve user reports against venues.</p>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <button 
+        (click)="refreshData()"
+        class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl font-medium transition-all duration-200 focus:ring-2 focus:ring-slate-300">
+        <lucide-angular [img]="icons.refresh" class="w-4 h-4" [class.animate-spin]="isLoading()"></lucide-angular>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 shrink-0">
+    <!-- Total Reports -->
+    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg shadow-indigo-500/20 transform transition-transform hover:scale-[1.02]">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-indigo-100 font-medium">Total Reports</p>
+          <h3 class="text-4xl font-bold mt-2">{{ reports().length }}</h3>
+        </div>
+        <div class="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+          <lucide-angular [img]="icons.fileText" class="w-6 h-6 text-white"></lucide-angular>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Reports -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">Active (Open/In Progress)</p>
+          <h3 class="text-4xl font-bold text-slate-900 dark:text-white mt-2">{{ openCount() }}</h3>
+        </div>
+        <div class="bg-amber-100 dark:bg-amber-900/40 p-3 rounded-xl">
+          <lucide-angular [img]="icons.alertCircle" class="w-6 h-6 text-amber-600 dark:text-amber-400"></lucide-angular>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resolved Reports -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">Resolved Cases</p>
+          <h3 class="text-4xl font-bold text-slate-900 dark:text-white mt-2">{{ resolvedCount() }}</h3>
+        </div>
+        <div class="bg-emerald-100 dark:bg-emerald-900/40 p-3 rounded-xl">
+          <lucide-angular [img]="icons.checkCircle" class="w-6 h-6 text-emerald-600 dark:text-emerald-400"></lucide-angular>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters & Search -->
+  <div class="flex flex-col sm:flex-row gap-4 items-center justify-between shrink-0">
+    <div class="flex bg-white dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm w-full sm:w-auto overflow-x-auto hide-scrollbar">
+      <button *ngFor="let status of ['All', 'Open', 'In Progress', 'Resolved', 'Closed']"
+        (click)="setFilter(status)"
+        [class.bg-indigo-600]="currentFilter() === status"
+        [class.text-white]="currentFilter() === status"
+        [class.text-slate-600]="currentFilter() !== status"
+        [class.dark:text-slate-300]="currentFilter() !== status"
+        [class.hover:bg-slate-100]="currentFilter() !== status"
+        [class.dark:hover:bg-slate-700]="currentFilter() !== status"
+        class="px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap">
+        {{ status }}
+      </button>
+    </div>
+
+    <div class="relative w-full sm:w-80">
+      <lucide-angular [img]="icons.search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></lucide-angular>
+      <input type="text"
+        [value]="searchQuery()"
+        (input)="onSearchChange($event)"
+        placeholder="Search reports, venues, users..."
+        class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:text-white placeholder-slate-400 transition-all shadow-sm">
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error()" class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl p-4 flex items-center gap-3 shrink-0">
+    <lucide-angular [img]="icons.alertTriangle" class="w-5 h-5 text-red-500"></lucide-angular>
+    <p class="text-red-700 dark:text-red-400">{{ error() }}</p>
+  </div>
+
+  <!-- Table Section -->
+  <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col flex-1 min-h-0 relative overflow-hidden">
+    
+    <!-- Loading Overlay -->
+    <div *ngIf="isLoading()" class="absolute inset-0 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm z-10 flex items-center justify-center">
+      <div class="flex flex-col items-center gap-3">
+        <lucide-angular [img]="icons.refresh" class="w-8 h-8 text-indigo-600 animate-spin"></lucide-angular>
+        <p class="text-indigo-600 font-medium">Loading reports...</p>
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-auto w-full">
+      <table class="w-full text-left border-collapse min-w-[800px]">
+        <thead class="sticky top-0 bg-slate-50 dark:bg-slate-800/90 backdrop-blur-sm z-0">
+          <tr class="border-b border-slate-200 dark:border-slate-700 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold">
+            <th class="p-4">Report Details</th>
+            <th class="p-4">Venue & Vendor</th>
+            <th class="p-4">Reported By</th>
+            <th class="p-4">Status</th>
+            <th class="p-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-700 text-sm">
+          <tr *ngIf="filteredReports().length === 0 && !isLoading()" class="bg-slate-50/50 dark:bg-slate-800/50">
+            <td colspan="5" class="p-8 text-center text-slate-500 dark:text-slate-400">
+              <div class="flex flex-col items-center gap-3">
+                <lucide-angular [img]="icons.fileText" class="w-10 h-10 text-slate-300 dark:text-slate-600"></lucide-angular>
+                <p class="text-lg font-medium">No reports found.</p>
+                <p class="text-sm">Try adjusting your filters or search term.</p>
+              </div>
+            </td>
+          </tr>
+          
+          <tr *ngFor="let report of filteredReports(); trackBy: trackByReportId" class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group cursor-pointer" (click)="openReviewCase(report)">
+            <td class="p-4">
+              <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5">
+                  <lucide-angular [img]="icons.alertCircle" class="w-4 h-4"></lucide-angular>
+                </div>
+                <div>
+                  <p class="font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    {{ report.title }}
+                  </p>
+                  <p class="text-slate-500 dark:text-slate-400 text-xs mt-1 line-clamp-1">{{ report.description }}</p>
+                  <p class="text-slate-400 text-[11px] mt-1.5">{{ report.createdAt | date:'mediumDate' }}</p>
+                </div>
+              </div>
+            </td>
+            
+            <td class="p-4">
+              <div class="flex flex-col">
+                <span class="font-medium text-slate-900 dark:text-white">{{ report.venue?.name || 'N/A' }}</span>
+                <span class="text-xs text-slate-500 mt-1">{{ report.venue?.city || 'N/A' }}</span>
+                <span class="text-[11px] text-indigo-600 dark:text-indigo-400 mt-1 font-medium bg-indigo-50 dark:bg-indigo-900/30 w-fit px-1.5 py-0.5 rounded">{{ report.venue?.vendorId?.businessName || 'Unknown Vendor' }}</span>
+              </div>
+            </td>
+            
+            <td class="p-4">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold text-xs shrink-0">
+                  {{ report.user?.name?.charAt(0) || 'U' }}
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-medium text-slate-900 dark:text-white">{{ report.user?.name || 'Unknown User' }}</span>
+                  <span class="text-xs text-slate-500">{{ report.user?.email }}</span>
+                </div>
+              </div>
+            </td>
+            
+            <td class="p-4" (click)="$event.stopPropagation()">
+              <select 
+                [value]="report.status"
+                (change)="onStatusChange($event, report._id)"
+                [ngClass]="getStatusClass(report.status)"
+                class="text-xs font-semibold px-3 py-1.5 rounded-full border-none focus:ring-2 focus:ring-indigo-500 cursor-pointer appearance-none bg-no-repeat bg-[right_0.5rem_center] bg-[length:1em_1em] pr-8"
+                style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');">
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </td>
+            
+            <td class="p-4 text-right">
+              <button class="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors">
+                <lucide-angular [img]="icons.chevronRight" class="w-5 h-5"></lucide-angular>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="border-t border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-800 shrink-0 flex items-center justify-between">
+      <p class="text-sm text-slate-500 dark:text-slate-400">
+        Showing <span class="font-medium text-slate-900 dark:text-white">{{ filteredReports().length > 0 ? (currentPage() - 1) * 10 + 1 : 0 }}</span> to 
+        <span class="font-medium text-slate-900 dark:text-white">{{ Math.min(currentPage() * 10, reports().length) }}</span> of 
+        <span class="font-medium text-slate-900 dark:text-white">{{ reports().length }}</span> entries
+      </p>
+      
+      <div class="flex gap-2">
+        <button 
+          (click)="prevPage()"
+          [disabled]="currentPage() === 1"
+          class="p-2 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-600 dark:text-slate-300 transition-colors">
+          <lucide-angular [img]="icons.chevronLeft" class="w-4 h-4"></lucide-angular>
+        </button>
+        <div class="flex items-center px-4 font-medium text-sm text-slate-700 dark:text-slate-300">
+          Page {{ currentPage() }} of {{ totalPages() }}
+        </div>
+        <button 
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages() || totalPages() === 0"
+          class="p-2 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-600 dark:text-slate-300 transition-colors">
+          <lucide-angular [img]="icons.chevronRight" class="w-4 h-4"></lucide-angular>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Centered Modal for Report Details -->
+<div *ngIf="isDrawerOpen()" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" (click)="closeDrawer()"></div>
+
+  <!-- Modal Panel -->
+  <div class="relative w-full max-w-3xl max-h-[95vh] flex flex-col bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden transform transition-all animate-[scaleIn_0.2s_ease]">
+      <!-- Drawer Header -->
+      <div class="px-6 py-6 border-b border-slate-200 dark:border-slate-700 flex items-start justify-between bg-slate-50 dark:bg-slate-800/50 shrink-0">
+        <div>
+          <div class="flex items-center gap-3">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white" id="slide-over-title">Report Details</h2>
+            <span *ngIf="activeReport()" [ngClass]="getStatusClass(activeReport()!.status)" class="text-xs font-semibold px-2.5 py-0.5 rounded-full">
+              {{ activeReport()?.status }}
+            </span>
+          </div>
+          <p class="text-sm text-slate-500 mt-1">ID: <span class="font-mono">{{ activeReport()?._id }}</span></p>
+        </div>
+        <button (click)="closeDrawer()" class="p-2 text-slate-400 hover:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <lucide-angular [img]="icons.close" class="w-6 h-6"></lucide-angular>
+        </button>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="flex-1 overflow-y-auto p-6 relative [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <!-- Loading specific report -->
+        <div *ngIf="isLoading() && !activeReport()" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-slate-800/80 z-10">
+          <lucide-angular [img]="icons.refresh" class="w-8 h-8 text-indigo-600 animate-spin"></lucide-angular>
+        </div>
+
+        <div *ngIf="activeReport()" class="space-y-8">
+          
+          <!-- Report Content -->
+          <section>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">{{ activeReport()?.title }}</h3>
+            <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
+              <p class="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{{ activeReport()?.description }}</p>
+            </div>
+          </section>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Reported By -->
+            <section class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+              <div class="flex items-center gap-2 mb-4">
+                <lucide-angular [img]="icons.user" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></lucide-angular>
+                <h4 class="font-bold text-slate-900 dark:text-white">Reported By</h4>
+              </div>
+              <div class="space-y-3">
+                <div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Name</p>
+                  <p class="font-medium text-slate-900 dark:text-white">{{ activeReport()?.user?.name || 'N/A' }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Email</p>
+                  <p class="text-slate-700 dark:text-slate-300">{{ activeReport()?.user?.email || 'N/A' }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Phone</p>
+                  <p class="text-slate-700 dark:text-slate-300">{{ activeReport()?.user?.phone || 'N/A' }}</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Venue Information -->
+            <section class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+              <div class="flex items-center gap-2 mb-4">
+                <lucide-angular [img]="icons.building" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></lucide-angular>
+                <h4 class="font-bold text-slate-900 dark:text-white">Venue Information</h4>
+              </div>
+              <div class="space-y-3">
+                <div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Venue Name</p>
+                  <p class="font-medium text-slate-900 dark:text-white">{{ activeReport()?.venue?.name || 'N/A' }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Vendor Business</p>
+                  <p class="text-slate-700 dark:text-slate-300">{{ activeReport()?.venue?.vendorId?.businessName || 'N/A' }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Vendor Email</p>
+                  <p class="text-slate-700 dark:text-slate-300">{{ activeReport()?.venue?.vendorId?.email || 'N/A' }}</p>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Attachments -->
+          <section *ngIf="activeReport()?.attachments && activeReport()?.attachments?.length">
+            <div class="flex items-center gap-2 mb-4">
+              <lucide-angular [img]="icons.paperclip" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></lucide-angular>
+              <h4 class="font-bold text-slate-900 dark:text-white">Attachments</h4>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <button *ngFor="let file of activeReport()?.attachments" 
+                 (click)="openImageViewer(file); $event.stopPropagation()"
+                 class="relative aspect-video rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden group hover:border-indigo-500 transition-colors block w-full">
+                <img [src]="file" alt="Attachment" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span class="text-white text-sm font-medium bg-black/50 px-3 py-1.5 rounded-full">View Image</span>
+                </div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Status Update Action -->
+          <section class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 rounded-xl p-5">
+             <h4 class="font-bold text-slate-900 dark:text-white mb-3">Update Status</h4>
+             <div class="flex items-center gap-4">
+               <select 
+                  [value]="activeReport()?.status"
+                  (change)="onStatusChange($event)"
+                  class="flex-1 max-w-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:text-white shadow-sm">
+                  <option value="Open">Open</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Resolved">Resolved</option>
+                  <option value="Closed">Closed</option>
+                </select>
+                <p class="text-sm text-slate-500 dark:text-slate-400 hidden sm:block">Update the current state of this report.</p>
+             </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ── IMAGE PREVIEW ── -->
+@if (viewingImageUrl()) {
+<div class="fixed inset-0 z-[10001] bg-slate-950/95 flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease]"
+  (click)="closeImageViewer()">
+  <button
+    class="absolute top-6 right-6 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all border border-white/10 backdrop-blur-md">
+    <lucide-angular [img]="icons.close" class="w-6 h-6"></lucide-angular>
+  </button>
+  <img [src]="viewingImageUrl()"
+    class="max-h-[85vh] max-w-full rounded-2xl object-contain border border-white/5"
+    (click)="$event.stopPropagation()" alt="Full screen preview" />
+</div>
+}

@@ -185,6 +185,16 @@
             @if (!collapsed()) { <span class="tracking-wide">Complaints</span> }
           </a>
 
+          <a [routerLink]="['/reports']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+            font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
+            transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
+            [class.py-3]="collapsed()" title="Reports">
+            <lucide-icon [img]="icons.reports" size="20" class="shrink-0 transition-transform duration-300
+              group-hover:scale-110 group-hover:text-[#6C63FF]">
+            </lucide-icon>
+            @if (!collapsed()) { <span class="tracking-wide">Reports</span> }
+          </a>
+
           <a [routerLink]="['/terms']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"

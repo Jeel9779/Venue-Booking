@@ -13,6 +13,7 @@ import { Table } from '../../shared/components/table/table';
 import { Model } from '../../shared/components/model/model';
 import { FormInput } from '../../shared/components/form-input/form-input';
 import { LucideAngularModule } from 'lucide-angular';
+import { API_BASE_URL } from '../../core/config/api.config';
 
 /**
  * Venues Management Feature
@@ -224,11 +225,15 @@ export class Venues implements OnInit {
    */
   getImageUrl(img?: string): string {
     if (!img) return '';
-    let url = img.replace(/\\/g, '/'); // Fix Windows paths for cross-platform compatibility
+    // Normalize path separators for cross-platform compatibility
+    let url = img.replace(/\\/g, '/');
+    // Return if already a full URL
     if (url.startsWith('http')) return url;
-    // Use localhost as the primary root to match the API environment
-    const root = 'http://localhost:3000';
-    return root + '/' + url.replace(/^\/+/, '');
+    // Return relative assets paths unchanged
+    if (url.startsWith('assets/')) return url;
+    // Use API base URL as root
+    const root = API_BASE_URL.replace(/\/+$/,'');
+    return `${root}/${url.replace(/^\/+/, '')}`;
   }
 
   /** 

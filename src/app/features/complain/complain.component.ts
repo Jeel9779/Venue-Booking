@@ -81,8 +81,9 @@ export class ComplainComponent implements OnInit {
   // Dropdown list of vendors for assignment
   vendors = computed(() => this.vendorStore.vendors().filter(v => v.status === 'approved'));
 
-  // Drawer / Modal states
+  // Drawer / Modals & States
   isDrawerOpen = signal<boolean>(false);
+  viewingImageUrl = signal<string | null>(null);
   activeComplaint = this.complaintStore.selectedComplaint;
   messages = this.complaintStore.messages;
   
@@ -235,5 +236,15 @@ export class ComplainComponent implements OnInit {
       case 'Closed': return 100;
       default: return 0;
     }
+  }
+
+  openImageViewer(url: string | null | undefined): void {
+    if (url) {
+      this.viewingImageUrl.set(url);
+    }
+  }
+
+  closeImageViewer(): void {
+    this.viewingImageUrl.set(null);
   }
 }
