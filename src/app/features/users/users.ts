@@ -13,6 +13,7 @@ import { Model } from '../../shared/components/model/model';
 import { FormInput } from '../../shared/components/form-input/form-input';
 import { Pagination } from '../../shared/components/pagination/pagination';
 import { initialPagination } from '../../core/models/pagination.model';
+import { LucideAngularModule } from 'lucide-angular';
 
 type SortField = 'name' | 'email' | 'createdAt';
 type SortOrder = 'asc' | 'desc';
@@ -20,7 +21,7 @@ type SortOrder = 'asc' | 'desc';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, Pagination],
+  imports: [CommonModule, FormsModule, Button, Card, Table, Model, FormInput, Pagination, LucideAngularModule],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })

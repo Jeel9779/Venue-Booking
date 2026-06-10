@@ -1,13 +1,18 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the Terms component. -->
 <div class="w-full p-4 sm:p-6">
   <!-- Header Section -->
-  <div class="flex justify-between items-center mb-6">
-    <div>
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-slate-100">Terms & Conditions</h1>
-      <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Manage active and past versions of Terms & Conditions.</p>
+  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="header-left flex items-center gap-3.5">
+      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+        <lucide-icon name="file-text" size="20"></lucide-icon>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-gray-900 dark:text-slate-100 truncate">Terms & Conditions</h1>
+        <p class="text-[0.8125rem] text-gray-500 dark:text-slate-400 mt-0.5 mb-0">Manage active and past versions of Terms & Conditions.</p>
+      </div>
     </div>
-    <app-button variant="primary" (onClick)="openCreateModel()">
-      <lucide-icon name="plus" class="w-4 h-4 mr-2"></lucide-icon>
+    <app-button variant="primary" (onClick)="openCreateModel()" class="w-full sm:w-auto">
+      <lucide-icon name="plus" class="w-4 h-4 mr-2 inline-block"></lucide-icon>
       Create New Terms
     </app-button>
   </div>

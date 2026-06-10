@@ -2,15 +2,14 @@
 <div class="bookings-dashboard w-full p-4 sm:p-6 animate-in fade-in duration-200">
   
   <!-- ── PAGE HEADER ── -->
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 sm:mb-10">
-    <div class="flex items-center gap-4">
-      <div class="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shrink-0 hover:scale-105 transition-transform">
-        <lucide-icon name="calendar-check" size="24" class="sm:hidden"></lucide-icon>
-        <lucide-icon name="calendar-check" size="28" class="hidden sm:block"></lucide-icon>
+  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="header-left flex items-center gap-3.5">
+      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+        <lucide-icon name="calendar-check" size="20"></lucide-icon>
       </div>
-      <div>
-        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 m-0 tracking-tight">Booking Management</h1>
-        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-bold mt-1">Monitor and manage all venue bookings</p>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Booking Management</h1>
+        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Monitor and manage all venue bookings</p>
       </div>
     </div>
   </div>
@@ -44,7 +43,7 @@
           </div>
           <span class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Total Bookings</span>
         </div>
-        <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter relative z-10">
+        <h3 class="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tighter relative z-10">
           {{ stats().totalCount }}
         </h3>
         <p class="text-[9px] sm:text-[0.7rem] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1 relative z-10">
@@ -60,7 +59,7 @@
           </div>
           <span class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">Today</span>
         </div>
-        <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter relative z-10">
+        <h3 class="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tighter relative z-10">
           {{ stats().todayCount }}
         </h3>
         <p class="text-[9px] sm:text-[0.7rem] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1 relative z-10">
@@ -76,7 +75,7 @@
           </div>
           <span class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Revenue</span>
         </div>
-        <h3 class="text-lg sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter relative z-10">
+        <h3 class="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tighter relative z-10">
           {{ formatCurrency(stats().totalRevenue) }}
         </h3>
         <p class="text-[9px] sm:text-[0.7rem] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1 relative z-10">
@@ -92,7 +91,7 @@
           </div>
           <span class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">Collected (20%)</span>
         </div>
-        <h3 class="text-lg sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter relative z-10">
+        <h3 class="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tighter relative z-10">
           {{ formatCurrency(stats().collected) }}
         </h3>
         <p class="text-[9px] sm:text-[0.7rem] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1 relative z-10">

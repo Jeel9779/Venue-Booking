@@ -2,25 +2,15 @@
 <div class="subscription-monitor-page w-full p-4 sm:p-6 text-slate-800 dark:text-slate-200">
 
   <!-- ── HEADER ── -->
-  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 sm:mb-10">
-    <div class="flex items-center gap-4 sm:gap-5">
-      <div
-        class="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-600 rounded-[18px] sm:rounded-[22px] flex items-center justify-center text-white hover:scale-105 transition-transform duration-300">
-        <lucide-icon name="scroll-text" size="24" class="sm:hidden"></lucide-icon>
-        <lucide-icon name="scroll-text" size="32" class="hidden sm:block"></lucide-icon>
+  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="header-left flex items-center gap-3.5">
+      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+        <lucide-icon name="scroll-text" size="20"></lucide-icon>
       </div>
-      <div>
-        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Subscription Monitor</h1>
-        <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">Track and manage vendor subscription lifecycles</p>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Subscription Monitor</h1>
+        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Track and manage vendor subscription lifecycles</p>
       </div>
-    </div>
-    <div class="flex items-center gap-3 w-full sm:w-auto">
-      <button (click)="loadAll()"
-        class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs font-black text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-800 transition-all cursor-pointer dark: active:scale-95">
-        <lucide-icon name="refresh-cw" size="14" [class.animate-spin]="isLoading()"></lucide-icon>
-        Refresh Data
-      </button>
-    </div>
   </div>
 
   <!-- ── TOP KPI CARDS ── -->

@@ -26,15 +26,14 @@
 <div class="w-full px-4 sm:px-6 py-6 space-y-6">
 
   <!-- PAGE HEADER -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5">
-    <div class="flex items-center gap-3">
-      <div
-        class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shrink-0">
-        <lucide-icon name="building" class="w-5 h-5" [strokeWidth]="2.5"></lucide-icon>
+  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="header-left flex items-center gap-3.5">
+      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+        <lucide-icon name="building" size="20"></lucide-icon>
       </div>
-      <div>
-        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 leading-tight">Partners Directory</h1>
-        <p class="text-base font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Partners Directory</h1>
+        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0 flex items-center gap-1.5">
           Analytics & Venue Management
           <span class="w-1 h-1 rounded-full bg-emerald-400 inline-block"></span>
           <span class="text-emerald-600 font-bold">{{ kpi().venues }} Total Venues</span>

@@ -526,7 +526,6 @@
       [(ngModel)]="rejectReason" [rows]="5"></app-form-input>
 
     <div footer>
-      <app-button variant="secondary" (onClick)="closeRejectModal()">Cancel</app-button>
       <app-button variant="danger" [disabled]="!rejectReason.trim()" [loading]="isLoading()" (onClick)="submitReject()">
         Confirm Rejection
       </app-button>
@@ -550,7 +549,6 @@
     </div>
 
     <div footer>
-      <app-button variant="secondary" (onClick)="showApproveModal.set(false)">Cancel</app-button>
       <app-button variant="success" [loading]="isLoading()" (onClick)="submitApprove()">
         Yes, Approve & Publish
       </app-button>

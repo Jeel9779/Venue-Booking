@@ -2,19 +2,19 @@
 <div class="user-review-dashboard w-full p-4 sm:p-6 animate-in fade-in duration-500">
   
   <!-- ── MODERATION HEADER ── -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-    <div class="flex items-center gap-4">
-      <div class="w-12 h-12 md:w-14 md:h-14 bg-emerald-600 rounded-[20px] md:rounded-[22px] flex items-center justify-center text-white">
-        <lucide-icon name="message-square" size="24"></lucide-icon>
+  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="header-left flex items-center gap-3.5">
+      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+        <lucide-icon name="message-square" size="20"></lucide-icon>
       </div>
-      <div>
-        <h1 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight m-0">Review Moderation</h1>
-        <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Manage, verify, and maintain listing quality</p>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Review Moderation</h1>
+        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Manage, verify, and maintain listing quality</p>
       </div>
     </div>
 
     @if (stats().awaitingReview > 0) {
-      <div class="bg-amber-50 text-amber-800 px-4 py-2 rounded-2xl text-[0.75rem] md:text-[0.8125rem] font-black flex items-center gap-2 border border-amber-200 self-start md:self-auto">
+      <div class="bg-amber-50 text-amber-800 px-4 py-2 rounded-2xl text-[0.75rem] md:text-[0.8125rem] font-black flex items-center gap-2 border border-amber-200 self-start sm:self-auto">
         <div class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></div>
         {{ stats().awaitingReview }} PENDING REVIEWS
       </div>

@@ -3,18 +3,14 @@
 
 
   <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
-  <div class="flex items-center justify-between flex-wrap gap-4 mb-5">
-    <div class="flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
-        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
+  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="header-left flex items-center gap-3.5">
+      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+        <lucide-icon name="users" size="20"></lucide-icon>
       </div>
-      <div>
-        <h1 class="text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100">User Management</h1>
-        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 m-0">Manage and monitor all registered users</p>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">User Management</h1>
+        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Manage and monitor all registered users</p>
       </div>
     </div>
 
@@ -312,7 +308,6 @@
                         [ngModel]="deleteReason()" (ngModelChange)="deleteReason.set($event)"></app-form-input>
       </div>
       <div footer>
-        <app-button variant="secondary" (onClick)="closeDeleteModel()">Cancel</app-button>
         <app-button variant="danger" (onClick)="submitDelete()" [loading]="isLoading()">
           Delete User
         </app-button>
