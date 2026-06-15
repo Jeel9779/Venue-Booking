@@ -69,7 +69,7 @@
       </div>
 
       <!-- Loading / Error / Empty States -->
-      @if (isLoading() && paginatedComplaints().length === 0) {
+      @if (isLoading() && complaints().length === 0) {
         <div class="bg-white dark:bg-slate-900 rounded-2xl p-16 border border-slate-100 dark:border-slate-800 text-center shadow-sm">
           <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-indigo-600 rounded-full mb-4" role="status">
             <span class="sr-only">Loading...</span>
@@ -85,7 +85,7 @@
             Try Reconnecting
           </button>
         </div>
-      } @else if (paginatedComplaints().length === 0) {
+      } @else if (complaints().length === 0) {
         <div class="bg-white dark:bg-slate-900 rounded-2xl p-16 border border-slate-100 dark:border-slate-800 text-center shadow-sm">
           <lucide-icon [img]="icons.checkCircle" size="48" class="text-slate-300 dark:text-slate-700 mx-auto mb-4"></lucide-icon>
           <h4 class="font-bold text-slate-800 dark:text-slate-200 text-lg">Clear Dashboard</h4>
@@ -96,7 +96,7 @@
       } @else {
         <!-- Complaints list cards -->
         <div class="space-y-4">
-          @for (complaint of paginatedComplaints(); track trackByComplaintId($index, complaint)) {
+          @for (complaint of complaints(); track trackByComplaintId($index, complaint)) {
             <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/50 dark:border-slate-800/80 hover:border-indigo-500/30 hover:shadow-md dark:hover:shadow-none transition-all duration-300 flex flex-col md:flex-row gap-6 relative group overflow-hidden">
               
               <!-- Subtle status highlight bar -->
@@ -201,27 +201,15 @@
         </div>
 
         <!-- Pagination Controls -->
-        @if (totalPages() > 1) {
-          <div class="flex items-center justify-between bg-white dark:bg-slate-900 px-6 py-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/80 shadow-sm mt-6">
-            <span class="text-xs font-medium text-slate-500">
-              Page {{ currentPage() }} of {{ totalPages() }} (Showing {{ paginatedComplaints().length }} of {{ filteredComplaints().length }} records)
-            </span>
-            <div class="flex gap-2">
-              <button 
-                (click)="prevPage()"
-                [disabled]="currentPage() === 1"
-                class="p-2 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:hover:bg-transparent transition-colors focus:outline-none"
-              >
-                <lucide-icon [img]="icons.chevronLeft" size="16"></lucide-icon>
-              </button>
-              <button 
-                (click)="nextPage()"
-                [disabled]="currentPage() === totalPages()"
-                class="p-2 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:hover:bg-transparent transition-colors focus:outline-none"
-              >
-                <lucide-icon [img]="icons.chevronRight" size="16"></lucide-icon>
-              </button>
-            </div>
+        @if (pagination().totalPages > 1) {
+          <div class="mt-6 w-full">
+            <app-pagination 
+              [currentPage]="pagination().page"
+              [totalPages]="pagination().totalPages"
+          [totalRecords]="pagination().totalRecords"
+          [limit]="pagination().limit"
+              (onPageChange)="onPageChange($event)">
+            </app-pagination>
           </div>
         }
       }

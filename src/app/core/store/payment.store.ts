@@ -5,21 +5,33 @@ import { Payment, PaymentStats, PaymentFilters } from '../models/payment.model';
 
 interface PaymentState {
   payments: Payment[];
-  stats: PaymentStats | null;
+  stats: PaymentStats;
   filters: PaymentFilters;
+  pagination: { page: number; limit: number; totalRecords: number; totalPages: number };
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: PaymentState = {
   payments: [],
-  stats: null,
+  stats: {
+    totalRevenue: 0,
+    revenueChange: 0,
+    pendingAmount: 0,
+    pendingCount: 0,
+    failedCount: 0,
+    successfulAmount: 0,
+    successfulCount: 0,
+    subscriptionRevenue: 0,
+    addonRevenue: 0,
+  },
   filters: {
     // Default to all Admin Revenue flows.
     type: '',
     paymentStatus: '',
     vendorId: '',
   },
+  pagination: { page: 1, limit: 10, totalRecords: 0, totalPages: 1 },
   isLoading: false,
   error: null,
 };
@@ -37,6 +49,7 @@ export class PaymentStore {
   readonly payments$ = this.stateView$.pipe(map((s) => s.payments));
   readonly stats$ = this.stateView$.pipe(map((s) => s.stats));
   readonly filters$ = this.stateView$.pipe(map((s) => s.filters));
+  readonly pagination$ = this.stateView$.pipe(map((s) => s.pagination));
   readonly isLoading$ = this.stateView$.pipe(map((s) => s.isLoading));
   readonly error$ = this.stateView$.pipe(map((s) => s.error));
 
@@ -70,5 +83,9 @@ export class PaymentStore {
 
   setError(error: string | null): void {
     this.state$.next({ ...this.snapshot, error, isLoading: false });
+  }
+
+  setPagination(pagination: { page: number; limit: number; totalRecords: number; totalPages: number }): void {
+    this.state$.next({ ...this.snapshot, pagination });
   }
 }

@@ -16,28 +16,22 @@ export class PaymentApi {
   /**
    * Fetches all payments with optional filtering
    */
-  getAll(filters?: Partial<PaymentFilters>): Observable<Payment[]> {
+  getAll(filters?: Partial<PaymentFilters>, page: number = 1, limit: number = 10, search: string = ''): Observable<{ data: Payment[]; page?: number; limit?: number; totalRecords?: number; totalPages?: number }> {
     let params = new HttpParams()
-      .set('page', '1')
-      .set('limit', '1000');
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+      
+    if (search) params = params.set('search', search);
+
     if (filters) {
-      if (filters.type) params = params.set('type', filters.type);
-      if (filters.paymentStatus) params = params.set('paymentStatus', filters.paymentStatus);
+      if (filters.type && filters.type !== 'all') params = params.set('type', filters.type);
+      if (filters.paymentStatus && filters.paymentStatus !== 'all') params = params.set('paymentStatus', filters.paymentStatus);
       if (filters.vendorId) params = params.set('vendorId', filters.vendorId);
     }
-    return this.http.get<{ data: Payment[] }>(`${API_BASE_URL}/payments/admin-vendor`, { params }).pipe(
-      map(res => res.data)
-    );
+    return this.http.get<{ data: Payment[]; page?: number; limit?: number; totalRecords?: number; totalPages?: number }>(`${API_BASE_URL}/payments/admin-vendor`, { params });
   }
 
-  /**
-   * Fetches payment statistics for dashboard KPIs
-   */
-  getStats(): Observable<PaymentStats> {
-    return this.http.get<{ data: PaymentStats }>(`${this.baseUrl}/stats`).pipe(
-      map(res => res.data)
-    );
-  }
+
 
   /**
    * Fetches a single payment by ID

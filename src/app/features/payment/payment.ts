@@ -14,10 +14,12 @@ import {
   Calendar, User, Building, Hash, FileText
 } from 'lucide-angular';
 
+import { Pagination } from '@shared/components/pagination/pagination';
+
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, Pagination],
   templateUrl: './payment.html',
   styleUrl: './payment.css',
 })
@@ -65,6 +67,11 @@ export class Payments implements OnInit {
 
   columns = ['Vendor', 'Plan / Type', 'Amount', 'Status', 'Transaction ID', 'Date', 'Actions'];
 
+  readonly pagination = toSignal(this.store.pagination$, { initialValue: { page: 1, limit: 10, totalRecords: 0, totalPages: 1 } });
+  readonly kpiStats = toSignal(this.store.stats$, { initialValue: {
+    totalRevenue: 0, revenueChange: 0, pendingAmount: 0, pendingCount: 0, failedCount: 0, successfulAmount: 0, successfulCount: 0, subscriptionRevenue: 0, addonRevenue: 0
+  } });
+
   // ── Deduplication ──────────────────────────────────────────────────────────
   // Backend sometimes creates two records per payment attempt (SUB-xxx + TXN-xxx).
   // Group by relatedId (Subscription/Add-on ID) to resolve duplicates robustly.
@@ -92,60 +99,6 @@ export class Payments implements OnInit {
     return Array.from(seen.values());
   });
 
-  // ── Client-side search filter (applied on top of deduped list) ────────────
-  readonly filteredPayments = computed(() => {
-    const q     = this.searchQuery().toLowerCase().trim();
-    const items = this.deduplicatedPayments();
-    if (!q) return items;
-
-    return items.filter(p => {
-      const name   = this.vendorName(p).toLowerCase();
-      const email  = (p.vendorId?.email || '').toLowerCase();
-      const txn    = (p.transactionId   || '').toLowerCase();
-      const type   = (p.type            || '').toLowerCase();
-      const status = (p.paymentStatus   || '').toLowerCase();
-      const amount = String(p.amount);
-      return name.includes(q) || email.includes(q) || txn.includes(q) || type.includes(q) || status.includes(q) || amount.includes(q);
-    });
-  });
-
-  // ── KPI cards — computed from LOCAL deduped data ──────────────────────────
-  // Admin revenue = subscription payments collected from vendors.
-  // We don't trust the backend /stats endpoint for KPIs because it may include
-  // booking payments and doesn't respect the active type filter.
-  readonly kpiStats = computed(() => {
-    const all = this.deduplicatedPayments();   // use the full deduped set, not filtered
-    let totalRevenue      = 0;
-    let pendingAmount     = 0;
-    let pendingCount      = 0;
-    let failedCount       = 0;
-    let successfulAmount  = 0;
-    let successfulCount   = 0;
-    let subscriptionRevenue = 0;
-    let addonRevenue      = 0;
-
-    for (const p of all) {
-      if (p.paymentStatus === 'success') {
-        totalRevenue     += p.amount;
-        successfulAmount += p.amount;
-        successfulCount++;
-        if (p.type === 'subscription') subscriptionRevenue += p.amount;
-        else if (p.type === 'addon' || p.type === 'full payment') addonRevenue += p.amount;
-      } else if (p.paymentStatus === 'pending') {
-        pendingAmount += p.amount;
-        pendingCount++;
-      } else if (p.paymentStatus === 'failed') {
-        failedCount++;
-      }
-    }
-
-    return {
-      totalRevenue, pendingAmount, pendingCount,
-      failedCount,  successfulAmount, successfulCount,
-      subscriptionRevenue, addonRevenue,
-    };
-  });
-
   // ── Active filter badge ────────────────────────────────────────────────────
   readonly hasActiveFilters = computed(() => {
     const f = this.filters();
@@ -166,11 +119,22 @@ export class Payments implements OnInit {
     });
   }
 
+  private searchTimeout: any;
+  onSearchChange(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.searchQuery.set(value);
+      this.applyApiFilters();
+    }, 500);
+  }
+
   // Triggered by type / status / date dropdowns → API re-fetch
   applyApiFilters(): void {
     this.service.applyFilters({
       type:          this.filterValues.type,
       paymentStatus: this.filterValues.paymentStatus,
+      search:        this.searchQuery()
     });
   }
 
@@ -178,7 +142,11 @@ export class Payments implements OnInit {
   resetFilters(): void {
     this.filterValues = { type: '', paymentStatus: '' };
     this.searchQuery.set('');
-    this.service.applyFilters(this.filterValues);
+    this.service.applyFilters({ type: '', paymentStatus: '', search: '' });
+  }
+
+  onPageChange(page: number) {
+    this.service.setPage(page);
   }
 
   viewDetails(payment: Payment): void {

@@ -56,6 +56,9 @@ export interface Venue {
   reviews: Review[];
   createdAt: string;
   updatedAt: string;
+  deactivated: boolean;
+  deactivatedBy: 'admin' | 'vendor' | null;
+  deactivationReason: string;
 }
 
 export type FilterState = 'all' | 'pending' | 'approved' | 'rejected';

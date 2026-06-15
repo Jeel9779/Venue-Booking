@@ -12,6 +12,8 @@ export class ReviewStore {
   readonly isLoading = signal<boolean>(false);
   /** Global error message for the review feature. */
   readonly error = signal<string | null>(null);
+  
+  readonly pagination = signal({ page: 1, limit: 10, totalRecords: 0, totalPages: 1 });
   /** Current active filter status (all, pending, approved, rejected). */
   readonly filterStatus = signal<string>('all');
   /** Current search query string. */
@@ -134,6 +136,10 @@ export class ReviewStore {
   setReviews(reviews: Review[]) {
     this.reviews.set(reviews);
     this.isLoading.set(false);
+  }
+
+  setPagination(data: { page: number; limit: number; totalRecords: number; totalPages: number }) {
+    this.pagination.set(data);
   }
 
   updateReview(updated: any) {

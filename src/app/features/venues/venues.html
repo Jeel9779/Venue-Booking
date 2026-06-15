@@ -154,10 +154,17 @@
               <td class="px-5 py-4 text-slate-600 dark:text-slate-400 font-medium whitespace-nowrap">{{ v.capacity | number }}</td>
               <td class="px-5 py-4 font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap">₹{{ v.pricePerDay | number }}</td>
               <td class="px-5 py-4">
-                <span
-                  [class]="'px-2.5 py-1 rounded-lg text-[0.7rem] font-extrabold uppercase tracking-widest whitespace-nowrap ' + v.status">
-                  {{ v.status }}
-                </span>
+                <div class="flex flex-col gap-1 items-start">
+                  <span
+                    [class]="'px-2.5 py-1 rounded-lg text-[0.7rem] font-extrabold uppercase tracking-widest whitespace-nowrap ' + v.status">
+                    {{ v.status }}
+                  </span>
+                  @if (v.deactivated) {
+                    <span class="w-fit px-2 py-0.5 rounded text-[0.6rem] font-bold uppercase tracking-widest bg-red-50 text-red-600 border border-red-100">
+                      Deactivated
+                    </span>
+                  }
+                </div>
               </td>
               <td class="px-5 py-4 text-slate-400 text-[0.8125rem] whitespace-nowrap">{{ v.createdAt | date:'d MMM y' }}
               </td>
@@ -244,6 +251,11 @@
                   class="w-fit px-2.5 py-0.5 rounded-lg text-[0.65rem] font-black uppercase tracking-widest {{ venue.status }}">
                   {{ venue.status }}
                 </span>
+                @if (venue.deactivated) {
+                  <span class="w-fit px-2.5 py-0.5 rounded-lg text-[0.65rem] font-black uppercase tracking-widest bg-red-100 text-red-700 border border-red-200">
+                    Deactivated ({{ venue.deactivatedBy }})
+                  </span>
+                }
               </div>
             </div>
             <p class="text-[0.875rem] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 m-0 truncate">
@@ -498,6 +510,18 @@
     </div>
 
     <div footer class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end w-full gap-3 mt-4">
+      @if (venue.status === 'approved') {
+        @if (!venue.deactivated) {
+          <app-button variant="danger" customClass="rounded-xl w-full sm:w-auto" (onClick)="openDeactivateModal()">
+            Deactivate Venue
+          </app-button>
+        } @else if (venue.deactivatedBy === 'admin') {
+          <app-button variant="success" customClass="rounded-xl w-full sm:w-auto" (onClick)="submitReactivate()" [loading]="isLoading()">
+            Reactivate Venue
+          </app-button>
+        }
+      }
+
       @if (venue.status !== 'rejected') {
       <app-button variant="danger" customClass="rounded-xl w-full sm:w-auto" (onClick)="openRejectModal()">
         Reject Venue
@@ -527,6 +551,24 @@
     <div footer>
       <app-button variant="danger" [disabled]="!rejectReason.trim()" [loading]="isLoading()" (onClick)="submitReject()">
         Confirm Rejection
+      </app-button>
+    </div>
+  </app-model>
+  }
+
+  <!-- ── DEACTIVATE MODAL ── -->
+  @if (showDeactivateModal() && selectedVenue(); as venue) {
+  <app-model [title]="'Deactivate Venue Listing'" maxWidth="sm" (onClose)="closeDeactivateModal()" [hasFooter]="true">
+    <p class="text-[0.9375rem] text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+      Please provide a reason for deactivating this venue. This will temporarily remove the venue from user view.
+    </p>
+    <app-form-input type="textarea" label="Deactivation Reason"
+      placeholder="e.g., Temporarily closed, violating terms, under review..."
+      [(ngModel)]="deactivateReason" [rows]="5"></app-form-input>
+
+    <div footer>
+      <app-button variant="danger" [disabled]="!deactivateReason.trim()" [loading]="isLoading()" (onClick)="submitDeactivate()">
+        Confirm Deactivation
       </app-button>
     </div>
   </app-model>

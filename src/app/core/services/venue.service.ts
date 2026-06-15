@@ -76,6 +76,50 @@ export class VenueService {
   }
 
   /**
+   * Deactivates a venue
+   */
+  deactivate(id: string, reason: string): void {
+    this.store.setLoading(true);
+    this.api.deactivate(id, reason).pipe(
+      tap((updatedVenue) => {
+        const parsedVenue = {
+          ...updatedVenue,
+          amenities: this.parseAmenities(updatedVenue.amenities),
+          mediaFiles: this.parseMediaFiles(updatedVenue.mediaFiles)
+        };
+        this.store.updateVenue(parsedVenue);
+      }),
+      catchError((err) => {
+        this.store.setError(err.message || 'Failed to deactivate venue');
+        return of(null);
+      }),
+      finalize(() => this.store.setLoading(false))
+    ).subscribe();
+  }
+
+  /**
+   * Reactivates a venue
+   */
+  reactivate(id: string): void {
+    this.store.setLoading(true);
+    this.api.reactivate(id).pipe(
+      tap((updatedVenue) => {
+        const parsedVenue = {
+          ...updatedVenue,
+          amenities: this.parseAmenities(updatedVenue.amenities),
+          mediaFiles: this.parseMediaFiles(updatedVenue.mediaFiles)
+        };
+        this.store.updateVenue(parsedVenue);
+      }),
+      catchError((err) => {
+        this.store.setError(err.message || 'Failed to reactivate venue');
+        return of(null);
+      }),
+      finalize(() => this.store.setLoading(false))
+    ).subscribe();
+  }
+
+  /**
    * Utility to handle inconsistent 'mediaFiles' data from the backend.
    */
   private parseMediaFiles(raw: unknown): string[] {

@@ -140,7 +140,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          @if (isLoading() && filteredSubscriptions().length === 0) {
+          @if (isLoading() && enrichedSubscriptions().length === 0) {
           @for (i of [1,2,3,4,5]; track i) {
           <tr class="animate-pulse">
             <td class="px-8 py-7" colspan="8">
@@ -149,7 +149,7 @@
           </tr>
           }
           } @else {
-          @for (sub of filteredSubscriptions(); track sub._id) {
+          @for (sub of enrichedSubscriptions(); track sub._id) {
           <tr (click)="openDetails(sub)"
             class="hover:bg-emerald-50/30 transition-all cursor-pointer group border-l-4 border-l-transparent hover:border-l-emerald-400">
 
@@ -297,11 +297,23 @@
         </tbody>
       </table>
     </div>
+    
+    @if (pagination().totalPages > 0) {
+      <div class="w-full bg-white dark:bg-slate-900 border-t-0">
+        <app-pagination 
+          [currentPage]="pagination().page"
+          [totalPages]="pagination().totalPages"
+          [totalRecords]="pagination().totalRecords"
+          [limit]="pagination().limit"
+          (onPageChange)="onPageChange($event)">
+        </app-pagination>
+      </div>
+    }
   </div>
 
   <!-- ── SUBSCRIPTION CARDS (Mobile & Tablet View) ── -->
   <div class="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-    @if (isLoading() && filteredSubscriptions().length === 0) {
+    @if (isLoading() && enrichedSubscriptions().length === 0) {
     @for (i of [1,2,3,4]; track i) {
     <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 dark: animate-pulse space-y-4">
       <div class="flex items-center gap-3">
@@ -319,7 +331,7 @@
     </div>
     }
     } @else {
-    @for (sub of filteredSubscriptions(); track sub._id) {
+    @for (sub of enrichedSubscriptions(); track sub._id) {
     <div (click)="openDetails(sub)"
       class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 dark: hover: hover:border-slate-300 dark:border-slate-700 transition-all duration-200 active:scale-[0.98] cursor-pointer flex flex-col justify-between">
       <div>
@@ -396,8 +408,20 @@
     }
   </div>
 
+  @if (pagination().totalPages > 0) {
+    <div class="mt-6 w-full lg:hidden rounded-[40px] overflow-hidden border border-slate-200 dark:border-slate-700">
+      <app-pagination 
+        [currentPage]="pagination().page"
+        [totalPages]="pagination().totalPages"
+        [totalRecords]="pagination().totalRecords"
+        [limit]="pagination().limit"
+        (onPageChange)="onPageChange($event)">
+      </app-pagination>
+    </div>
+  }
+
   <!-- Empty State -->
-  @if (!isLoading() && filteredSubscriptions().length === 0) {
+  @if (!isLoading() && enrichedSubscriptions().length === 0) {
   <div
     class="py-20 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-700 mt-6 dark:">
     <div

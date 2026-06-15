@@ -13,6 +13,8 @@ export class SubscriptionStore {
   private readonly _summary = signal<any>({});
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
+  
+  readonly pagination = signal({ page: 1, limit: 10, totalRecords: 0, totalPages: 1 });
 
   // ── Selectors (Computed) ──
   readonly currentSubscription = computed(() => this._currentSubscription());
@@ -50,5 +52,9 @@ export class SubscriptionStore {
 
   setError(error: string | null) {
     this._error.set(error);
+  }
+
+  setPagination(data: { page: number; limit: number; totalRecords: number; totalPages: number }) {
+    this.pagination.set(data);
   }
 }

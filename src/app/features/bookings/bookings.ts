@@ -30,12 +30,24 @@ export class Bookings {
   private readonly cd = inject(ChangeDetectorRef);
   protected readonly Math = Math;
 
+  private allBookingsForStats = signal<Booking[]>([]);
+
   ngOnInit() {
-    this.bookingService.loadAll(this.pagination().page, this.pagination().limit);
+    this.bookingService.loadAll(this.pagination().page, this.pagination().limit, this.search(), this.filter());
+    this.loadStats();
+  }
+
+  loadStats() {
+    this.bookingApi.getAllBookings(1, 1000, this.search(), this.filter()).subscribe({
+      next: (res) => {
+        const all = Array.isArray(res) ? res : (res.data || res.bookings || []);
+        this.allBookingsForStats.set(all);
+      }
+    });
   }
 
   onPageChange(page: number) {
-    this.bookingService.loadAll(page, this.pagination().limit);
+    this.bookingService.loadAll(page, this.pagination().limit, this.search(), this.filter());
   }
 
   // ── State (Signals) ────────────────────────────────────────────────────────
@@ -67,83 +79,9 @@ export class Bookings {
     maximumFractionDigits: 2
   });
 
-  /**
-   * High-Performance Filtering Logic
-   * Optimized to avoid redundant object creation (Dates, Strings) inside the loop.
-   */
-  filteredBookings = computed(() => {
-    const list = this.bookings();
-    const currentFilter = this.filter();
-    const q = this.search().toLowerCase().trim();
-    const dateRange = this.dateFilter();
-
-    if (!q && currentFilter === 'all' && dateRange === 'allTime') {
-      return list;
-    }
-
-    // Pre-calculate date-related constants OUTSIDE the filter loop
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const todayTime = today.getTime();
-    
-    let yesterdayTime = 0;
-    let twoDaysAgoTime = 0;
-    let threeDaysAgoTime = 0;
-    let sevenDaysAgoTime = 0;
-
-    if (dateRange === 'yesterday') {
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      yesterdayTime = yesterday.getTime();
-    } else if (dateRange === 'last2days') {
-      const twoDaysAgo = new Date(today);
-      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-      twoDaysAgoTime = twoDaysAgo.getTime();
-    } else if (dateRange === 'last3days') {
-      const threeDaysAgo = new Date(today);
-      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-      threeDaysAgoTime = threeDaysAgo.getTime();
-    } else if (dateRange === 'last7days') {
-      const sevenDaysAgo = new Date(today);
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      sevenDaysAgoTime = sevenDaysAgo.getTime();
-    }
-
-    const targetStatus = currentFilter === 'paid' ? 'success' : currentFilter;
-
-    return list.filter(b => {
-      // 1. Status Filter (Instant match)
-      if (currentFilter !== 'all' && b.paymentStatus !== targetStatus) return false;
-
-      // 2. Date Filter (Efficient timestamp comparison)
-      if (dateRange !== 'allTime') {
-        // Fast date extraction from ISO string (avoiding full Date object if possible)
-        const bDate = new Date(b.date);
-        const bookingTime = new Date(bDate.getFullYear(), bDate.getMonth(), bDate.getDate()).getTime();
-
-        if (dateRange === 'today' && bookingTime !== todayTime) return false;
-        if (dateRange === 'yesterday' && bookingTime !== yesterdayTime) return false;
-        if (dateRange === 'last2days' && bookingTime < twoDaysAgoTime) return false;
-        if (dateRange === 'last3days' && bookingTime < threeDaysAgoTime) return false;
-        if (dateRange === 'last7days' && bookingTime < sevenDaysAgoTime) return false;
-      }
-
-      // 3. Search Filter (Only run if search query exists)
-      if (q) {
-        return (
-          b.userId.name.toLowerCase().includes(q) ||
-          b.userId.email.toLowerCase().includes(q) ||
-          b.userId.phone.toLowerCase().includes(q) ||
-          b.venueId.name.toLowerCase().includes(q) ||
-          b.vendorId.fullName.toLowerCase().includes(q) ||
-          b.transactionId.toLowerCase().includes(q)
-        );
-      }
-
-      return true;
-    });
-  });
-
+  // ── High-Performance Filtering Logic (Server-Side) ─────────────────────────
+  // Replaced with server-side API calls to prevent client-side bottleneck
+  
   totalPages = computed(() => this.pagination().totalPages);
 
   pages = computed(() => {
@@ -167,18 +105,17 @@ export class Bookings {
   });
 
   /**
-   * Optimized KPI calculations in a single pass
+   * Optimized KPI calculations in a single pass (Current Page Stats)
    */
   stats = computed((): BookingStats => {
-    const all = this.bookings();
+    const all = this.allBookingsForStats();
     const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
 
     const stats: BookingStats = {
       totalRevenue: 0,
       collected: 0,
       outstanding: 0,
-      totalCount: all.length,
+      totalCount: this.pagination().totalRecords || all.length,
       paidCount: 0,
       pendingCount: 0,
       failedCount: 0,
@@ -211,28 +148,33 @@ export class Bookings {
 
   // ── Actions ────────────────────────────────────────────────────────────────
   refresh() {
-    this.bookingService.loadAll(this.pagination().page, this.pagination().limit);
+    this.bookingService.loadAll(this.pagination().page, this.pagination().limit, this.search(), this.filter());
   }
+  
   setFilter(f: string) {
     this.filter.set(f);
+    this.bookingService.loadAll(1, this.pagination().limit, this.search(), f);
+    this.loadStats();
   }
 
   private searchTimeout: any;
   onSearch(event: Event) {
     const input = event.target as HTMLInputElement;
-    // Debounce search to prevent excessive signal updates
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.search.set(input.value);
-    }, 300);
+      this.bookingService.loadAll(1, this.pagination().limit, input.value, this.filter());
+      this.loadStats();
+    }, 500);
   }
 
   setDateFilter(range: string) {
     this.dateFilter.set(range);
+    // Note: Backend doesn't support dateFilter yet, but we prepare the UI state.
   }
 
   setPageSize(size: number) {
-    this.bookingService.loadAll(1, size);
+    this.bookingService.loadAll(1, size, this.search(), this.filter());
   }
 
   openDetails(booking: Booking) {

@@ -12,13 +12,28 @@ export class ReviewService {
   private readonly store = inject(ReviewStore);
 
   /**
-   * Syncs the entire moderation queue from the backend.
+   * Syncs the moderation queue from the backend (Paginated).
    */
-  loadAll() {
+  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = 'all') {
     this.store.isLoading.set(true);
-    return this.api.getAll().pipe(
-      tap(reviews => {
+    return this.api.getAll(page, limit, search, status).pipe(
+      tap(res => {
+        const reviews = Array.isArray(res) ? res : (res.data || []);
         this.store.setReviews(reviews);
+        
+        // Handle pagination state
+        if (!Array.isArray(res)) {
+          this.store.setPagination({
+            page: res.page || page,
+            limit: res.limit || limit,
+            totalRecords: res.totalRecords || reviews.length,
+            totalPages: res.totalPages || Math.max(1, Math.ceil((res.totalRecords || reviews.length) / (res.limit || limit)))
+          });
+        } else {
+          this.store.setPagination({
+            page, limit, totalRecords: reviews.length, totalPages: Math.max(1, Math.ceil(reviews.length / limit))
+          });
+        }
         this.store.setError(null);
       }),
       catchError(err => {
@@ -43,8 +58,9 @@ export class ReviewService {
       tap(res => {
         // Handle wrapped backend response { message: string, review: Review }
         const review = (res as any)?.review || res;
-        if (review && review._id) {
-          this.store.updateReview(review);
+        if (review && review._id && review.status) {
+          // Only update status to avoid overwriting populated fields (like userId.name) with unpopulated strings from backend
+          this.store.updateReview({ _id: reviewId, status: review.status });
         }
       }),
       catchError(err => {
@@ -71,8 +87,9 @@ export class ReviewService {
       tap(res => {
         // Handle wrapped backend response { message: string, review: Review }
         const review = (res as any)?.review || res;
-        if (review && review._id) {
-          this.store.updateReview(review);
+        if (review && review._id && review.status) {
+          // Only update status to avoid overwriting populated fields
+          this.store.updateReview({ _id: reviewId, status: review.status });
         }
       }),
       catchError(err => {

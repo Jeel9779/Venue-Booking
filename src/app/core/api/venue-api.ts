@@ -60,4 +60,18 @@ export class VenueApi {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  /**
+   * Deactivates a venue (admin soft-delete).
+   */
+  deactivate(id: string, reason: string): Observable<Venue> {
+    return this.http.patch<Venue>(`${API_BASE_URL}/admin/venues/${id}/deactivate`, { reason });
+  }
+
+  /**
+   * Reactivates a venue.
+   */
+  reactivate(id: string): Observable<Venue> {
+    return this.http.patch<Venue>(`${API_BASE_URL}/admin/venues/${id}/reactivate`, {});
+  }
 }

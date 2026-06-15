@@ -8,6 +8,7 @@ import { ReviewService } from '../../core/services/review.service';
 import { ReviewStore } from '../../core/store/review.store';
 import { Card } from '../../shared/components/card/card';
 import { Chart } from '../../shared/components/chart/chart';
+import { Pagination } from '../../shared/components/pagination/pagination';
 import { VenueApi } from '../../core/api/venue-api';
 import { API_BASE_URL } from '../../core/config/api.config';
 import { VenueService } from '../../core/services/venue.service';
@@ -16,7 +17,7 @@ import { VenueStore } from '../../core/store/venue.store';
 @Component({
   selector: 'app-user-review',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, Card, Chart],
+  imports: [CommonModule, FormsModule, LucideAngularModule, Card, Chart, Pagination],
   templateUrl: './user-review.html',
   styleUrl: './user-review.css'
 })
@@ -31,13 +32,14 @@ export class UserReview implements OnInit {
 
 
   // ── Reactive Properties (Exposing Store Signals) ──
-  readonly reviews = this.store.filteredReviews;
+  readonly reviews = this.store.reviews;
   readonly stats = this.store.stats;
   readonly isLoading = this.store.isLoading;
   readonly currentFilter = this.store.filterStatus;
   readonly error = this.store.error;
   readonly chartData = this.store.ratingChartData;
   readonly apiBaseUrl = API_BASE_URL;
+  readonly pagination = this.store.pagination;
 
   // ── Reactive UI State (signals) ──
   readonly showDeleteModal = signal(false);
@@ -51,8 +53,12 @@ export class UserReview implements OnInit {
   readonly searchTerm = this.store.searchTerm;
 
   ngOnInit() {
-    this.service.loadAll();
+    this.service.loadAll(this.pagination().page, this.pagination().limit);
     this.venueService.loadAll(); // Instant local cache synchronization!
+  }
+
+  onPageChange(page: number) {
+    this.service.loadAll(page, this.pagination().limit, this.searchTerm(), this.currentFilter());
   }
 
   /**
@@ -122,18 +128,24 @@ export class UserReview implements OnInit {
     return this.apiBaseUrl + '/' + url.replace(/^\/+/, '');
   }
 
+  private searchTimeout: any;
   /**
-   * Updates the search query in the store.
+   * Updates the search query in the store and triggers API call.
    */
   onSearch(query: string) {
-    this.store.searchTerm.set(query);
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.store.searchTerm.set(query);
+      this.service.loadAll(1, this.pagination().limit, query, this.currentFilter());
+    }, 500);
   }
 
   /**
-   * Updates the UI filter state.
+   * Updates the UI filter state and triggers API call.
    */
   setFilter(status: string) {
     this.store.filterStatus.set(status);
+    this.service.loadAll(1, this.pagination().limit, this.searchTerm(), status);
   }
 
   /**

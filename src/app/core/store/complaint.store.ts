@@ -16,8 +16,7 @@ export class ComplaintStore {
   // Filters & Pagination signals
   readonly statusFilter = signal<string>('All'); // 'All', 'Open', 'In Progress', 'Resolved', 'Closed'
   readonly searchTerm = signal<string>('');
-  readonly currentPage = signal<number>(1);
-  readonly pageSize = signal<number>(10);
+  readonly pagination = signal({ page: 1, limit: 10, totalRecords: 0, totalPages: 1 });
 
   // ── Selectors (Computed) ──
   readonly complaints = computed(() => this._state().complaints);
@@ -25,44 +24,6 @@ export class ComplaintStore {
   readonly messages = computed(() => this._state().messages);
   readonly isLoading = computed(() => this._state().isLoading);
   readonly error = computed(() => this._state().error);
-
-  // Filtered complaints based on status and search query
-  readonly filteredComplaints = computed(() => {
-    const list = this._state().complaints;
-    const filter = this.statusFilter();
-    const term = this.searchTerm().trim().toLowerCase();
-
-    return list.filter(item => {
-      // 1. Status Filter
-      if (filter !== 'All' && item.status !== filter) {
-        return false;
-      }
-      // 2. Search Term Filter
-      if (term) {
-        const titleMatch = item.title?.toLowerCase().includes(term);
-        const descMatch = item.description?.toLowerCase().includes(term);
-        const userMatch = item.user?.name?.toLowerCase().includes(term);
-        const vendorMatch = item.vendor?.businessName?.toLowerCase().includes(term) || item.vendor?.fullName?.toLowerCase().includes(term);
-        const venueMatch = item.venue?.name?.toLowerCase().includes(term) || item.venue?.city?.toLowerCase().includes(term);
-
-        return titleMatch || descMatch || userMatch || vendorMatch || venueMatch;
-      }
-      return true;
-    });
-  });
-
-  // Paginated complaints
-  readonly paginatedComplaints = computed(() => {
-    const list = this.filteredComplaints();
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return list.slice(start, start + this.pageSize());
-  });
-
-  // Total pages based on filtered list size
-  readonly totalPages = computed(() => {
-    const total = this.filteredComplaints().length;
-    return Math.max(1, Math.ceil(total / this.pageSize()));
-  });
 
   // Dynamic statistics
   readonly clearedCasesCount = computed(() => {
@@ -165,5 +126,9 @@ export class ComplaintStore {
 
   setError(error: string | null): void {
     this._state.update(s => ({ ...s, error, isLoading: false }));
+  }
+
+  setPagination(data: { page: number; limit: number; totalRecords: number; totalPages: number }) {
+    this.pagination.set(data);
   }
 }

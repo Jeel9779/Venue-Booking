@@ -15,18 +15,32 @@ export class PartnerService {
    * Fetches all venues and updates the store.
    * Ensures amenities is always an array.
    */
-  loadAll() {
+  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = 'all') {
     this.store.setLoading(true);
     this.store.setError(null);
-    this.api.getVenues().pipe(
+    this.api.getVenues(page, limit, search, status).pipe(
       finalize(() => this.store.setLoading(false))
     ).subscribe({
       next: (res: any) => {
-        const venues = (res.data || res).map((v: any) => ({
+        const data = Array.isArray(res) ? res : (res.data || []);
+        const venues = data.map((v: any) => ({
           ...v,
           amenities: Array.isArray(v.amenities) ? v.amenities : [],
         }));
         this.store.setVenues(venues);
+
+        if (!Array.isArray(res)) {
+          this.store.setPagination({
+            page: res.page || page,
+            limit: res.limit || limit,
+            totalRecords: res.totalRecords || venues.length,
+            totalPages: res.totalPages || Math.max(1, Math.ceil((res.totalRecords || venues.length) / (res.limit || limit)))
+          });
+        } else {
+          this.store.setPagination({
+            page, limit, totalRecords: venues.length, totalPages: Math.max(1, Math.ceil(venues.length / limit))
+          });
+        }
       },
       error: (err) => this.store.setError(err?.message || 'Failed to load partners/venues')
     });

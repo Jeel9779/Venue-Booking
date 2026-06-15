@@ -7,12 +7,13 @@ import { PartnerService } from '../../core/services/partner.service';
 import { Venue } from '../../core/models/venue.model';
 import { API_BASE_URL } from '../../core/config/api.config';
 import { Model } from '../../shared/components/model/model';
+import { Pagination } from '../../shared/components/pagination/pagination';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-partners',
   standalone: true,
-  imports: [CommonModule, FormsModule, Model, LucideAngularModule],
+  imports: [CommonModule, FormsModule, Model, Pagination, LucideAngularModule],
   templateUrl: './partners.html',
   styleUrl: './partners.css'
 })
@@ -29,10 +30,13 @@ export class Partners implements OnInit {
 
   // ── Local UI State ──
   search = signal(''); // Search query for filtering
+  filter = signal<string>('all'); // Status filter
   expandedMap = signal<Record<string, boolean>>({}); // Track which partners are expanded in the list
   selectedVenue = signal<Venue | null>(null); // Venue currently being viewed in modal
   previewImage = signal<string | null>(null); // URL of the image being previewed
   
+  readonly pagination = this.store.pagination;
+
   selectedPartner = computed(() => {
     const venue = this.selectedVenue();
     if (!venue) return null;
@@ -49,23 +53,6 @@ export class Partners implements OnInit {
   venueToDelete = signal<Venue | null>(null);
 
   // ── Computed ──
-  /**
-   * Filters partners and their venues based on the search query.
-   * Matches against: Vendor Name, Email, Business Name, Venue Name, and City.
-   */
-  filteredPartners = computed(() => {
-    const q = this.search().toLowerCase().trim();
-    const list = this.partners();
-    if (!q) return list;
-
-    return list.filter(p => 
-      p.name.toLowerCase().includes(q) || 
-      p.email.toLowerCase().includes(q) || 
-      p.businessName?.toLowerCase().includes(q) ||
-      p.spaces.some(s => s.name.toLowerCase().includes(q) || s.city.toLowerCase().includes(q))
-    );
-  });
-
   chartData = computed(() =>
     this.partners().map(p => {
       const total = p.spaces.length || 1;
@@ -80,16 +67,32 @@ export class Partners implements OnInit {
     })
   );
 
-
-
   // ── Lifecycle ──
   ngOnInit() {
-    this.service.loadAll();
+    this.service.loadAll(this.pagination().page, this.pagination().limit);
   }
 
   // ── Actions ──
   reload() {
-    this.service.loadAll();
+    this.service.loadAll(this.pagination().page, this.pagination().limit, this.search(), this.filter());
+  }
+
+  onPageChange(page: number) {
+    this.service.loadAll(page, this.pagination().limit, this.search(), this.filter());
+  }
+
+  private searchTimeout: any;
+  onSearch(query: string) {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.search.set(query);
+      this.service.loadAll(1, this.pagination().limit, query, this.filter());
+    }, 500);
+  }
+
+  setFilter(status: string) {
+    this.filter.set(status);
+    this.service.loadAll(1, this.pagination().limit, this.search(), status);
   }
 
   toggle(id: string) {

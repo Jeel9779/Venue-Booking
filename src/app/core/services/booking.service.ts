@@ -12,9 +12,9 @@ export class BookingService {
   private readonly api = inject(BookingApi);
   private readonly store = inject(BookingStore);
 
-  loadAll(page: number = 1, limit: number = 10): void {
+  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = ''): void {
     this.store.setLoading(true);
-    this.api.getAllBookings(page, limit)
+    this.api.getAllBookings(page, limit, search, status)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: (res) => {

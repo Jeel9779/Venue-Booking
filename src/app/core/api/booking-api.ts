@@ -20,8 +20,11 @@ export class BookingApi {
     return this.http.post<{ message: string; booking: Booking }>(this.baseUrl, data);
   }
 
-  getAllBookings(page: number = 1, limit: number = 10): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}?page=${page}&limit=${limit}`).pipe(
+  getAllBookings(page: number = 1, limit: number = 10, search: string = '', status: string = ''): Observable<any> {
+    let url = `${this.baseUrl}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (status && status !== 'all') url += `&status=${status === 'paid' ? 'success' : status}`;
+    return this.http.get<any>(url).pipe(
       map(res => res)
     );
   }

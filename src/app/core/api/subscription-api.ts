@@ -25,8 +25,12 @@ export class SubscriptionApi {
   }
 
   // Admin: Monitor all vendor subscriptions
-  adminGetAllSubscriptions(): Observable<{ success: boolean; warningWindowDays: number; summary: any; subscriptions: any[] }> {
-    return this.http.get<any>(`${this.baseUrl}/all`).pipe(
+  adminGetAllSubscriptions(page: number = 1, limit: number = 10, search: string = '', status: string = 'all'): Observable<{ success: boolean; warningWindowDays: number; summary: any; subscriptions: any[]; page?: number; limit?: number; totalRecords?: number; totalPages?: number }> {
+    let url = `${this.baseUrl}/all?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (status && status !== 'all') url += `&status=${status}`;
+
+    return this.http.get<any>(url).pipe(
       map(res => {
         // Normalize paginated response to the format expected by the service
         if (res.data && !res.subscriptions) {
@@ -34,7 +38,11 @@ export class SubscriptionApi {
             success: true,
             warningWindowDays: res.warningWindowDays || 15,
             summary: res.summary || {},
-            subscriptions: res.data
+            subscriptions: res.data,
+            page: res.page,
+            limit: res.limit,
+            totalRecords: res.totalRecords,
+            totalPages: res.totalPages
           };
         }
         return res;

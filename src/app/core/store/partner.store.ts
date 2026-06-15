@@ -13,6 +13,8 @@ export class PartnerStore {
   private readonly _isLoading = signal<boolean>(false);
   // Global error message state
   private readonly _error = signal<string | null>(null);
+  
+  readonly pagination = signal({ page: 1, limit: 10, totalRecords: 0, totalPages: 1 });
 
   // ── Selectors (Computed) ──
   readonly isLoading = computed(() => this._isLoading());
@@ -103,6 +105,10 @@ export class PartnerStore {
   // ── Updaters ──
   setVenues(venues: Venue[]) {
     this._rawVenues.set(venues);
+  }
+
+  setPagination(data: { page: number; limit: number; totalRecords: number; totalPages: number }) {
+    this.pagination.set(data);
   }
 
   updateVenueInStore(updatedVenue: Venue) {

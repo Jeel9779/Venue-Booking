@@ -11,12 +11,28 @@ export class ComplaintService {
   private readonly store = inject(ComplaintStore);
   private readonly toast = inject(ToastService);
 
-  loadAll(): void {
+  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = 'all'): void {
     this.store.setLoading(true);
-    this.api.getComplaints()
+    this.api.getComplaints(page, limit, search, status)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
-        next: (res) => this.store.setComplaints(res || []),
+        next: (res: any) => {
+          const complaints = Array.isArray(res) ? res : (res.data || []);
+          this.store.setComplaints(complaints);
+          
+          if (!Array.isArray(res)) {
+            this.store.setPagination({
+              page: res.page || page,
+              limit: res.limit || limit,
+              totalRecords: res.totalRecords || complaints.length,
+              totalPages: res.totalPages || Math.max(1, Math.ceil((res.totalRecords || complaints.length) / (res.limit || limit)))
+            });
+          } else {
+            this.store.setPagination({
+              page, limit, totalRecords: complaints.length, totalPages: Math.max(1, Math.ceil(complaints.length / limit))
+            });
+          }
+        },
         error: (err) => {
           const errMsg = err?.error?.message || 'Failed to load complaints';
           this.store.setError(errMsg);

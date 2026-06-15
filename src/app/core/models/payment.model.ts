@@ -33,6 +33,8 @@ export interface PaymentStats {
   failedCount: number;
   successfulAmount: number;
   successfulCount: number;
+  subscriptionRevenue: number;
+  addonRevenue: number;
 }
 
 // Defines the data model structure
@@ -40,4 +42,5 @@ export interface PaymentFilters {
   type: string;
   paymentStatus: string;
   vendorId: string;
+  search?: string;
 }

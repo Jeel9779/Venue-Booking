@@ -27,12 +27,13 @@ import { ComplaintStore } from '@core/store/complaint.store';
 import { VendorService } from '@core/services/vendor.service';
 import { VendorStore } from '@core/store/vendor.store';
 import { Complaint } from '@core/models/complaint.model';
+import { Pagination } from '@shared/components/pagination/pagination';
 import { API_BASE_URL } from '@core/config/api.config';
 
 @Component({
   selector: 'app-complain',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, Pagination],
   templateUrl: './complain.component.html',
   styleUrls: ['./complain.component.css'],
 })
@@ -64,10 +65,7 @@ export class ComplainComponent implements OnInit {
 
   // Expose signals from store
   complaints = this.complaintStore.complaints;
-  filteredComplaints = this.complaintStore.filteredComplaints;
-  paginatedComplaints = this.complaintStore.paginatedComplaints;
-  currentPage = this.complaintStore.currentPage;
-  totalPages = this.complaintStore.totalPages;
+  pagination = this.complaintStore.pagination;
   isLoading = this.complaintStore.isLoading;
   error = this.complaintStore.error;
 
@@ -100,40 +98,35 @@ export class ComplainComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.complaintService.loadAll();
+    this.complaintService.loadAll(this.pagination().page, this.pagination().limit);
     this.vendorService.loadAll(1, 100); // Load vendors to populate dropdowns
   }
 
   // Refreshes the complaints list
   refreshData(): void {
-    this.complaintService.loadAll();
+    this.complaintService.loadAll(this.pagination().page, this.pagination().limit, this.searchQuery(), this.currentFilter());
   }
 
   // Handle filter category selection
   setFilter(status: string): void {
     this.complaintStore.statusFilter.set(status);
-    this.complaintStore.currentPage.set(1);
+    this.complaintService.loadAll(1, this.pagination().limit, this.searchQuery(), status);
   }
 
+  private searchTimeout: any;
   // Handle search term input change
   onSearchChange(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    this.searchQuery.set(value);
-    this.complaintStore.searchTerm.set(value);
-    this.complaintStore.currentPage.set(1);
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.searchQuery.set(value);
+      this.complaintStore.searchTerm.set(value);
+      this.complaintService.loadAll(1, this.pagination().limit, value, this.currentFilter());
+    }, 500);
   }
 
-  // Pagination helper actions
-  prevPage(): void {
-    if (this.currentPage() > 1) {
-      this.complaintStore.currentPage.set(this.currentPage() - 1);
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage() < this.totalPages()) {
-      this.complaintStore.currentPage.set(this.currentPage() + 1);
-    }
+  onPageChange(page: number) {
+    this.complaintService.loadAll(page, this.pagination().limit, this.searchQuery(), this.currentFilter());
   }
 
   // Review Case opens the detail drawer on the right

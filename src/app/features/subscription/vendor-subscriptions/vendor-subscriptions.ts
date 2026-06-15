@@ -1,67 +1,42 @@
 // Purpose: Component/Logic: Handles UI behavior and user interactions for vendor-subscriptions.
-import { Component, inject, signal, computed, ChangeDetectorRef, resource, effect } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectorRef, resource, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
+import { SubscriptionService } from '@core/services/subscription.service';
+import { VendorService } from '@core/services/vendor.service';
 import { SubscriptionStore } from '@core/store/subscription.store';
 import { VendorStore } from '@core/store/vendor.store';
-import { SubscriptionApi } from '@core/api/subscription-api';
-import { VendorApi } from '@core/api/vendor-api';
 import { Model } from '@shared/components/model/model';
 import { LucideAngularModule } from 'lucide-angular';
+import { Pagination } from '@shared/components/pagination/pagination';
 
 @Component({
   selector: 'app-vendor-subscriptions',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, Model],
+  imports: [CommonModule, LucideAngularModule, Model, Pagination],
   templateUrl: './vendor-subscriptions.html',
   styleUrl: './vendor-subscriptions.css'
 })
 // Defines the structure and behavior of this class
-export class VendorSubscriptions {
+export class VendorSubscriptions implements OnInit {
   private readonly subStore = inject(SubscriptionStore);
   private readonly vendorStore = inject(VendorStore);
-  private readonly subApi = inject(SubscriptionApi);
-  private readonly vendorApi = inject(VendorApi);
+  private readonly subService = inject(SubscriptionService);
+  private readonly vendorService = inject(VendorService);
   private readonly cd = inject(ChangeDetectorRef);
   protected readonly Math = Math;
 
-  // ── Declarative Data Loading (Aligned with Bookings) ──────────────────────────
-  private readonly subscriptionsResource = resource({
-    loader: () => firstValueFrom(this.subApi.adminGetAllSubscriptions()),
-  });
-
-  private readonly addonsResource = resource({
-    loader: () => firstValueFrom(this.subApi.adminGetAllAddons()),
-  });
-
-  private readonly vendorsResource = resource({
-    loader: () => firstValueFrom(this.vendorApi.getAll()),
-  });
-
-  // Sync resource data to store (Eagerly using effect)
-  private readonly _syncEffect = effect(() => {
-    const sRes = this.subscriptionsResource.value();
-    if (sRes) {
-      this.subStore.setAllSubscriptions(sRes.subscriptions);
-      this.subStore.setSummary(sRes.summary);
-    }
-
-    const aRes = this.addonsResource.value();
-    if (aRes) {
-      this.subStore.setAllAddons(aRes.addons || []);
-    }
-
-    const vRes = this.vendorsResource.value();
-    if (vRes) {
-      const vendorsArray = Array.isArray(vRes) ? vRes : (vRes.data || []);
-      this.vendorStore.setVendors(vendorsArray);
-    }
-  });
-
-  readonly isLoading = computed(() => this.subscriptionsResource.isLoading() || this.addonsResource.isLoading() || this.vendorsResource.isLoading() || this.subStore.isLoading());
-  readonly error = computed(() => (this.subscriptionsResource.error() as any)?.message || (this.addonsResource.error() as any)?.message || this.subStore.error());
+  readonly pagination = this.subStore.pagination;
+  readonly isLoading = computed(() => this.subStore.isLoading() || this.vendorStore.isLoading());
+  readonly error = computed(() => this.subStore.error() || this.vendorStore.error());
   readonly summary = this.subStore.summary;
+
+  ngOnInit() {
+    this.subService.loadAllSubscriptions(this.pagination().page, this.pagination().limit);
+    this.subService.loadAllAddons();
+    this.vendorService.loadAll(1, 100);
+  }
 
   search = signal('');
   filter = signal<string>('all');
@@ -163,42 +138,29 @@ export class VendorSubscriptions {
       }, 0);
   });
 
-  readonly filteredSubscriptions = computed(() => {
-    const list = this.enrichedSubscriptions();
-    const f = this.filter();
-    const q = this.search().toLowerCase().trim();
+  setFilter(status: string) {
+    this.filter.set(status);
+    this.subService.loadAllSubscriptions(1, this.pagination().limit, this.search(), status);
+  }
 
-    return list.filter(sub => {
-      // 1. Status Filter
-      if (f === 'expiring') {
-        if (!sub.isExpiring) return false;
-      } else if (f !== 'all' && sub.status !== f) {
-        return false;
-      }
+  private searchTimeout: any;
+  onSearchChange(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.search.set(value);
+      this.subService.loadAllSubscriptions(1, this.pagination().limit, value, this.filter());
+    }, 500);
+  }
 
-      // 2. Search Filter
-      if (q) {
-        const vendorName = sub.vendorDetails?.businessName?.toLowerCase() || sub.vendorDetails?.fullName?.toLowerCase() || '';
-        const vendorEmail = sub.vendorDetails?.email?.toLowerCase() || '';
-        const planName = sub.planSnapshot?.name?.toLowerCase() || '';
-        const txnId = sub._id.toLowerCase();
-        
-        return vendorName.includes(q) || 
-               vendorEmail.includes(q) || 
-               planName.includes(q) || 
-               txnId.includes(q);
-      }
-
-      return true;
-    });
-  });
-
-
+  onPageChange(page: number) {
+    this.subService.loadAllSubscriptions(page, this.pagination().limit, this.search(), this.filter());
+  }
 
   loadAll() {
-    this.subscriptionsResource.reload();
-    this.addonsResource.reload();
-    this.vendorsResource.reload();
+    this.subService.loadAllSubscriptions(this.pagination().page, this.pagination().limit, this.search(), this.filter());
+    this.subService.loadAllAddons();
+    this.vendorService.loadAll(1, 100);
   }
 
   getStatusClass(status: string): string {

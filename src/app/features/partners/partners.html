@@ -165,7 +165,7 @@
         class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 dark:text-slate-400 group-focus-within:text-emerald-500 transition-colors">
         <lucide-icon name="search" class="w-4 h-4"></lucide-icon>
       </div>
-      <input type="text" [ngModel]="search()" (ngModelChange)="search.set($event)"
+      <input type="text" [ngModel]="search()" (ngModelChange)="onSearch($event)"
         placeholder="Search by vendor, venue or city..."
         class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-10 pr-4 text-sm font-medium text-slate-700 dark:text-slate-300 placeholder:text-slate-500 dark:text-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all outline-none dark:">
     </div>
@@ -173,7 +173,7 @@
 
   <!-- VENDOR LIST -->
   <div class="space-y-3">
-    @for (partner of filteredPartners(); track partner.id) {
+    @for (partner of partners(); track partner.id) {
     <div
       class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 dark: hover: transition-all duration-300 overflow-hidden group">
       <!-- VENDOR ROW -->
@@ -303,7 +303,7 @@
     </div>
     }
 
-    @if (filteredPartners().length === 0) {
+    @if (partners().length === 0) {
     <div class="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
       <div class="w-14 h-14 rounded-2xl bg-slate-50 dark:bg-slate-800 mx-auto mb-5 flex items-center justify-center text-slate-300">
         <lucide-icon name="search" class="w-7 h-7"></lucide-icon>
@@ -315,6 +315,16 @@
         class="mt-5 text-xs font-extrabold uppercase tracking-widest text-emerald-600 hover:text-emerald-700 underline underline-offset-4">Clear
         Search</button>
     </div>
+    }
+    
+    @if (pagination().totalPages > 1) {
+      <app-pagination 
+        [currentPage]="pagination().page"
+        [totalPages]="pagination().totalPages"
+        [totalRecords]="pagination().totalRecords"
+        [limit]="pagination().limit"
+        (onPageChange)="onPageChange($event)">
+      </app-pagination>
     }
   </div>
 </div>
@@ -494,7 +504,7 @@
 
     <div>
       <label class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 block">Rejection
-        Message</label>
+         Message</label>
       <textarea [ngModel]="rejectReason()" (ngModelChange)="rejectReason.set($event)"
         placeholder="e.g. Image quality is low, description is insufficient..."
         class="w-full h-36 bg-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl p-4 text-sm font-medium text-slate-700 dark:text-slate-300 placeholder:text-slate-300 focus:bg-white dark:bg-slate-900 focus:ring-4 focus:ring-emerald-500/8 transition-all outline-none resize-none"></textarea>

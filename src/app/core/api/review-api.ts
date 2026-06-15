@@ -15,10 +15,12 @@ export class ReviewApi {
   /**
    * Fetches all reviews, optionally filtered by status.
    */
-  getAll(status?: string): Observable<Review[]> {
-    const url = status ? `${this.baseUrl}?status=${status}` : this.baseUrl;
+  getAll(page: number = 1, limit: number = 10, search: string = '', status: string = 'all'): Observable<any> {
+    let url = `${this.baseUrl}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (status && status !== 'all') url += `&status=${status}`;
     return this.http.get<any>(url).pipe(
-      map(res => Array.isArray(res) ? res : (res.data || []))
+      map(res => res)
     );
   }
 

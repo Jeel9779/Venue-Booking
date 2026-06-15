@@ -28,9 +28,12 @@ export class PartnerApi {
     return this.http.delete<{ message: string }>(`${this.api}/${id}`);
   }
 
-  getVenues(): Observable<Venue[]> {
-    return this.http.get<any>(this.api).pipe(
-      map(res => Array.isArray(res) ? res : (res.data || []))
+  getVenues(page: number = 1, limit: number = 10, search: string = '', status: string = 'all'): Observable<any> {
+    let url = `${this.api}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (status && status !== 'all') url += `&status=${status}`;
+    return this.http.get<any>(url).pipe(
+      map(res => res)
     );
   }
 }

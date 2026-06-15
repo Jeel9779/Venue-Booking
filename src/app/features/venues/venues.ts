@@ -82,9 +82,13 @@ export class Venues implements OnInit {
   showDetailsModal = signal(false);
   showRejectModal = signal(false);
   showApproveModal = signal(false);
+  showDeactivateModal = signal(false);
 
   /** Reason for rejecting a venue (required for rejection) */
   rejectReason = '';
+  
+  /** Reason for deactivating a venue */
+  deactivateReason = '';
 
   /** URL for the image currently being previewed in full-screen */
   previewImage = signal<string | null>(null);
@@ -201,6 +205,36 @@ export class Venues implements OnInit {
 
     this.venueService.updateStatus(venue._id, 'rejected', this.rejectReason.trim());
     this.showRejectModal.set(false);
+    this.closeDetails();
+  }
+
+  /** Opens the modal to deactivate a venue */
+  openDeactivateModal() {
+    this.deactivateReason = '';
+    this.showDeactivateModal.set(true);
+  }
+
+  /** Closes the deactivation modal */
+  closeDeactivateModal() {
+    this.showDeactivateModal.set(false);
+  }
+
+  /** Submits the deactivation of a venue */
+  submitDeactivate() {
+    const venue = this.selectedVenue();
+    if (!venue?._id || !this.deactivateReason.trim()) return;
+
+    this.venueService.deactivate(venue._id, this.deactivateReason.trim());
+    this.showDeactivateModal.set(false);
+    this.closeDetails();
+  }
+
+  /** Submits the reactivation of a venue */
+  submitReactivate() {
+    const venue = this.selectedVenue();
+    if (!venue?._id) return;
+
+    this.venueService.reactivate(venue._id);
     this.closeDetails();
   }
 

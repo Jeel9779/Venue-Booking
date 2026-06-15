@@ -11,8 +11,11 @@ export class ComplaintApi {
   private readonly baseUrl = `${API_BASE_URL}/complaints`;
 
   // Get all complaints
-  getComplaints(): Observable<Complaint[]> {
-    return this.http.get<Complaint[]>(this.baseUrl);
+  getComplaints(page: number = 1, limit: number = 10, search: string = '', status: string = 'all'): Observable<any> {
+    let url = `${this.baseUrl}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (status && status !== 'all') url += `&status=${status}`;
+    return this.http.get<any>(url);
   }
 
   // Get single complaint details

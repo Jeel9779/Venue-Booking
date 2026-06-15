@@ -48,9 +48,9 @@ export class SubscriptionService {
       });
   }
   // Admin Actions
-  loadAllSubscriptions() {
+  loadAllSubscriptions(page: number = 1, limit: number = 10, search: string = '', status: string = 'all') {
     this.store.setLoading(true);
-    this.api.adminGetAllSubscriptions()
+    this.api.adminGetAllSubscriptions(page, limit, search, status)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: (res) => {
@@ -75,6 +75,13 @@ export class SubscriptionService {
             };
             this.store.setSummary(summary);
           }
+          
+          this.store.setPagination({
+            page: res.page || page,
+            limit: res.limit || limit,
+            totalRecords: res.totalRecords || subscriptions.length,
+            totalPages: res.totalPages || Math.max(1, Math.ceil((res.totalRecords || subscriptions.length) / (res.limit || limit)))
+          });
         },
         error: (err) => this.store.setError(err.error?.message || 'Failed to load all subscriptions')
       });
