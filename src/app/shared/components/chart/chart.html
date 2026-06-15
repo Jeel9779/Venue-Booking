@@ -1,5 +1,5 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none p-8 rounded-[2.5rem] transition-all duration-300 hover:shadow-md h-full flex flex-col">
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] transition-all duration-300 hover:shadow-md h-full flex flex-col w-full min-w-0">
     <div class="flex items-center justify-between mb-8">
         <div>
             <h3 class="text-xl font-black text-slate-900 dark:text-slate-100 tracking-tight">{{ title }}</h3>
@@ -7,16 +7,16 @@
         </div>
     </div>
 
-    <div class="flex gap-6 h-64">
+    <div class="flex gap-2 sm:gap-6 h-64 min-w-0 w-full">
         <!-- Y-Axis Labels -->
-        <div class="flex flex-col justify-between text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase w-8 h-56">
+        <div class="flex flex-col justify-between text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase w-6 sm:w-8 h-56 shrink-0">
             @for (label of yAxisLabels; track label) {
                 <span>{{ label }}</span>
             }
         </div>
 
         <!-- Chart Area -->
-        <div class="flex-1 relative h-56 group">
+        <div class="flex-1 relative h-56 group min-w-0">
             <!-- Horizontal Grid Lines -->
             <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
                 @for (line of [1,2,3,4,5]; track line) {
@@ -25,7 +25,7 @@
             </div>
 
             <!-- Bars Container -->
-            <div class="absolute inset-0 flex items-end justify-center gap-8 px-4 z-10">
+            <div class="absolute inset-0 flex items-end justify-between sm:justify-center gap-1 sm:gap-8 px-1 sm:px-4 z-10 w-full">
                 @for (val of data; track $index) {
                 <div class="flex flex-col items-center flex-1 max-w-[40px] h-full relative group/bar">
                     <!-- Tooltip -->
@@ -43,8 +43,8 @@
                     
                     <!-- X-Axis Label -->
                     @if (labels[$index]) {
-                        <span class="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">
-                            {{ labels[$index] }}
+                        <span class="text-[8px] sm:text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest sm:whitespace-nowrap mt-2 text-center leading-tight">
+                            {{ labels[$index] | slice:0:1 }}<span class="hidden sm:inline">{{ labels[$index] | slice:1 }}</span>
                         </span>
                     }
                 </div>

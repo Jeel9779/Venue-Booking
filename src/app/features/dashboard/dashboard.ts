@@ -64,10 +64,6 @@ export class Dashboard implements OnInit, OnDestroy {
   readonly usersLoading = toSignal(this.usersStore.isLoading$, { initialValue: false });
   readonly paymentsLoading = toSignal(this.paymentStore.isLoading$, { initialValue: false });
 
-  // ── Live Activity Ticker State ──────────────────────────────────────────
-  readonly liveActivities = signal<Array<{ id: number; text: string; time: string; type: 'booking' | 'vendor' | 'user' | 'review' | 'payment' }>>([]);
-  private activityIntervalId: any;
-
   // ── Combined Dashboard Loading State ─────────────────────────────────────
   readonly isDashboardLoading = computed(() => {
     return this.venueStore.isLoading() || 
@@ -218,8 +214,9 @@ export class Dashboard implements OnInit, OnDestroy {
     bookings.forEach(b => {
       if (!b.vendorId) return;
       const vId = typeof b.vendorId === 'object' ? b.vendorId._id : b.vendorId;
-      const vName = typeof b.vendorId === 'object' ? b.vendorId.businessName || b.vendorId.fullName : 'Unknown Vendor';
-      const vEmail = typeof b.vendorId === 'object' ? b.vendorId.email : '';
+      // Safety check: if vendorId is an object but doesn't have required properties or is deleted
+      const vName = typeof b.vendorId === 'object' ? (b.vendorId.businessName || b.vendorId.fullName || 'Unknown Vendor') : 'Unknown Vendor';
+      const vEmail = typeof b.vendorId === 'object' ? (b.vendorId.email || '') : '';
       const amount = b.totalBookingAmount || b.cost || 0;
 
       const current = vendorStats.get(vId) || { count: 0, revenue: 0, name: vName, email: vEmail };
@@ -396,96 +393,9 @@ export class Dashboard implements OnInit, OnDestroy {
     this.vendorService.loadAll(1, 1000);
     this.userService.loadAll(1, 1000);
     this.paymentService.loadInitialData();
-
-    this.initLiveActivities();
   }
 
   ngOnDestroy() {
-    if (this.activityIntervalId) {
-      clearInterval(this.activityIntervalId);
-    }
-  }
-
-  // ── Live Activities Helper Methods ──────────────────────────────────────────
-  private initLiveActivities() {
-    const initialList = [
-      { id: Date.now() - 40000, text: 'Platform operations system initialized successfully', time: 'Just now', type: 'user' as const },
-      { id: Date.now() - 30000, text: 'Real-time database sync completed with active clusters', time: '1m ago', type: 'booking' as const }
-    ];
-    this.liveActivities.set(initialList);
-
-    this.activityIntervalId = setInterval(() => {
-      this.generateLiveEvent();
-    }, 10000);
-  }
-
-  private generateLiveEvent() {
-    const venues = this.venueStore.venues();
-    const vendors = this.vendorStore.vendors();
-    const users = this.users();
-    const bookings = this.bookingStore.bookings();
-
-    const eventTypes: Array<'booking' | 'vendor' | 'user' | 'review' | 'payment'> = ['booking', 'vendor', 'user', 'review', 'payment'];
-    const randomType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
-
-    let text = '';
-    switch (randomType) {
-      case 'booking':
-        if (venues.length > 0) {
-          const randomVenue = venues[Math.floor(Math.random() * venues.length)];
-          const actions = ['received a booking request', 'has a new booking', 'confirmed booking', 'received an inquiry'];
-          text = `"${randomVenue.name}" ${actions[Math.floor(Math.random() * actions.length)]}`;
-        } else {
-          text = 'Royal Palace received booking';
-        }
-        break;
-      case 'vendor':
-        if (vendors.length > 0) {
-          const randomVendor = vendors[Math.floor(Math.random() * vendors.length)];
-          const actions = ['joined the platform', 'updated their listing status', 'upgraded to Premium subscription', 'updated pricing details'];
-          text = `Vendor "${randomVendor.businessName || randomVendor.fullName}" ${actions[Math.floor(Math.random() * actions.length)]}`;
-        } else {
-          text = 'New vendor registered business';
-        }
-        break;
-      case 'user':
-        if (users.length > 0) {
-          const randomUser = users[Math.floor(Math.random() * users.length)];
-          text = `User "${randomUser.name}" logged in to browse listings`;
-        } else {
-          text = 'New user registered account';
-        }
-        break;
-      case 'review':
-        if (venues.length > 0) {
-          const randomVenue = venues[Math.floor(Math.random() * venues.length)];
-          const ratings = [5, 4, 3, 5, 4];
-          text = `New ${ratings[Math.floor(Math.random() * ratings.length)]}-star review submitted for "${randomVenue.name}"`;
-        } else {
-          text = 'New review pending admin moderation';
-        }
-        break;
-      case 'payment':
-        if (bookings.length > 0) {
-          const randomBooking = bookings[Math.floor(Math.random() * bookings.length)];
-          const statuses = ['processed successfully', 'marked as pending verification', 'refund processed'];
-          text = `Payment of ₹${(randomBooking.totalBookingAmount || 15000).toLocaleString()} ${statuses[Math.floor(Math.random() * statuses.length)]}`;
-        } else {
-          text = 'Subscription renewal payment received';
-        }
-        break;
-    }
-
-    if (text) {
-      const newEvent = {
-        id: Date.now(),
-        text,
-        time: 'Just now',
-        type: randomType
-      };
-
-      this.liveActivities.update(prev => [newEvent, ...prev.slice(0, 9)]);
-    }
   }
 
   getBarHeightPercentage(val: number, max: number): number {

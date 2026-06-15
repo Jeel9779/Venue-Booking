@@ -46,4 +46,12 @@ export class UsersApi {
     const options = reason ? { body: { reason } } : {};
     return this.http.delete<void>(url, options);
   }
+
+  suspend(id: string): Observable<{ message: string; user: User }> {
+    return this.http.put<{ message: string; user: User }>(`${this.baseUrl}/suspend/${id}`, {});
+  }
+
+  unsuspend(id: string): Observable<{ message: string; user: User }> {
+    return this.http.put<{ message: string; user: User }>(`${this.baseUrl}/unsuspend/${id}`, {});
+  }
 }

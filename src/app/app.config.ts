@@ -14,7 +14,7 @@ import {
   MessageSquareOff, ShieldX, CheckCircle, TrendingUp, Wallet,
   CalendarCheck, Download, ClipboardList, CalendarX, RefreshCw, ShieldOff, ScrollText,
   ChevronLeft, CreditCard, Layers, Activity, ArrowUpCircle, Utensils, LayoutDashboard,
-  DollarSign, Image, Command, CornerDownLeft, Briefcase, CalendarRange, Edit
+  DollarSign, Image, Command, CornerDownLeft, Briefcase, CalendarRange, Edit, UserCheck, UserX
 } from 'lucide-angular';
 
 
@@ -32,7 +32,7 @@ export const appConfig: ApplicationConfig = {
       MessageSquareOff, ShieldX, CheckCircle, TrendingUp, Wallet,
       CalendarCheck, Download, ClipboardList, CalendarX, RefreshCw, ShieldOff, ScrollText,
       ChevronLeft, CreditCard, Layers, Activity, ArrowUpCircle, Utensils, LayoutDashboard,
-      DollarSign, Image, Command, CornerDownLeft, Briefcase, CalendarRange, Edit
+      DollarSign, Image, Command, CornerDownLeft, Briefcase, CalendarRange, Edit, UserCheck, UserX
     }))
   ]
 };

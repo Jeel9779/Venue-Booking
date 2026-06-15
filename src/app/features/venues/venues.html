@@ -20,11 +20,10 @@
       </div>
     </div>
 
-    <div
-      class="header-stats flex gap-2 flex-wrap bg-white dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-300 dark:border-slate-700 backdrop-blur-sm">
+    <div class="header-stats flex gap-2 flex-wrap">
       <div
         class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
-        [class]="filter() === 'all' ? 'bg-sky-500 text-white dark:' : 'bg-sky-200 text-sky-700 hover:bg-sky-300'"
+        [class]="filter() === 'all' ? 'bg-sky-500 text-white' : 'bg-sky-200 text-sky-700 hover:bg-sky-300'"
         (click)="filter.set('all')">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         {{ counts().all }} All
@@ -62,7 +61,7 @@
       <lucide-icon name="search" size="18"
         class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></lucide-icon>
       <input type="text"
-        class="w-full py-3 pl-11 pr-11 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-slate-100 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 box-border placeholder:text-slate-400 dark:"
+        class="w-full py-3 pl-11 pr-11 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-slate-100 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 box-border placeholder:text-slate-400"
         placeholder="Search venues by name, city, or type..." [value]="search()"
         (input)="search.set($any($event.target).value)" />
       @if (search()) {
@@ -123,7 +122,7 @@
               <td class="px-5 py-4">
                 <div class="flex items-center gap-3.5">
                   <div
-                    class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-green-600 text-white font-bold text-sm flex items-center justify-center shrink-0 dark:">
+                    class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-green-600 text-white font-bold text-sm flex items-center justify-center shrink-0">
                     {{ v.name.charAt(0) }}
                   </div>
                   <div>
@@ -182,7 +181,7 @@
           <div class="flex justify-between items-start gap-2">
             <div class="flex items-center gap-3 min-w-0">
               <div
-                class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-green-600 text-white font-bold text-sm flex items-center justify-center shrink-0 dark:">
+                class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-500 to-green-600 text-white font-bold text-sm flex items-center justify-center shrink-0">
                 {{ v.name.charAt(0) }}
               </div>
               <div class="min-w-0">
@@ -498,14 +497,14 @@
       }
     </div>
 
-    <div footer class="flex items-center justify-end w-full gap-3">
+    <div footer class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end w-full gap-3 mt-4">
       @if (venue.status !== 'rejected') {
-      <app-button variant="danger" customClass="rounded-xl" (onClick)="openRejectModal()">
+      <app-button variant="danger" customClass="rounded-xl w-full sm:w-auto" (onClick)="openRejectModal()">
         Reject Venue
       </app-button>
       }
       @if (venue.status !== 'approved') {
-      <app-button variant="success" customClass="rounded-xl" (onClick)="confirmApprove()"
+      <app-button variant="success" customClass="rounded-xl w-full sm:w-auto" (onClick)="confirmApprove()"
         [loading]="isLoading()">
         Approve & Verify Venue
       </app-button>

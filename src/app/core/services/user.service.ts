@@ -61,6 +61,30 @@ export class UserService {
       });
   }
 
+  suspend(id: string): void {
+    this.store.setLoading(true);
+    this.api.suspend(id)
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: (res) => {
+          this.store.updateUser(res.user);
+        },
+        error: (err) => this.store.setError(err?.error?.message || 'Failed to suspend user'),
+      });
+  }
+
+  unsuspend(id: string): void {
+    this.store.setLoading(true);
+    this.api.unsuspend(id)
+      .pipe(finalize(() => this.store.setLoading(false)))
+      .subscribe({
+        next: (res) => {
+          this.store.updateUser(res.user);
+        },
+        error: (err) => this.store.setError(err?.error?.message || 'Failed to unsuspend user'),
+      });
+  }
+
   private readonly placeholderUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAnklEQVR4Ae3WsQnAMBBD0YWJQ+IxCLnE4EyV5AAEzcT0gJ7O+dukgEBEREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREf8B3qFdCnE4vB0AAAAASUVORK5CYII=';
 
   getPhotoUrl(path: string | null | undefined): string {

@@ -14,13 +14,13 @@
   </div>
 
   <!-- ── TOP KPI CARDS ── -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-8 sm:mb-10">
+  <div class="flex flex-col lg:flex-row w-full gap-4 sm:gap-6 mb-8 sm:mb-10">
     <!-- Total -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 dark: relative overflow-hidden group hover: hover:border-slate-300 dark:border-slate-700 transition-all">
-      <p class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 sm:mb-4">Total Subs
+      class="flex-1 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-6 sm:p-10 border border-slate-200 dark:border-slate-700/80 relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+      <p class="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 sm:mb-4">Total Subs
       </p>
-      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.total || 0
+      <h3 class="text-3xl sm:text-5xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.total || 0
         }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-indigo-500 transition-all duration-1000" [style.width.%]="100"></div>
@@ -29,10 +29,10 @@
 
     <!-- Active -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 dark: relative overflow-hidden group hover: hover:border-slate-300 dark:border-slate-700 transition-all">
-      <p class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Active
+      class="flex-1 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-6 sm:p-10 border border-slate-200 dark:border-slate-700/80 relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+      <p class="text-[10px] sm:text-[11px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Active
       </p>
-      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.active || 0
+      <h3 class="text-3xl sm:text-5xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.active || 0
         }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-emerald-500 transition-all duration-1000"
@@ -42,10 +42,10 @@
 
     <!-- Expiring -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 dark: relative overflow-hidden group hover: hover:border-slate-300 dark:border-slate-700 transition-all">
-      <p class="text-[9px] sm:text-[10px] font-black text-rose-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Expiring
+      class="flex-1 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-6 sm:p-10 border border-slate-200 dark:border-slate-700/80 relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+      <p class="text-[10px] sm:text-[11px] font-black text-rose-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Expiring
         Soon</p>
-      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{
+      <h3 class="text-3xl sm:text-5xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{
         summary()?.expiringWithin15Days || 0 }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-rose-500 transition-all duration-1000"
@@ -55,10 +55,10 @@
 
     <!-- Grace -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 dark: relative overflow-hidden group hover: hover:border-slate-300 dark:border-slate-700 transition-all">
-      <p class="text-[9px] sm:text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">In Grace
+      class="flex-1 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-6 sm:p-10 border border-slate-200 dark:border-slate-700/80 relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+      <p class="text-[10px] sm:text-[11px] font-black text-amber-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">In Grace
       </p>
-      <h3 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.grace || 0
+      <h3 class="text-3xl sm:text-5xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">{{ summary()?.grace || 0
         }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-amber-500 transition-all duration-1000"
@@ -68,10 +68,10 @@
 
     <!-- Revenue -->
     <div
-      class="col-span-1 sm:col-span-2 lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80 dark: relative overflow-hidden group hover: hover:border-slate-300 dark:border-slate-700 transition-all">
-      <p class="text-[9px] sm:text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Total
+      class="flex-1 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[32px] p-6 sm:p-10 border border-slate-200 dark:border-slate-700/80 relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+      <p class="text-[10px] sm:text-[11px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-2 sm:mb-4">Total
         Revenue</p>
-      <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">₹{{ totalRevenue() |
+      <h3 class="text-2xl sm:text-4xl lg:text-4xl font-black text-slate-900 dark:text-slate-100 mb-2 leading-none">₹{{ totalRevenue() |
         number }}</h3>
       <div class="absolute bottom-0 left-0 w-full h-1.5 bg-slate-100">
         <div class="h-full bg-indigo-600 transition-all duration-1000" [style.width.%]="100"></div>
@@ -81,7 +81,7 @@
 
   <!-- ── FILTERS & SEARCH ── -->
   <div
-    class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-8 bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-700 dark:">
+    class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between w-full gap-4 mb-8 bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-700">
     <div class="flex flex-wrap items-center gap-1.5 w-full lg:w-auto">
       <button (click)="filter.set('all')"
         class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer text-center"

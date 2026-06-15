@@ -38,13 +38,14 @@ export class Users implements OnInit {
 
   // ── UI State ───────────────────────────────────────────────────────────────
   search = signal('');
-  filter = signal<'all' | 'verified' | 'unverified'>('all');
+  filter = signal<'all' | 'verified' | 'unverified' | 'suspended'>('all');
   sortBy = signal<SortField>('createdAt');
   sortOrder = signal<SortOrder>('desc');
 
   selectedUser = signal<User | null>(null);
   showEditModel = signal(false);
   showDeleteModel = signal(false);
+  showSuspendModel = signal(false);
   deleteReason = signal('');
 
   editFormData: UpdateUserPayload = {
@@ -89,9 +90,11 @@ export class Users implements OnInit {
 
     // Status filter
     if (this.filter() === 'verified') {
-      result = result.filter(u => u.profilePhoto && u.address && u.city);
+      result = result.filter(u => u.status !== 'suspended' && u.profilePhoto && u.address && u.city);
     } else if (this.filter() === 'unverified') {
-      result = result.filter(u => !u.profilePhoto || !u.address || !u.city);
+      result = result.filter(u => u.status !== 'suspended' && (!u.profilePhoto || !u.address || !u.city));
+    } else if (this.filter() === 'suspended') {
+      result = result.filter(u => u.status === 'suspended');
     }
 
     // Sort
@@ -115,11 +118,14 @@ export class Users implements OnInit {
 
   counts = computed(() => {
     const list = this.users().filter(u => !u.deleted);
-    const verified = list.filter(u => u.profilePhoto && u.address && u.city).length;
+    const suspended = list.filter(u => u.status === 'suspended').length;
+    const active = list.filter(u => u.status !== 'suspended');
+    const verified = active.filter(u => u.profilePhoto && u.address && u.city).length;
     return {
       all: list.length,
       verified,
-      unverified: list.length - verified
+      unverified: active.length - verified,
+      suspended
     };
   });
 
@@ -176,6 +182,29 @@ export class Users implements OnInit {
     this.closeDeleteModel();
     // Clear reason for next use
     this.deleteReason.set('');
+  }
+
+  openSuspendModel(user: User) {
+    this.selectedUser.set(user);
+    this.showSuspendModel.set(true);
+  }
+
+  closeSuspendModel() {
+    this.showSuspendModel.set(false);
+    this.selectedUser.set(null);
+  }
+
+  toggleSuspend() {
+    const user = this.selectedUser();
+    if (!user) return;
+    
+    if (user.status === 'suspended') {
+      this.userService.unsuspend(user._id);
+    } else {
+      this.userService.suspend(user._id);
+    }
+    
+    this.closeSuspendModel();
   }
 
   getImageUrl(path: string | null | undefined): string {

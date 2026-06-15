@@ -108,7 +108,7 @@
         <p class="text-base text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">Status breakdown per partner</p>
       </div>
       <div
-        class="flex items-center gap-4 text-[10px] font-extrabold uppercase tracking-widest border border-slate-100 rounded-xl px-4 py-2.5 bg-slate-50 dark:bg-slate-800">
+        class="flex flex-wrap items-center gap-4 text-[10px] font-extrabold uppercase tracking-widest border border-slate-100 rounded-xl px-4 py-2.5 bg-slate-50 dark:bg-slate-800">
         <span class="flex items-center gap-1.5 text-emerald-600"><span
             class="w-2 h-2 rounded-full bg-emerald-500"></span> Approved</span>
         <span class="flex items-center gap-1.5 text-amber-500"><span class="w-2 h-2 rounded-full bg-amber-400"></span>
@@ -120,8 +120,8 @@
 
     <div class="space-y-4">
       @for (row of chartData(); track row.label) {
-      <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
-        <div class="w-36 shrink-0 text-[11px] font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-wide truncate">{{
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+        <div class="w-full sm:w-36 shrink-0 text-[11px] font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-wide truncate">{{
           row.label
           }}</div>
         <div class="flex-1 h-8 flex gap-1 rounded-xl overflow-hidden bg-slate-100 p-1 border border-slate-200 dark:border-slate-700">
@@ -187,10 +187,10 @@
           </div>
           <div class="min-w-0">
             <!-- Subtitle: fullName + email -->
-            <p class="text-base font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-0.5">
+            <p class="text-base font-semibold text-slate-500 dark:text-slate-400 flex flex-wrap items-center gap-1 sm:gap-1.5 mb-0.5">
               <span class="text-sm font-extrabold text-slate-900 dark:text-slate-100">{{ partner.name }}</span>
-              <span class="w-1 h-1 rounded-full bg-slate-300 inline-block"></span>
-              {{ partner.email }}
+              <span class="hidden sm:inline-block w-1 h-1 rounded-full bg-slate-300"></span>
+              <span class="text-xs truncate w-full sm:w-auto">{{ partner.email }}</span>
             </p>
             <!-- Primary heading: businessName -->
             <h4 class="text-sm font-normal text-slate-600 dark:text-slate-400 leading-tight tracking-tight truncate">
@@ -341,7 +341,7 @@
           {{ selectedVenue()!.city }}, {{ selectedVenue()!.state }}
         </p>
       </div>
-      <div class="flex flex-col items-end gap-2 shrink-0">
+      <div class="flex flex-col sm:items-end gap-2 shrink-0">
         <span class="badge-premium text-[10px] px-4 py-1.5 border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300 dark:">
           {{ getStatus(selectedVenue()!.status) }}
         </span>
@@ -453,11 +453,10 @@
     }
   </div>
 
-  <div footer class="flex justify-between items-center w-full pt-4">
-    <div class="flex gap-3">
+  <div footer class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center w-full pt-4 gap-3">
       @if (selectedVenue()!.status !== 'approved') {
       <button (click)="approve()" [disabled]="actionLoading()"
-        class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-emerald-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
+        class="w-full sm:w-auto justify-center bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-emerald-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
         @if (actionLoading()) {
         <ng-container *ngTemplateOutlet="spinner"></ng-container>
         }
@@ -466,11 +465,10 @@
       }
       @if (selectedVenue()!.status !== 'rejected') {
       <button (click)="openRejectFlow()" [disabled]="actionLoading()"
-        class="bg-white dark:bg-slate-900 text-red-600 border border-red-200 px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-50 transition-all disabled:opacity-50 active:scale-95">
+        class="w-full sm:w-auto justify-center bg-white dark:bg-slate-900 text-red-600 border border-red-200 px-6 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-50 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
         Reject Venue
       </button>
       }
-    </div>
   </div>
 </app-model>
 }

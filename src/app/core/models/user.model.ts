@@ -12,6 +12,7 @@ export interface User {
   pinCode?: string;
   profilePhoto?: string | null;
   deleted?: boolean;
+  status?: string;
   createdAt: string;
   updatedAt: string;
 }

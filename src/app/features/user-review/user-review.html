@@ -22,7 +22,7 @@
   </div>
 
   <!-- ── EXPLANATION BANNER ── -->
-  <div class="bg-indigo-50/50 border border-indigo-100 rounded-3xl p-5 mb-8 flex gap-4">
+  <div class="hidden sm:flex bg-indigo-50/50 border border-indigo-100 rounded-3xl p-5 mb-8 gap-4">
     <lucide-icon name="info" class="text-indigo-600 shrink-0 mt-0.5" size="20"></lucide-icon>
     <div>
       <h4 class="text-xs font-black text-indigo-900 uppercase tracking-wider mb-1">Platform Moderation Hub</h4>
@@ -82,9 +82,9 @@
 
   <!-- ── ANALYTICS DISTRIBUTION SECTION ── -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 items-stretch">
-    <div class="lg:col-span-2 h-full flex flex-col gap-4">
+    <div class="lg:col-span-2 h-full flex flex-col gap-4 min-w-0">
       <app-chart 
-        title="Rating Distribution Breakdown" 
+        title="Rating Distribution" 
         description="Frequency of star ratings across all customer testimonials" 
         [labels]="['1 Star', '2 Star', '3 Star', '4 Star', '5 Star']"
         [data]="chartData()"
@@ -99,7 +99,7 @@
       </div>
     </div>
     
-    <div class="h-full">
+    <div class="h-full min-w-0">
       <app-card [padding]="true" customClass="h-full bg-slate-900 text-white border-none flex flex-col rounded-3xl">
         <div class="flex-1">
           <h3 class="text-xs font-black uppercase tracking-[0.2em] mb-6 text-slate-400">Moderation Progress</h3>
