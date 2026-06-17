@@ -30,8 +30,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
             [(ngModel)]="value"
             (ngModelChange)="onModelChange($event)"
             (blur)="onTouched()"
+            (wheel)="$event.preventDefault()"
             [placeholder]="placeholder()"
-            [class]="inputClasses + ' h-11 px-4'"
+            [class]="inputClasses + ' h-11 px-4 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'"
           />
         }
       </div>

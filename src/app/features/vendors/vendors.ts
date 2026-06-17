@@ -50,6 +50,8 @@ export class Vendors implements OnInit {
   deleteReason = signal('');
   vendorToDelete = signal<Vendor | null>(null);
 
+  showSuspendModel = signal(false);
+
   viewingImageUrl = signal<string | null>(null);
 
   // ── Computed ───────────────────────────────────────────────────────────────
@@ -139,9 +141,14 @@ export class Vendors implements OnInit {
   }
 
   suspendVendor() {
+    this.showSuspendModel.set(true);
+  }
+
+  submitSuspend() {
     const v = this.selectedVendor();
     if (!v) return;
     this.vendorService.suspend(v._id);
+    this.showSuspendModel.set(false);
     this.closeDetails();
   }
 

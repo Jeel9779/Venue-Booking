@@ -29,6 +29,12 @@ export class PlanList implements OnInit {
   showForm = signal(false);
   selectedPlan = signal<Plan | null>(null);
   planToDelete = signal<string | null>(null);
+
+  activeTab = signal<'base' | 'addon'>('base');
+
+  // ── Computed ──
+  basePlans = computed(() => this.plans().filter(p => !p.planType || p.planType === 'base'));
+  addonPlans = computed(() => this.plans().filter(p => p.planType === 'addon'));
   
   // Helper to get base plan name for an add‑on
   getBasePlanName(parentId: string | null | undefined): string {

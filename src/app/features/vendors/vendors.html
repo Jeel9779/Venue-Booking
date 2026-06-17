@@ -390,7 +390,6 @@
       </div>
     </div>
     <div footer>
-      <app-button variant="secondary" (onClick)="showRejectModel.set(false)">Cancel</app-button>
       <app-button variant="danger" (onClick)="submitReject()" [disabled]="!rejectReason().trim()">Submit
         Rejection</app-button>
     </div>
@@ -419,6 +418,28 @@
     <div footer>
       <app-button variant="danger" (onClick)="submitDelete()" [disabled]="!deleteReason().trim()">Confirm
         Deletion</app-button>
+    </div>
+  </app-model>
+  }
+
+  <!-- ── SUSPEND MODEL ─────────────────────────────────────────────────── -->
+  @if (showSuspendModel()) {
+  <app-model [title]="'Suspend Vendor'" maxWidth="sm" (onClose)="showSuspendModel.set(false)" [hasFooter]="true">
+    <div class="space-y-6 py-4">
+      <div class="p-5 rounded-2xl bg-orange-50 border border-orange-200 flex gap-4">
+        <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center shrink-0">
+          <lucide-icon name="alert-triangle" size="24" [strokeWidth]="2.5"></lucide-icon>
+        </div>
+        <div>
+          <h4 class="text-[0.9rem] font-black text-orange-900 mb-1">Warning</h4>
+          <p class="text-xs text-orange-700/80 leading-relaxed">
+            Are you sure you want to suspend <strong>{{ selectedVendor()?.businessName || selectedVendor()?.fullName }}</strong>? Their access to the platform will be revoked temporarily.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div footer>
+      <app-button variant="danger" (onClick)="submitSuspend()">Confirm Suspension</app-button>
     </div>
   </app-model>
   }
