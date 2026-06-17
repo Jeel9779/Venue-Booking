@@ -9,7 +9,7 @@ import { PaymentStore } from '../../core/store/payment.store';
 import { Payment } from '../../core/models/payment.model';
 import {
   LucideAngularModule,
-  Search, Filter, RotateCcw, Eye, Download,
+  Search, Filter, RotateCcw, Eye,
   TrendingUp, AlertCircle, CheckCircle2, Clock, X,
   Calendar, User, Building, Hash, FileText
 } from 'lucide-angular';
@@ -43,7 +43,7 @@ export class Payments implements OnInit {
     filter:     Filter,
     reset:      RotateCcw,
     view:       Eye,
-    download:   Download,
+
     trendingUp: TrendingUp,
     alert:      AlertCircle,
     success:    CheckCircle2,

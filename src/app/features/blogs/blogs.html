@@ -1,0 +1,252 @@
+<!-- Purpose: Template: Defines the visual layout and structure for the component. -->
+<div class="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700">
+  <!-- Header Section -->
+  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="header-left flex items-center gap-3.5">
+      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0">
+        <lucide-icon [img]="icons.penTool" size="20"></lucide-icon>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Blog Monitoring</h1>
+        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Review and moderate vendor blog posts</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters & Search Section -->
+  <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-2xl border border-slate-200 dark:border-slate-700 dark: space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+        <lucide-icon [img]="icons.filter" size="16"></lucide-icon>
+        Filters
+      </h3>
+      <button (click)="resetFilters()" class="text-xs text-indigo-600 font-bold hover:text-indigo-700 transition-colors flex items-center gap-1">
+        <lucide-icon [img]="icons.reset" size="12"></lucide-icon>
+        Reset All
+      </button>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="relative">
+        <lucide-icon [img]="icons.search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></lucide-icon>
+        <input 
+          type="text" 
+          [ngModel]="searchQuery()" 
+          (ngModelChange)="searchQuery.set($event); applyFilters()"
+          placeholder="Search by Title or Vendor Name..."
+          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none transition-all focus:ring-2 focus:ring-indigo-500 text-slate-700 dark:text-slate-300"
+        >
+      </div>
+      <select 
+        [ngModel]="filterStatus()" 
+        (ngModelChange)="filterStatus.set($event); applyFilters()"
+        class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm outline-none transition-all focus:ring-2 focus:ring-indigo-500 text-slate-700 dark:text-slate-300 appearance-none"
+      >
+        <option value="">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="suspended">Suspended</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Data Table (Desktop) & Cards (Mobile) -->
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse min-w-[800px]">
+        <thead>
+          <tr class="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700">
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Blog Info</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Vendor</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Status</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Engagement</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Date</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @if (isLoading()) {
+            @for (i of [1,2,3,4,5]; track i) {
+              <tr class="animate-pulse">
+                <td class="px-6 py-5"><div class="h-4 bg-slate-100 rounded-full w-48"></div></td>
+                <td class="px-6 py-5"><div class="h-4 bg-slate-100 rounded-full w-32"></div></td>
+                <td class="px-6 py-5"><div class="h-4 bg-slate-100 rounded-full w-16"></div></td>
+                <td class="px-6 py-5"><div class="h-4 bg-slate-100 rounded-full w-16"></div></td>
+                <td class="px-6 py-5"><div class="h-4 bg-slate-100 rounded-full w-24"></div></td>
+                <td class="px-6 py-5"><div class="h-4 bg-slate-100 rounded-full w-12 ml-auto"></div></td>
+              </tr>
+            }
+          } @else {
+            @for (blog of blogs(); track blog._id) {
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-150" [class.opacity-50]="blog.deleted">
+                <!-- Blog Info -->
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    @if (blog.coverImage) {
+                      <img [src]="blog.coverImage" alt="Cover" class="w-12 h-12 rounded object-cover shrink-0">
+                    } @else {
+                      <div class="w-12 h-12 rounded bg-indigo-50 flex items-center justify-center shrink-0 text-indigo-200">
+                        <lucide-icon [img]="icons.fileText" size="20"></lucide-icon>
+                      </div>
+                    }
+                    <div class="min-w-0">
+                      <p class="font-bold text-slate-900 dark:text-slate-100 text-sm truncate max-w-[200px]">{{ blog.title }}</p>
+                      @if (blog.deleted) {
+                        <span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider">Deleted</span>
+                      } @else {
+                        <p class="text-[10px] text-slate-500 truncate max-w-[200px]">{{ blog.tags.join(', ') }}</p>
+                      }
+                    </div>
+                  </div>
+                </td>
+                <!-- Vendor -->
+                <td class="px-6 py-4">
+                  <div class="min-w-0">
+                    <p class="font-bold text-slate-900 dark:text-slate-100 text-xs">{{ blog.vendorId.businessName || blog.vendorId.fullName || 'Unknown' }}</p>
+                    <p class="text-[10px] text-slate-500">{{ blog.vendorId.email }}</p>
+                  </div>
+                </td>
+                <!-- Status -->
+                <td class="px-6 py-4">
+                  <span [class]="getStatusClass(blog.status)" class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border">
+                    {{ blog.status }}
+                  </span>
+                </td>
+                <!-- Engagement -->
+                <td class="px-6 py-4">
+                  <div class="flex gap-3 text-xs text-slate-500">
+                    <span>❤️ {{ blog.likes.length || 0 }}</span>
+                    <span>💬 {{ blog.comments.length || 0 }}</span>
+                  </div>
+                </td>
+                <!-- Date -->
+                <td class="px-6 py-4">
+                  <p class="text-xs font-medium text-slate-700">{{ blog.createdAt | date:'MMM d, y' }}</p>
+                </td>
+                <!-- Actions -->
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button (click)="previewBlog(blog)" class="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded" title="Preview">
+                      <lucide-icon [img]="icons.view" size="16"></lucide-icon>
+                    </button>
+                    @if (!blog.deleted) {
+                      @if (blog.status === 'pending') {
+                        <button (click)="approveBlog(blog._id)" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded" title="Approve">
+                          <lucide-icon [img]="icons.success" size="16"></lucide-icon>
+                        </button>
+                        <button (click)="openReasonModal(blog, 'reject')" class="p-1.5 text-rose-600 hover:bg-rose-50 rounded" title="Reject">
+                          <lucide-icon [img]="icons.reject" size="16"></lucide-icon>
+                        </button>
+                      } @else if (blog.status === 'approved') {
+                        <button (click)="openReasonModal(blog, 'suspend')" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded" title="Suspend">
+                          <lucide-icon [img]="icons.suspend" size="16"></lucide-icon>
+                        </button>
+                      } @else if (blog.status === 'rejected' || blog.status === 'suspended') {
+                        <button (click)="restoreBlog(blog._id)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Restore to Pending">
+                          <lucide-icon [img]="icons.restore" size="16"></lucide-icon>
+                        </button>
+                      }
+                      <button (click)="deleteBlog(blog._id)" class="p-1.5 text-rose-600 hover:bg-rose-50 rounded" title="Soft Delete">
+                        <lucide-icon [img]="icons.delete" size="16"></lucide-icon>
+                      </button>
+                    } @else {
+                      <button (click)="undeleteBlog(blog._id)" class="px-2 py-1 text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded uppercase">
+                        Undelete
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (pagination().totalPages > 1) {
+      <div class="p-4 border-t border-slate-200 dark:border-slate-700">
+        <app-pagination 
+          [currentPage]="pagination().page"
+          [totalPages]="pagination().totalPages"
+          [totalRecords]="pagination().totalRecords"
+          [limit]="pagination().limit"
+          (onPageChange)="onPageChange($event)">
+        </app-pagination>
+      </div>
+    }
+  </div>
+
+  <!-- Empty State -->
+  @if (!isLoading() && blogs().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center bg-slate-50 dark:bg-slate-800/50 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+      <div class="w-20 h-20 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center mb-4">
+        <lucide-icon [img]="icons.penTool" size="32" class="text-slate-300"></lucide-icon>
+      </div>
+      <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">No Blogs Found</h3>
+      <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xs mt-1">Try adjusting your search or filters.</p>
+    </div>
+  }
+
+  <!-- Modals -->
+  <!-- 1. Preview Modal -->
+  @if (showPreviewModal() && selectedBlog()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in" (click)="closePreviewModal()"></div>
+      <div class="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-3xl overflow-hidden relative z-10 flex flex-col max-h-[90vh] shadow-2xl">
+        <div class="p-6 border-b border-slate-100 flex justify-between items-start shrink-0">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ selectedBlog()?.title }}</h2>
+            <p class="text-xs text-slate-500 mt-1">By {{ selectedBlog()?.vendorId?.businessName || selectedBlog()?.vendorId?.fullName }}</p>
+          </div>
+          <button (click)="closePreviewModal()" class="p-2 hover:bg-slate-100 rounded-full transition-colors">
+            <lucide-icon [img]="icons.close" size="20"></lucide-icon>
+          </button>
+        </div>
+        <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+          @if (selectedBlog()?.coverImage) {
+            <img [src]="selectedBlog()?.coverImage" class="w-full h-48 md:h-64 object-cover rounded-xl mb-6">
+          }
+          <div class="prose dark:prose-invert max-w-none text-sm text-slate-700 dark:text-slate-300" [innerHTML]="selectedBlog()?.content"></div>
+          
+          @if (selectedBlog()?.adminNote) {
+            <div class="mt-8 p-4 bg-amber-50 rounded-xl border border-amber-100">
+              <p class="text-xs font-bold text-amber-800 uppercase mb-1">Admin Note / Reason</p>
+              <p class="text-sm text-amber-900">{{ selectedBlog()?.adminNote }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- 2. Reason Modal (Reject/Suspend) -->
+  @if (showReasonModal() && selectedBlog()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in" (click)="closeReasonModal()"></div>
+      <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl overflow-hidden relative z-10 p-6 shadow-2xl">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white capitalize mb-2">{{ reasonAction() }} Blog</h2>
+        <p class="text-sm text-slate-500 mb-4">Provide a reason for this action. The vendor will see this note.</p>
+        
+        <textarea
+          [ngModel]="reasonText()"
+          (ngModelChange)="reasonText.set($event)"
+          rows="4"
+          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-sm outline-none transition-all focus:ring-2 focus:ring-indigo-500 text-slate-700 dark:text-slate-300 resize-none mb-4"
+          placeholder="Enter reason..."
+        ></textarea>
+        
+        <div class="flex gap-3 justify-end">
+          <button (click)="closeReasonModal()" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+            Cancel
+          </button>
+          <button (click)="submitReason()" class="px-4 py-2 rounded-xl text-sm font-bold text-white transition-colors"
+                  [ngClass]="reasonAction() === 'reject' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-amber-600 hover:bg-amber-700'"
+                  [disabled]="!reasonText().trim()">
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
