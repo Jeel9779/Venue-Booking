@@ -64,7 +64,7 @@ export class ComplainComponent implements OnInit {
   private readonly vendorStore = inject(VendorStore);
 
   // Expose signals from store
-  complaints = this.complaintStore.complaints;
+  allComplaints = this.complaintStore.complaints;
   pagination = this.complaintStore.pagination;
   isLoading = this.complaintStore.isLoading;
   error = this.complaintStore.error;
@@ -76,6 +76,29 @@ export class ComplainComponent implements OnInit {
   // Active filters in local component context
   currentFilter = this.complaintStore.statusFilter;
   searchQuery = signal<string>('');
+
+  // Frontend filtering to guarantee search/filter works perfectly
+  complaints = computed(() => {
+    let list = this.allComplaints();
+    const search = this.searchQuery().toLowerCase().trim();
+    const status = this.currentFilter();
+
+    if (status !== 'All') {
+      list = list.filter(c => c.status === status);
+    }
+
+    if (search) {
+      list = list.filter(c => 
+        c.title?.toLowerCase().includes(search) || 
+        c.description?.toLowerCase().includes(search) ||
+        c.venue?.name?.toLowerCase().includes(search) ||
+        c.user?.name?.toLowerCase().includes(search) ||
+        c._id?.toLowerCase().includes(search)
+      );
+    }
+
+    return list;
+  });
 
   // Dropdown list of vendors for assignment
   vendors = computed(() => this.vendorStore.vendors().filter(v => v.status === 'approved'));
@@ -92,25 +115,25 @@ export class ComplainComponent implements OnInit {
   // Select vendor ID for assignment dropdown
   selectedVendorId = signal<string>('');
 
-  // Critical banner computed signal (finds the first unresolved complaint)
-  criticalComplaint = computed(() => {
-    return this.complaints().find(c => c.status === 'Open' || c.status === 'In Progress');
-  });
+
 
   ngOnInit(): void {
-    this.complaintService.loadAll(this.pagination().page, this.pagination().limit);
+    const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
+    this.complaintService.loadAll(this.pagination().page, this.pagination().limit, this.searchQuery(), apiStatus);
     this.vendorService.loadAll(1, 100); // Load vendors to populate dropdowns
   }
 
   // Refreshes the complaints list
   refreshData(): void {
-    this.complaintService.loadAll(this.pagination().page, this.pagination().limit, this.searchQuery(), this.currentFilter());
+    const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
+    this.complaintService.loadAll(this.pagination().page, this.pagination().limit, this.searchQuery(), apiStatus);
   }
 
   // Handle filter category selection
   setFilter(status: string): void {
     this.complaintStore.statusFilter.set(status);
-    this.complaintService.loadAll(1, this.pagination().limit, this.searchQuery(), status);
+    const apiStatus = status === 'All' ? 'all' : status;
+    this.complaintService.loadAll(1, this.pagination().limit, this.searchQuery(), apiStatus);
   }
 
   private searchTimeout: any;
@@ -121,12 +144,14 @@ export class ComplainComponent implements OnInit {
     this.searchTimeout = setTimeout(() => {
       this.searchQuery.set(value);
       this.complaintStore.searchTerm.set(value);
-      this.complaintService.loadAll(1, this.pagination().limit, value, this.currentFilter());
+      const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
+      this.complaintService.loadAll(1, this.pagination().limit, value, apiStatus);
     }, 500);
   }
 
   onPageChange(page: number) {
-    this.complaintService.loadAll(page, this.pagination().limit, this.searchQuery(), this.currentFilter());
+    const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
+    this.complaintService.loadAll(page, this.pagination().limit, this.searchQuery(), apiStatus);
   }
 
   // Review Case opens the detail drawer on the right
@@ -218,6 +243,30 @@ export class ComplainComponent implements OnInit {
         return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+    }
+  }
+
+  // Filter tab color formatting
+  getFilterTabClass(filter: string, isCurrent: boolean): string {
+    const baseClass = 'px-3 py-1.5 text-xs rounded-lg transition-all whitespace-nowrap ';
+    if (!isCurrent) {
+      return baseClass + 'font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50';
+    }
+    
+    const activeBase = baseClass + 'font-bold text-white shadow-sm ';
+    switch (filter) {
+      case 'All':
+        return activeBase + 'bg-indigo-600 dark:bg-indigo-500';
+      case 'Open':
+        return activeBase + 'bg-amber-500 dark:bg-amber-600';
+      case 'In Progress':
+        return activeBase + 'bg-blue-500 dark:bg-blue-600';
+      case 'Resolved':
+        return activeBase + 'bg-emerald-500 dark:bg-emerald-600';
+      case 'Closed':
+        return activeBase + 'bg-slate-600 dark:bg-slate-700';
+      default:
+        return activeBase + 'bg-indigo-600 dark:bg-indigo-500';
     }
   }
 

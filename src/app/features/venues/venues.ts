@@ -90,6 +90,13 @@ export class Venues implements OnInit {
   /** Reason for deactivating a venue */
   deactivateReason = '';
 
+  /** Deactivation type: 'indefinite' or 'date-range' */
+  deactivateType = signal<'indefinite' | 'date-range'>('indefinite');
+
+  /** Suspension date range for date-range deactivations */
+  deactivateStartDate = '';
+  deactivateEndDate = '';
+
   /** URL for the image currently being previewed in full-screen */
   previewImage = signal<string | null>(null);
 
@@ -177,6 +184,11 @@ export class Venues implements OnInit {
     this.showApproveModal.set(true);
   }
 
+  /** Closes the approve modal */
+  closeApproveModal() {
+    this.showApproveModal.set(false);
+  }
+
   /** Finalizes the approval process by calling the service. */
   submitApprove() {
     const venue = this.selectedVenue();
@@ -184,6 +196,7 @@ export class Venues implements OnInit {
 
     this.venueService.updateStatus(venue._id, 'approved');
     this.showApproveModal.set(false);
+    // Explicitly call closeDetails() to fully clear selection
     this.closeDetails();
   }
 
@@ -211,6 +224,9 @@ export class Venues implements OnInit {
   /** Opens the modal to deactivate a venue */
   openDeactivateModal() {
     this.deactivateReason = '';
+    this.deactivateType.set('indefinite');
+    this.deactivateStartDate = '';
+    this.deactivateEndDate = '';
     this.showDeactivateModal.set(true);
   }
 
@@ -224,7 +240,19 @@ export class Venues implements OnInit {
     const venue = this.selectedVenue();
     if (!venue?._id || !this.deactivateReason.trim()) return;
 
-    this.venueService.deactivate(venue._id, this.deactivateReason.trim());
+    if (this.deactivateType() === 'date-range') {
+      if (!this.deactivateStartDate || !this.deactivateEndDate) return;
+      if (this.deactivateEndDate < this.deactivateStartDate) return;
+      this.venueService.deactivate(
+        venue._id,
+        this.deactivateReason.trim(),
+        new Date(this.deactivateStartDate).toISOString(),
+        new Date(this.deactivateEndDate).toISOString()
+      );
+    } else {
+      this.venueService.deactivate(venue._id, this.deactivateReason.trim());
+    }
+
     this.showDeactivateModal.set(false);
     this.closeDetails();
   }

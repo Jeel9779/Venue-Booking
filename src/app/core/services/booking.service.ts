@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BookingApi } from '../api/booking-api';
 import { BookingStore } from '../store/booking.store';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { BookingStore } from '../store/booking.store';
 export class BookingService {
   private readonly api = inject(BookingApi);
   private readonly store = inject(BookingStore);
+  private readonly toast = inject(ToastService);
 
   loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = ''): void {
     this.store.setLoading(true);
@@ -58,7 +60,34 @@ export class BookingService {
         // Rollback on error
         this.store.setBookings(originalBookings);
         this.store.setError(err?.message || 'Failed to update booking status');
+        this.toast.error(err?.message || 'Failed to update booking status');
       },
+    });
+  }
+
+  processRefund(id: string): void {
+    const originalBookings = [...this.store.bookings()];
+    // Optimsitic update
+    const bookingToUpdate = originalBookings.find(b => b._id === id);
+    if (bookingToUpdate && bookingToUpdate.cancellation) {
+      this.store.optimisticUpdate(id, { 
+        cancellation: { ...bookingToUpdate.cancellation, refundStatus: 'processed' } 
+      });
+    }
+
+    // Default admin actor payload
+    this.api.processRefund(id, { actorId: 'admin', actorType: 'admin' }).subscribe({
+      next: (res) => {
+        if (res.booking) {
+          this.store.updateBooking(res.booking);
+        }
+        this.toast.success('Refund processed successfully');
+      },
+      error: (err) => {
+        this.store.setBookings(originalBookings);
+        this.store.setError(err?.error?.message || err?.message || 'Failed to process refund');
+        this.toast.error(err?.error?.message || err?.message || 'Failed to process refund');
+      }
     });
   }
 }

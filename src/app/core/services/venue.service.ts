@@ -5,6 +5,8 @@ import { VenueApi } from '../api/venue-api';
 import { VenueStore } from '../store/venue.store';
 import { Venue } from '../models/venue.model';
 
+import { ToastService } from './toast.service';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +15,7 @@ export class VenueService {
   // DI
   private readonly api = inject(VenueApi);
   private readonly store = inject(VenueStore);
+  private readonly toastService = inject(ToastService);
 
   /**
    * Loads all venues from the API and synchronizes the local Store.
@@ -78,9 +81,9 @@ export class VenueService {
   /**
    * Deactivates a venue
    */
-  deactivate(id: string, reason: string): void {
+  deactivate(id: string, reason: string, suspensionStart?: string, suspensionEnd?: string): void {
     this.store.setLoading(true);
-    this.api.deactivate(id, reason).pipe(
+    this.api.deactivate(id, reason, suspensionStart, suspensionEnd).pipe(
       tap((updatedVenue) => {
         const parsedVenue = {
           ...updatedVenue,
@@ -88,9 +91,16 @@ export class VenueService {
           mediaFiles: this.parseMediaFiles(updatedVenue.mediaFiles)
         };
         this.store.updateVenue(parsedVenue);
+        
+        let message = 'Venue successfully deactivated.';
+        if (updatedVenue.cancelledBookings !== undefined && updatedVenue.cancelledBookings > 0) {
+          message += ` ${updatedVenue.cancelledBookings} active booking(s) were automatically cancelled.`;
+        }
+        this.toastService.success(message, 5000);
       }),
       catchError((err) => {
         this.store.setError(err.message || 'Failed to deactivate venue');
+        this.toastService.error('Failed to deactivate venue');
         return of(null);
       }),
       finalize(() => this.store.setLoading(false))
@@ -110,9 +120,11 @@ export class VenueService {
           mediaFiles: this.parseMediaFiles(updatedVenue.mediaFiles)
         };
         this.store.updateVenue(parsedVenue);
+        this.toastService.success('Venue successfully reactivated.');
       }),
       catchError((err) => {
         this.store.setError(err.message || 'Failed to reactivate venue');
+        this.toastService.error('Failed to reactivate venue');
         return of(null);
       }),
       finalize(() => this.store.setLoading(false))

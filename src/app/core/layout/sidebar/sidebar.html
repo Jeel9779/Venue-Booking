@@ -76,7 +76,7 @@
         [class.opacity-100]="openGroup() === 'main' || collapsed()">
         <div class="pt-1 space-y-1">
 
-          <a [routerLink]="['/dashboard']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none"
+          <a [routerLink]="['/dashboard']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none"
             [routerLinkActiveOptions]="{ exact: true }" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200 focus:outline-none" [class.px-3]="!collapsed()"
@@ -87,7 +87,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Overview</span> }
           </a>
 
-          <a [routerLink]="['/venues']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/venues']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Venues">
@@ -97,7 +97,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Venues</span> }
           </a>
 
-          <a [routerLink]="['/users']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/users']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Users">
@@ -107,7 +107,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Users</span> }
           </a>
 
-          <a [routerLink]="['/user-review']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/user-review']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="User Review">
@@ -145,7 +145,7 @@
         [class.opacity-100]="openGroup() === 'management' || collapsed()">
         <div class="pt-1 space-y-1">
 
-          <a [routerLink]="['/vendors']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/vendors']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Vendors">
@@ -155,7 +155,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Vendors</span> }
           </a>
 
-          <a [routerLink]="['/partners']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/partners']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Venue by Vendor">
@@ -165,7 +165,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Venue by Vendor</span> }
           </a>
 
-          <a [routerLink]="['/bookings']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/bookings']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Bookings">
@@ -175,7 +175,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Bookings</span> }
           </a>
 
-          <a [routerLink]="['/complain']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/complain']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Complaints">
@@ -185,7 +185,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Complaints</span> }
           </a>
 
-          <a [routerLink]="['/reports']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/reports']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Reports">
@@ -195,7 +195,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Reports</span> }
           </a>
 
-          <a [routerLink]="['/terms']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/terms']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Terms & Conditions">
@@ -233,7 +233,7 @@
         [class.opacity-100]="openGroup() === 'billing' || collapsed()">
         <div class="pt-1 space-y-1">
 
-          <a [routerLink]="['/plans']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/plans']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Plans">
@@ -243,7 +243,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Plans</span> }
           </a>
 
-          <a [routerLink]="['/admin/vendor-subscriptions']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none"
+          <a [routerLink]="['/admin/vendor-subscriptions']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none"
             class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
@@ -254,7 +254,7 @@
             @if (!collapsed()) { <span class="tracking-wide">Subscription Monitor</span> }
           </a>
 
-          <a [routerLink]="['/payment']" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
+          <a [routerLink]="['/payment']" (click)="closeOnMobile()" routerLinkActive="bg-[#E8E9FF] text-[#6C63FF] shadow-sm dark:shadow-none" class="group flex items-center gap-3 py-2.5 rounded-lg text-sm
             font-medium text-gray-600 dark:text-slate-400 hover:bg-[#EAECF0] hover:text-[#0F1117]
             transition-all duration-200" [class.px-3]="!collapsed()" [class.justify-center]="collapsed()"
             [class.py-3]="collapsed()" title="Payment">

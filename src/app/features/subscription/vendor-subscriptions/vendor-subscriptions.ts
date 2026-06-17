@@ -183,4 +183,10 @@ export class VendorSubscriptions implements OnInit {
     this.selectedSubscription.set(null);
     this.cd.detectChanges();
   }
+
+  getUsagePercentage(sub: any): number {
+    if (!sub || !sub.totalDays) return 0;
+    const pct = ((sub.totalDays - sub.daysLeft) / sub.totalDays) * 100;
+    return Math.max(0, Math.min(100, Math.round(pct)));
+  }
 }

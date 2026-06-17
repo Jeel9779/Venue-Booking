@@ -59,6 +59,9 @@ export interface Venue {
   deactivated: boolean;
   deactivatedBy: 'admin' | 'vendor' | null;
   deactivationReason: string;
+  suspensionStart?: string;
+  suspensionEnd?: string;
+  cancelledBookings?: number;
 }
 
 export type FilterState = 'all' | 'pending' | 'approved' | 'rejected';

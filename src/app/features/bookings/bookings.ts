@@ -218,6 +218,16 @@ export class Bookings {
     this.closeDetails();
   }
 
+  processRefund() {
+    const b = this.selectedBooking();
+    if (!b) return;
+    
+    // Simple browser confirm for safety
+    if (confirm(`Are you sure you want to process a refund of ${this.formatCurrency(b.cancellation?.refundAmount || 0)} for this booking?`)) {
+      this.bookingService.processRefund(b._id);
+    }
+  }
+
   formatCurrency(value: number): string {
     return Bookings.currencyFormatter.format(value || 0);
   }
@@ -227,7 +237,9 @@ export class Bookings {
     switch (status) {
       case 'success': return `${base} bg-emerald-50 text-emerald-600 border-emerald-200`;
       case 'pending':  return `${base} bg-amber-50 text-amber-600 border-amber-200`;
-      case 'failed':   return `${base} bg-rose-50 text-rose-600 border-rose-200`;
+      case 'failed':
+      case 'cancelled':
+        return `${base} bg-red-50 text-red-600 border-red-200`;
       default:         return `${base} bg-slate-50 text-slate-600 border-slate-200`;
     }
   }

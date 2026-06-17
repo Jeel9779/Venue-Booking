@@ -70,6 +70,12 @@ export class Sidebar {
     this.collapsed.update(v => !v);
   }
 
+  closeOnMobile() {
+    if (window.innerWidth < 1024) {
+      this.collapsed.set(true);
+    }
+  }
+
   // Open/close sections (Main, Management, etc.)
   toggleGroup(name: string) {
     this.openGroup.update(v => v === name ? null : name);

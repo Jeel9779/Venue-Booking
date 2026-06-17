@@ -441,11 +441,9 @@
 </div>
 
 <!-- ── DETAIL MODAL ── -->
-@if (selectedSubscription(); as sub) {
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-300">
-  <div class="absolute inset-0 bg-slate-900/60" (click)="closeDetails()"></div>
-  <app-model [title]="'Subscription Overview'" maxWidth="2xl" [hasFooter]="true" (onClose)="closeDetails()"
-    class="relative z-10">
+@if (selectedSubscription()) {
+  @let sub = selectedSubscription();
+  <app-model [title]="'Subscription Overview'" maxWidth="2xl" [hasFooter]="true" (onClose)="closeDetails()">
     <div class="modal-content overflow-y-auto max-h-[70vh] pr-1 -mr-1 space-y-6 relative hide-scrollbar">
 
       <!-- 1. VENDOR PREMIUM HEADER -->
@@ -464,9 +462,11 @@
                 {{ sub?.vendorDetails?.businessName || sub?.vendorDetails?.fullName || 'Unknown Vendor' }}
               </h3>
               <div class="absolute top-2 right-2 flex flex-col items-end gap-1">
-                <span *ngFor="let addon of sub.attachedAddons" class="px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-full text-[9px] font-black uppercase tracking-widest">
+                @for (addon of sub.attachedAddons; track $index) {
+                <span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-full text-[9px] font-black uppercase tracking-widest">
                   {{ addon.planSnapshot?.name }}
                 </span>
+                }
               </div>
             </div>
             <div
@@ -598,12 +598,11 @@
           <div class="mt-6">
             <div class="flex justify-between text-[10px] font-black uppercase mb-2 text-indigo-500">
               <span>Consumed</span>
-              <span>{{ (sub?.totalDays ? Math.round((sub.totalDays - sub.daysLeft) / sub.totalDays * 100) : 0)
-                }}%</span>
+              <span>{{ getUsagePercentage(sub) }}%</span>
             </div>
             <div class="h-2.5 bg-indigo-100 rounded-full overflow-hidden">
               <div class="h-full bg-indigo-600 rounded-full transition-all duration-1000"
-                [style.width.%]="(sub?.totalDays ? Math.max(0, Math.min(100, (sub.totalDays - sub.daysLeft) / sub.totalDays * 100)) : 0)">
+                [style.width.%]="getUsagePercentage(sub)">
               </div>
             </div>
           </div>
@@ -619,7 +618,7 @@
           Pending Plan Activation
         </h4>
         <div class="space-y-3">
-          @for (item of sub.pendingQueue; track item._id) {
+          @for (item of sub.pendingQueue; track $index) {
           <div
             class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-2xl border border-amber-200/70 group hover:border-amber-400 transition-colors gap-3">
             <div class="flex items-center gap-3.5 min-w-0">
@@ -655,7 +654,7 @@
           Active Add-ons
         </h4>
         <div class="space-y-3">
-          @for (addon of sub.attachedAddons; track addon._id) {
+          @for (addon of sub.attachedAddons; track $index) {
           <div
             class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-2xl border border-indigo-100 group hover:border-indigo-300 transition-colors gap-3">
             <div class="flex items-center gap-3.5 min-w-0">
@@ -691,8 +690,13 @@
       </div>
       }
     </div>
+    <div footer>
+      <button (click)="closeDetails()"
+        class="px-5 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors">
+        Close
+      </button>
+    </div>
   </app-model>
-</div>
 }
 
 <style>

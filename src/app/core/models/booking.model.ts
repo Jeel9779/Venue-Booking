@@ -32,10 +32,16 @@ export interface Booking {
   totalBookingAmount: number;
   upfrontPaymentAmount: number;
   amountPaid: number;
-  paymentStatus: 'pending' | 'success' | 'failed';
+  paymentStatus: 'pending' | 'success' | 'failed' | 'cancelled';
   transactionId: string;
   paymentTimestamp: string;
   status: string;
+  cancellation?: {
+    cancelledAt: string;
+    refundAmount: number;
+    refundStatus: 'pending' | 'processed' | 'none';
+    refundTier: string;
+  };
   createdAt: string;
   updatedAt: string;
 }

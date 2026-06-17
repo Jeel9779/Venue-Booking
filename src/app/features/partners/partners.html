@@ -251,19 +251,23 @@
         @for (space of partner.spaces; track space._id) {
         <div
           class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-300 p-4 flex flex-col gap-3 hover:-translate-y-1 transition-all duration-300 group/venue">
-          <div class="flex items-start justify-between">
-            <div class="flex items-start gap-3">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-start gap-3 min-w-0 flex-1">
               <div
                 class="w-9 h-9 rounded-xl bg-gray-200 border border-gray-300 flex items-center justify-center shrink-0 text-slate-600 dark:text-slate-400 transition-colors">
                 <lucide-icon name="building" class="w-5 h-5"></lucide-icon>
               </div>
               <div class="min-w-0">
                 <p class="text-sm font-extrabold text-slate-900 dark:text-slate-100 truncate tracking-tight">{{ space.name }}</p>
-                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">{{ space.city }}, {{ space.state }}</p>
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5 truncate">{{ space.city }}, {{ space.state }}</p>
               </div>
             </div>
             <span
-              class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">
+              [class]="'shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider border ' + 
+              (space.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
+               space.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
+               space.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-200' : 
+               'bg-gray-200 text-slate-700 border-gray-300')">
               {{ getStatus(space.status) }}
             </span>
           </div>
@@ -283,12 +287,12 @@
 
           <div class="flex items-center gap-2 border-t border-slate-200 dark:border-slate-700 pt-3">
             <button (click)="openModal(space, $event)"
-              class="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-800 rounded-xl py-2.5 transition-all">
+              class="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 rounded-xl py-2.5 transition-all">
               <lucide-icon name="eye" class="w-4 h-4"></lucide-icon>
               View Details
             </button>
             <button (click)="deleteVenue(space, $event)"
-              class="w-8 h-8 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-red-50 rounded-xl transition-all">
+              class="w-10 h-10 flex items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/30 dark:hover:bg-rose-900/50 rounded-xl transition-all">
               <lucide-icon name="trash-2" class="w-4 h-4"></lucide-icon>
             </button>
           </div>
@@ -352,7 +356,11 @@
         </p>
       </div>
       <div class="flex flex-col sm:items-end gap-2 shrink-0">
-        <span class="badge-premium text-[10px] px-4 py-1.5 border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300 dark:">
+        <span [class]="'badge-premium text-[10px] px-4 py-1.5 rounded-full border font-extrabold uppercase tracking-widest ' + 
+              (selectedVenue()!.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
+               selectedVenue()!.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
+               selectedVenue()!.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-200' : 
+               'bg-gray-200 text-slate-700 border-gray-300')">
           {{ getStatus(selectedVenue()!.status) }}
         </span>
         @if (selectedVenue()!.averageRating > 0) {
@@ -382,20 +390,20 @@
     }
 
     <!-- STATS ROW -->
-    <div class="grid grid-cols-3 gap-3">
-      <div class="bg-white dark:bg-slate-900 border border-gray-300 p-4 rounded-2xl">
-        <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Price</p>
-        <p class="text-base font-extrabold text-slate-500 dark:text-slate-400">₹{{ selectedVenue()!.pricePerDay }}<span
-            class="text-[10px] text-slate-500 dark:text-slate-400 ml-0.5">/day</span></p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div class="bg-white dark:bg-slate-900 border border-gray-300 p-3 sm:p-4 rounded-2xl flex flex-col justify-center overflow-hidden">
+        <p class="text-[9px] sm:text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Price</p>
+        <p class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-200 truncate" title="₹{{ selectedVenue()!.pricePerDay }}/day">₹{{ selectedVenue()!.pricePerDay }}<span
+            class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 ml-0.5">/day</span></p>
       </div>
-      <div class="bg-white dark:bg-slate-900 border border-gray-300 p-4 rounded-2xl">
-        <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Capacity</p>
-        <p class="text-base font-extrabold text-slate-500 dark:text-slate-400">{{ selectedVenue()!.capacity }} <span
-            class="text-[10px] text-slate-500 dark:text-slate-400">Guests</span></p>
+      <div class="bg-white dark:bg-slate-900 border border-gray-300 p-3 sm:p-4 rounded-2xl flex flex-col justify-center overflow-hidden">
+        <p class="text-[9px] sm:text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Capacity</p>
+        <p class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-200 truncate">{{ selectedVenue()!.capacity }} <span
+            class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400">Guests</span></p>
       </div>
-      <div class="bg-white dark:bg-slate-900 border border-gray-300 p-4 rounded-2xl">
-        <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Available</p>
-        <p class="text-sm font-extrabold text-slate-500 dark:text-slate-400">{{ selectedVenue()!.availableFrom | date:'mediumDate' }}</p>
+      <div class="col-span-2 sm:col-span-1 bg-white dark:bg-slate-900 border border-gray-300 p-3 sm:p-4 rounded-2xl flex flex-col justify-center overflow-hidden">
+        <p class="text-[9px] sm:text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Available</p>
+        <p class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-200 truncate">{{ selectedVenue()!.availableFrom | date:'mediumDate' }}</p>
       </div>
     </div>
 
@@ -519,8 +527,6 @@
   </div>
 
   <div footer class="flex justify-end gap-3 w-full pt-3">
-    <button (click)="closeRejectModal()"
-      class="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:text-slate-400 transition-colors px-4 py-2.5">Cancel</button>
     <button (click)="submitReject()" [disabled]="rejectReason().trim().length < 10 || actionLoading()"
       class="bg-red-600 text-white px-8 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
       @if (actionLoading()) {
@@ -551,8 +557,6 @@
   </div>
 
   <div footer class="flex gap-3 w-full pt-4">
-    <button (click)="venueToDelete.set(null)" [disabled]="actionLoading()"
-      class="flex-1 text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:text-slate-400 transition-colors py-3">Cancel</button>
     <button (click)="confirmDelete()" [disabled]="actionLoading()"
       class="flex-1 bg-red-600 text-white rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2 py-3">
       @if (actionLoading()) {

@@ -21,7 +21,7 @@
     <!-- KPI Skeletons -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-8 sm:mb-10">
       @for (i of [1,2,3,4,5]; track i) {
-        <app-card [padding]="true" customClass="border-slate-200 dark:border-slate-700 dark: col-span-1" [class]="i === 5 ? 'col-span-1 sm:col-span-2 lg:col-span-1' : ''">
+        <app-card [padding]="true" customClass="border-slate-200 dark:border-slate-700 col-span-1" [class]="i === 5 ? 'col-span-1 sm:col-span-2 lg:col-span-1' : ''">
           <div class="animate-pulse">
             <div class="flex justify-between items-start mb-5">
               <div class="w-12 h-12 bg-slate-100 rounded-2xl"></div>
@@ -35,7 +35,7 @@
     </div>
   } @else {
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-8 sm:mb-10">
-      <app-card [padding]="true" customClass="border-slate-300 dark:border-slate-700 dark: relative overflow-hidden group">
+      <app-card [padding]="true" customClass="border-slate-300 dark:border-slate-700 relative overflow-hidden group">
         <div class="flex justify-between items-start mb-4 relative z-10">
           <div class="p-2 sm:p-3 bg-indigo-100 border border-indigo-200 text-indigo-700 rounded-2xl">
             <lucide-icon name="clipboard-list" size="20" class="sm:hidden"></lucide-icon>
@@ -51,7 +51,7 @@
         </p>
       </app-card>
 
-      <app-card [padding]="true" customClass="border-slate-300 dark:border-slate-700 dark: relative overflow-hidden group">
+      <app-card [padding]="true" customClass="border-slate-300 dark:border-slate-700 relative overflow-hidden group">
         <div class="flex justify-between items-start mb-4 relative z-10">
           <div class="p-2 sm:p-3 bg-emerald-100 border border-emerald-200 text-emerald-700 rounded-2xl">
             <lucide-icon name="calendar-check" size="20" class="sm:hidden"></lucide-icon>
@@ -67,7 +67,7 @@
         </p>
       </app-card>
 
-      <app-card [padding]="true" customClass="border-slate-300 dark:border-slate-700 dark: relative overflow-hidden group">
+      <app-card [padding]="true" customClass="border-slate-300 dark:border-slate-700 relative overflow-hidden group">
         <div class="flex justify-between items-start mb-4 relative z-10">
           <div class="p-2 sm:p-3 bg-indigo-100 border border-indigo-200 text-indigo-700 rounded-2xl">
             <lucide-icon name="trending-up" size="20" class="sm:hidden"></lucide-icon>
@@ -83,7 +83,7 @@
         </p>
       </app-card>
 
-      <app-card [padding]="true" customClass="border-slate-300 dark:border-slate-700 dark: relative overflow-hidden group">
+      <app-card [padding]="true" customClass="border-slate-300 dark:border-slate-700 relative overflow-hidden group">
         <div class="flex justify-between items-start mb-4 relative z-10">
           <div class="p-2 sm:p-3 bg-emerald-100 border border-emerald-200 text-emerald-700 rounded-2xl">
             <lucide-icon name="wallet" size="20" class="sm:hidden"></lucide-icon>
@@ -99,7 +99,7 @@
         </p>
       </app-card>
 
-      <app-card [padding]="true" customClass="col-span-1 sm:col-span-2 lg:col-span-1 border-slate-300 dark:border-slate-700 dark: relative overflow-hidden group">
+      <app-card [padding]="true" customClass="col-span-1 sm:col-span-2 lg:col-span-1 border-slate-300 dark:border-slate-700 relative overflow-hidden group">
         <div class="flex justify-between items-start mb-4 relative z-10">
           <div class="p-2 sm:p-3 bg-amber-100 border border-amber-200 text-amber-700 rounded-2xl">
             <lucide-icon name="indian-rupee" size="20" class="sm:hidden"></lucide-icon>
@@ -130,7 +130,7 @@
             type="text" 
             (input)="onSearch($event)"
             placeholder="Search bookings, users, venues..." 
-            class="pl-12 pr-6 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all w-full md:w-72 lg:w-[350px] dark:">
+            class="pl-12 pr-6 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all w-full md:w-72 lg:w-[350px]">
         </div>
 
         <!-- Filter pills switcher -->
@@ -153,29 +153,13 @@
             class="flex-1 md:flex-none px-4 sm:px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer border-none whitespace-nowrap">
             Pending
           </button>
+          <button 
+            (click)="setFilter('cancelled')"
+            [class]="filter() === 'cancelled' ? 'bg-red-500 text-white' : 'bg-transparent text-slate-500 dark:text-slate-400 hover:text-red-600'"
+            class="flex-1 md:flex-none px-4 sm:px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer border-none whitespace-nowrap">
+            Cancelled
+          </button>
         </div>
-      </div>
-
-      <!-- Right controls -->
-      <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full xl:w-auto">
-        <div class="relative flex-1 xl:flex-initial w-full md:w-auto">
-          <select 
-            (change)="setDateFilter(dateSelect.value)"
-            #dateSelect
-            class="w-full xl:w-auto px-6 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl text-[11px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all cursor-pointer dark: appearance-none md:min-w-[160px]">
-            <option value="allTime">All Time</option>
-            <option value="today">Today</option>
-            <option value="yesterday">Yesterday</option>
-            <option value="last2days">Last 2 Days</option>
-            <option value="last3days">Last 3 Days</option>
-            <option value="last7days">Last 7 Days</option>
-          </select>
-        </div>
-        
-        <button class="flex-1 xl:flex-initial w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl text-[11px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-800 transition-all dark: cursor-pointer active:scale-95">
-          <lucide-icon name="download" size="14"></lucide-icon>
-          Export
-        </button>
       </div>
     </div>
 
@@ -217,16 +201,16 @@
             @for (booking of bookings(); track booking._id) {
               <tr (click)="openDetails(booking)" class="hover:bg-indigo-50/30 transition-all cursor-pointer group border-transparent hover:border-indigo-100">
                 <td class="px-8 py-6">
-                  <h4 class="text-sm font-black text-slate-900 dark:text-slate-100 m-0 leading-tight group-hover:text-indigo-600">{{ booking.userId.name }}</h4>
-                  <p class="text-[11px] text-slate-400 font-bold mt-1 lowercase">{{ booking.userId.email }}</p>
+                  <h4 class="text-sm font-black text-slate-900 dark:text-slate-100 m-0 leading-tight group-hover:text-indigo-600">{{ booking?.userId?.name || 'Unknown User' }}</h4>
+                  <p class="text-[11px] text-slate-400 font-bold mt-1 lowercase">{{ booking?.userId?.email || 'No email' }}</p>
                 </td>
                 <td class="px-6 py-6">
-                  <h4 class="text-xs font-black text-slate-900 dark:text-slate-100 m-0">{{ booking.vendorId.fullName }}</h4>
-                  <p class="text-[10px] text-slate-400 font-bold mt-1">{{ booking.vendorId.businessName }}</p>
+                  <h4 class="text-xs font-black text-slate-900 dark:text-slate-100 m-0">{{ booking?.vendorId?.fullName || 'Unknown Vendor' }}</h4>
+                  <p class="text-[10px] text-slate-400 font-bold mt-1">{{ booking?.vendorId?.businessName || 'No business' }}</p>
                 </td>
                 <td class="px-6 py-6">
-                  <h4 class="text-xs font-black text-slate-900 dark:text-slate-100 m-0">{{ booking.venueId.name }}</h4>
-                  <p class="text-[10px] text-slate-400 font-bold mt-1">{{ booking.venueId.city }}</p>
+                  <h4 class="text-xs font-black text-slate-900 dark:text-slate-100 m-0">{{ booking?.venueId?.name || 'Unknown Venue' }}</h4>
+                  <p class="text-[10px] text-slate-400 font-bold mt-1">{{ booking?.venueId?.city || 'No city' }}</p>
                 </td>
                 <td class="px-6 py-6 text-xs font-black text-slate-600 dark:text-slate-400">{{ booking.date | date:'d MMM yyyy' }}</td>
                 <td class="px-6 py-6 text-sm font-black text-slate-900 dark:text-slate-100">{{ formatCurrency(booking.totalBookingAmount) }}</td>
@@ -240,7 +224,7 @@
                     {{ formatCurrency(booking.totalBookingAmount - booking.amountPaid) }}
                   </div>
                 </td>
-                <td class="px-6 py-6"><div [class]="getStatusClass(booking.paymentStatus)">{{ booking.paymentStatus === 'success' ? 'Paid' : booking.paymentStatus }}</div></td>
+                <td class="px-6 py-6"><div [class]="getStatusClass(booking.paymentStatus)">{{ booking.paymentStatus === 'success' ? 'Paid' : booking.paymentStatus === 'failed' ? 'Cancelled' : booking.paymentStatus }}</div></td>
               </tr>
             }
           }
@@ -252,7 +236,7 @@
     <div class="lg:hidden p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
       @if (isLoading() && bookings().length === 0) {
         @for (i of [1,2,3,4]; track i) {
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 dark: animate-pulse space-y-4">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 animate-pulse space-y-4">
             <div class="flex justify-between items-start">
               <div class="space-y-2 flex-1">
                 <div class="h-4 bg-slate-200 rounded w-2/3"></div>
@@ -269,14 +253,14 @@
         }
       } @else {
         @for (booking of bookings(); track booking._id) {
-          <div (click)="openDetails(booking)" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 dark: hover: hover:border-slate-300 dark:border-slate-700 active:scale-[0.98] transition-all cursor-pointer flex flex-col justify-between">
+          <div (click)="openDetails(booking)" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 hover:border-slate-300 dark:hover:border-slate-600 active:scale-[0.98] transition-all cursor-pointer flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-start mb-4 gap-2">
                 <div>
-                  <h4 class="text-base font-black text-slate-900 dark:text-slate-100 m-0 line-clamp-1">{{ booking.userId.name }}</h4>
-                  <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 line-clamp-1">{{ booking.venueId.name }}</p>
+                  <h4 class="text-base font-black text-slate-900 dark:text-slate-100 m-0 line-clamp-1">{{ booking?.userId?.name || 'Unknown User' }}</h4>
+                  <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 line-clamp-1">{{ booking?.venueId?.name || 'Unknown Venue' }}</p>
                 </div>
-                <div [class]="getStatusClass(booking.paymentStatus) + ' shrink-0'">{{ booking.paymentStatus === 'success' ? 'Paid' : booking.paymentStatus }}</div>
+                <div [class]="getStatusClass(booking.paymentStatus) + ' shrink-0'">{{ booking.paymentStatus === 'success' ? 'Paid' : booking.paymentStatus === 'failed' ? 'Cancelled' : booking.paymentStatus }}</div>
               </div>
               
               <div class="grid grid-cols-2 gap-4 py-3 border-t border-b border-slate-50 my-3">
@@ -327,19 +311,19 @@
 
 <!-- ── DETAILS MODAL (lives outside the card, inside the page) ── -->
 @if (selectedBooking(); as booking) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
     <!-- Backdrop -->
-    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" (click)="closeDetails()"></div>
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
     
     <!-- Modal Content -->
     <div class="relative bg-white dark:bg-slate-900 w-full max-w-[800px] rounded-3xl sm:rounded-[36px] border border-slate-300 dark:border-slate-700 overflow-hidden flex flex-col max-h-[85vh]">
       
       <!-- Header -->
-      <div class="p-5 sm:p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between bg-gradient-to-r from-emerald-50 to-white shrink-0">
+      <div class="p-5 sm:p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between bg-gradient-to-r from-emerald-50 to-white shrink-0 relative">
         @if (isLoading()) {
           <app-loading-spinner size="md"></app-loading-spinner>
         }
-        <div class="flex items-center gap-3.5">
+        <div class="flex items-center gap-3.5 pr-8">
           <div class="w-11 h-11 sm:w-12 sm:h-12 bg-emerald-700 rounded-xl flex items-center justify-center text-white shrink-0">
             <lucide-icon name="file-text" size="20"></lucide-icon>
           </div>
@@ -348,24 +332,29 @@
             <p class="text-[9px] sm:text-[10px] text-emerald-700 font-bold mt-0.5 uppercase tracking-wider font-mono break-all line-clamp-1">TXN: {{ booking?.transactionId }}</p>
           </div>
         </div>
+        <button (click)="closeDetails()" class="absolute top-5 right-5 sm:top-6 sm:right-6 w-8 h-8 flex items-center justify-center rounded-xl bg-white/50 text-slate-500 hover:bg-white hover:text-slate-800 border border-slate-200 transition-all cursor-pointer">
+          <lucide-icon name="x" size="18"></lucide-icon>
+        </button>
       </div>
 
       <!-- Tab Switcher (Scrollable on mobile) -->
-      <div class="flex items-center gap-1 px-5 sm:px-6 pt-4 pb-0 overflow-x-auto hide-scrollbar shrink-0 border-b border-slate-100">
-        <button
-          (click)="modalTab.set('booking')"
-          [class]="modalTab() === 'booking' ? 'border-b-2 border-emerald-700 text-emerald-700' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'"
-          class="flex items-center gap-2 px-4 py-3 text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all border-none bg-transparent cursor-pointer whitespace-nowrap">
-          <lucide-icon name="calendar" size="13"></lucide-icon>
-          Booking Info
-        </button>
-        <button
-          (click)="modalTab.set('payment')"
-          [class]="modalTab() === 'payment' ? 'border-b-2 border-emerald-700 text-emerald-700' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'"
-          class="flex items-center gap-2 px-4 py-3 text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all border-none bg-transparent cursor-pointer whitespace-nowrap">
-          <lucide-icon name="credit-card" size="13"></lucide-icon>
-          Payment Details
-        </button>
+      <div class="px-5 sm:px-6 pt-4 pb-3 shrink-0 border-b border-slate-100 overflow-x-auto hide-scrollbar">
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl w-fit">
+          <button
+            (click)="modalTab.set('booking')"
+            [class]="modalTab() === 'booking' ? 'bg-white dark:bg-slate-900 text-emerald-700 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'"
+            class="flex items-center gap-2 px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all border-none bg-transparent cursor-pointer whitespace-nowrap">
+            <lucide-icon name="calendar" size="14"></lucide-icon>
+            Booking Info
+          </button>
+          <button
+            (click)="modalTab.set('payment')"
+            [class]="modalTab() === 'payment' ? 'bg-white dark:bg-slate-900 text-emerald-700 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'"
+            class="flex items-center gap-2 px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all border-none bg-transparent cursor-pointer whitespace-nowrap">
+            <lucide-icon name="credit-card" size="14"></lucide-icon>
+            Payment Details
+          </button>
+        </div>
       </div>
 
       <div class="p-5 sm:p-6 overflow-y-auto flex-1 modal-body-container">
@@ -377,14 +366,14 @@
             <section>
               <h4 class="text-[0.6rem] font-black text-emerald-700 uppercase tracking-[0.2em] mb-2.5">Customer Details</h4>
               <div class="p-4 sm:p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 space-y-2">
-                <p class="text-sm sm:text-base font-black text-slate-900 dark:text-slate-100 m-0">{{ booking?.userId?.name }}</p>
+                <p class="text-sm sm:text-base font-black text-slate-900 dark:text-slate-100 m-0">{{ booking?.userId?.name || 'Unknown User' }}</p>
                 <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-bold truncate">
                   <lucide-icon name="mail" size="12" class="text-slate-400 shrink-0"></lucide-icon>
-                  <span class="truncate">{{ booking?.userId?.email }}</span>
+                  <span class="truncate">{{ booking?.userId?.email || 'N/A' }}</span>
                 </div>
                 <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-bold">
                   <lucide-icon name="phone" size="12" class="text-slate-400 shrink-0"></lucide-icon>
-                  <span>{{ booking?.userId?.phone }}</span>
+                  <span>{{ booking?.userId?.phone || 'N/A' }}</span>
                 </div>
               </div>
             </section>
@@ -394,17 +383,17 @@
               <h4 class="text-[0.6rem] font-black text-emerald-700 uppercase tracking-[0.2em] mb-2.5">Vendor Details</h4>
               <div class="p-4 sm:p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 space-y-2">
                 <div class="flex items-center justify-between gap-2">
-                  <p class="text-sm sm:text-base font-black text-slate-900 dark:text-slate-100 m-0 truncate">{{ booking?.vendorId?.fullName }}</p>
+                  <p class="text-sm sm:text-base font-black text-slate-900 dark:text-slate-100 m-0 truncate">{{ booking?.vendorId?.fullName || 'Unknown Vendor' }}</p>
                   <span class="px-2 py-0.5 bg-emerald-700 text-white rounded text-[8px] font-black uppercase shrink-0">{{ booking?.vendorId?.businessType || 'Partner' }}</span>
                 </div>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">{{ booking?.vendorId?.businessName }}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">{{ booking?.vendorId?.businessName || 'N/A' }}</p>
                 <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-bold truncate">
                   <lucide-icon name="mail" size="12" class="text-slate-400 shrink-0"></lucide-icon>
-                  <span class="truncate">{{ booking?.vendorId?.email }}</span>
+                  <span class="truncate">{{ booking?.vendorId?.email || 'N/A' }}</span>
                 </div>
                 <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-bold">
                   <lucide-icon name="phone" size="12" class="text-slate-400 shrink-0"></lucide-icon>
-                  <span>{{ booking?.vendorId?.phone }}</span>
+                  <span>{{ booking?.vendorId?.phone || 'N/A' }}</span>
                 </div>
               </div>
             </section>
@@ -414,11 +403,11 @@
               <h4 class="text-[0.6rem] font-black text-emerald-700 uppercase tracking-[0.2em] mb-2.5">Venue &amp; Event</h4>
               <div class="p-4 sm:p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 flex flex-col md:flex-row md:items-center gap-4">
                 <div class="flex-1 min-w-0">
-                  <p class="text-sm sm:text-base font-black text-slate-900 dark:text-slate-100 m-0 truncate">{{ booking?.venueId?.name }}</p>
+                  <p class="text-sm sm:text-base font-black text-slate-900 dark:text-slate-100 m-0 truncate">{{ booking?.venueId?.name || 'Unknown Venue' }}</p>
                   <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-1">
-                    {{ booking?.venueId?.address }}, {{ booking?.venueId?.city }}, {{ booking?.venueId?.state }} {{ booking?.venueId?.zip }}
+                    {{ booking?.venueId?.address || 'N/A' }}, {{ booking?.venueId?.city || 'N/A' }}, {{ booking?.venueId?.state || 'N/A' }} {{ booking?.venueId?.zip || '' }}
                   </p>
-                  <p class="text-[9px] text-emerald-700 font-black uppercase mt-1 tracking-wider">{{ booking?.venueId?.country }}</p>
+                  <p class="text-[9px] text-emerald-700 font-black uppercase mt-1 tracking-wider">{{ booking?.venueId?.country || 'India' }}</p>
                 </div>
                 <div class="flex items-center gap-3 bg-white dark:bg-slate-900 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 shrink-0">
                   <lucide-icon name="calendar" size="16" class="text-emerald-700 shrink-0"></lucide-icon>
@@ -438,23 +427,28 @@
             <!-- Status Banner -->
             <div class="flex items-center justify-between p-4 rounded-xl border"
                  [ngClass]="{
-                   'bg-emerald-50 border-emerald-200': booking?.paymentStatus === 'success',
+                   'bg-emerald-50 border-emerald-200': booking?.paymentStatus === 'success' || booking?.cancellation?.refundStatus === 'processed',
                    'bg-amber-50 border-amber-200': booking?.paymentStatus === 'pending',
-                   'bg-rose-50 border-rose-200': booking?.paymentStatus === 'failed'
+                   'bg-red-50 border-red-200': (booking?.paymentStatus === 'failed' || $any(booking?.paymentStatus) === 'cancelled') && booking?.cancellation?.refundStatus !== 'processed'
                  }">
               <div class="flex items-center gap-2.5">
-                @if (booking?.paymentStatus === 'success') {
+                @if (booking?.cancellation?.refundStatus === 'processed') {
+                  <lucide-icon name="check-circle" size="18" class="text-emerald-600 shrink-0"></lucide-icon>
+                  <span class="text-xs sm:text-sm font-black text-emerald-800 uppercase tracking-wider">Refund Processed</span>
+                } @else if (booking?.paymentStatus === 'success') {
                   <lucide-icon name="check-circle" size="18" class="text-emerald-600 shrink-0"></lucide-icon>
                   <span class="text-xs sm:text-sm font-black text-emerald-800 uppercase tracking-wider">Payment Verified</span>
                 } @else if (booking?.paymentStatus === 'pending') {
                   <lucide-icon name="clock" size="18" class="text-amber-600 shrink-0"></lucide-icon>
                   <span class="text-xs sm:text-sm font-black text-amber-800 uppercase tracking-wider">Awaiting Verification</span>
                 } @else {
-                  <lucide-icon name="x-circle" size="18" class="text-rose-600 shrink-0"></lucide-icon>
-                  <span class="text-xs sm:text-sm font-black text-rose-800 uppercase tracking-wider">Payment Failed</span>
+                  <lucide-icon name="x-circle" size="18" class="text-red-600 shrink-0"></lucide-icon>
+                  <span class="text-xs sm:text-sm font-black text-red-800 uppercase tracking-wider">Payment Failed</span>
                 }
               </div>
-              <div [class]="getStatusClass(booking?.paymentStatus || '') + ' shrink-0'">{{ booking?.paymentStatus }}</div>
+              <div [class]="(booking?.cancellation?.refundStatus === 'processed' ? 'px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border flex items-center justify-center gap-1.5 w-fit bg-emerald-100 text-emerald-700 border-emerald-200' : getStatusClass(booking?.paymentStatus || '')) + ' shrink-0'">
+                {{ booking?.cancellation?.refundStatus === 'processed' ? 'Refunded' : (booking?.paymentStatus === 'success' ? 'Paid' : booking?.paymentStatus === 'failed' ? 'Cancelled' : booking?.paymentStatus) }}
+              </div>
             </div>
 
             <!-- Payment Breakdown -->
@@ -497,6 +491,59 @@
                 </div>
               </div>
             </div>
+
+            <!-- Cancellation Details -->
+            @if ((booking?.status === 'cancelled' || booking?.paymentStatus === 'cancelled' || booking?.paymentStatus === 'failed') && booking?.cancellation) {
+            <div>
+              <h4 class="text-[0.6rem] font-black uppercase tracking-[0.2em] mb-2.5"
+                  [ngClass]="booking?.cancellation?.refundStatus === 'processed' ? 'text-emerald-700' : 'text-red-700'">
+                Cancellation &amp; Refund
+              </h4>
+              <div class="p-4 sm:p-5 rounded-2xl border grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6"
+                   [ngClass]="{
+                     'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800/50': booking?.cancellation?.refundStatus === 'processed',
+                     'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50': booking?.cancellation?.refundStatus !== 'processed'
+                   }">
+                <div>
+                  <p class="text-[9px] font-black uppercase tracking-wider mb-1"
+                     [ngClass]="booking?.cancellation?.refundStatus === 'processed' ? 'text-emerald-500' : 'text-red-400'">Cancelled On</p>
+                  <p class="text-xs font-black mt-1"
+                     [ngClass]="booking?.cancellation?.refundStatus === 'processed' ? 'text-emerald-800 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'">
+                    {{ booking?.cancellation?.cancelledAt | date:'mediumDate' }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-[9px] font-black uppercase tracking-wider mb-1"
+                     [ngClass]="booking?.cancellation?.refundStatus === 'processed' ? 'text-emerald-500' : 'text-red-400'">Refund Tier</p>
+                  <p class="text-xs font-black mt-1 capitalize"
+                     [ngClass]="booking?.cancellation?.refundStatus === 'processed' ? 'text-emerald-800 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'">
+                    {{ booking?.cancellation?.refundTier || 'N/A' }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-[9px] font-black uppercase tracking-wider mb-1"
+                     [ngClass]="booking?.cancellation?.refundStatus === 'processed' ? 'text-emerald-500' : 'text-red-400'">Refund Amount</p>
+                  <p class="text-xs font-black mt-1"
+                     [ngClass]="booking?.cancellation?.refundStatus === 'processed' ? 'text-emerald-800 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'">
+                    {{ formatCurrency(booking?.cancellation?.refundAmount || 0) }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-[9px] font-black uppercase tracking-wider mb-1"
+                     [ngClass]="booking?.cancellation?.refundStatus === 'processed' ? 'text-emerald-500' : 'text-red-400'">Refund Status</p>
+                  <div class="mt-1">
+                    @if (booking?.cancellation?.refundStatus === 'processed') {
+                      <span class="px-2 py-0.5 bg-emerald-200 text-emerald-800 rounded text-[10px] font-black uppercase tracking-wider">Processed</span>
+                    } @else if (booking?.cancellation?.refundStatus === 'none' || booking?.cancellation?.refundAmount === 0) {
+                      <span class="px-2 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] font-black uppercase tracking-wider">N/A</span>
+                    } @else {
+                      <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-[10px] font-black uppercase tracking-wider">Pending</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
           </div>
         }
       </div>
@@ -504,14 +551,17 @@
       <!-- Footer -->
       <div class="px-5 sm:px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 shrink-0">
         @if (booking?.paymentStatus === 'pending') {
-          <app-button (onClick)="openReject()" variant="secondary" customClass="w-full sm:w-auto px-5 py-2.5 rounded-xl text-rose-600 border-rose-100 hover:bg-rose-50 text-xs" class="w-full sm:w-auto">
+          <app-button (onClick)="openReject()" variant="secondary" customClass="w-full sm:w-auto px-5 py-2.5 rounded-xl text-red-600 border-red-100 hover:bg-red-50 text-xs" class="w-full sm:w-auto">
             Reject
           </app-button>
           <app-button (onClick)="openApprove()" variant="primary" customClass="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs" class="w-full sm:w-auto">
             Approve
           </app-button>
-        } @else {
-          <p class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center sm:text-right w-full">Click outside to dismiss</p>
+        }
+        @if ((booking?.status === 'cancelled' || booking?.paymentStatus === 'cancelled' || booking?.paymentStatus === 'failed') && booking?.cancellation?.refundStatus === 'pending') {
+          <app-button (onClick)="processRefund()" variant="primary" customClass="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs text-white" class="w-full sm:w-auto">
+            Process Refund
+          </app-button>
         }
       </div>
 
@@ -557,7 +607,7 @@
     maxWidth="md">
     
     <div class="p-2">
-      <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mb-6">
+      <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6">
         <lucide-icon name="x-circle" size="28"></lucide-icon>
       </div>
       <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-slate-100 mb-2">Decline Verification</h3>
@@ -569,13 +619,13 @@
         [ngModel]="rejectReason()"
         (ngModelChange)="rejectReason.set($event)"
         placeholder="e.g. Transaction ID mismatch, payment not received in bank..." 
-        class="w-full p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-rose-500/10 focus:border-rose-500 transition-all min-h-[100px] mb-6"></textarea>
+        class="w-full p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500 transition-all min-h-[100px] mb-6"></textarea>
 
       <div class="flex flex-col-reverse sm:flex-row items-stretch gap-3">
         <app-button (onClick)="showRejectModel.set(false)" variant="secondary" customClass="w-full py-3 sm:py-4 rounded-xl" class="w-full sm:w-auto flex-1">
           Cancel
         </app-button>
-        <app-button (onClick)="submitReject()" [disabled]="!rejectReason()" variant="primary" customClass="w-full py-3 sm:py-4 rounded-xl bg-rose-600 hover:bg-rose-700" class="w-full sm:w-auto flex-1">
+        <app-button (onClick)="submitReject()" [disabled]="!rejectReason()" variant="primary" customClass="w-full py-3 sm:py-4 rounded-xl bg-red-600 hover:bg-red-700" class="w-full sm:w-auto flex-1">
           Confirm Reject
         </app-button>
       </div>

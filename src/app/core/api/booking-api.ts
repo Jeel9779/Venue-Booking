@@ -40,4 +40,8 @@ export class BookingApi {
   updateBookingStatus(bookingId: string, status: 'approved' | 'rejected'): Observable<{ message: string; booking: Booking }> {
     return this.http.put<{ message: string; booking: Booking }>(`${this.baseUrl}/${bookingId}/status`, { status });
   }
+
+  processRefund(bookingId: string, payload: { actorId: string, actorType: 'admin' }): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/${bookingId}/process-refund`, payload);
+  }
 }

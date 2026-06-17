@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="header-stats flex gap-2 flex-wrap">
+    <div class="header-stats flex gap-2 flex-wrap w-full sm:w-auto mt-2 sm:mt-0">
       <div
         class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
         [class]="filter() === 'all' ? 'bg-sky-500 text-white' : 'bg-sky-200 text-sky-700 hover:bg-sky-300'"
@@ -57,7 +57,7 @@
     The search bar is restricted to max-width on desktop for a cleaner, more focused UI.
   -->
   <div class="toolbar flex gap-3 flex-col sm:flex-row mb-6 items-start sm:items-center w-full">
-    <div class="relative w-full lg:max-w-md">
+    <div class="relative w-full sm:w-auto sm:flex-1 min-w-[220px] lg:max-w-md">
       <lucide-icon name="search" size="18"
         class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></lucide-icon>
       <input type="text"
@@ -79,7 +79,7 @@
     Displays a data table on desktop and a vertical card list on mobile devices.
   -->
   <div class="w-full max-w-full overflow-hidden rounded-[24px]">
-    <app-card [padding]="false" customClass="/50 w-full min-w-0">
+    <app-card [padding]="false" customClass="w-full min-w-0">
       <div header-actions class="text-[0.75rem] font-medium text-slate-400">
         Showing <span class="text-indigo-600 font-bold">{{ filteredVenues().length }}</span> venues
       </div>
@@ -183,7 +183,7 @@
       <!-- MOBILE CARD LIST -->
       <div class="md:hidden flex flex-col divide-y divide-slate-100">
         @for (v of filteredVenues(); track v._id) {
-        <div class="p-4 flex flex-col gap-3 cursor-pointer hover:bg-slate-50 dark:bg-slate-800 transition-colors"
+        <div class="p-4 sm:p-5 flex flex-col gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           (click)="openDetails(v)">
           <div class="flex justify-between items-start gap-2">
             <div class="flex items-center gap-3 min-w-0">
@@ -231,7 +231,7 @@
   </div>
 
   <!-- ── DETAIL MODAL ── -->
-  @if (selectedVenue(); as venue) {
+  @if (showDetailsModal() && selectedVenue(); as venue) {
   <app-model [title]="'Venue Details'" maxWidth="lg" (onClose)="closeDetails()" [hasFooter]="true">
     <div class="flex flex-col gap-8">
       <!-- Header Info -->
@@ -239,7 +239,7 @@
         class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-slate-50 dark:bg-slate-800 p-5 rounded-[24px] border border-slate-100">
         <div class="flex items-center gap-4 w-full sm:w-auto flex-1">
           <div
-            class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 text-2xl font-bold flex items-center justify-center shrink-0 border border-indigo-100/50">
+            class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-indigo-50 text-indigo-600 text-xl sm:text-2xl font-bold flex items-center justify-center shrink-0 border border-indigo-100/50">
             {{ venue.name.charAt(0) }}
           </div>
           <div class="flex-1 min-w-0">
@@ -258,9 +258,9 @@
                 }
               </div>
             </div>
-            <p class="text-[0.875rem] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 m-0 truncate">
-              <lucide-icon name="map-pin" size="14" class="text-indigo-500"></lucide-icon>
-              <span class="truncate">{{ venue.address }}, {{ venue.city }}, {{ venue.state }} - {{ venue.zip || '—' }}, {{ venue.country || '—' }}</span>
+            <p class="text-[0.875rem] font-medium text-slate-500 dark:text-slate-400 flex items-start sm:items-center gap-1.5 m-0 mt-2 sm:mt-0">
+              <lucide-icon name="map-pin" size="14" class="text-indigo-500 shrink-0"></lucide-icon>
+              <span class="line-clamp-2 sm:truncate">{{ venue.address }}, {{ venue.city }}, {{ venue.state }} - {{ venue.zip || '—' }}, {{ venue.country || '—' }}</span>
             </p>
           </div>
         </div>
@@ -283,6 +283,45 @@
           <div class="text-[0.65rem] font-black uppercase tracking-widest text-red-500 mb-1">Previous Rejection Reason
           </div>
           <p class="text-sm text-red-700">{{ venue.adminDescription }}</p>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Deactivation Info Section -->
+      @if (venue.deactivated) {
+      <div class="bg-red-50/60 border border-red-100 rounded-2xl p-5">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 bg-white dark:bg-slate-900 border border-red-100 text-red-600 rounded-lg flex items-center justify-center">
+            <lucide-icon name="shield-off" size="18"></lucide-icon>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 m-0">Venue Deactivated</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400 m-0">This venue was deactivated by <span class="font-bold text-red-600 uppercase">{{ venue.deactivatedBy }}</span></p>
+          </div>
+        </div>
+        @if (venue.deactivationReason) {
+        <div class="p-3.5 bg-red-50/40 border border-red-100/60 rounded-xl mb-3">
+          <div class="text-[0.65rem] font-black uppercase tracking-widest text-red-500 mb-1">Deactivation Reason</div>
+          <p class="text-sm text-red-700 m-0">{{ venue.deactivationReason }}</p>
+        </div>
+        }
+        @if (venue.deactivatedBy === 'vendor' && venue.suspensionStart) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3 bg-white dark:bg-slate-900 border border-red-100/60 rounded-xl">
+            <div class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1.5">
+              <lucide-icon name="calendar" size="10"></lucide-icon>
+              Suspension Start
+            </div>
+            <div class="text-sm font-bold text-slate-800 dark:text-slate-200">{{ venue.suspensionStart | date:'d MMM y' }}</div>
+          </div>
+          <div class="p-3 bg-white dark:bg-slate-900 border border-red-100/60 rounded-xl">
+            <div class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1.5">
+              <lucide-icon name="calendar" size="10"></lucide-icon>
+              Suspension End
+            </div>
+            <div class="text-sm font-bold text-slate-800 dark:text-slate-200">{{ venue.suspensionEnd ? (venue.suspensionEnd | date:'d MMM y') : 'Indefinite' }}</div>
+          </div>
         </div>
         }
       </div>
@@ -330,9 +369,9 @@
       </div>
 
       <!-- Info Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <div
-          class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
+          class="p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="tag" size="10"></lucide-icon>
@@ -341,7 +380,7 @@
           <div class="text-base font-bold text-slate-800 dark:text-slate-200">{{ venue.type }}</div>
         </div>
         <div
-          class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
+          class="p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="users" size="10"></lucide-icon>
@@ -351,7 +390,7 @@
               class="text-[10px] font-medium text-slate-500 dark:text-slate-400">Guests</span></div>
         </div>
         <div
-          class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
+          class="p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="indian-rupee" size="10"></lucide-icon>
@@ -361,7 +400,7 @@
               class="text-[10px] font-medium text-slate-500 dark:text-slate-400">/day</span></div>
         </div>
         <div
-          class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
+          class="p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl transition-all hover:bg-slate-100/40 hover:border-slate-200 dark:border-slate-700/50">
           <div
             class="text-[0.65rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <lucide-icon name="calendar" size="10"></lucide-icon>
@@ -379,14 +418,14 @@
           <lucide-icon name="utensils" size="12"></lucide-icon>
           Catering & Food Pricing
         </h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="p-4 bg-green-50 border border-green-100 rounded-2xl">
+        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+          <div class="p-3 sm:p-4 bg-green-50 border border-green-100 rounded-2xl">
             <div class="text-[0.65rem] font-black uppercase tracking-widest text-green-600 mb-1">Veg Price</div>
-            <div class="text-lg font-black text-green-900">₹{{ venue.vegPrice || 0 | number }}</div>
+            <div class="text-sm sm:text-lg font-black text-green-900">₹{{ venue.vegPrice || 0 | number }}</div>
           </div>
-          <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl">
+          <div class="p-3 sm:p-4 bg-rose-50 border border-rose-100 rounded-2xl">
             <div class="text-[0.65rem] font-black uppercase tracking-widest text-rose-600 mb-1">Non-Veg Price</div>
-            <div class="text-lg font-black text-rose-900">₹{{ venue.nonVegPrice || 0 | number }}</div>
+            <div class="text-sm sm:text-lg font-black text-rose-900">₹{{ venue.nonVegPrice || 0 | number }}</div>
           </div>
         </div>
       </div>
@@ -421,7 +460,7 @@
       </div>
 
       <!-- Supported Events & Venue Categories -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
         <!-- Venue Categories -->
         @if (venue.venueTypes && venue.venueTypes.length) {
         <div>
@@ -485,7 +524,7 @@
         <h4 class="text-[0.75rem] font-black uppercase tracking-widest text-slate-400 mb-3">
           Gallery <span class="text-indigo-500 font-bold ml-1">({{ venue.mediaFiles.length }})</span>
         </h4>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
           @for (img of venue.mediaFiles; track img) {
           <div
             class="aspect-square rounded-2xl overflow-hidden cursor-pointer group relative border border-slate-300 dark:border-slate-700"
@@ -560,15 +599,88 @@
   @if (showDeactivateModal() && selectedVenue(); as venue) {
   <app-model [title]="'Deactivate Venue Listing'" maxWidth="sm" (onClose)="closeDeactivateModal()" [hasFooter]="true">
     <p class="text-[0.9375rem] text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-      Please provide a reason for deactivating this venue. This will temporarily remove the venue from user view.
+      Choose whether to deactivate this venue indefinitely or for a specific date range. Affected bookings will be
+      automatically cancelled.
     </p>
+
+    <!-- Deactivation Type Toggle -->
+    <div class="mb-5">
+      <label class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 mb-2.5 block">Deactivation Type</label>
+      <div class="flex gap-2">
+        <button
+          class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold border-2 transition-all cursor-pointer"
+          [class]="deactivateType() === 'indefinite'
+            ? 'bg-red-50 border-red-400 text-red-700'
+            : 'bg-slate-50 border-slate-200 text-slate-500 hover:border-slate-300'"
+          (click)="deactivateType.set('indefinite')">
+          <div class="flex items-center justify-center gap-2">
+            <lucide-icon name="ban" size="14"></lucide-icon>
+            Indefinite
+          </div>
+        </button>
+        <button
+          class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold border-2 transition-all cursor-pointer"
+          [class]="deactivateType() === 'date-range'
+            ? 'bg-amber-50 border-amber-400 text-amber-700'
+            : 'bg-slate-50 border-slate-200 text-slate-500 hover:border-slate-300'"
+          (click)="deactivateType.set('date-range')">
+          <div class="flex items-center justify-center gap-2">
+            <lucide-icon name="calendar-range" size="14"></lucide-icon>
+            Date Range
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Date Range Inputs (shown only for date-range type) -->
+    @if (deactivateType() === 'date-range') {
+    <div class="grid grid-cols-2 gap-3 mb-5">
+      <div>
+        <label class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Start Date</label>
+        <input type="date"
+          class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 box-border"
+          [value]="deactivateStartDate"
+          (input)="deactivateStartDate = $any($event.target).value" />
+      </div>
+      <div>
+        <label class="text-[0.7rem] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">End Date</label>
+        <input type="date"
+          class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 box-border"
+          [value]="deactivateEndDate"
+          [min]="deactivateStartDate"
+          (input)="deactivateEndDate = $any($event.target).value" />
+      </div>
+    </div>
+    @if (deactivateStartDate && deactivateEndDate && deactivateEndDate < deactivateStartDate) {
+    <div class="mb-4 px-3 py-2 bg-red-50 border border-red-100 rounded-xl text-xs font-bold text-red-600 flex items-center gap-2">
+      <lucide-icon name="alert-circle" size="14"></lucide-icon>
+      End date must be on or after start date.
+    </div>
+    }
+    }
+
+    <!-- Info hint -->
+    @if (deactivateType() === 'indefinite') {
+    <div class="mb-4 px-3 py-2 bg-slate-50 border border-slate-100 rounded-xl text-xs font-medium text-slate-500 flex items-center gap-2">
+      <lucide-icon name="info" size="14" class="text-slate-400 shrink-0"></lucide-icon>
+      The venue will remain deactivated until an admin manually reactivates it. All active bookings will be cancelled.
+    </div>
+    } @else {
+    <div class="mb-4 px-3 py-2 bg-amber-50 border border-amber-100 rounded-xl text-xs font-medium text-amber-700 flex items-center gap-2">
+      <lucide-icon name="info" size="14" class="text-amber-500 shrink-0"></lucide-icon>
+      Only bookings within the selected date range will be cancelled. The venue will auto-reactivate after the end date.
+    </div>
+    }
+
     <app-form-input type="textarea" label="Deactivation Reason"
       placeholder="e.g., Temporarily closed, violating terms, under review..."
-      [(ngModel)]="deactivateReason" [rows]="5"></app-form-input>
+      [(ngModel)]="deactivateReason" [rows]="4"></app-form-input>
 
     <div footer>
-      <app-button variant="danger" [disabled]="!deactivateReason.trim()" [loading]="isLoading()" (onClick)="submitDeactivate()">
-        Confirm Deactivation
+      <app-button variant="danger"
+        [disabled]="!deactivateReason.trim() || (deactivateType() === 'date-range' && (!deactivateStartDate || !deactivateEndDate || deactivateEndDate < deactivateStartDate))"
+        [loading]="isLoading()" (onClick)="submitDeactivate()">
+        {{ deactivateType() === 'indefinite' ? 'Deactivate Indefinitely' : 'Deactivate for Date Range' }}
       </app-button>
     </div>
   </app-model>
@@ -576,7 +688,7 @@
 
   <!-- ── APPROVE MODAL ── -->
   @if (showApproveModal() && selectedVenue(); as venue) {
-  <app-model [title]="'Approve Venue Listing'" maxWidth="sm" (onClose)="showApproveModal.set(false)" [hasFooter]="true">
+  <app-model [title]="'Approve Venue Listing'" maxWidth="sm" (onClose)="closeApproveModal()" [hasFooter]="true">
     <div class="flex flex-col items-center text-center py-4">
       <div
         class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4">

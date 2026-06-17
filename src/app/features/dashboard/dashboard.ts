@@ -1,6 +1,7 @@
 // Purpose: Component/Logic: Handles UI behavior and user interactions for dashboard.
 import { Component, inject, OnInit, OnDestroy, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { VenueStore } from '@core/store/venue.store';
 import { API_BASE_URL } from '@core/config/api.config';
@@ -35,7 +36,7 @@ import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -268,7 +269,7 @@ export class Dashboard implements OnInit, OnDestroy {
       id: v._id,
       type: 'vendor' as const,
       name: v.businessName || v.fullName,
-      subText: `Gov ID: ${v.governmentId || 'N/A'} | License: ${v.licenseDoc ? 'Attached' : 'N/A'}`,
+      subText: 'Awaiting Verification',
       date: v.createdAt || v.updatedAt || '',
     }));
 
