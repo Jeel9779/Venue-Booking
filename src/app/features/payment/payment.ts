@@ -1,5 +1,5 @@
 // Purpose: Component/Logic: Handles UI behavior and user interactions for payment.
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +24,7 @@ import { Pagination } from '@shared/components/pagination/pagination';
   styleUrl: './payment.css',
 })
 // Defines the structure and behavior of this class
-export class Payments implements OnInit {
+export class Payments implements OnInit, OnDestroy {
   private readonly service = inject(PaymentService);
   private readonly store = inject(PaymentStore);
   private readonly router = inject(Router);
@@ -107,6 +107,8 @@ export class Payments implements OnInit {
   });
 
   // ──────────────────────────────────────────────────────────────────────────
+  private pollingInterval: any;
+
   ngOnInit(): void {
     this.service.loadInitialData();
 
@@ -117,6 +119,17 @@ export class Payments implements OnInit {
         paymentStatus: f.paymentStatus ?? '',
       };
     });
+
+    // Auto-refresh the page data every 10 seconds safely
+    this.pollingInterval = setInterval(() => {
+      this.applyApiFilters();
+    }, 10000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   }
 
   private searchTimeout: any;
