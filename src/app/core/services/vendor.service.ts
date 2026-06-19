@@ -15,9 +15,16 @@ export class VendorService {
   private readonly api = inject(VendorApi);
   private readonly store = inject(VendorStore);
 
-  loadAll(page: number = 1, limit: number = 10): void {
+  loadAll(
+    page: number = 1, 
+    limit: number = 10,
+    search: string = '', 
+    status: string = '',
+    sortBy: string = '',
+    sortOrder: string = ''
+  ): void {
     this.store.setLoading(true);
-    this.api.getAll(page, limit)
+    this.api.getAll(page, limit, search, status, sortBy, sortOrder)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: (res) => {
@@ -35,6 +42,10 @@ export class VendorService {
         },
         error: (err) => this.store.setError(err?.message || 'Failed to load vendors'),
       });
+  }
+
+  getStats() {
+    return this.api.getStats();
   }
 
   create(formData: FormData): void {

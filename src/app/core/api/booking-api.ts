@@ -20,13 +20,31 @@ export class BookingApi {
     return this.http.post<{ message: string; booking: Booking }>(this.baseUrl, data);
   }
 
-  getAllBookings(page: number = 1, limit: number = 10, search: string = '', status: string = ''): Observable<any> {
+  getAllBookings(
+    page: number = 1, 
+    limit: number = 10, 
+    search: string = '', 
+    status: string = '',
+    sortBy: string = '',
+    sortOrder: string = '',
+    startDate: string = '',
+    endDate: string = ''
+  ): Observable<any> {
     let url = `${this.baseUrl}?page=${page}&limit=${limit}`;
     if (search) url += `&search=${encodeURIComponent(search)}`;
     if (status && status !== 'all') url += `&status=${status === 'paid' ? 'success' : status}`;
+    if (sortBy) url += `&sortBy=${encodeURIComponent(sortBy)}`;
+    if (sortOrder) url += `&sortOrder=${encodeURIComponent(sortOrder)}`;
+    if (startDate) url += `&startDate=${encodeURIComponent(startDate)}`;
+    if (endDate) url += `&endDate=${encodeURIComponent(endDate)}`;
+    
     return this.http.get<any>(url).pipe(
       map(res => res)
     );
+  }
+
+  getStats(): Observable<{ totalRevenue: number; collected: number; outstanding: number; todayCount: number }> {
+    return this.http.get<any>(`${this.baseUrl}/stats`);
   }
 
   getUserBookings(userId: string): Observable<UserBookings> {

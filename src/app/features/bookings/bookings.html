@@ -168,14 +168,14 @@
       <table class="w-full text-left border-collapse min-w-[1100px]">
         <thead>
           <tr class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">User</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Vendor</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Venue</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Booking Date</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Total Amount</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Paid (20%)</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Remaining (80%)</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Action</th>
+            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('userId.name')">User</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('vendorId.fullName')">Vendor</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('venueId.name')">Venue</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('date')">Booking Date</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('totalBookingAmount')">Total Amount</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('amountPaid')">Paid (20%)</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('totalBookingAmount')">Remaining (80%)</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer hover:text-indigo-600 transition-colors" (click)="toggleSort('paymentStatus')">Action</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">

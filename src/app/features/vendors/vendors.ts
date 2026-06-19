@@ -33,8 +33,19 @@ export class Vendors implements OnInit {
   readonly error = this.vendorStore.error;
   readonly pagination = this.vendorStore.pagination;
 
+  // ── State (Reactive Signals) ─────────────────────────────────────────────
   search = signal('');
-  filter = signal<'all' | 'pending' | 'approved' | 'rejected' | 'suspended'>('all');
+  filter = signal<string>('all');
+  sortBy = signal<string>('createdAt');
+  sortOrder = signal<'asc' | 'desc'>('desc');
+
+  backendStats = signal<{total: number; approved: number; pending: number; rejected: number; suspended: number}>({
+    total: 0,
+    approved: 0,
+    pending: 0,
+    rejected: 0,
+    suspended: 0
+  });
 
   selectedVendor = signal<Vendor | null>(null);
   showDetailsModel = signal(false);
@@ -54,48 +65,56 @@ export class Vendors implements OnInit {
 
   viewingImageUrl = signal<string | null>(null);
 
-  // ── Computed ───────────────────────────────────────────────────────────────
+  // ── Computed Signals (Derived State) ─────────────────────────────────────
   filteredVendors = computed(() => {
-    let list = this.vendors();
-    if (this.filter() !== 'all') {
-      list = list.filter((v) => v.status === this.filter());
-    }
-    const q = this.search().toLowerCase().trim();
-    if (q) {
-      list = list.filter(v =>
-        v.fullName.toLowerCase().includes(q) ||
-        v.businessName.toLowerCase().includes(q) ||
-        v.email.toLowerCase().includes(q) ||
-        v.phone.includes(q) ||
-        v.businessType.toLowerCase().includes(q) ||
-        v.state.toLowerCase().includes(q) ||
-        v.address.toLowerCase().includes(q) ||
-        v.pincode.includes(q) ||
-        new Date(v.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(q) ||
-        new Date(v.updatedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(q)
-      );
-    }
-    return list;
+    return this.vendors();
   });
 
   counts = computed(() => {
-    const list = this.vendors();
     return {
-      all: list.length,
-      pending: list.filter(v => v.status === 'pending').length,
-      approved: list.filter(v => v.status === 'approved').length,
-      rejected: list.filter(v => v.status === 'rejected').length,
-      suspended: list.filter(v => v.status === 'suspended').length,
+      all: this.backendStats().total,
+      pending: this.backendStats().pending,
+      approved: this.backendStats().approved,
+      rejected: this.backendStats().rejected,
+      suspended: this.backendStats().suspended,
     };
   });
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
   ngOnInit() {
-    this.vendorService.loadAll(this.pagination().page);
+    this.fetchData(this.pagination().page);
+  }
+
+  loadStats() {
+    this.vendorService.getStats().subscribe({
+      next: (stats) => {
+        if (stats) this.backendStats.set(stats);
+      }
+    });
+  }
+
+  fetchData(page: number) {
+    this.vendorService.loadAll(page, this.pagination().limit, this.search(), this.filter(), this.sortBy(), this.sortOrder());
+    this.loadStats();
   }
 
   onPageChange(page: number) {
-    this.vendorService.loadAll(page, this.pagination().limit);
+    this.fetchData(page);
+  }
+
+  setFilter(filter: string) {
+    this.filter.set(filter);
+    this.fetchData(1);
+  }
+
+  private searchTimeout: any;
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.search.set(input.value);
+      this.fetchData(1);
+    }, 400);
   }
 
   // ── Actions ────────────────────────────────────────────────────────────────
@@ -153,10 +172,21 @@ export class Vendors implements OnInit {
   }
 
   unsuspendVendor() {
-    const v = this.selectedVendor();
-    if (!v) return;
-    this.vendorService.unsuspend(v._id);
-    this.closeDetails();
+    const vendor = this.selectedVendor();
+    if (vendor?._id) {
+      this.vendorService.unsuspend(vendor._id);
+      this.closeDetails();
+    }
+  }
+
+  toggleSort(field: string) {
+    if (this.sortBy() === field) {
+      this.sortOrder.set(this.sortOrder() === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.sortBy.set(field);
+      this.sortOrder.set('asc');
+    }
+    this.fetchData(1);
   }
 
   deleteVendor(v: Vendor) {

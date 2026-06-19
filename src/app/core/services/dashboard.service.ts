@@ -1,30 +1,31 @@
 // Purpose: Service: Handles business logic and API communication for dashboard.
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DashboardResponse } from '@core/models/dashboard.model';
-import { Observable, shareReplay } from 'rxjs';
-
+import { DashboardSummaryResponse } from '@core/models/dashboard.model';
+import { API_BASE_URL } from '@core/config/api.config';
 
 @Injectable({
   providedIn: 'root',
 })
-// Defines the structure and behavior of this class
 export class DashboardService {
-  stats = signal([
-    { title: 'Total Bookings', value: 1284, change: '+12.5%', color: 'indigo' },
-    { title: 'Net Revenue', value: '$42.8k', change: '+8.2%', color: 'green' },
-    { title: 'Active Venues', value: 86, change: 'Stable', color: 'purple' },
-    { title: 'Cancellations', value: 14, change: '-3.1%', color: 'red' },
-  ]);
-
-  venues = signal([
-    { name: 'Grand Ballroom', bookings: 42, revenue: 12400, img: 'https://picsum.photos/50?1' },
-    { name: 'Skyline Hub', bookings: 28, revenue: 8900, img: 'https://picsum.photos/50?2' }
-  ]);
-
+  private readonly http = inject(HttpClient);
+  
+  summary = signal<DashboardSummaryResponse | null>(null);
+  isLoading = signal<boolean>(false);
+  error = signal<string | null>(null);
 
   loadDashboard() {
-
+    this.isLoading.set(true);
+    this.error.set(null);
+    this.http.get<DashboardSummaryResponse>(`${API_BASE_URL}/api/dashboard/summary`).subscribe({
+      next: (data) => {
+        this.summary.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        this.error.set(err.message || 'Failed to load dashboard summary');
+        this.isLoading.set(false);
+      }
+    });
   }
-
 }

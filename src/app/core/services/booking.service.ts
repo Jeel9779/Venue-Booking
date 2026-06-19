@@ -14,9 +14,18 @@ export class BookingService {
   private readonly store = inject(BookingStore);
   private readonly toast = inject(ToastService);
 
-  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = ''): void {
+  loadAll(
+    page: number = 1, 
+    limit: number = 10, 
+    search: string = '', 
+    status: string = '',
+    sortBy: string = '',
+    sortOrder: string = '',
+    startDate: string = '',
+    endDate: string = ''
+  ): void {
     this.store.setLoading(true);
-    this.api.getAllBookings(page, limit, search, status)
+    this.api.getAllBookings(page, limit, search, status, sortBy, sortOrder, startDate, endDate)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: (res) => {
@@ -47,6 +56,10 @@ export class BookingService {
       });
   }
 
+
+  getStats() {
+    return this.api.getStats();
+  }
 
   updateStatus(id: string, status: 'pending' | 'success' | 'failed'): void {
     // ⚡ OPTIMISTIC: Update UI immediately

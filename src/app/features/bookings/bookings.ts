@@ -30,71 +30,52 @@ export class Bookings {
   private readonly cd = inject(ChangeDetectorRef);
   protected readonly Math = Math;
 
-  private allBookingsForStats = signal<Booking[]>([]);
+  // We will store the KPI stats in a signal to be updated from backend
+  private backendStats = signal<BookingStats>({
+    totalRevenue: 0,
+    collected: 0,
+    outstanding: 0,
+    totalCount: 0,
+    paidCount: 0,
+    pendingCount: 0,
+    failedCount: 0,
+    todayCount: 0
+  });
+
+  // Track sorting
+  sortBy = signal<string>('createdAt');
+  sortOrder = signal<string>('desc');
 
   ngOnInit() {
-    const limit = this.search() ? 1000 : 10;
-    this.bookingService.loadAll(this.pagination().page, limit, '', this.filter());
-    this.loadStats();
+    this.refresh();
   }
 
   loadStats() {
-    this.bookingApi.getAllBookings(1, 1000, this.search(), this.filter()).subscribe({
+    this.bookingService.getStats().subscribe({
       next: (res) => {
-        const all = Array.isArray(res) ? res : (res.data || res.bookings || []);
-        this.allBookingsForStats.set(all);
+        this.backendStats.set({
+          totalRevenue: res.totalRevenue || 0,
+          collected: res.collected || 0,
+          outstanding: res.outstanding || 0,
+          totalCount: this.pagination().totalRecords || 0,
+          paidCount: 0, // Backend might not provide this yet, but we use what we have
+          pendingCount: 0,
+          failedCount: 0,
+          todayCount: res.todayCount || 0
+        });
       }
     });
   }
 
   onPageChange(page: number) {
-    const limit = this.search() ? 1000 : 10;
-    this.bookingService.loadAll(page, limit, '', this.filter());
+    this.fetchData(page);
   }
 
   // ── State (Signals) ────────────────────────────────────────────────────────
   readonly rawBookings = this.bookingStore.bookings;
   
   readonly bookings = computed(() => {
-    const term = this.search().toLowerCase().trim();
-    let list = this.rawBookings();
-    
-    if (term) {
-      list = list.filter(b => {
-        if (!b) return false;
-        const userId: any = b.userId && typeof b.userId === 'object' ? b.userId : {};
-        const vendorId: any = b.vendorId && typeof b.vendorId === 'object' ? b.vendorId : {};
-        const venueId: any = b.venueId && typeof b.venueId === 'object' ? b.venueId : {};
-        
-        const userName = userId.name || '';
-        const userEmail = userId.email || '';
-        const vendorName = vendorId.fullName || vendorId.businessName || '';
-        const venueName = venueId.name || '';
-        const venueCity = venueId.city || '';
-        const statusStr = b.paymentStatus || '';
-        const txnId = b.transactionId || '';
-        
-        let dateMatch = false;
-        if (b.date) {
-          const d = new Date(b.date);
-          dateMatch = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toLowerCase().includes(term) ||
-                      d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }).toLowerCase().includes(term);
-        }
-        
-        return userName.toLowerCase().includes(term) ||
-               userEmail.toLowerCase().includes(term) ||
-               vendorName.toLowerCase().includes(term) ||
-               venueName.toLowerCase().includes(term) ||
-               venueCity.toLowerCase().includes(term) ||
-               statusStr.toLowerCase().includes(term) ||
-               txnId.toLowerCase().includes(term) ||
-               dateMatch;
-      });
-    }
-
-    const page = this.pagination()?.page || 1;
-    const limit = 10;
-    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
+    return this.rawBookings();
   });
   // Use store signals for loading and error states
   readonly isLoading = this.bookingStore.isLoading;
@@ -149,58 +130,58 @@ export class Bookings {
   });
 
   /**
-   * Optimized KPI calculations in a single pass (Current Page Stats)
+   * Stats directly read from backend
    */
-  stats = computed((): BookingStats => {
-    const all = this.allBookingsForStats();
-    const now = new Date();
-
-    const stats: BookingStats = {
-      totalRevenue: 0,
-      collected: 0,
-      outstanding: 0,
-      totalCount: this.pagination().totalRecords || all.length,
-      paidCount: 0,
-      pendingCount: 0,
-      failedCount: 0,
-      todayCount: 0
-    };
-
-    for (const b of all) {
-      const amount = b.totalBookingAmount || 0;
-      const paid = b.amountPaid || 0;
-      
-      stats.totalRevenue += amount;
-      stats.collected += paid;
-      stats.outstanding += (amount - paid);
-
-      if (b.paymentStatus === 'success') stats.paidCount++;
-      else if (b.paymentStatus === 'pending') stats.pendingCount++;
-      else if (b.paymentStatus === 'failed') stats.failedCount++;
-
-      // Robust Today's Booking check
-      const bDate = new Date(b.date);
-      if (bDate.getFullYear() === now.getFullYear() && 
-          bDate.getMonth() === now.getMonth() && 
-          bDate.getDate() === now.getDate()) {
-        stats.todayCount++;
-      }
-    }
-
-    return stats;
-  });
+  stats = this.backendStats.asReadonly();
 
   // ── Actions ────────────────────────────────────────────────────────────────
+  
+  private fetchData(page: number = 1) {
+    let startDate = '';
+    let endDate = '';
+    
+    // Convert dateFilter into start/end dates
+    const now = new Date();
+    if (this.dateFilter() === 'today') {
+      startDate = new Date(now.setHours(0,0,0,0)).toISOString();
+      endDate = new Date(now.setHours(23,59,59,999)).toISOString();
+    } else if (this.dateFilter() === 'thisWeek') {
+      const first = now.getDate() - now.getDay();
+      startDate = new Date(now.setDate(first)).toISOString();
+    } else if (this.dateFilter() === 'thisMonth') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    }
+
+    this.bookingService.loadAll(
+      page, 
+      this.pagination().limit || 10, 
+      this.search(), 
+      this.filter(),
+      this.sortBy(),
+      this.sortOrder(),
+      startDate,
+      endDate
+    );
+    this.loadStats();
+  }
+
   refresh() {
-    const limit = this.search() ? 1000 : 10;
-    this.bookingService.loadAll(this.pagination().page, limit, '', this.filter());
+    this.fetchData(this.pagination().page);
   }
   
   setFilter(f: string) {
     this.filter.set(f);
-    const limit = this.search() ? 1000 : 10;
-    this.bookingService.loadAll(1, limit, '', f);
-    this.loadStats();
+    this.fetchData(1);
+  }
+
+  toggleSort(field: string) {
+    if (this.sortBy() === field) {
+      this.sortOrder.set(this.sortOrder() === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.sortBy.set(field);
+      this.sortOrder.set('desc');
+    }
+    this.fetchData(1);
   }
 
   private searchTimeout: any;
@@ -209,20 +190,19 @@ export class Bookings {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.search.set(input.value);
-      const limit = input.value ? 1000 : 10;
-      this.bookingService.loadAll(1, limit, '', this.filter());
-      this.loadStats();
-    }, 500);
+      this.fetchData(1);
+    }, 400); // 400ms debounce
   }
 
   setDateFilter(range: string) {
     this.dateFilter.set(range);
-    // Note: Backend doesn't support dateFilter yet, but we prepare the UI state.
+    this.fetchData(1);
   }
 
   setPageSize(size: number) {
-    const limit = this.search() ? 1000 : size;
-    this.bookingService.loadAll(1, limit, '', this.filter());
+    // Modify pagination limit in store directly or just pass to loadAll (which sets it)
+    this.bookingService.loadAll(1, size, this.search(), this.filter(), this.sortBy(), this.sortOrder());
+    this.loadStats();
   }
 
   openDetails(booking: Booking) {

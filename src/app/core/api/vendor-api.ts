@@ -14,12 +14,29 @@ export class VendorApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${API_BASE_URL}/vendors`;
 
-  getAll(page: number = 1, limit: number = 10): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}?page=${page}&limit=${limit}`).pipe(
+  getAll(
+    page: number = 1, 
+    limit: number = 10,
+    search: string = '', 
+    status: string = '',
+    sortBy: string = '',
+    sortOrder: string = ''
+  ): Observable<any> {
+    let url = `${this.baseUrl}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (status && status !== 'all') url += `&status=${status}`;
+    if (sortBy) url += `&sortBy=${encodeURIComponent(sortBy)}`;
+    if (sortOrder) url += `&sortOrder=${encodeURIComponent(sortOrder)}`;
+
+    return this.http.get<any>(url).pipe(
       map(res => {
         return res;
       })
     );
+  }
+
+  getStats(): Observable<{ total: number; approved: number; pending: number; rejected: number; suspended: number }> {
+    return this.http.get<any>(`${this.baseUrl}/stats`);
   }
 
   getById(id: string): Observable<Vendor> {

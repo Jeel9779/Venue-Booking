@@ -38,9 +38,16 @@ export class Users implements OnInit {
 
   // ── UI State ───────────────────────────────────────────────────────────────
   search = signal('');
-  filter = signal<'all' | 'verified' | 'unverified' | 'suspended'>('all');
+  filter = signal<string>('all');
   sortBy = signal<SortField>('createdAt');
   sortOrder = signal<SortOrder>('desc');
+
+  backendStats = signal<{all: number; verified: number; unverified: number; suspended: number}>({
+    all: 0,
+    verified: 0,
+    unverified: 0,
+    suspended: 0
+  });
 
   selectedUser = signal<User | null>(null);
   showEditModel = signal(false);
@@ -54,88 +61,51 @@ export class Users implements OnInit {
 
   // ── Computed ───────────────────────────────────────────────────────────────
   filteredUsers = computed(() => {
-    // Filter out soft-deleted users first
-    let result = this.users().filter(u => !u.deleted);
-
-    // Search
-    const q = this.search().toLowerCase().trim();
-    if (q) {
-      result = result.filter(u => {
-        const nameMatch = u.name.toLowerCase().includes(q);
-        const emailMatch = u.email.toLowerCase().includes(q);
-        const cityMatch = (u.city || '').toLowerCase().includes(q);
-        const phoneMatch = (u.phone || '').includes(q);
-        const pinMatch = (u.pinCode || '').toLowerCase().includes(q);
-        const addressMatch = (u.address || '').toLowerCase().includes(q);
-        
-        let dateMatch = false;
-        if (u.createdAt) {
-          const dateObj = new Date(u.createdAt);
-          const formattedDateUS = dateObj.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          }).toLowerCase();
-          const formattedDateIN = dateObj.toLocaleDateString('en-IN', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          }).toLowerCase();
-          dateMatch = formattedDateUS.includes(q) || formattedDateIN.includes(q) || u.createdAt.toLowerCase().includes(q);
-        }
-
-        return nameMatch || emailMatch || cityMatch || phoneMatch || pinMatch || addressMatch || dateMatch;
-      });
-    }
-
-    // Status filter
-    if (this.filter() === 'verified') {
-      result = result.filter(u => u.status !== 'suspended' && u.profilePhoto && u.address && u.city);
-    } else if (this.filter() === 'unverified') {
-      result = result.filter(u => u.status !== 'suspended' && (!u.profilePhoto || !u.address || !u.city));
-    } else if (this.filter() === 'suspended') {
-      result = result.filter(u => u.status === 'suspended');
-    }
-
-    // Sort
-    result.sort((a, b) => {
-      let aVal: any = a[this.sortBy() as keyof User];
-      let bVal: any = b[this.sortBy() as keyof User];
-      if (this.sortBy() === 'createdAt') {
-        aVal = new Date(aVal as string).getTime();
-        bVal = new Date(bVal as string).getTime();
-      } else {
-        aVal = String(aVal ?? '').toLowerCase();
-        bVal = String(bVal ?? '').toLowerCase();
-      }
-      if (aVal < bVal) return this.sortOrder() === 'asc' ? -1 : 1;
-      if (aVal > bVal) return this.sortOrder() === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-    return result;
+    return this.users().filter(u => !u.deleted);
   });
 
-  counts = computed(() => {
-    const list = this.users().filter(u => !u.deleted);
-    const suspended = list.filter(u => u.status === 'suspended').length;
-    const active = list.filter(u => u.status !== 'suspended');
-    const verified = active.filter(u => u.profilePhoto && u.address && u.city).length;
-    return {
-      all: list.length,
-      verified,
-      unverified: active.length - verified,
-      suspended
-    };
-  });
+  counts = this.backendStats.asReadonly();
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
   ngOnInit() {
-    this.userService.loadAll(this.pagination().page);
+    this.fetchData(this.pagination().page);
+  }
+
+  loadStats() {
+    this.userService.getStats().subscribe({
+      next: (stats) => {
+        if (stats) this.backendStats.set({
+          all: stats.total,
+          verified: stats.verified,
+          unverified: stats.unverified,
+          suspended: stats.suspended
+        });
+      }
+    });
+  }
+
+  fetchData(page: number) {
+    this.userService.loadAll(page, this.pagination().limit, this.search(), this.filter(), this.sortBy(), this.sortOrder());
+    this.loadStats();
   }
 
   onPageChange(page: number) {
-    this.userService.loadAll(page, this.pagination().limit);
+    this.fetchData(page);
+  }
+
+  setFilter(filter: string) {
+    this.filter.set(filter);
+    this.fetchData(1);
+  }
+
+  private searchTimeout: any;
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.search.set(input.value);
+      this.fetchData(1);
+    }, 400);
   }
 
   // ── Actions ────────────────────────────────────────────────────────────────
@@ -218,6 +188,7 @@ export class Users implements OnInit {
       this.sortBy.set(field);
       this.sortOrder.set('asc');
     }
+    this.fetchData(1);
   }
 
   dismissError() {
