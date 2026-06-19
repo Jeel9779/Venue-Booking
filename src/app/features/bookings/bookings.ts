@@ -33,7 +33,8 @@ export class Bookings {
   private allBookingsForStats = signal<Booking[]>([]);
 
   ngOnInit() {
-    this.bookingService.loadAll(this.pagination().page, this.pagination().limit, this.search(), this.filter());
+    const limit = this.search() ? 1000 : 10;
+    this.bookingService.loadAll(this.pagination().page, limit, '', this.filter());
     this.loadStats();
   }
 
@@ -47,11 +48,54 @@ export class Bookings {
   }
 
   onPageChange(page: number) {
-    this.bookingService.loadAll(page, this.pagination().limit, this.search(), this.filter());
+    const limit = this.search() ? 1000 : 10;
+    this.bookingService.loadAll(page, limit, '', this.filter());
   }
 
   // ── State (Signals) ────────────────────────────────────────────────────────
-  readonly bookings = this.bookingStore.bookings;
+  readonly rawBookings = this.bookingStore.bookings;
+  
+  readonly bookings = computed(() => {
+    const term = this.search().toLowerCase().trim();
+    let list = this.rawBookings();
+    
+    if (term) {
+      list = list.filter(b => {
+        if (!b) return false;
+        const userId: any = b.userId && typeof b.userId === 'object' ? b.userId : {};
+        const vendorId: any = b.vendorId && typeof b.vendorId === 'object' ? b.vendorId : {};
+        const venueId: any = b.venueId && typeof b.venueId === 'object' ? b.venueId : {};
+        
+        const userName = userId.name || '';
+        const userEmail = userId.email || '';
+        const vendorName = vendorId.fullName || vendorId.businessName || '';
+        const venueName = venueId.name || '';
+        const venueCity = venueId.city || '';
+        const statusStr = b.paymentStatus || '';
+        const txnId = b.transactionId || '';
+        
+        let dateMatch = false;
+        if (b.date) {
+          const d = new Date(b.date);
+          dateMatch = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toLowerCase().includes(term) ||
+                      d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }).toLowerCase().includes(term);
+        }
+        
+        return userName.toLowerCase().includes(term) ||
+               userEmail.toLowerCase().includes(term) ||
+               vendorName.toLowerCase().includes(term) ||
+               venueName.toLowerCase().includes(term) ||
+               venueCity.toLowerCase().includes(term) ||
+               statusStr.toLowerCase().includes(term) ||
+               txnId.toLowerCase().includes(term) ||
+               dateMatch;
+      });
+    }
+
+    const page = this.pagination()?.page || 1;
+    const limit = 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
+  });
   // Use store signals for loading and error states
   readonly isLoading = this.bookingStore.isLoading;
   readonly error = this.bookingStore.error;
@@ -148,12 +192,14 @@ export class Bookings {
 
   // ── Actions ────────────────────────────────────────────────────────────────
   refresh() {
-    this.bookingService.loadAll(this.pagination().page, this.pagination().limit, this.search(), this.filter());
+    const limit = this.search() ? 1000 : 10;
+    this.bookingService.loadAll(this.pagination().page, limit, '', this.filter());
   }
   
   setFilter(f: string) {
     this.filter.set(f);
-    this.bookingService.loadAll(1, this.pagination().limit, this.search(), f);
+    const limit = this.search() ? 1000 : 10;
+    this.bookingService.loadAll(1, limit, '', f);
     this.loadStats();
   }
 
@@ -163,7 +209,8 @@ export class Bookings {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.search.set(input.value);
-      this.bookingService.loadAll(1, this.pagination().limit, input.value, this.filter());
+      const limit = input.value ? 1000 : 10;
+      this.bookingService.loadAll(1, limit, '', this.filter());
       this.loadStats();
     }, 500);
   }
@@ -174,7 +221,8 @@ export class Bookings {
   }
 
   setPageSize(size: number) {
-    this.bookingService.loadAll(1, size, this.search(), this.filter());
+    const limit = this.search() ? 1000 : size;
+    this.bookingService.loadAll(1, limit, '', this.filter());
   }
 
   openDetails(booking: Booking) {

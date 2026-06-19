@@ -24,7 +24,34 @@ export class Blogs implements OnInit {
   private readonly blogService = inject(BlogService);
 
   // Store signals
-  readonly blogs = this.store.blogs;
+  readonly rawBlogs = this.store.blogs;
+
+  readonly blogs = computed(() => {
+    let list = this.rawBlogs();
+    const search = this.searchQuery().toLowerCase().trim();
+
+    if (search) {
+      list = list.filter(b => {
+        const vendorName = b.vendorId?.businessName || b.vendorId?.fullName || 'Unknown';
+        const vendorEmail = b.vendorId?.email || '';
+        const status = b.status || '';
+        const title = b.title || '';
+        const content = b.content || '';
+        const tags = b.tags ? b.tags.join(', ') : '';
+
+        return title.toLowerCase().includes(search) ||
+               content.toLowerCase().includes(search) ||
+               vendorName.toLowerCase().includes(search) ||
+               vendorEmail.toLowerCase().includes(search) ||
+               status.toLowerCase().includes(search) ||
+               tags.toLowerCase().includes(search);
+      });
+    }
+
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
+  });
   readonly pagination = this.store.pagination;
   readonly isLoading = this.store.isLoading;
   readonly error = this.store.error;
@@ -62,10 +89,11 @@ export class Blogs implements OnInit {
   }
 
   loadBlogs(page: number = 1): void {
+    const limit = this.searchQuery() ? 1000 : this.pagination().limit;
     this.blogService.loadBlogs(
       page, 
-      this.pagination().limit, 
-      this.searchQuery(), 
+      limit, 
+      '', 
       this.filterStatus()
     );
   }
@@ -82,6 +110,16 @@ export class Blogs implements OnInit {
     this.filterStatus.set('');
     this.searchQuery.set('');
     this.loadBlogs(1);
+  }
+
+  private searchTimeout: any;
+
+  onSearchChange(term: string): void {
+    this.searchQuery.set(term);
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.applyFilters();
+    }, 500);
   }
 
   // Actions

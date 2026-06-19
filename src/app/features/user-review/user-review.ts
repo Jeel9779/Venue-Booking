@@ -1,6 +1,6 @@
 // Purpose: Component/Logic: Handles UI behavior and user interactions for user-review.
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -32,7 +32,12 @@ export class UserReview implements OnInit {
 
 
   // ── Reactive Properties (Exposing Store Signals) ──
-  readonly reviews = this.store.reviews;
+  readonly reviews = computed(() => {
+    const list = this.store.filteredReviews();
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
+  });
   readonly stats = this.store.stats;
   readonly isLoading = this.store.isLoading;
   readonly currentFilter = this.store.filterStatus;
@@ -58,7 +63,8 @@ export class UserReview implements OnInit {
   }
 
   onPageChange(page: number) {
-    this.service.loadAll(page, this.pagination().limit, this.searchTerm(), this.currentFilter());
+    const limit = this.searchTerm() ? 1000 : 10;
+    this.service.loadAll(page, limit, '', this.currentFilter());
   }
 
   /**
@@ -136,7 +142,8 @@ export class UserReview implements OnInit {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.store.searchTerm.set(query);
-      this.service.loadAll(1, this.pagination().limit, query, this.currentFilter());
+      const limit = query ? 1000 : 10;
+      this.service.loadAll(1, limit, '', this.currentFilter());
     }, 500);
   }
 
@@ -145,7 +152,8 @@ export class UserReview implements OnInit {
    */
   setFilter(status: string) {
     this.store.filterStatus.set(status);
-    this.service.loadAll(1, this.pagination().limit, this.searchTerm(), status);
+    const limit = this.searchTerm() ? 1000 : 10;
+    this.service.loadAll(1, limit, '', status);
   }
 
   /**

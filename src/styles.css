@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 body {
-  font-family: "", sans-serif;
+  font-family: "Poppins", sans-serif;
   @apply text-slate-900 bg-slate-50/50 dark:text-slate-100 dark:bg-slate-950 transition-colors duration-300;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
@@ -13,16 +13,12 @@ body::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
 
-.rubik-doodle-shadow-regular {
-  font-family: "Rubik Doodle Shadow", system-ui;
-  font-weight: 400;
-  font-style: normal;
+.poppins {
+  font-family: "Poppins", sans-serif;
 }
 
-.rubik-regular {
-  font-family: "Rubik", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+.playfair-display {
+  font-family: "Playfair Display", serif;
 }
 
 /* Sidebar */

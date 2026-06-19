@@ -321,7 +321,7 @@
     </div>
     }
     
-    @if (pagination().totalPages > 1) {
+    @if (pagination().totalPages > 0) {
       <app-pagination 
         [currentPage]="pagination().page"
         [totalPages]="pagination().totalPages"

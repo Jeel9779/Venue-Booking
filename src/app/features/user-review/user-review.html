@@ -289,7 +289,7 @@
       }
     }
     
-    @if (pagination().totalPages > 1) {
+    @if (pagination().totalPages > 0) {
       <div class="mt-6 w-full">
         <app-pagination 
           [currentPage]="pagination().page"

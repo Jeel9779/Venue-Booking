@@ -96,7 +96,10 @@ export class Payments implements OnInit, OnDestroy {
       }
     }
 
-    return Array.from(seen.values());
+    const list = Array.from(seen.values());
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
   });
 
   // ── Active filter badge ────────────────────────────────────────────────────

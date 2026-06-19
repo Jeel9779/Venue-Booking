@@ -88,16 +88,22 @@ export class ComplainComponent implements OnInit {
     }
 
     if (search) {
-      list = list.filter(c => 
-        c.title?.toLowerCase().includes(search) || 
-        c.description?.toLowerCase().includes(search) ||
-        c.venue?.name?.toLowerCase().includes(search) ||
-        c.user?.name?.toLowerCase().includes(search) ||
-        c._id?.toLowerCase().includes(search)
-      );
+      list = list.filter(c => {
+        const venueName = c.venue?.name || 'General Platform Service';
+        const userName = c.user?.name || 'Unknown Client';
+        
+        return c.title?.toLowerCase().includes(search) || 
+               c.description?.toLowerCase().includes(search) ||
+               venueName.toLowerCase().includes(search) ||
+               userName.toLowerCase().includes(search) ||
+               c._id?.toLowerCase().includes(search) ||
+               c.status?.toLowerCase().includes(search);
+      });
     }
 
-    return list;
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
   });
 
   // Dropdown list of vendors for assignment
@@ -119,21 +125,24 @@ export class ComplainComponent implements OnInit {
 
   ngOnInit(): void {
     const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
-    this.complaintService.loadAll(this.pagination().page, this.pagination().limit, this.searchQuery(), apiStatus);
+    const limit = this.searchQuery() ? 1000 : this.pagination().limit;
+    this.complaintService.loadAll(this.pagination().page, limit, '', apiStatus);
     this.vendorService.loadAll(1, 100); // Load vendors to populate dropdowns
   }
 
   // Refreshes the complaints list
   refreshData(): void {
     const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
-    this.complaintService.loadAll(this.pagination().page, this.pagination().limit, this.searchQuery(), apiStatus);
+    const limit = this.searchQuery() ? 1000 : this.pagination().limit;
+    this.complaintService.loadAll(this.pagination().page, limit, '', apiStatus);
   }
 
   // Handle filter category selection
   setFilter(status: string): void {
     this.complaintStore.statusFilter.set(status);
     const apiStatus = status === 'All' ? 'all' : status;
-    this.complaintService.loadAll(1, this.pagination().limit, this.searchQuery(), apiStatus);
+    const limit = this.searchQuery() ? 1000 : this.pagination().limit;
+    this.complaintService.loadAll(1, limit, '', apiStatus);
   }
 
   private searchTimeout: any;
@@ -145,13 +154,15 @@ export class ComplainComponent implements OnInit {
       this.searchQuery.set(value);
       this.complaintStore.searchTerm.set(value);
       const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
-      this.complaintService.loadAll(1, this.pagination().limit, value, apiStatus);
+      const limit = value ? 1000 : 10;
+      this.complaintService.loadAll(1, limit, '', apiStatus);
     }, 500);
   }
 
   onPageChange(page: number) {
     const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
-    this.complaintService.loadAll(page, this.pagination().limit, this.searchQuery(), apiStatus);
+    const limit = this.searchQuery() ? 1000 : 10;
+    this.complaintService.loadAll(page, limit, '', apiStatus);
   }
 
   // Review Case opens the detail drawer on the right

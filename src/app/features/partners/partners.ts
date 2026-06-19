@@ -23,7 +23,12 @@ export class Partners implements OnInit {
   private readonly service = inject(PartnerService);
 
   // ── State (Signals Linked to Store) ──
-  readonly partners = this.store.partners;
+  readonly partners = computed(() => {
+    const list = this.store.partners();
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
+  });
   readonly kpi = this.store.kpi;
   readonly loading = this.store.isLoading;
   readonly error = this.store.error;

@@ -33,7 +33,8 @@ export class VendorSubscriptions implements OnInit {
   readonly summary = this.subStore.summary;
 
   ngOnInit() {
-    this.subService.loadAllSubscriptions(this.pagination().page, this.pagination().limit);
+    const limit = this.search() ? 1000 : this.pagination().limit;
+    this.subService.loadAllSubscriptions(this.pagination().page, limit, '', this.filter());
     this.subService.loadAllAddons();
     this.vendorService.loadAll(1, 100);
   }
@@ -119,9 +120,32 @@ export class VendorSubscriptions implements OnInit {
     });
 
     // We only return Base Plans as primary rows to avoid duplicating vendors
-    return [...normalizedSubs].sort((a, b) => {
+    let finalSubs = [...normalizedSubs].sort((a, b) => {
       return new Date(b.createdAt || b.startDate).getTime() - new Date(a.createdAt || a.startDate).getTime();
     });
+
+    const term = this.search().toLowerCase().trim();
+    if (term) {
+      finalSubs = finalSubs.filter(sub => {
+        const vName = sub.vendorDetails?.businessName || '';
+        const fName = sub.vendorDetails?.fullName || '';
+        const vEmail = sub.vendorDetails?.email || '';
+        const vPhone = sub.vendorDetails?.phone || '';
+        const pName = sub.planSnapshot?.name || '';
+        const status = sub.status || '';
+
+        return vName.toLowerCase().includes(term) ||
+               fName.toLowerCase().includes(term) ||
+               vEmail.toLowerCase().includes(term) ||
+               vPhone.toLowerCase().includes(term) ||
+               pName.toLowerCase().includes(term) ||
+               status.toLowerCase().includes(term);
+      });
+    }
+
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return finalSubs.length > limit ? finalSubs.slice((page - 1) * limit, page * limit) : finalSubs;
   });
 
   // Calculate total revenue locally to include add-ons and queued plans
@@ -140,7 +164,8 @@ export class VendorSubscriptions implements OnInit {
 
   setFilter(status: string) {
     this.filter.set(status);
-    this.subService.loadAllSubscriptions(1, this.pagination().limit, this.search(), status);
+    const limit = this.search() ? 1000 : this.pagination().limit;
+    this.subService.loadAllSubscriptions(1, limit, '', status);
   }
 
   private searchTimeout: any;
@@ -149,16 +174,19 @@ export class VendorSubscriptions implements OnInit {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.search.set(value);
-      this.subService.loadAllSubscriptions(1, this.pagination().limit, value, this.filter());
+      const limit = value ? 1000 : 10;
+      this.subService.loadAllSubscriptions(1, limit, '', this.filter());
     }, 500);
   }
 
   onPageChange(page: number) {
-    this.subService.loadAllSubscriptions(page, this.pagination().limit, this.search(), this.filter());
+    const limit = this.search() ? 1000 : 10;
+    this.subService.loadAllSubscriptions(page, limit, '', this.filter());
   }
 
   loadAll() {
-    this.subService.loadAllSubscriptions(this.pagination().page, this.pagination().limit, this.search(), this.filter());
+    const limit = this.search() ? 1000 : this.pagination().limit;
+    this.subService.loadAllSubscriptions(this.pagination().page, limit, '', this.filter());
     this.subService.loadAllAddons();
     this.vendorService.loadAll(1, 100);
   }
