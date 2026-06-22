@@ -26,6 +26,12 @@ export class Blogs implements OnInit {
   // Store signals
   readonly rawBlogs = this.store.blogs;
 
+  // KPI Stats
+  readonly totalBlogs = computed(() => this.rawBlogs().length);
+  readonly pendingBlogs = computed(() => this.rawBlogs().filter(b => b.status === 'pending').length);
+  readonly approvedBlogs = computed(() => this.rawBlogs().filter(b => b.status === 'approved').length);
+  readonly rejectedBlogs = computed(() => this.rawBlogs().filter(b => b.status === 'rejected' || b.status === 'suspended').length);
+
   readonly blogs = computed(() => {
     let list = this.rawBlogs();
     const search = this.searchQuery().toLowerCase().trim();
@@ -167,9 +173,26 @@ export class Blogs implements OnInit {
     this.blogService.restoreBlog(id).subscribe();
   }
 
-  deleteBlog(id: string): void {
-    if (confirm('Are you sure you want to soft delete this blog?')) {
-      this.blogService.deleteBlog(id).subscribe();
+  // Delete Modal State
+  showDeleteModal = signal<boolean>(false);
+  blogToDelete = signal<string | null>(null);
+
+  confirmDelete(id: string): void {
+    this.blogToDelete.set(id);
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.blogToDelete.set(null);
+  }
+
+  executeDelete(): void {
+    const id = this.blogToDelete();
+    if (id) {
+      this.blogService.deleteBlog(id).subscribe(() => {
+        this.closeDeleteModal();
+      });
     }
   }
 

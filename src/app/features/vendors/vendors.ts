@@ -67,16 +67,33 @@ export class Vendors implements OnInit {
 
   // ── Computed Signals (Derived State) ─────────────────────────────────────
   filteredVendors = computed(() => {
-    return this.vendors();
+    let list = this.vendors();
+    const q = this.search().toLowerCase().trim();
+    if (q) {
+      list = list.filter(v =>
+        (v.fullName?.toLowerCase().includes(q)) ||
+        (v.businessName?.toLowerCase().includes(q)) ||
+        (v.email?.toLowerCase().includes(q)) ||
+        (v.phone?.includes(q)) ||
+        (v.businessType?.toLowerCase().includes(q)) ||
+        (v.state?.toLowerCase().includes(q)) ||
+        (v.address?.toLowerCase().includes(q)) ||
+        (v.pincode?.includes(q)) ||
+        (v.status?.toLowerCase().includes(q)) ||
+        (new Date(v.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(q))
+      );
+    }
+    return list;
   });
 
   counts = computed(() => {
+    const list = this.vendors();
     return {
-      all: this.backendStats().total,
-      pending: this.backendStats().pending,
-      approved: this.backendStats().approved,
-      rejected: this.backendStats().rejected,
-      suspended: this.backendStats().suspended,
+      all: this.backendStats().total || list.length,
+      pending: this.backendStats().pending || list.filter(v => v.status === 'pending').length,
+      approved: this.backendStats().approved || list.filter(v => v.status === 'approved').length,
+      rejected: this.backendStats().rejected || list.filter(v => v.status === 'rejected').length,
+      suspended: this.backendStats().suspended || list.filter(v => v.status === 'suspended').length,
     };
   });
 
@@ -88,7 +105,15 @@ export class Vendors implements OnInit {
   loadStats() {
     this.vendorService.getStats().subscribe({
       next: (stats) => {
-        if (stats) this.backendStats.set(stats);
+        if (stats) {
+          this.backendStats.set({
+            total: stats.total || 0,
+            approved: stats.approved || 0,
+            pending: stats.pending || 0,
+            rejected: stats.rejected || 0,
+            suspended: stats.suspended || 0
+          });
+        }
       }
     });
   }
