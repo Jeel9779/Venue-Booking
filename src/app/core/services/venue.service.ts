@@ -21,9 +21,16 @@ export class VenueService {
    * Loads all venues from the API and synchronizes the local Store.
    * Handles loading states, data transformation (amenities/media parsing), and error reporting.
    */
-  loadAll(page: number = 1, limit: number = 10): void {
+  loadAll(
+    page: number = 1, 
+    limit: number = 10,
+    search: string = '',
+    status: string = '',
+    sortBy: string = '',
+    sortOrder: string = ''
+  ): void {
     this.store.setLoading(true);
-    this.api.getAll(page, limit).pipe(
+    this.api.getAll(page, limit, search, status, sortBy, sortOrder).pipe(
       tap((res) => {
         const venues = Array.isArray(res) ? res : (res.data || []);
         // Data Transformation: Ensure amenities and mediaFiles are always clean string arrays

@@ -28,17 +28,16 @@ export class UserService {
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: (res) => {
-          const users = Array.isArray(res) ? res : (res.data || []);
+          const isArray = Array.isArray(res);
+          const users = isArray ? res : (res.data || []);
           this.store.setUsers(users);
           
-          if (!Array.isArray(res)) {
-            this.store.setPagination({
-              page: res.page || page,
-              limit: res.limit || limit,
-              totalRecords: res.totalRecords || users.length,
-              totalPages: res.totalPages || 1
-            });
-          }
+          this.store.setPagination({
+            page: isArray ? page : Number(res.page || page),
+            limit: isArray ? limit : Number(res.limit || limit),
+            totalRecords: isArray ? users.length : Number(res.totalRecords !== undefined ? res.totalRecords : users.length),
+            totalPages: isArray ? (Math.ceil(users.length / limit) || 1) : Number(res.totalPages || Math.ceil(users.length / (res.limit || limit)) || 1)
+          });
         },
         error: (err) => this.store.setError(err?.error?.message || 'Failed to load users'),
       });

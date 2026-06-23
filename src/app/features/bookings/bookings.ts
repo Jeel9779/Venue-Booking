@@ -47,7 +47,7 @@ export class Bookings {
   sortOrder = signal<string>('desc');
 
   ngOnInit() {
-    this.refresh();
+    this.fetchData(1);
   }
 
   loadStats() {
@@ -192,6 +192,11 @@ export class Bookings {
       this.search.set(input.value);
       this.fetchData(1);
     }, 400); // 400ms debounce
+  }
+
+  clearSearch() {
+    this.search.set('');
+    this.fetchData(1);
   }
 
   setDateFilter(range: string) {

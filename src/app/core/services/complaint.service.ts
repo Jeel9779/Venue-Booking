@@ -11,9 +11,9 @@ export class ComplaintService {
   private readonly store = inject(ComplaintStore);
   private readonly toast = inject(ToastService);
 
-  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = 'all'): void {
+  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = 'all', sortBy: string = '', sortOrder: string = ''): void {
     this.store.setLoading(true);
-    this.api.getComplaints(page, limit, search, status)
+    this.api.getComplaints(page, limit, search, status, sortBy, sortOrder)
       .pipe(finalize(() => this.store.setLoading(false)))
       .subscribe({
         next: (res: any) => {

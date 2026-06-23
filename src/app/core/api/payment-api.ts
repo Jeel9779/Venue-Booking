@@ -16,12 +16,15 @@ export class PaymentApi {
   /**
    * Fetches all payments with optional filtering
    */
-  getAll(filters?: Partial<PaymentFilters>, page: number = 1, limit: number = 10, search: string = ''): Observable<{ data: Payment[]; page?: number; limit?: number; totalRecords?: number; totalPages?: number }> {
+  getAll(filters?: Partial<PaymentFilters>, page: number = 1, limit: number = 10, search: string = '', sortBy: string = '', sortOrder: string = ''): Observable<{ data: Payment[]; page?: number; limit?: number; totalRecords?: number; totalPages?: number }> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
       
     if (search) params = params.set('search', search);
+    if (sortBy) params = params.set('sortBy', sortBy);
+    if (sortOrder) params = params.set('sortOrder', sortOrder);
+
 
     if (filters) {
       if (filters.type && filters.type !== 'all') params = params.set('type', filters.type);

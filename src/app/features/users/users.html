@@ -19,28 +19,28 @@
       <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
                   bg-sky-50 text-sky-700 border-sky-200 hover:ring-2 hover:ring-sky-300 transition"
            [class.ring-2]="filter() === 'all'" [class.ring-sky-400]="filter() === 'all'"
-           (click)="filter.set('all')">
+           (click)="setFilter('all')">
         <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
         {{ counts().all }} All
       </div>
       <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
                   bg-emerald-50 text-emerald-700 border-emerald-200 hover:ring-2 hover:ring-emerald-300 transition"
            [class.ring-2]="filter() === 'verified'" [class.ring-emerald-400]="filter() === 'verified'"
-           (click)="filter.set('verified')">
+           (click)="setFilter('verified')">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
         {{ counts().verified }} Verified
       </div>
       <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
                   bg-amber-50 text-amber-700 border-amber-200 hover:ring-2 hover:ring-amber-300 transition"
            [class.ring-2]="filter() === 'unverified'" [class.ring-amber-400]="filter() === 'unverified'"
-           (click)="filter.set('unverified')">
+           (click)="setFilter('unverified')">
         <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
         {{ counts().unverified }} Incomplete
       </div>
       <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
                   bg-rose-50 text-rose-700 border-rose-200 hover:ring-2 hover:ring-rose-300 transition"
            [class.ring-2]="filter() === 'suspended'" [class.ring-rose-400]="filter() === 'suspended'"
-           (click)="filter.set('suspended')">
+           (click)="setFilter('suspended')">
         <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
         {{ counts().suspended }} Suspended
       </div>
@@ -60,10 +60,10 @@
                     focus:ring-blue-400/20 dark:"
              placeholder="Search by name, email, phone, city, address, pincode, date..."
              [value]="search()"
-             (input)="search.set($any($event.target).value)"/>
+             (input)="onSearch($event)"/>
       @if (search()) {
       <button class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded text-slate-400
-                     hover:text-slate-700 dark:text-slate-300 transition" (click)="search.set('')">
+                     hover:text-slate-700 dark:text-slate-300 transition" (click)="clearSearch()">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path d="M18 6L6 18M6 6l12 12"/>
         </svg>

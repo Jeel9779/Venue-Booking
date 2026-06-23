@@ -44,8 +44,8 @@ export class VendorApi {
   }
 
   create(formData: FormData): Observable<{ message: string; vendor: Vendor }> {
-    // Backend uses /vendors/register for POST
-    return this.http.post<{ message: string; vendor: Vendor }>(`${this.baseUrl}/register`, formData);
+    // Admin uses /vendors/admin-create to automatically approve and set credentials
+    return this.http.post<{ message: string; vendor: Vendor }>(`${this.baseUrl}/admin-create`, formData);
   }
 
   // Backend uses PUT /vendors/approve/:id

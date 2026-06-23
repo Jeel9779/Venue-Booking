@@ -65,25 +65,8 @@ export class Vendors implements OnInit {
 
   viewingImageUrl = signal<string | null>(null);
 
-  // ── Computed Signals (Derived State) ─────────────────────────────────────
   filteredVendors = computed(() => {
-    let list = this.vendors();
-    const q = this.search().toLowerCase().trim();
-    if (q) {
-      list = list.filter(v =>
-        (v.fullName?.toLowerCase().includes(q)) ||
-        (v.businessName?.toLowerCase().includes(q)) ||
-        (v.email?.toLowerCase().includes(q)) ||
-        (v.phone?.includes(q)) ||
-        (v.businessType?.toLowerCase().includes(q)) ||
-        (v.state?.toLowerCase().includes(q)) ||
-        (v.address?.toLowerCase().includes(q)) ||
-        (v.pincode?.includes(q)) ||
-        (v.status?.toLowerCase().includes(q)) ||
-        (new Date(v.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase().includes(q))
-      );
-    }
-    return list;
+    return this.vendors();
   });
 
   counts = computed(() => {
@@ -99,7 +82,7 @@ export class Vendors implements OnInit {
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
   ngOnInit() {
-    this.fetchData(this.pagination().page);
+    this.fetchData(1);
   }
 
   loadStats() {

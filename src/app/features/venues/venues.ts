@@ -155,7 +155,7 @@ export class Venues implements OnInit {
    * Initializes the view by triggering the API call to load venues.
    */
   ngOnInit() {
-    this.venueService.loadAll(this.pagination().page);
+    this.venueService.loadAll(1, this.pagination().limit);
   }
 
   onPageChange(page: number) {

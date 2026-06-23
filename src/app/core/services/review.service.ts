@@ -14,9 +14,9 @@ export class ReviewService {
   /**
    * Syncs the moderation queue from the backend (Paginated).
    */
-  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = 'all') {
+  loadAll(page: number = 1, limit: number = 10, search: string = '', status: string = 'all', sortBy: string = '', sortOrder: string = '') {
     this.store.isLoading.set(true);
-    return this.api.getAll(page, limit, search, status).pipe(
+    return this.api.getAll(page, limit, search, status, sortBy, sortOrder).pipe(
       tap(res => {
         const reviews = Array.isArray(res) ? res : (res.data || []);
         this.store.setReviews(reviews);

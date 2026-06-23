@@ -128,9 +128,15 @@
           <lucide-icon name="search" size="18" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></lucide-icon>
           <input 
             type="text" 
+            [value]="search()"
             (input)="onSearch($event)"
             placeholder="Search bookings, users, venues..." 
             class="pl-12 pr-6 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all w-full md:w-72 lg:w-[350px]">
+          @if (search()) {
+            <button class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded text-slate-400 hover:text-slate-700 dark:text-slate-300 transition" (click)="clearSearch()">
+              <lucide-icon name="x" size="16" [strokeWidth]="2.5"></lucide-icon>
+            </button>
+          }
         </div>
 
         <!-- Filter pills switcher -->

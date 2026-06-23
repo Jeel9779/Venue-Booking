@@ -48,9 +48,9 @@
         {{ counts().rejected }} Rejected
       </div>
       <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
-                  bg-white dark:bg-slate-900 text-orange-600 border-slate-200 dark:border-slate-700 hover:border-orange-300"
-        [class.ring-2]="filter() === 'suspended'" [class.ring-orange-500]="filter() === 'suspended'"
-        [class.border-orange-500]="filter() === 'suspended'" (click)="filter.set('suspended')">
+                  bg-white dark:bg-slate-900 text-violet-600 border-slate-200 dark:border-slate-700 hover:border-violet-300"
+        [class.ring-2]="filter() === 'suspended'" [class.ring-violet-500]="filter() === 'suspended'"
+        [class.border-violet-500]="filter() === 'suspended'" (click)="filter.set('suspended')">
         {{ counts().suspended }} Suspended
       </div>
     </div>
@@ -60,7 +60,7 @@
         class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></lucide-icon>
       <input type="text"
         class="w-full py-2.5 pl-10 pr-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
-        placeholder="Search vendors..." [value]="search()" (input)="search.set($any($event.target).value)" />
+        placeholder="Search vendors..." [value]="search()" (input)="onSearch($event)" />
     </div>
   </div>
 
@@ -117,9 +117,9 @@
             </td>
             <td class="px-5 py-4">
               <span [class]="'px-2.5 py-1 rounded-lg text-[0.7rem] font-black uppercase tracking-widest border ' + 
-                                (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 
+                                 (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 
                                  v.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-100' : 
-                                 v.status === 'suspended' ? 'bg-orange-50 text-orange-700 border-orange-100' : 
+                                 v.status === 'suspended' ? 'bg-rose-50 text-rose-700 border-rose-100' : 
                                  'bg-amber-50 text-amber-700 border-amber-100')">
                 {{ v.status }}
               </span>
@@ -164,7 +164,7 @@
             [class]="'px-2 py-0.5 rounded-md text-[0.65rem] font-extrabold uppercase tracking-widest shrink-0 border ' + 
                           (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 
                            v.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-100' : 
-                           v.status === 'suspended' ? 'bg-orange-50 text-orange-700 border-orange-100' : 
+                           v.status === 'suspended' ? 'bg-violet-50 text-violet-700 border-violet-100' : 
                            'bg-amber-50 text-amber-700 border-amber-100')">
             {{ v.status }}
           </span>
@@ -218,7 +218,7 @@
             <span [class]="'px-2.5 py-0.5 rounded-lg text-[0.65rem] font-black uppercase tracking-widest border ' + 
                              (v.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
                               v.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
-                              v.status === 'suspended' ? 'bg-orange-50 text-orange-700 border-orange-100' : 
+                              v.status === 'suspended' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
                               'bg-amber-50 text-amber-700 border-amber-100')">
               {{ v.status }}
             </span>

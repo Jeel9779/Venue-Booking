@@ -68,7 +68,7 @@ export class Users implements OnInit {
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
   ngOnInit() {
-    this.fetchData(this.pagination().page);
+    this.fetchData(1);
   }
 
   loadStats() {
@@ -106,6 +106,11 @@ export class Users implements OnInit {
       this.search.set(input.value);
       this.fetchData(1);
     }, 400);
+  }
+
+  clearSearch() {
+    this.search.set('');
+    this.fetchData(1);
   }
 
   // ── Actions ────────────────────────────────────────────────────────────────

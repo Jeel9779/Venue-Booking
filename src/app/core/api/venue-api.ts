@@ -15,9 +15,21 @@ export class VenueApi {
   private readonly baseUrl = `${API_BASE_URL}/venues`;
 
 
-  getAll(page: number = 1, limit: number = 10): Observable<any> {
-    // Admin backend uses /admin/venues
-    return this.http.get<any>(`${API_BASE_URL}/admin/venues?page=${page}&limit=${limit}`).pipe(
+  getAll(
+    page: number = 1, 
+    limit: number = 10,
+    search: string = '',
+    status: string = '',
+    sortBy: string = '',
+    sortOrder: string = ''
+  ): Observable<any> {
+    let url = `${API_BASE_URL}/admin/venues?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (status && status !== 'all') url += `&status=${status}`;
+    if (sortBy) url += `&sortBy=${encodeURIComponent(sortBy)}`;
+    if (sortOrder) url += `&sortOrder=${encodeURIComponent(sortOrder)}`;
+
+    return this.http.get<any>(url).pipe(
       map(res => res)
     );
   }

@@ -8,11 +8,13 @@ import { VendorStore } from '../../../core/store/vendor.store';
 import { Button } from '../../../shared/components/button/button';
 import { Card } from '../../../shared/components/card/card';
 import { FormInput } from '../../../shared/components/form-input/form-input';
+import { Model } from '../../../shared/components/model/model';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-add-vendor',
   standalone: true,
-  imports: [CommonModule, FormsModule, Button, Card, FormInput, RouterLink],
+  imports: [CommonModule, FormsModule, Button, Card, FormInput, RouterLink, Model, LucideAngularModule],
   templateUrl: './add-vendor.html',
   styleUrl: './add-vendor.css',
 })
@@ -28,6 +30,8 @@ export class AddVendor {
   readonly vendors = this.vendorStore.vendors;
 
   vendorData = signal({
+    username: '',
+    password: '',
     fullName: '',
     email: '',
     phone: '',
@@ -41,12 +45,16 @@ export class AddVendor {
   selectedGovFile = signal<File | null>(null);
   selectedLicenseFile = signal<File | null>(null);
   isSubmitted = signal(false);
+  showSuccessModal = signal(false);
 
   // Validation Signals
   errors = computed(() => {
     if (!this.isSubmitted()) return {} as Record<string, string>;
     const data = this.vendorData();
     const errs: Record<string, string> = {};
+    if (!data.username.trim()) errs['username'] = 'Username is required';
+    if (!data.password.trim()) errs['password'] = 'Password is required';
+    else if (data.password.length < 6) errs['password'] = 'Password must be at least 6 chars';
     
     if (!data.businessName.trim()) errs['businessName'] = 'Business Name is required';
     if (!data.businessType.trim()) errs['businessType'] = 'Type is required';
@@ -68,6 +76,8 @@ export class AddVendor {
   isFormValid = computed(() => {
     const data = this.vendorData();
     return !!(
+      data.username.trim() &&
+      data.password.length >= 6 &&
       data.fullName.trim() &&
       /\S+@\S+\.\S+/.test(data.email) &&
       /^\d{10}$/.test(data.phone) &&
@@ -83,12 +93,18 @@ export class AddVendor {
     let initialCount = this.vendors().length;
     effect(() => {
       if (this.vendors().length > initialCount && !this.error() && !this.isLoading()) {
-        this.router.navigate(['/vendors']);
+        this.showSuccessModal.set(true);
+        initialCount = this.vendors().length; // Update to prevent re-triggering
       }
     });
   }
 
   // ── Actions ────────────────────────────────────────────────────────────────
+  
+  closeModal() {
+    this.showSuccessModal.set(false);
+    this.router.navigate(['/vendors']);
+  }
   updateField(field: string, value: string) {
     this.vendorData.update(prev => ({ ...prev, [field]: value }));
   }
@@ -110,6 +126,8 @@ export class AddVendor {
     const licenseFile = this.selectedLicenseFile()!;
 
     const formData = new FormData();
+    formData.append('username', data.username);
+    formData.append('password', data.password);
     formData.append('fullName', data.fullName);
     formData.append('email', data.email);
     formData.append('phone', data.phone);

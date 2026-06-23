@@ -21,8 +21,8 @@ export class PaymentService {
     const { filters, pagination } = this.store.snapshot;
 
     forkJoin({
-      paymentsRes: this.api.getAll(filters, pagination.page, pagination.limit, filters.search),
-      allForStats: this.api.getAll({}, 1, 1000, '').pipe(catchError(() => of(null)))
+      paymentsRes: this.api.getAll(filters, pagination.page, pagination.limit, filters.search, filters.sortBy, filters.sortOrder),
+      allForStats: this.api.getAll({}, 1, 1000, '', '', '').pipe(catchError(() => of(null)))
     })
       .pipe(
         tap(({ paymentsRes, allForStats }: any) => {
@@ -70,7 +70,7 @@ export class PaymentService {
     const { filters, pagination } = this.store.snapshot;
 
     this.api
-      .getAll(filters, pagination.page, pagination.limit, filters.search)
+      .getAll(filters, pagination.page, pagination.limit, filters.search, filters.sortBy, filters.sortOrder)
       .pipe(
         tap((res: any) => {
           this.store.setPayments(res.data || res);

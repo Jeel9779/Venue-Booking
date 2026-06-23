@@ -43,4 +43,6 @@ export interface PaymentFilters {
   paymentStatus: string;
   vendorId: string;
   search?: string;
+  sortBy?: string;
+  sortOrder?: string;
 }

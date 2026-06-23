@@ -50,6 +50,16 @@
 
       <app-card title="Owner Details" customClass="/50">
         <div class="flex flex-col gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
+            <app-form-input label="Username" placeholder="e.g. john_doe" 
+                            [ngModel]="vendorData().username" (ngModelChange)="updateField('username', $event)"
+                            [error]="errors()['username']"></app-form-input>
+            
+            <app-form-input label="Password" type="text" placeholder="At least 6 characters" 
+                            [ngModel]="vendorData().password" (ngModelChange)="updateField('password', $event)"
+                            [error]="errors()['password']"></app-form-input>
+          </div>
+
           <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Full Name of Owner" placeholder="e.g. John Doe" 
                             [ngModel]="vendorData().fullName" (ngModelChange)="updateField('fullName', $event)"
@@ -154,5 +164,24 @@
       </app-card>
     </div>
   </div>
+
+  @if (showSuccessModal()) {
+    <app-model title="Vendor Successfully Created" maxWidth="sm" (onClose)="closeModal()" [hasFooter]="true">
+      <div class="flex flex-col items-center gap-4 py-6 text-center">
+        <div class="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2">
+          <lucide-icon name="check-circle-2" size="32" [strokeWidth]="2.5"></lucide-icon>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Vendor Created & Approved!</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium px-4">
+          The vendor account has been successfully created. An email containing the login credentials (username and password) has been dispatched to the vendor.
+        </p>
+      </div>
+      <div footer class="flex justify-end w-full">
+        <app-button variant="primary" (onClick)="closeModal()">
+          Back to Vendors
+        </app-button>
+      </div>
+    </app-model>
+  }
 
 </div>

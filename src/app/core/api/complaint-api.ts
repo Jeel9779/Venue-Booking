@@ -11,10 +11,12 @@ export class ComplaintApi {
   private readonly baseUrl = `${API_BASE_URL}/complaints`;
 
   // Get all complaints
-  getComplaints(page: number = 1, limit: number = 10, search: string = '', status: string = 'all'): Observable<any> {
+  getComplaints(page: number = 1, limit: number = 10, search: string = '', status: string = 'all', sortBy: string = '', sortOrder: string = ''): Observable<any> {
     let url = `${this.baseUrl}?page=${page}&limit=${limit}`;
     if (search) url += `&search=${encodeURIComponent(search)}`;
     if (status && status !== 'all') url += `&status=${status}`;
+    if (sortBy) url += `&sortBy=${encodeURIComponent(sortBy)}`;
+    if (sortOrder) url += `&sortOrder=${encodeURIComponent(sortOrder)}`;
     return this.http.get<any>(url);
   }
 

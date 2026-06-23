@@ -31,14 +31,13 @@ export class VendorService {
           const vendors = Array.isArray(res) ? res : (res.data || []);
           this.store.setVendors(vendors);
 
-          if (!Array.isArray(res)) {
-            this.store.setPagination({
-              page: res.page || page,
-              limit: res.limit || limit,
-              totalRecords: res.totalRecords || vendors.length,
-              totalPages: res.totalPages || 1
-            });
-          }
+          const isArray = Array.isArray(res);
+          this.store.setPagination({
+            page: isArray ? page : Number(res.page || page),
+            limit: isArray ? limit : Number(res.limit || limit),
+            totalRecords: isArray ? vendors.length : Number(res.totalRecords || vendors.length),
+            totalPages: isArray ? (Math.ceil(vendors.length / limit) || 1) : Number(res.totalPages || Math.ceil(vendors.length / (res.limit || limit)) || 1)
+          });
         },
         error: (err) => this.store.setError(err?.message || 'Failed to load vendors'),
       });
