@@ -71,11 +71,16 @@ export class PartnerStore {
    */
   readonly kpi = computed<PartnerKPI>(() => {
     const spaces = this._rawVenues();
-    const allReviews = spaces.flatMap(s => s.reviews || []);
     const ratedVenues = spaces.filter(s => s.averageRating > 0);
     const avgRating = ratedVenues.length > 0 
       ? ratedVenues.reduce((acc, v) => acc + v.averageRating, 0) / ratedVenues.length 
       : 0;
+      
+    // Calculate total reviews using the aggregated ratingCount (or fallback to reviews array length)
+    const totalReviews = spaces.reduce((acc, s) => {
+      const count = s.ratingCount ?? (s.reviews?.length || 0);
+      return acc + count;
+    }, 0);
 
     // Direct calculation of unique vendors from raw venues
     const uniqueVendors = new Set(
@@ -89,7 +94,7 @@ export class PartnerStore {
       venues: spaces.length,
       active: spaces.filter(s => s.status === 'approved').length,
       pending: spaces.filter(s => s.status === 'pending').length,
-      totalReviews: allReviews.length,
+      totalReviews: totalReviews,
       avgRating: Number(avgRating.toFixed(1)),
     };
   });

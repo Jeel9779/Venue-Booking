@@ -75,7 +75,12 @@ export class Bookings {
   readonly rawBookings = this.bookingStore.bookings;
   
   readonly bookings = computed(() => {
-    return this.rawBookings();
+    let list = this.rawBookings();
+    
+    // Add client-side pagination slice to ensure we never display more than 'limit' records on a single page
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
   });
   // Use store signals for loading and error states
   readonly isLoading = this.bookingStore.isLoading;

@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
       @for (s of newStats(); track s.title) {
       <div
-        class="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-700/80 dark: hover: hover:border-slate-300 dark:border-slate-700 transition-all duration-300 transform hover:-translate-y-1"
+        class="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-700/80 hover: hover:border-slate-300 dark:border-slate-700 transition-all duration-300 transform hover:-translate-y-1"
         [ngClass]="s.accentClass">
         <div class="flex justify-between items-start mb-4">
           <div
@@ -166,7 +166,7 @@
             </span>
           </div>
 
-          <div class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+          <div class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar scrollbar-hide">
             @if (isDashboardLoading()) {
             @for (i of [1,2,3]; track i) {
             <div class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl animate-pulse space-y-2">

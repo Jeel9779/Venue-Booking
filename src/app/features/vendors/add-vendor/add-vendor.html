@@ -17,33 +17,33 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     
     <!-- ── FORM SECTION ──────────────────────────────────────────────────── -->
-    <div class="lg:col-span-2 space-y-8">
+    <div class="lg:col-span-2 space-y-8" [formGroup]="vendorForm">
       <app-card title="Business Information" customClass="/50">
         <div class="flex flex-col gap-3">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Business Name" placeholder="e.g. Grand Plaza Hotels" 
-                            [ngModel]="vendorData().businessName" (ngModelChange)="updateField('businessName', $event)"
-                            [error]="errors()['businessName']"></app-form-input>
+                            formControlName="businessName"
+                            [error]="errors['businessName']"></app-form-input>
             
             <app-form-input label="Business Type" placeholder="e.g. Hotel, Resort, Banquet" 
-                            [ngModel]="vendorData().businessType" (ngModelChange)="updateField('businessType', $event)"
-                            [error]="errors()['businessType']"></app-form-input>
+                            formControlName="businessType"
+                            [error]="errors['businessType']"></app-form-input>
           </div>
           
           <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Full Address" type="textarea" placeholder="Street, landmark, area..." [rows]="3"
-                            [ngModel]="vendorData().address" (ngModelChange)="updateField('address', $event)"
-                            [error]="errors()['address']"></app-form-input>
+                            formControlName="address"
+                            [error]="errors['address']"></app-form-input>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="State" placeholder="e.g. Gujarat" 
-                            [ngModel]="vendorData().state" (ngModelChange)="updateField('state', $event)"
-                            [error]="errors()['state']"></app-form-input>
+                            formControlName="state"
+                            [error]="errors['state']"></app-form-input>
             
             <app-form-input label="Pincode" placeholder="6-digit code" 
-                            [ngModel]="vendorData().pincode" (ngModelChange)="updateField('pincode', $event)"
-                            [error]="errors()['pincode']"></app-form-input>
+                            formControlName="pincode"
+                            [error]="errors['pincode']"></app-form-input>
           </div>
         </div>
       </app-card>
@@ -52,28 +52,28 @@
         <div class="flex flex-col gap-3">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Username" placeholder="e.g. john_doe" 
-                            [ngModel]="vendorData().username" (ngModelChange)="updateField('username', $event)"
-                            [error]="errors()['username']"></app-form-input>
+                            formControlName="username"
+                            [error]="errors['username']"></app-form-input>
             
             <app-form-input label="Password" type="text" placeholder="At least 6 characters" 
-                            [ngModel]="vendorData().password" (ngModelChange)="updateField('password', $event)"
-                            [error]="errors()['password']"></app-form-input>
+                            formControlName="password"
+                            [error]="errors['password']"></app-form-input>
           </div>
 
           <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Full Name of Owner" placeholder="e.g. John Doe" 
-                            [ngModel]="vendorData().fullName" (ngModelChange)="updateField('fullName', $event)"
-                            [error]="errors()['fullName']"></app-form-input>
+                            formControlName="fullName"
+                            [error]="errors['fullName']"></app-form-input>
           </div>
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-300 dark:border-slate-700 dark:">
             <app-form-input label="Email Address" type="email" placeholder="john@example.com" 
-                            [ngModel]="vendorData().email" (ngModelChange)="updateField('email', $event)"
-                            [error]="errors()['email']"></app-form-input>
+                            formControlName="email"
+                            [error]="errors['email']"></app-form-input>
             
             <app-form-input label="Phone Number" placeholder="10-digit mobile number" 
-                            [ngModel]="vendorData().phone" (ngModelChange)="updateField('phone', $event)"
-                            [error]="errors()['phone']"></app-form-input>
+                            formControlName="phone"
+                            [error]="errors['phone']"></app-form-input>
           </div>
         </div>
       </app-card>
@@ -154,7 +154,7 @@
           }
         </div>
 
-        <app-button [fullWidth]="true" size="lg" (onClick)="onSubmit()" [loading]="isLoading()" [disabled]="isSubmitted() && !isFormValid()">
+        <app-button [fullWidth]="true" size="lg" (onClick)="onSubmit()" [loading]="isLoading()" [disabled]="isSubmitted() && !isFormValid">
           Submit Application
         </app-button>
         

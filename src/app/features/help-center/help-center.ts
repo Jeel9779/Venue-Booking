@@ -21,20 +21,28 @@ export class HelpCenter {
 
   faqs = [
     {
-      question: 'How do I approve a new vendor?',
-      answer: 'Go to the "Vendors" tab from the main navigation. Find the vendor with a "Pending" status in the list. Click on their row to view their application details, then click the "Approve" button. This will automatically generate their temporary login credentials and notify them via email.'
+      question: 'How do I onboard a new venue partner (vendor)?',
+      answer: 'To onboard a new partner, navigate to the "Vendors" tab and click "Add Vendor". You must fill in their Business Information, Owner Details, and securely upload verification documents (Gov ID and Business License). Once submitted, the system automatically creates their account and dispatches login credentials to their registered email.'
     },
     {
-      question: 'How do I process a refund for a cancelled booking?',
-      answer: 'Navigate to the "Bookings" calendar or list view. Locate the specific booking and open the details panel. If the booking is eligible for a refund according to our policy, you will see a "Process Refund" button. Clicking this will reverse the transaction in the payment gateway.'
+      question: 'How do I manage and verify listed venues?',
+      answer: 'Go to the "Venues" section from the sidebar. Here you can view all properties listed by our partners. As an admin, you have the authority to suspend a venue if it violates our guidelines or manually approve new venue listings before they go live on the user-facing app.'
     },
     {
       question: 'What happens when a vendor subscription expires?',
-      answer: 'When a vendor\'s subscription expires, their venues are automatically hidden from the public platform. They will still be able to log in to their vendor dashboard to renew their plan. You can monitor expiring plans from the "Subscription Monitor" in the Shortcuts menu.'
+      answer: 'Partners must maintain an active plan to keep their venues visible. You can manage tier limits under the "Plans" tab. When a subscription expires, the vendor\'s venues are automatically hidden from public search results until they renew. You can track this under "Vendor Subscriptions".'
     },
     {
-      question: 'How do I moderate user reviews?',
-      answer: 'Under the "Reviews" tab, you will see a feed of all recent user feedback. You can filter by "Flagged" or "Pending". Click on any review to either "Approve" it (making it public on the venue page) or "Reject" it if it violates community guidelines.'
+      question: 'How are customer complaints and disputes handled?',
+      answer: 'All grievances submitted via the user app are logged in the "Complain" section. You can view the status of each ticket, resolve disputes between users and venue owners, and take necessary disciplinary actions against vendors with repeated infractions.'
+    },
+    {
+      question: 'Where can I track payments and process booking refunds?',
+      answer: 'The "Payment" module provides a real-time ledger of all transactions. For cancelled bookings, the system calculates eligible refund amounts based on the venue\'s specific cancellation policy. Refunds can be monitored and manually overridden here if required.'
+    },
+    {
+      question: 'How do I moderate user reviews for venues?',
+      answer: 'Under the "User Review" tab, you will find a feed of all recent feedback left by customers. You can filter by "Flagged" to quickly identify reviews containing inappropriate language and remove them to maintain platform integrity.'
     }
   ];
 

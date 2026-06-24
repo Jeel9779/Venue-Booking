@@ -153,7 +153,7 @@
       <!-- All -->
       <button (click)="setFilter('all')"
         [class]="currentFilter() === 'all' 
-          ? 'bg-sky-500 text-white dark: ring-2 ring-sky-300' 
+          ? 'bg-sky-500 text-white ring-2 ring-sky-300' 
           : 'bg-sky-50 text-sky-700 hover:bg-sky-100/70 border border-sky-100/50'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer border-none">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -163,7 +163,7 @@
       <!-- Pending -->
       <button (click)="setFilter('pending')"
         [class]="currentFilter() === 'pending' 
-          ? 'bg-amber-500 text-white dark: ring-2 ring-amber-300' 
+          ? 'bg-amber-500 text-white ring-2 ring-amber-300' 
           : 'bg-amber-50 text-amber-700 hover:bg-amber-100/70 border border-amber-100/50'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer border-none">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -173,7 +173,7 @@
       <!-- Approved -->
       <button (click)="setFilter('approved')"
         [class]="currentFilter() === 'approved' 
-          ? 'bg-emerald-500 text-white dark: ring-2 ring-emerald-300' 
+          ? 'bg-emerald-500 text-white ring-2 ring-emerald-300' 
           : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100/70 border border-emerald-100/50'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer border-none">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -183,7 +183,7 @@
       <!-- Rejected -->
       <button (click)="setFilter('rejected')"
         [class]="currentFilter() === 'rejected' 
-          ? 'bg-red-500 text-white dark: ring-2 ring-red-300' 
+          ? 'bg-red-500 text-white ring-2 ring-red-300' 
           : 'bg-red-50 text-red-700 hover:bg-red-100/70 border border-red-100/50'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer border-none">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -368,12 +368,12 @@
                   <!-- Carousel Controls -->
                   @if (selectedVenue().mediaFiles.length > 1) {
                     <!-- Left Arrow -->
-                    <button (click)="prevImage(selectedVenue().mediaFiles.length)" class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-950/40 hover:bg-slate-950/70 backdrop-blur-md text-white flex items-center justify-center border-none transition-all cursor-pointer dark: hover:scale-105 active:scale-95 z-10">
+                    <button (click)="prevImage(selectedVenue().mediaFiles.length)" class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-950/40 hover:bg-slate-950/70 backdrop-blur-md text-white flex items-center justify-center border-none transition-all cursor-pointer hover:scale-105 active:scale-95 z-10">
                       <lucide-icon name="chevron-left" size="16"></lucide-icon>
                     </button>
 
                     <!-- Right Arrow -->
-                    <button (click)="nextImage(selectedVenue().mediaFiles.length)" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-950/40 hover:bg-slate-950/70 backdrop-blur-md text-white flex items-center justify-center border-none transition-all cursor-pointer dark: hover:scale-105 active:scale-95 z-10">
+                    <button (click)="nextImage(selectedVenue().mediaFiles.length)" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-950/40 hover:bg-slate-950/70 backdrop-blur-md text-white flex items-center justify-center border-none transition-all cursor-pointer hover:scale-105 active:scale-95 z-10">
                       <lucide-icon name="chevron-right" size="16"></lucide-icon>
                     </button>
 

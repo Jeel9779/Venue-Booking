@@ -47,7 +47,7 @@
 
     <!-- Vendors KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 dark: hover: hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover: hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
         <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 dark:text-slate-400 dark:">
           <lucide-icon name="users" class="w-5 h-5"></lucide-icon>
@@ -60,7 +60,7 @@
 
     <!-- Venues KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 dark: hover: hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover: hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
         <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-emerald-600 dark:">
           <lucide-icon name="map-pin" class="w-5 h-5"></lucide-icon>
@@ -71,22 +71,22 @@
       <p class="text-sm font-semibold text-emerald-500 uppercase mt-2 tracking-wider">{{ kpi().active }} Live Spaces</p>
     </div>
 
-    <!-- Reviews KPI -->
+    <!-- Pending Approvals KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 dark: hover: hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-blue-600 dark:">
-          <lucide-icon name="message-square" class="w-5 h-5"></lucide-icon>
+        <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+          <lucide-icon name="clock" class="w-5 h-5"></lucide-icon>
         </div>
-        <span class="text-[10px] font-extrabold text-blue-500 uppercase tracking-widest">Reviews</span>
+        <span class="text-[10px] font-extrabold text-amber-500 uppercase tracking-widest">Pending</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().totalReviews }}</p>
-      <p class="text-sm font-semibold text-blue-500 uppercase mt-2 tracking-wider">Verified Reviews</p>
+      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().pending }}</p>
+      <p class="text-sm font-semibold text-amber-500 uppercase mt-2 tracking-wider">Awaiting Action</p>
     </div>
 
     <!-- Quality KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 dark: hover: hover:-translate-y-0.5 transition-all duration-300">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover: hover:-translate-y-0.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
         <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-purple-600 dark:">
           <lucide-icon name="star" class="w-5 h-5"></lucide-icon>
@@ -175,7 +175,7 @@
   <div class="space-y-3">
     @for (partner of partners(); track partner.id) {
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 dark: hover: transition-all duration-300 overflow-hidden group">
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 hover: transition-all duration-300 overflow-hidden group">
       <!-- VENDOR ROW -->
       <div
         class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-800/80 transition-colors"
@@ -225,13 +225,13 @@
           <div class="hidden lg:flex -space-x-2">
             @for (s of partner.spaces.slice(0,3); track s._id) {
             <div
-              class="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border-2 border-white dark: flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 uppercase select-none overflow-hidden ring-1 ring-slate-200">
+              class="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border-2 border-white flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 uppercase select-none overflow-hidden ring-1 ring-slate-200">
               {{ getInitials(s.name) }}
             </div>
             }
             @if (partner.spaces.length > 3) {
             <div
-              class="w-8 h-8 rounded-lg bg-slate-100 border-2 border-white dark: flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 ring-1 ring-slate-200">
+              class="w-8 h-8 rounded-lg bg-slate-100 border-2 border-white flex items-center justify-center text-[9px] font-extrabold text-slate-500 dark:text-slate-400 ring-1 ring-slate-200">
               +{{ partner.spaces.length - 3 }}
             </div>
             }

@@ -52,8 +52,15 @@ export class PaymentService {
   /**
    * Reloads payments based on current or new filters
    */
-  applyFilters(filters: Partial<PaymentFilters>): void {
+  applyFilters(filters: Partial<PaymentFilters>, resetPage: boolean = true): void {
     this.store.updateFilters(filters);
+    
+    if (resetPage) {
+      // Reset to page 1 when applying new filters to avoid missing data on deep pages
+      const pagination = this.store.snapshot.pagination;
+      this.store.setPagination({ ...pagination, page: 1 });
+    }
+    
     this.loadPayments();
   }
 
@@ -69,17 +76,23 @@ export class PaymentService {
     this.store.setLoading(true);
     const { filters, pagination } = this.store.snapshot;
 
+    const apiLimit = filters.search ? 1000 : pagination.limit;
+
     this.api
-      .getAll(filters, pagination.page, pagination.limit, filters.search, filters.sortBy, filters.sortOrder)
+      .getAll(filters, pagination.page, apiLimit, filters.search, filters.sortBy, filters.sortOrder)
       .pipe(
         tap((res: any) => {
           this.store.setPayments(res.data || res);
           if (res.page !== undefined) {
+             const actualTotalPages = filters.search 
+                 ? Math.max(1, Math.ceil((res.totalRecords || (res.data?.length || 0)) / pagination.limit))
+                 : res.totalPages;
+
              this.store.setPagination({
                page: res.page,
-               limit: res.limit,
-               totalRecords: res.totalRecords,
-               totalPages: res.totalPages
+               limit: pagination.limit,
+               totalRecords: res.totalRecords || (res.data?.length || 0),
+               totalPages: actualTotalPages
              });
           }
         }),
@@ -101,14 +114,17 @@ export class PaymentService {
   private calculateStats(payments: any[]): any {
     const seen = new Map<string, any>();
     for (const p of payments) {
-      if (p.type !== 'subscription' && p.type !== 'addon' && p.type !== 'full payment') continue;
+      const type = (p.type || '').toLowerCase();
+      if (type !== 'subscription' && type !== 'addon' && type !== 'full payment' && type !== 'booking') continue;
       const key = p.relatedId ? String(p.relatedId) : p._id;
       if (!seen.has(key)) {
         seen.set(key, p);
       } else {
         const existing = seen.get(key)!;
-        const newIsSub = p.transactionId?.startsWith('SUB-') || p.paymentStatus === 'success';
-        const existingIsSub = existing.transactionId?.startsWith('SUB-') || existing.paymentStatus === 'success';
+        const newStatus = (p.paymentStatus || '').toLowerCase();
+        const oldStatus = (existing.paymentStatus || '').toLowerCase();
+        const newIsSub = p.transactionId?.startsWith('SUB-') || newStatus === 'success' || newStatus === 'completed';
+        const existingIsSub = existing.transactionId?.startsWith('SUB-') || oldStatus === 'success' || oldStatus === 'completed';
         if (newIsSub && !existingIsSub) {
           seen.set(key, p);
         }
@@ -121,15 +137,18 @@ export class PaymentService {
     let subscriptionRevenue = 0, addonRevenue = 0;
 
     for (const p of list) {
-      if (p.paymentStatus === 'success') {
+      const status = (p.paymentStatus || '').toLowerCase();
+      const type = (p.type || '').toLowerCase();
+      
+      if (status === 'success' || status === 'completed') {
         successfulAmount += p.amount;
         successfulCount++;
-        if (p.type === 'subscription') subscriptionRevenue += p.amount;
-        if (p.type === 'addon') addonRevenue += p.amount;
-      } else if (p.paymentStatus === 'pending') {
+        if (type === 'subscription') subscriptionRevenue += p.amount;
+        if (type === 'addon') addonRevenue += p.amount;
+      } else if (status === 'pending') {
         pendingAmount += p.amount;
         pendingCount++;
-      } else if (p.paymentStatus === 'failed') {
+      } else if (status === 'failed') {
         failedCount++;
       }
     }

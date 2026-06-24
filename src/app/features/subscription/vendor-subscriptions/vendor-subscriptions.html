@@ -322,7 +322,7 @@
   <div class="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
     @if (isLoading() && enrichedSubscriptions().length === 0) {
     @for (i of [1,2,3,4]; track i) {
-    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 dark: animate-pulse space-y-4">
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 animate-pulse space-y-4">
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-xl bg-slate-200"></div>
         <div class="flex-1 space-y-2">
@@ -340,7 +340,7 @@
     } @else {
     @for (sub of enrichedSubscriptions(); track sub._id) {
     <div (click)="openDetails(sub)"
-      class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 dark: hover: hover:border-slate-300 dark:border-slate-700 transition-all duration-200 active:scale-[0.98] cursor-pointer flex flex-col justify-between">
+      class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 hover: hover:border-slate-300 dark:border-slate-700 transition-all duration-200 active:scale-[0.98] cursor-pointer flex flex-col justify-between">
       <div>
         <div class="flex justify-between items-start gap-2 mb-4">
           <div class="flex items-center gap-3 min-w-0">

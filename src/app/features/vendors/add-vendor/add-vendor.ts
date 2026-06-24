@@ -2,7 +2,7 @@
 import { Component, inject, signal, effect, computed } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { VendorService } from '../../../core/services/vendor.service';
 import { VendorStore } from '../../../core/store/vendor.store';
 import { Button } from '../../../shared/components/button/button';
@@ -14,7 +14,7 @@ import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-add-vendor',
   standalone: true,
-  imports: [CommonModule, FormsModule, Button, Card, FormInput, RouterLink, Model, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, Button, Card, FormInput, RouterLink, Model, LucideAngularModule],
   templateUrl: './add-vendor.html',
   styleUrl: './add-vendor.css',
 })
@@ -23,23 +23,24 @@ export class AddVendor {
   private readonly vendorService = inject(VendorService);
   private readonly vendorStore = inject(VendorStore);
   private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
 
   // ── State (Signals) ────────────────────────────────────────────────────────
   readonly isLoading = this.vendorStore.isLoading;
   readonly error = this.vendorStore.error;
   readonly vendors = this.vendorStore.vendors;
 
-  vendorData = signal({
-    username: '',
-    password: '',
-    fullName: '',
-    email: '',
-    phone: '',
-    businessName: '',
-    businessType: '',
-    state: '',
-    pincode: '',
-    address: ''
+  vendorForm: FormGroup = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    fullName: ['', Validators.required],
+    email: ['', [Validators.required, Validators.pattern(/\S+@\S+\.\S+/)]],
+    phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+    businessName: ['', Validators.required],
+    businessType: ['', Validators.required],
+    state: ['', Validators.required],
+    pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+    address: ['', Validators.required]
   });
 
   selectedGovFile = signal<File | null>(null);
@@ -47,47 +48,38 @@ export class AddVendor {
   isSubmitted = signal(false);
   showSuccessModal = signal(false);
 
-  // Validation Signals
-  errors = computed(() => {
+  get errors() {
     if (!this.isSubmitted()) return {} as Record<string, string>;
-    const data = this.vendorData();
     const errs: Record<string, string> = {};
-    if (!data.username.trim()) errs['username'] = 'Username is required';
-    if (!data.password.trim()) errs['password'] = 'Password is required';
-    else if (data.password.length < 6) errs['password'] = 'Password must be at least 6 chars';
+    const controls = this.vendorForm.controls;
     
-    if (!data.businessName.trim()) errs['businessName'] = 'Business Name is required';
-    if (!data.businessType.trim()) errs['businessType'] = 'Type is required';
-    if (!data.address.trim()) errs['address'] = 'Full Address is required';
-    if (!data.state.trim()) errs['state'] = 'State is required';
-    if (!data.pincode.trim()) errs['pincode'] = 'Pincode is required';
-    else if (!/^\d{6}$/.test(data.pincode)) errs['pincode'] = 'Invalid 6-digit Pincode';
+    if (controls['username'].errors?.['required']) errs['username'] = 'Username is required';
     
-    if (!data.fullName.trim()) errs['fullName'] = 'Owner Name is required';
-    if (!data.email.trim()) errs['email'] = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(data.email)) errs['email'] = 'Invalid Email address';
+    if (controls['password'].errors?.['required']) errs['password'] = 'Password is required';
+    else if (controls['password'].errors?.['minlength']) errs['password'] = 'Password must be at least 6 chars';
     
-    if (!data.phone.trim()) errs['phone'] = 'Phone is required';
-    else if (!/^\d{10}$/.test(data.phone)) errs['phone'] = 'Invalid 10-digit number';
+    if (controls['businessName'].errors?.['required']) errs['businessName'] = 'Business Name is required';
+    if (controls['businessType'].errors?.['required']) errs['businessType'] = 'Type is required';
+    if (controls['address'].errors?.['required']) errs['address'] = 'Full Address is required';
+    if (controls['state'].errors?.['required']) errs['state'] = 'State is required';
+    
+    if (controls['pincode'].errors?.['required']) errs['pincode'] = 'Pincode is required';
+    else if (controls['pincode'].errors?.['pattern']) errs['pincode'] = 'Invalid 6-digit Pincode';
+    
+    if (controls['fullName'].errors?.['required']) errs['fullName'] = 'Owner Name is required';
+    
+    if (controls['email'].errors?.['required']) errs['email'] = 'Email is required';
+    else if (controls['email'].errors?.['pattern']) errs['email'] = 'Invalid Email address';
+    
+    if (controls['phone'].errors?.['required']) errs['phone'] = 'Phone is required';
+    else if (controls['phone'].errors?.['pattern']) errs['phone'] = 'Invalid 10-digit number';
 
     return errs;
-  });
+  }
 
-  isFormValid = computed(() => {
-    const data = this.vendorData();
-    return !!(
-      data.username.trim() &&
-      data.password.length >= 6 &&
-      data.fullName.trim() &&
-      /\S+@\S+\.\S+/.test(data.email) &&
-      /^\d{10}$/.test(data.phone) &&
-      data.businessName.trim() &&
-      data.address.trim() &&
-      /^\d{6}$/.test(data.pincode) &&
-      this.selectedGovFile() &&
-      this.selectedLicenseFile()
-    );
-  });
+  get isFormValid() {
+    return this.vendorForm.valid && !!this.selectedGovFile() && !!this.selectedLicenseFile();
+  }
 
   constructor() {
     let initialCount = this.vendors().length;
@@ -105,12 +97,9 @@ export class AddVendor {
     this.showSuccessModal.set(false);
     this.router.navigate(['/vendors']);
   }
-  updateField(field: string, value: string) {
-    this.vendorData.update(prev => ({ ...prev, [field]: value }));
-  }
-
-  onFileSelected(event: any, type: 'gov' | 'license') {
-    const file = event.target.files[0];
+  onFileSelected(event: Event, type: 'gov' | 'license') {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (file) {
       if (type === 'gov') this.selectedGovFile.set(file);
       else this.selectedLicenseFile.set(file);
@@ -119,9 +108,9 @@ export class AddVendor {
 
   onSubmit() {
     this.isSubmitted.set(true);
-    if (!this.isFormValid()) return;
+    if (!this.isFormValid) return;
 
-    const data = this.vendorData();
+    const data = this.vendorForm.value;
     const govFile = this.selectedGovFile()!;
     const licenseFile = this.selectedLicenseFile()!;
 

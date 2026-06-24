@@ -96,9 +96,24 @@ export class Payments implements OnInit, OnDestroy {
       }
     }
 
-    const list = Array.from(seen.values());
+    let list = Array.from(seen.values());
+    
+    // ── Client-side filtering ────────────────────────────────────────────────
+    const term = this.searchQuery().toLowerCase().trim();
+    if (term) {
+      list = list.filter(p => {
+         const vName = (p.vendorId?.fullName || p.vendorId?.name || '').toLowerCase();
+         const vEmail = (p.vendorId?.email || '').toLowerCase();
+         const tId = (p.transactionId || '').toLowerCase();
+         const type = (p.type || '').toLowerCase();
+         const status = (p.paymentStatus || '').toLowerCase();
+         const amount = String(p.amount);
+         return vName.includes(term) || vEmail.includes(term) || tId.includes(term) || type.includes(term) || status.includes(term) || amount.includes(term);
+      });
+    }
+
     const page = this.pagination()?.page || 1;
-    const limit = this.pagination()?.limit || 10;
+    const limit = 10; // Keep display limit at 10 regardless of what the store says
     return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
   });
 
@@ -125,7 +140,7 @@ export class Payments implements OnInit, OnDestroy {
 
     // Auto-refresh the page data every 10 seconds safely
     this.pollingInterval = setInterval(() => {
-      this.applyApiFilters();
+      this.applyApiFilters(false);
     }, 10000);
   }
 
@@ -136,22 +151,21 @@ export class Payments implements OnInit, OnDestroy {
   }
 
   private searchTimeout: any;
-  onSearchChange(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  onSearchChange(value: string) {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.searchQuery.set(value);
-      this.applyApiFilters();
+      this.applyApiFilters(true);
     }, 500);
   }
 
   // Triggered by type / status / date dropdowns → API re-fetch
-  applyApiFilters(): void {
+  applyApiFilters(resetPage: boolean = true): void {
     this.service.applyFilters({
       type:          this.filterValues.type,
       paymentStatus: this.filterValues.paymentStatus,
       search:        this.searchQuery()
-    });
+    }, resetPage);
   }
 
   // Reset everything: API filters + client-side search

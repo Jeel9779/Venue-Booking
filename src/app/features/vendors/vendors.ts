@@ -66,7 +66,12 @@ export class Vendors implements OnInit {
   viewingImageUrl = signal<string | null>(null);
 
   filteredVendors = computed(() => {
-    return this.vendors();
+    let list = this.vendors();
+    
+    // Add client-side pagination slice to ensure we never display more than 'limit' records on a single page
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
   });
 
   counts = computed(() => {

@@ -61,7 +61,12 @@ export class Users implements OnInit {
 
   // ── Computed ───────────────────────────────────────────────────────────────
   filteredUsers = computed(() => {
-    return this.users().filter(u => !u.deleted);
+    let list = this.users().filter(u => !u.deleted);
+    
+    // Add client-side pagination slice to ensure we never display more than 'limit' records on a single page
+    const page = this.pagination()?.page || 1;
+    const limit = this.pagination()?.limit || 10;
+    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
   });
 
   counts = this.backendStats.asReadonly();
