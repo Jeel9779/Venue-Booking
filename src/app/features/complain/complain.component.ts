@@ -20,7 +20,8 @@ import {
   MessageSquare, 
   ShieldAlert,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ChevronDown
 } from 'lucide-angular';
 import { ComplaintService } from '@core/services/complaint.service';
 import { ComplaintStore } from '@core/store/complaint.store';
@@ -29,7 +30,9 @@ import { VendorStore } from '@core/store/vendor.store';
 import { Complaint } from '@core/models/complaint.model';
 import { Pagination } from '@shared/components/pagination/pagination';
 import { API_BASE_URL } from '@core/config/api.config';
-
+import { forkJoin } from 'rxjs';
+import { ComplaintApi } from '@core/api/complaint-api';
+ 
 @Component({
   selector: 'app-complain',
   standalone: true,
@@ -55,13 +58,23 @@ export class ComplainComponent implements OnInit {
     message: MessageSquare,
     shieldAlert: ShieldAlert,
     chevronLeft: ChevronLeft,
-    chevronRight: ChevronRight
+    chevronRight: ChevronRight,
+    chevronDown: ChevronDown
   };
 
   private readonly complaintService = inject(ComplaintService);
   private readonly complaintStore = inject(ComplaintStore);
   private readonly vendorService = inject(VendorService);
   private readonly vendorStore = inject(VendorStore);
+  private readonly complaintApi = inject(ComplaintApi);
+
+  filterCounts = signal<{ [key: string]: number }>({
+    'All': 0,
+    'Open': 0,
+    'In Progress': 0,
+    'Resolved': 0,
+    'Closed': 0
+  });
 
   // Expose signals from store
   allComplaints = this.complaintStore.complaints;
@@ -121,13 +134,103 @@ export class ComplainComponent implements OnInit {
   // Select vendor ID for assignment dropdown
   selectedVendorId = signal<string>('');
 
+  // Dropdown UI states for premium custom selects (resolving OS-picker visual constraints)
+  isVendorDropdownOpen = signal<boolean>(false);
+  isStatusDropdownOpen = signal<boolean>(false);
 
+  toggleVendorDropdown(): void {
+    this.isVendorDropdownOpen.update(o => !o);
+    this.isStatusDropdownOpen.set(false);
+  }
+
+  toggleStatusDropdown(): void {
+    this.isStatusDropdownOpen.update(o => !o);
+    this.isVendorDropdownOpen.set(false);
+  }
+
+  getSelectedVendorName(): string {
+    const id = this.selectedVendorId();
+    if (!id) return 'Unassigned (No Vendor Allocated)';
+    const foundVendor = this.vendors().find(v => v._id === id);
+    if (!foundVendor) return 'Unassigned (No Vendor Allocated)';
+    return this.formatVendorOption(foundVendor);
+  }
+
+  getSelectedStatusName(): string {
+    const status = this.activeComplaint()?.status;
+    if (status === 'Open') return 'Open (Pending Assignment)';
+    if (status === 'In Progress') return 'In Progress (Investigation)';
+    if (status === 'Resolved') return 'Resolved (Settled)';
+    if (status === 'Closed') return 'Closed (Archived)';
+    return 'Select Stage';
+  }
+
+  selectStatus(newStatus: 'Open' | 'In Progress' | 'Resolved' | 'Closed'): void {
+    const complaint = this.activeComplaint();
+    if (complaint && newStatus) {
+      this.complaintService.changeStatus(complaint._id, newStatus);
+      setTimeout(() => this.loadFilterCounts(), 600);
+    }
+    this.isStatusDropdownOpen.set(false);
+  }
+
+  selectVendor(vendorId: string): void {
+    const complaint = this.activeComplaint();
+    if (complaint) {
+      if (!vendorId) {
+        this.complaintService.assign(complaint._id, null, null);
+        this.selectedVendorId.set('');
+      } else {
+        const foundVendor = this.vendors().find(v => v._id === vendorId);
+        const vendorDetails = foundVendor ? {
+          _id: foundVendor._id,
+          fullName: foundVendor.fullName,
+          businessName: foundVendor.businessName,
+          email: foundVendor.email
+        } : undefined;
+
+        this.complaintService.assign(complaint._id, vendorId, vendorDetails);
+        this.selectedVendorId.set(vendorId);
+      }
+    }
+    this.isVendorDropdownOpen.set(false);
+  }
+
+  // Formats vendor option text to keep layout clean and responsive
+  formatVendorOption(vendor: any): string {
+    const name = vendor.businessName || vendor.fullName || 'Unknown Vendor';
+    const email = vendor.email || '';
+    
+    // Check if we have long text and truncate appropriately
+    const displayName = name.length > 20 ? name.substring(0, 18) + '...' : name;
+    const displayEmail = email.length > 18 ? email.substring(0, 15) + '...' : email;
+    
+    return email ? `${displayName} (${displayEmail})` : displayName;
+  }
+
+
+
+  loadFilterCounts(): void {
+    this.complaintApi.getComplaints(1, 1000, '', 'all').subscribe({
+      next: (res: any) => {
+        const list: any[] = Array.isArray(res) ? res : (res.data || []);
+        this.filterCounts.set({
+          'All': list.length,
+          'Open': list.filter(c => c.status === 'Open').length,
+          'In Progress': list.filter(c => c.status === 'In Progress').length,
+          'Resolved': list.filter(c => c.status === 'Resolved').length,
+          'Closed': list.filter(c => c.status === 'Closed').length
+        });
+      }
+    });
+  }
 
   ngOnInit(): void {
     const apiStatus = this.currentFilter() === 'All' ? 'all' : this.currentFilter();
     const limit = this.searchQuery() ? 1000 : this.pagination().limit;
     this.complaintService.loadAll(this.pagination().page, limit, '', apiStatus);
     this.vendorService.loadAll(1, 100); // Load vendors to populate dropdowns
+    this.loadFilterCounts();
   }
 
   // Refreshes the complaints list
@@ -172,11 +275,22 @@ export class ComplainComponent implements OnInit {
     this.selectedVendorId.set(complaint.vendor?._id || '');
     this.isDrawerOpen.set(true);
     this.replyText.set('');
+
+    // Scroll layout viewport to top on open so Case Details starts at the top
+    setTimeout(() => {
+      const mainEl = document.querySelector('main');
+      if (mainEl) {
+        mainEl.scrollTop = 0;
+      }
+      window.scrollTo({ top: 0 });
+    }, 80);
   }
 
   // Closes the detail drawer
   closeDrawer(): void {
     this.isDrawerOpen.set(false);
+    this.isStatusDropdownOpen.set(false);
+    this.isVendorDropdownOpen.set(false);
     this.complaintStore.setSelectedComplaint(null);
   }
 
@@ -187,6 +301,7 @@ export class ComplainComponent implements OnInit {
     const complaint = this.activeComplaint();
     if (complaint && newStatus) {
       this.complaintService.changeStatus(complaint._id, newStatus);
+      setTimeout(() => this.loadFilterCounts(), 600);
     }
   }
 

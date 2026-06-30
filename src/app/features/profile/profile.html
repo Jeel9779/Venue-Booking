@@ -1,4 +1,4 @@
-<div class="p-6 md:p-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+<div class="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500 w-full px-4 sm:px-6 py-6">
   
   <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
     <div class="header-left flex items-center gap-3.5">
@@ -16,18 +16,18 @@
     
     <!-- Header/Banner -->
     <div class="h-32 bg-gradient-to-r from-indigo-500 via-[#6C63FF] to-purple-500 relative">
-      <div class="absolute -bottom-12 left-8">
+      <div class="absolute -bottom-12 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-8">
         <div class="p-1 bg-white dark:bg-slate-900 rounded-full">
-          <img src="https://i.pravatar.cc/150?u=a04258" alt="Admin Avatar" class="w-24 h-24 rounded-full object-cover" />
+          <img src="https://i.pravatar.cc/150?u=a04258" alt="Admin Avatar" class="w-24 h-24 sm:w-24 sm:h-24 rounded-full object-cover" />
         </div>
       </div>
     </div>
 
     <!-- Profile Info Content -->
-    <div class="pt-16 pb-8 px-8">
-      <div class="flex justify-between items-start">
+    <div class="pt-16 pb-6 px-4 sm:pb-8 sm:px-8">
+      <div class="flex flex-col sm:flex-row justify-between items-center sm:items-start text-center sm:text-left">
         <div>
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-slate-100">{{ adminName() }}</h2>
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100">{{ adminName() }}</h2>
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8E9FF] text-[#4E4CFF] text-xs font-bold tracking-widest uppercase mt-2">
             <lucide-icon [img]="icons.shield" size="12"></lucide-icon>
             {{ adminRole() }}
@@ -53,9 +53,9 @@
           <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 flex items-center justify-center text-gray-400 shrink-0">
             <lucide-icon [img]="icons.mail" size="20"></lucide-icon>
           </div>
-          <div>
+          <div class="min-w-0 flex-1">
             <p class="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">Email Address</p>
-            <p class="text-base font-semibold text-gray-900 dark:text-slate-100">{{ adminEmail() }}</p>
+            <p class="text-[13px] sm:text-base font-semibold text-gray-900 dark:text-slate-100 truncate sm:break-normal">{{ adminEmail() }}</p>
           </div>
         </div>
 
@@ -73,3 +73,4 @@
     </div>
   </div>
 </div>
+

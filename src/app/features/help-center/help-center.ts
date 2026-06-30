@@ -1,10 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { LucideAngularModule, HelpCircle, ChevronDown, ChevronUp, BookOpen, MessageSquare } from 'lucide-angular';
+import { Model } from '@shared/components/model/model';
+import { ToastService } from '@core/services/toast.service';
 
 @Component({
   selector: 'app-help-center',
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, Model, ReactiveFormsModule],
   templateUrl: './help-center.html',
   styleUrl: './help-center.css'
 })
@@ -17,7 +20,43 @@ export class HelpCenter {
     messageSquare: MessageSquare
   };
 
+  private fb = inject(FormBuilder);
+  private toastService = inject(ToastService);
+
   expandedFaq = signal<number | null>(null);
+  
+  showSupportModal = signal(false);
+  isSubmitting = signal(false);
+
+  supportForm = this.fb.group({
+    subject: ['', Validators.required],
+    message: ['', [Validators.required, Validators.minLength(10)]]
+  });
+
+  openSupport() {
+    this.showSupportModal.set(true);
+    this.supportForm.reset();
+  }
+
+  closeSupport() {
+    this.showSupportModal.set(false);
+  }
+
+  submitSupport() {
+    if (this.supportForm.invalid) {
+      this.supportForm.markAllAsTouched();
+      return;
+    }
+    
+    this.isSubmitting.set(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      this.isSubmitting.set(false);
+      this.closeSupport();
+      this.toastService.success('Support ticket submitted successfully. Our team will contact you shortly.');
+    }, 1200);
+  }
 
   faqs = [
     {

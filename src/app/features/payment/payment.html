@@ -1,5 +1,5 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700">
+<div class="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700 w-full px-4 sm:px-6 py-6">
   <!-- Header Section -->
   <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
     <div class="header-left flex items-center gap-3.5">
@@ -14,28 +14,36 @@
   </div>
 
   <!-- KPI Cards Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+  <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-10">
+
     <!-- Total Revenue Card -->
-    <div class="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-100 hover: transition-all group relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-50/50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-      <div class="flex justify-between items-start mb-4 relative z-10">
-        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
-          <lucide-icon [img]="icons.trendingUp" size="24"></lucide-icon>
+    <div class="bg-white dark:bg-slate-900 p-3 sm:p-5 rounded-2xl border border-slate-100 dark:border-slate-700 transition-all group relative overflow-hidden flex flex-col justify-between border-l-4 border-l-indigo-500">
+      <div class="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-indigo-50/50 rounded-bl-full -mr-6 sm:-mr-8 -mt-6 sm:-mt-8 transition-transform group-hover:scale-110"></div>
+      <!-- Icon + Badge Row -->
+      <div class="flex items-center justify-between mb-2 relative z-10">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <div class="p-1.5 sm:p-2 bg-indigo-50 text-indigo-600 rounded-xl shrink-0">
+            <lucide-icon [img]="icons.trendingUp" size="14" class="sm:hidden block"></lucide-icon>
+            <lucide-icon [img]="icons.trendingUp" size="18" class="hidden sm:block"></lucide-icon>
+          </div>
+          <span class="text-[9px] sm:text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-tight">Total Revenue</span>
         </div>
-        <span class="text-emerald-500 text-[10px] font-bold bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
-          +{{ kpiStats().successfulCount > 0 ? 'Live' : '0%' }} <lucide-icon [img]="icons.success" size="10"></lucide-icon>
+        <span class="text-emerald-500 text-[8px] sm:text-[10px] font-bold bg-emerald-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full flex items-center gap-0.5">
+          +{{ kpiStats().successfulCount > 0 ? 'Live' : '0%' }}
         </span>
       </div>
-      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10">Total Admin Revenue</p>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1 relative z-10">₹ {{ kpiStats().totalRevenue | number:'1.0-0' }}</h3>
-      
-      <!-- Revenue Breakdown Area -->
-      <div class="mt-4 pt-4 border-t border-slate-50 space-y-2 relative z-10">
-        <div class="flex justify-between text-[9px] font-bold">
-          <span class="text-slate-400 uppercase">Subscriptions</span>
+      <!-- Sub label + Number -->
+      <div class="relative z-10">
+        <p class="text-slate-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-0.5">Admin Revenue</p>
+        <h3 class="text-base sm:text-2xl font-black text-slate-900 dark:text-slate-100 leading-none">₹ {{ kpiStats().totalRevenue | number:'1.0-0' }}</h3>
+      </div>
+      <!-- Revenue Breakdown -->
+      <div class="mt-2 sm:mt-4 pt-2 sm:pt-4 border-t border-slate-50 space-y-1 relative z-10">
+        <div class="flex justify-between text-[8px] sm:text-[9px] font-bold">
+          <span class="text-slate-400 uppercase">Subs</span>
           <span class="text-purple-600">₹{{ kpiStats().subscriptionRevenue | number }}</span>
         </div>
-        <div class="flex justify-between text-[9px] font-bold">
+        <div class="flex justify-between text-[8px] sm:text-[9px] font-bold">
           <span class="text-slate-400 uppercase">Add-ons</span>
           <span class="text-cyan-600">₹{{ kpiStats().addonRevenue | number }}</span>
         </div>
@@ -43,46 +51,85 @@
     </div>
 
     <!-- Pending Card -->
-    <div class="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-100 hover: transition-all group">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
-          <lucide-icon [img]="icons.pending" size="24"></lucide-icon>
+    <div class="bg-white dark:bg-slate-900 p-3 sm:p-5 rounded-2xl border border-slate-100 dark:border-slate-700 transition-all group flex flex-col justify-between border-l-4 border-l-amber-500">
+      <!-- Icon + Label -->
+      <div class="flex items-center gap-1.5 sm:gap-2 mb-2">
+        <div class="p-1.5 sm:p-2 bg-amber-50 text-amber-600 rounded-xl shrink-0">
+          <lucide-icon [img]="icons.pending" size="14" class="sm:hidden block"></lucide-icon>
+          <lucide-icon [img]="icons.pending" size="18" class="hidden sm:block"></lucide-icon>
         </div>
+        <span class="text-[9px] sm:text-[10px] font-black text-amber-600 uppercase tracking-widest leading-tight">Pending</span>
       </div>
-      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">In Pipeline</p>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1">₹ {{ kpiStats().pendingAmount | number:'1.0-0' }}</h3>
-      <p class="text-slate-400 text-[10px] mt-2 font-medium flex items-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-        {{ kpiStats().pendingCount }} pending authorizations
+      <!-- Sub label + Number -->
+      <div>
+        <p class="text-slate-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-0.5">In Pipeline</p>
+        <h3 class="text-base sm:text-2xl font-black text-slate-900 dark:text-slate-100 leading-none">₹ {{ kpiStats().pendingAmount | number:'1.0-0' }}</h3>
+      </div>
+      <!-- Footer note -->
+      <p class="text-slate-400 text-[8px] sm:text-[10px] mt-2 font-medium flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+        {{ kpiStats().pendingCount }} pending
       </p>
+      <!-- Bottom accent bar -->
+      <div class="mt-2 sm:mt-3 h-1 w-full bg-amber-50 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full w-3/4"></div>
+      </div>
     </div>
 
     <!-- Failed Card -->
-    <div class="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-100 hover: transition-all group border-l-4 border-l-rose-500">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-rose-50 text-rose-600 rounded-xl">
-          <lucide-icon [img]="icons.alert" size="24"></lucide-icon>
+    <div class="bg-white dark:bg-slate-900 p-3 sm:p-5 rounded-2xl border border-slate-100 dark:border-slate-700 transition-all group flex flex-col justify-between border-l-4 border-l-rose-500">
+      <!-- Icon + Label -->
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <div class="p-1.5 sm:p-2 bg-rose-50 text-rose-600 rounded-xl shrink-0">
+            <lucide-icon [img]="icons.alert" size="14" class="sm:hidden block"></lucide-icon>
+            <lucide-icon [img]="icons.alert" size="18" class="hidden sm:block"></lucide-icon>
+          </div>
+          <span class="text-[9px] sm:text-[10px] font-black text-rose-600 uppercase tracking-widest leading-tight">Failed</span>
         </div>
-        <span class="text-rose-600 text-[10px] font-black bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-full uppercase">Review</span>
+        <span class="text-rose-600 text-[8px] sm:text-[10px] font-black bg-rose-50 border border-rose-100 px-1.5 sm:px-2 py-0.5 rounded-full uppercase">Review</span>
       </div>
-      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Failed Transactions</p>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1">{{ kpiStats().failedCount }}</h3>
-      <p class="text-rose-500 text-[10px] mt-2 font-bold flex items-center gap-1">Requires manual audit <lucide-icon [img]="icons.alert" size="10"></lucide-icon></p>
+      <!-- Sub label + Number -->
+      <div>
+        <p class="text-slate-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-0.5">Transactions</p>
+        <h3 class="text-base sm:text-2xl font-black text-slate-900 dark:text-slate-100 leading-none">{{ kpiStats().failedCount }}</h3>
+      </div>
+      <!-- Footer note -->
+      <p class="text-rose-500 text-[8px] sm:text-[10px] mt-2 font-bold flex items-center gap-1">Manual audit needed</p>
+      <!-- Bottom accent bar -->
+      <div class="mt-2 sm:mt-3 h-1 w-full bg-rose-50 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-rose-400 to-rose-500 rounded-full w-1/2"></div>
+      </div>
     </div>
 
     <!-- Gross Processed Volume Card -->
-    <div class="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-100 hover: transition-all group border-l-4 border-l-emerald-500">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-          <lucide-icon [img]="icons.success" size="24"></lucide-icon>
+    <div class="bg-white dark:bg-slate-900 p-3 sm:p-5 rounded-2xl border border-slate-100 dark:border-slate-700 transition-all group flex flex-col justify-between border-l-4 border-l-emerald-500">
+      <!-- Icon + Label -->
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <div class="p-1.5 sm:p-2 bg-emerald-50 text-emerald-600 rounded-xl shrink-0">
+            <lucide-icon [img]="icons.success" size="14" class="sm:hidden block"></lucide-icon>
+            <lucide-icon [img]="icons.success" size="18" class="hidden sm:block"></lucide-icon>
+          </div>
+          <span class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-tight">Gross Vol.</span>
         </div>
-        <span class="text-emerald-600 text-[10px] font-black bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full uppercase">Processed</span>
+        <span class="text-emerald-600 text-[8px] sm:text-[10px] font-black bg-emerald-50 border border-emerald-100 px-1.5 sm:px-2 py-0.5 rounded-full uppercase">Done</span>
       </div>
-      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Platform Gross Volume</p>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1">₹ {{ kpiStats().successfulAmount | number:'1.0-0' }}</h3>
-      <p class="text-emerald-500 text-[10px] mt-2 font-bold flex items-center gap-1">Across {{ kpiStats().successfulCount }} verified transactions</p>
+      <!-- Sub label + Number -->
+      <div>
+        <p class="text-slate-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-0.5">Platform Volume</p>
+        <h3 class="text-base sm:text-2xl font-black text-slate-900 dark:text-slate-100 leading-none">₹ {{ kpiStats().successfulAmount | number:'1.0-0' }}</h3>
+      </div>
+      <!-- Footer note -->
+      <p class="text-emerald-500 text-[8px] sm:text-[10px] mt-2 font-bold">{{ kpiStats().successfulCount }} verified txns</p>
+      <!-- Bottom accent bar -->
+      <div class="mt-2 sm:mt-3 h-1 w-full bg-emerald-50 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full w-full"></div>
+      </div>
     </div>
+
   </div>
+
 
   <!-- Filters & Search Section -->
   <div class="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
@@ -297,6 +344,19 @@
     }
   </div>
 
+  <!-- Mobile Pagination (lg:hidden) -->
+  @if (pagination().totalPages > 0) {
+    <div class="mt-4 w-full lg:hidden">
+      <app-pagination
+        [currentPage]="pagination().page"
+        [totalPages]="pagination().totalPages"
+        [totalRecords]="pagination().totalRecords"
+        [limit]="pagination().limit"
+        (onPageChange)="onPageChange($event)">
+      </app-pagination>
+    </div>
+  }
+
   <!-- Empty State -->
   @if (!isLoading() && deduplicatedPayments().length === 0) {
     <div class="flex flex-col items-center justify-center py-20 text-center bg-slate-50 dark:bg-slate-800/50 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
@@ -407,3 +467,4 @@
     </div>
   }
 </div>
+

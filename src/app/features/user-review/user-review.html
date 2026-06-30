@@ -1,5 +1,5 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="user-review-dashboard w-full p-4 sm:p-6 animate-in fade-in duration-500">
+<div class="user-review-dashboard w-full p-4 sm:p-6 animate-in fade-in duration-500 w-full px-4 sm:px-6 py-6">
   
   <!-- ── MODERATION HEADER ── -->
   <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
@@ -33,51 +33,76 @@
   </div>
 
   <!-- ── KPI ANALYTICS GRID ── -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-    <app-card [padding]="true" customClass="bg-white dark:bg-slate-900 border border-slate-100 hover: hover:border-slate-200 dark:border-slate-700 transition-all duration-300 h-full">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-400 transition-colors">
-          <lucide-icon name="list" size="18"></lucide-icon>
-        </div>
-        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Global</span>
-      </div>
-      <div class="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter">{{ stats().totalReviews }}</div>
-      <div class="text-[0.65rem] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Total Reviews</div>
-    </app-card>
+  <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8">
 
-    <app-card [padding]="true" customClass="bg-white dark:bg-slate-900 border border-slate-100 hover: hover:border-slate-200 dark:border-slate-700 transition-all duration-300 h-full">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-amber-50 rounded-xl text-amber-600 transition-colors">
-          <lucide-icon name="clock" size="18"></lucide-icon>
+    <!-- Card 1: Total Reviews -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-slate-200 transition-all duration-300 relative overflow-hidden">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="p-1.5 sm:p-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-400 shrink-0">
+          <lucide-icon name="list" size="16" class="block"></lucide-icon>
         </div>
-        <span class="text-[9px] font-black text-amber-500 uppercase tracking-widest mt-1">Action Req.</span>
+        <span class="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest leading-tight">Total Reviews</span>
       </div>
-      <div class="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter">{{ stats().awaitingReview }}</div>
-      <div class="text-[0.65rem] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Awaiting Review</div>
-    </app-card>
+      <div class="mt-1">
+        <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Global</div>
+        <div class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter leading-none">{{ stats().totalReviews }}</div>
+      </div>
+      <div class="mt-3 h-1 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-slate-400 to-slate-500 rounded-full w-full"></div>
+      </div>
+    </div>
 
-    <app-card [padding]="true" customClass="bg-white dark:bg-slate-900 border border-slate-100 hover: hover:border-slate-200 dark:border-slate-700 transition-all duration-300 h-full">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-emerald-50 rounded-xl text-emerald-600 transition-colors">
-          <lucide-icon name="check-circle" size="18"></lucide-icon>
+    <!-- Card 2: Awaiting Review -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-amber-200 transition-all duration-300 relative overflow-hidden">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="p-1.5 sm:p-2 bg-amber-50 rounded-xl text-amber-600 shrink-0">
+          <lucide-icon name="clock" size="16" class="block"></lucide-icon>
         </div>
-        <span class="text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-1">Live</span>
+        <span class="text-[9px] sm:text-[10px] font-black text-amber-600 uppercase tracking-widest leading-tight">Awaiting Review</span>
       </div>
-      <div class="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter">{{ stats().approvedContent }}</div>
-      <div class="text-[0.65rem] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Approved Content</div>
-    </app-card>
+      <div class="mt-1">
+        <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Action Req.</div>
+        <div class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter leading-none">{{ stats().awaitingReview }}</div>
+      </div>
+      <div class="mt-3 h-1 w-full bg-amber-50 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" [style.width.%]="(stats().awaitingReview / stats().totalReviews) * 100 || 0"></div>
+      </div>
+    </div>
 
-    <app-card [padding]="true" customClass="bg-white dark:bg-slate-900 border border-slate-100 hover: hover:border-slate-200 dark:border-slate-700 transition-all duration-300 h-full">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-indigo-50 rounded-xl text-indigo-600 transition-colors">
-          <lucide-icon name="star" size="18"></lucide-icon>
+    <!-- Card 3: Approved Content -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-emerald-200 transition-all duration-300 relative overflow-hidden">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="p-1.5 sm:p-2 bg-emerald-50 rounded-xl text-emerald-600 shrink-0">
+          <lucide-icon name="check-circle" size="16" class="block"></lucide-icon>
         </div>
-        <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest mt-1">Quality</span>
+        <span class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-tight">Approved</span>
       </div>
-      <div class="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter">{{ stats().liveAvgScore }}</div>
-      <div class="text-[0.65rem] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Live Avg Score</div>
-      <div class="text-[9px] text-slate-400 font-medium mt-0.5 italic">Based on approved reviews</div>
-    </app-card>
+      <div class="mt-1">
+        <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Live</div>
+        <div class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter leading-none">{{ stats().approvedContent }}</div>
+      </div>
+      <div class="mt-3 h-1 w-full bg-emerald-50 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full" [style.width.%]="(stats().approvedContent / stats().totalReviews) * 100 || 0"></div>
+      </div>
+    </div>
+
+    <!-- Card 4: Live Avg Score -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-indigo-200 transition-all duration-300 relative overflow-hidden">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="p-1.5 sm:p-2 bg-indigo-50 rounded-xl text-indigo-600 shrink-0">
+          <lucide-icon name="star" size="16" class="block"></lucide-icon>
+        </div>
+        <span class="text-[9px] sm:text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-tight">Avg Score</span>
+      </div>
+      <div class="mt-1">
+        <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Quality</div>
+        <div class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter leading-none">{{ stats().liveAvgScore }}</div>
+      </div>
+      <div class="mt-3 h-1 w-full bg-indigo-50 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-indigo-400 to-violet-500 rounded-full" [style.width.%]="(stats().liveAvgScore / 5) * 100 || 0"></div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ── ANALYTICS DISTRIBUTION SECTION ── -->
@@ -148,8 +173,8 @@
   <!-- ── TOOLBAR & FILTERS ── -->
   <div class="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8 bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-100">
     
-    <!-- Filter status buttons -->
-    <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+    <!-- Filter status buttons (DESKTOP) -->
+    <div class="hidden sm:flex flex-wrap items-center gap-2 w-full lg:w-auto">
       <!-- All -->
       <button (click)="setFilter('all')"
         [class]="currentFilter() === 'all' 
@@ -188,6 +213,34 @@
         class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer border-none">
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
         <span>{{ stats().rejectedContent }} Rejected</span>
+      </button>
+    </div>
+
+    <!-- Filter status buttons (MOBILE SEGMENTED CONTROL) -->
+    <div class="sm:hidden flex w-full bg-slate-100 dark:bg-slate-800/80 p-1.5 rounded-[16px]">
+      <button class="flex-1 flex flex-col items-center justify-center py-2 rounded-[12px] text-[11px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="currentFilter() === 'all' ? 'bg-white dark:bg-slate-700 shadow-sm text-sky-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="setFilter('all')">
+        <span class="text-lg leading-none mb-0.5">{{ stats().totalReviews }}</span>
+        All
+      </button>
+      <button class="flex-1 flex flex-col items-center justify-center py-2 rounded-[12px] text-[11px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="currentFilter() === 'pending' ? 'bg-white dark:bg-slate-700 shadow-sm text-amber-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="setFilter('pending')">
+        <span class="text-lg leading-none mb-0.5">{{ stats().awaitingReview }}</span>
+        Pending
+      </button>
+      <button class="flex-1 flex flex-col items-center justify-center py-2 rounded-[12px] text-[11px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="currentFilter() === 'approved' ? 'bg-white dark:bg-slate-700 shadow-sm text-emerald-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="setFilter('approved')">
+        <span class="text-lg leading-none mb-0.5">{{ stats().approvedContent }}</span>
+        Approved
+      </button>
+      <button class="flex-1 flex flex-col items-center justify-center py-2 rounded-[12px] text-[11px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="currentFilter() === 'rejected' ? 'bg-white dark:bg-slate-700 shadow-sm text-rose-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="setFilter('rejected')">
+        <span class="text-lg leading-none mb-0.5">{{ stats().rejectedContent }}</span>
+        Rejected
       </button>
     </div>
 

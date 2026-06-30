@@ -1,13 +1,13 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="w-full p-4 sm:p-6 text-slate-800 dark:text-slate-200 font-sans selection:bg-indigo-500 selection:text-white">
+<div class="w-full text-slate-800 dark:text-slate-200 font-sans selection:bg-indigo-500 selection:text-white w-full px-4 sm:px-6 py-6">
 
   <div class="w-full">
 
     <!-- ── HEADER ── -->
-    <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-6 lg:mb-8">
       <div class="header-left flex items-center gap-3.5">
         <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
-          <lucide-icon name="layout-dashboard" size="20"></lucide-icon>
+          <lucide-icon [img]="icons.layoutDashboard" size="20"></lucide-icon>
         </div>
         <div class="flex-1 min-w-0">
           <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Command Center</h1>
@@ -17,31 +17,32 @@
     </div> 
 
     <!-- ── KEY PERFORMANCE INDICATORS (KPIs) ── -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-6 lg:mb-8">
       @for (s of newStats(); track s.title) {
       <div
-        class="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-700/80 hover: hover:border-slate-300 dark:border-slate-700 transition-all duration-300 transform hover:-translate-y-1"
+        [routerLink]="s.link"
+        class="group bg-white dark:bg-slate-900 p-3 sm:p-5 lg:p-6 rounded-2xl sm:rounded-[2rem] border border-slate-200 dark:border-slate-700/80 hover:border-slate-300 dark:border-slate-700 transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between cursor-pointer"
         [ngClass]="s.accentClass">
-        <div class="flex justify-between items-start mb-4">
+        <div class="flex flex-row sm:justify-between items-center sm:items-start gap-2 sm:gap-0 mb-2 sm:mb-4">
           <div
-            class="p-3 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+            class="p-2 sm:p-3 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shrink-0"
             [ngClass]="s.iconClass">
-            <lucide-icon [name]="s.icon" size="20"></lucide-icon>
+            <lucide-icon [img]="s.icon" size="20" class="w-4 h-4 sm:w-5 sm:h-5"></lucide-icon>
           </div>
           <div
-            class="text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider bg-slate-100 text-slate-600 dark:text-slate-400">
+            class="text-[9px] sm:text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-wider bg-slate-100 text-slate-600 dark:text-slate-400">
             {{ s.change }}
           </div>
         </div>
-        <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ s.title }}</p>
+        <p class="text-[9px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">{{ s.title }}</p>
 
         @if (s.isLoading) {
-        <div class="h-9 w-24 bg-slate-100 rounded-lg animate-pulse mt-1"></div>
+        <div class="h-5 sm:h-9 w-16 sm:w-24 bg-slate-100 rounded-lg animate-pulse mt-1"></div>
         } @else {
-        <h3 class="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter">{{ s.value }}</h3>
+        <h3 class="text-base sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tighter truncate">{{ s.value }}</h3>
         }
 
-        <div class="mt-4 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+        <div class="mt-2.5 sm:mt-4 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
           <div class="h-full rounded-full w-4/5 group-hover:w-full transition-all duration-1000"
             [ngClass]="s.progressClass"></div>
         </div>
@@ -50,22 +51,22 @@
     </div>
 
     <!-- ── MAIN ANALYTICAL GRID ── -->
-    <div class="grid lg:grid-cols-3 gap-5 sm:gap-8 mb-10">
+    <div class="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-6 lg:mb-8">
 
       <!-- Left 2 Columns -->
-      <div class="lg:col-span-2 space-y-8">
+      <div class="lg:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
 
         <!-- Booking velocity & City growth -->
-        <div class="grid sm:grid-cols-2 gap-5 sm:gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
 
           <!-- Question 1: Are bookings increasing? -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 sm:p-8 rounded-3xl sm:rounded-[2rem] flex flex-col justify-between">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 sm:p-5 lg:p-6 rounded-2xl sm:rounded-[2rem] flex flex-col justify-between">
             <div>
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">Booking Growth Velocity</h3>
-                <lucide-icon name="trending-up" size="20" class="text-emerald-500"></lucide-icon>
+              <div class="flex items-center justify-between mb-1 sm:mb-4">
+                <h3 class="text-sm sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">Booking Growth Velocity</h3>
+                <lucide-icon [img]="icons.trendingUp" size="16" class="text-emerald-500 sm:w-[20px] sm:h-[20px] shrink-0"></lucide-icon>
               </div>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Comparing weekly performance matrix to answer user trend requests.
+              <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mb-3 sm:mb-6 leading-snug">Comparing weekly performance matrix to answer user trend requests.
               </p>
 
               @if (isDashboardLoading()) {
@@ -75,8 +76,8 @@
                 <div class="h-4 w-2/3 bg-slate-100 rounded"></div>
               </div>
               } @else {
-              <div class="flex items-baseline gap-3 mb-4">
-                <span class="text-4xl sm:text-5xl font-black text-indigo-600 tracking-tighter">
+              <div class="flex items-baseline gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <span class="text-3xl sm:text-4xl lg:text-5xl font-black text-indigo-600 tracking-tighter">
                   {{ bookingVelocity().isIncreasing ? '+' : '' }}{{ bookingVelocity().changePercent }}%
                 </span>
                 <span class="text-sm font-bold text-slate-500 dark:text-slate-400">vs last 7 days</span>
@@ -95,7 +96,7 @@
               }
             </div>
 
-            <div class="mt-6 pt-4 border-t border-slate-100">
+            <div class="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100">
               <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">
                 @if (isDashboardLoading()) {
                 <div class="h-3 w-48 bg-slate-100 rounded animate-pulse"></div>
@@ -111,13 +112,12 @@
           </div>
 
           <!-- Question 6: Which city grows fastest? -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 sm:p-8 rounded-3xl sm:rounded-[2rem]">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">Top Growing Cities</h3>
-              <lucide-icon name="map-pin" size="20" class="text-indigo-500"></lucide-icon>
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 sm:p-5 lg:p-6 rounded-2xl sm:rounded-[2rem]">
+            <div class="flex items-center justify-between mb-1 sm:mb-4">
+              <h3 class="text-sm sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">Top Growing Cities</h3>
+              <lucide-icon [img]="icons.mapPin" size="16" class="text-indigo-500 sm:w-[20px] sm:h-[20px] shrink-0"></lucide-icon>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Platform expansions and order velocities grouped by metropolitan
-              regions.</p>
+            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mb-3 sm:mb-6 leading-snug">Platform expansions and order velocities grouped by metropolitan regions.</p>
 
             <div class="space-y-4">
               @if (isDashboardLoading()) {
@@ -130,14 +130,14 @@
               } @else {
               @for (city of cityGrowth(); track city.cityName; let idx = $index) {
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3 truncate pr-2">
                   <span
-                    class="text-xs font-black w-5 h-5 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 dark:text-slate-400">
+                    class="text-[10px] sm:text-xs font-black w-4 h-4 sm:w-5 sm:h-5 rounded sm:rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 dark:text-slate-400 shrink-0">
                     {{ idx + 1 }}
                   </span>
-                  <span class="text-sm font-bold text-slate-900 dark:text-slate-100">{{ city.cityName }}</span>
+                  <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 truncate">{{ city.cityName }}</span>
                 </div>
-                <div class="flex items-center gap-4 text-xs">
+                <div class="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-xs shrink-0">
                   <span class="text-slate-500 dark:text-slate-400 font-semibold">{{ city.venuesCount }} venues</span>
                   <span class="font-black text-indigo-600">{{ city.bookingsCount }} bookings</span>
                 </div>
@@ -153,11 +153,11 @@
         </div>
 
         <!-- Question 4: PENDING APPROVALS SECTION -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 sm:p-8 rounded-3xl sm:rounded-[2rem]">
-          <div class="flex items-center justify-between mb-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 sm:p-5 lg:p-6 rounded-2xl sm:rounded-[2rem]">
+          <div class="flex flex-wrap sm:flex-nowrap items-center justify-between mb-3 sm:mb-6 gap-2">
             <div>
-              <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">Pending Approvals Action Queue</h3>
-              <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1">Direct verification queue for newly registered
+              <h3 class="text-sm sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">Pending Approvals Action Queue</h3>
+              <p class="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 leading-snug">Direct verification queue for newly registered
                 vendors and venue submissions.</p>
             </div>
             <span
@@ -179,9 +179,9 @@
             <div [routerLink]="item.type === 'venue' ? ['/venues'] : ['/vendors']"
               class="p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 hover:bg-slate-100/55 transition-colors cursor-pointer group">
               <div class="flex items-start sm:items-center gap-3 sm:gap-4">
-                <div class="p-2 rounded-xl"
+                <div class="p-2 rounded-xl shrink-0"
                   [ngClass]="item.type === 'venue' ? 'bg-purple-50 text-purple-600 border border-purple-100' : 'bg-indigo-50 text-indigo-600 border border-indigo-100'">
-                  <lucide-icon [name]="item.type === 'venue' ? 'building-2' : 'briefcase'" size="18"></lucide-icon>
+                  <lucide-icon [img]="item.type === 'venue' ? icons.building2 : icons.briefcase" size="16" class="sm:w-[18px] sm:h-[18px]"></lucide-icon>
                 </div>
                 <div>
                   <span class="text-[9px] uppercase font-black tracking-wider px-2 py-0.5 rounded mr-2"
@@ -199,8 +199,8 @@
             }
             @if (pendingApprovalsList().length === 0) {
             <div class="py-8 text-center bg-slate-50 dark:bg-slate-800 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
-              <lucide-icon name="check-circle" size="28" class="text-emerald-500 mx-auto mb-2"></lucide-icon>
-              <p class="text-xs text-slate-500 dark:text-slate-400">All submissions verified! No pending approvals found.</p>
+              <lucide-icon [img]="icons.checkCircle" size="28" class="text-emerald-500 mx-auto mb-2"></lucide-icon>
+              <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">All submissions verified! No pending approvals found.</p>
             </div>
             }
             }
@@ -208,35 +208,34 @@
         </div>
 
         <!-- ANIMATED CHARTS SECTION -->
-        <div class="grid sm:grid-cols-2 gap-5 sm:gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
 
           <!-- Most booked days Chart -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 sm:p-8 rounded-3xl sm:rounded-[2rem]">
-            <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-2">Most Booked Days</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Distribution of bookings by day of the week.</p>
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 sm:p-5 lg:p-6 rounded-2xl sm:rounded-[2rem]">
+            <h3 class="text-sm sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-0.5 sm:mb-2 leading-tight">Most Booked Days</h3>
+            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mb-3 sm:mb-6 leading-snug">Distribution of bookings by day of the week.</p>
 
             <div
-              class="flex items-end justify-between h-48 pt-6 px-2 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100">
+              class="flex items-end justify-between h-32 sm:h-48 pt-4 sm:pt-6 px-1 sm:px-2 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100">
               @if (isDashboardLoading()) {
               <div class="w-full h-full flex items-center justify-center animate-pulse">
                 <div class="h-32 w-full bg-slate-100 rounded-lg"></div>
               </div>
               } @else {
               @for (label of mostBookedDays().labels; track label; let idx = $index) {
-              <div class="flex flex-col items-center flex-1 group">
-                <div class="w-full px-2 flex justify-center relative">
-                  <!-- Tooltip -->
-                  <div
-                    class="absolute bottom-full mb-2 bg-slate-900 text-white font-black text-[10px] py-1 px-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    {{ mostBookedDays().data[idx] }} bookings
-                  </div>
+              <div class="flex flex-col items-center flex-1 group h-full justify-end">
+                <div class="w-full px-1 sm:px-2 flex flex-col justify-end items-center h-full relative">
+                  <!-- Explicit count always visible -->
+                  <span class="text-[9px] sm:text-[10px] font-black text-slate-700 dark:text-slate-300 mb-1 sm:mb-2">
+                    {{ mostBookedDays().data[idx] }}
+                  </span>
                   <!-- Animated bar -->
                   <div
                     class="w-3 sm:w-4 bg-indigo-600 rounded-t-lg transition-all duration-700 group-hover:bg-indigo-500"
-                    [style.height.px]="getPercentage(mostBookedDays().data[idx], mostBookedDays().max) * 1.2">
+                    [style.height.%]="getPercentage(mostBookedDays().data[idx], mostBookedDays().max)">
                   </div>
                 </div>
-                <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 mt-2 uppercase">{{ label }}</span>
+                <span class="text-[9px] sm:text-[10px] font-black text-slate-500 dark:text-slate-400 mt-1 sm:mt-2 uppercase truncate w-full text-center">{{ label }}</span>
               </div>
               }
               }
@@ -244,9 +243,9 @@
           </div>
 
           <!-- Peak booking hours Chart -->
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 sm:p-8 rounded-3xl sm:rounded-[2rem]">
-            <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-2">Peak Booking Hours</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Aggregate booking registrations grouped by time slots.</p>
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 sm:p-5 lg:p-6 rounded-2xl sm:rounded-[2rem]">
+            <h3 class="text-sm sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-0.5 sm:mb-2 leading-tight">Peak Booking Hours</h3>
+            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mb-3 sm:mb-6 leading-snug">Aggregate booking registrations grouped by time slots.</p>
 
             <div class="space-y-4 pt-2">
               @if (isDashboardLoading()) {
@@ -279,12 +278,12 @@
       </div>
 
       <!-- Right Column -->
-      <div class="space-y-8">
+      <div class="space-y-4 sm:space-y-6 lg:space-y-8">
 
         <!-- Question 2: Which vendors perform best? -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 sm:p-8 rounded-3xl sm:rounded-[2rem]">
-          <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-1">Top Performing Vendors</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Sorted by booking transaction volume & revenue generation.</p>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 sm:p-5 lg:p-6 rounded-2xl sm:rounded-[2rem]">
+          <h3 class="text-sm sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-0.5 sm:mb-1 leading-tight">Top Performing Vendors</h3>
+          <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mb-3 sm:mb-6">Sorted by booking transaction volume & revenue generation.</p>
 
           <div class="space-y-4">
             @if (isDashboardLoading()) {
@@ -321,9 +320,9 @@
         </div>
 
         <!-- Question 3 & SUBSCRIPTION ANALYTICS: Which subscriptions earn most? -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 sm:p-8 rounded-3xl sm:rounded-[2rem]">
-          <h3 class="text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-1">Subscription Revenue Model</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Active subscription volumes grouped by package tiers.</p>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 sm:p-5 lg:p-6 rounded-2xl sm:rounded-[2rem]">
+          <h3 class="text-sm sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight mb-0.5 sm:mb-1 leading-tight">Subscription Revenue</h3>
+          <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mb-3 sm:mb-6">Active subscription volumes grouped by package tiers.</p>
 
           <div class="space-y-5">
             @if (isDashboardLoading()) {

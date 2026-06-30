@@ -12,17 +12,12 @@
       <div class="flex items-center gap-2.5">
         <h1
           class="text-[1.1rem] md:text-lg font-extrabold text-gray-900 dark:text-slate-100 tracking-tight truncate leading-none bg-clip-text bg-linear-to-r from-gray-900 to-gray-700">
-          BookMyVenue
+          Admin Workspace
         </h1>
-        <span
-          class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#E8E9FF] border border-[#D6D9FF] text-[0.65rem] font-bold text-[#4E4CFF] tracking-widest uppercase shadow-sm dark:shadow-none">
-          <lucide-icon [img]="icons.sparkles" size="10" class="text-[#6C63FF]"></lucide-icon>
-          Admin
-        </span>
       </div>
       <p
         class="hidden sm:block text-xs text-gray-500 dark:text-slate-400 font-medium tracking-wide mt-1 truncate group-hover:text-gray-700 dark:text-slate-300 transition-colors">
-        Analytics & Management
+        Platform Operations & Analytics
       </p>
     </div>
 
@@ -203,7 +198,7 @@
       </div>
 
       <!-- Search Body (Scrollable Results) -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-4 max-h-[45vh]">
+      <div class="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 max-h-[45vh]">
         @if (filteredResults().length === 0) {
           <div class="flex flex-col items-center justify-center py-10 gap-3">
             <lucide-icon [img]="icons.search" size="32" class="text-slate-300"></lucide-icon>
@@ -223,15 +218,15 @@
                     <lucide-icon [img]="getIcon(item.icon)" size="16"></lucide-icon>
                   </div>
                   <div class="min-w-0">
-                    <p class="text-xs font-black m-0 leading-normal">{{ item.title }}</p>
+                    <p class="text-[11px] sm:text-xs font-black m-0 leading-normal">{{ item.title }}</p>
                     @if (item.subtitle) {
-                      <p class="text-[10px] font-bold text-slate-400 m-0 mt-0.5 leading-normal truncate">{{ item.subtitle }}</p>
+                      <p class="text-[9px] sm:text-[10px] font-bold text-slate-400 m-0 mt-0.5 leading-normal truncate">{{ item.subtitle }}</p>
                     }
                   </div>
                 </div>
 
                 <div class="flex items-center gap-2">
-                  <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-100 text-slate-500 dark:text-slate-400">
+                  <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-slate-100 text-slate-500 dark:text-slate-400">
                     {{ item.category }}
                   </span>
                   @if ($index === activeIndex()) {
@@ -246,7 +241,7 @@
       </div>
 
       <!-- Search Footer (Keyboard guide) -->
-      <div class="px-5 py-3.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400">
+      <div class="px-5 py-3.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 hidden sm:flex items-center justify-between text-[10px] font-bold text-slate-400">
         <div class="flex items-center gap-4">
           <span class="flex items-center gap-1.5">
             <lucide-icon [img]="icons.command" size="12" class="text-slate-400"></lucide-icon>

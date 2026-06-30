@@ -3,7 +3,8 @@ import { Component, Output, EventEmitter, inject, OnInit, signal, computed, Host
 import { 
   LucideAngularModule, Bell, Menu, Search, ChevronDown, Settings, User, LogOut, 
   LifeBuoy, Plus, Sparkles, X, ChevronRight, CornerDownLeft, Command, 
-  Activity, Building2, Store, Calendar, ListChecks, DollarSign, LayoutDashboard, Users 
+  Activity, Building2, Store, Calendar, ListChecks, DollarSign, LayoutDashboard, Users,
+  MessageSquare, AlertTriangle, FileText, Handshake, Repeat, CreditCard, BookOpen
 } from 'lucide-angular';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { VenueService } from '@core/services/venue.service';
@@ -13,6 +14,13 @@ import { VendorStore } from '@core/store/vendor.store';
 import { UserService } from '@core/services/user.service';
 import { UsersStore } from '@core/store/users.store';
 import { ToastService } from '@core/services/toast.service';
+import { BookingStore } from '@core/store/booking.store';
+import { PaymentStore } from '@core/store/payment.store';
+import { ReviewStore } from '@core/store/review.store';
+import { ComplaintStore } from '@core/store/complaint.store';
+import { BlogStore } from '@core/store/blog.store';
+import { PartnerStore } from '@core/store/partner.store';
+import { SubscriptionStore } from '@core/store/subscription.store';
 
 // Defines the data model structure
 export interface SearchItem {
@@ -43,6 +51,13 @@ export class Header implements OnInit {
   private userService = inject(UserService);
   private toastService = inject(ToastService);
   private usersStore = inject(UsersStore);
+  private bookingStore = inject(BookingStore);
+  private paymentStore = inject(PaymentStore);
+  private reviewStore = inject(ReviewStore);
+  private complaintStore = inject(ComplaintStore);
+  private blogStore = inject(BlogStore);
+  private partnerStore = inject(PartnerStore);
+  private subscriptionStore = inject(SubscriptionStore);
 
   // Real admin data signals
   adminName = signal<string>('Jeel Vadukiya');
@@ -100,7 +115,74 @@ export class Header implements OnInit {
         raw: u
       }));
 
-    const allItems: SearchItem[] = [...this.navLinks, ...venues, ...vendors, ...users];
+    const bookings: SearchItem[] = this.bookingStore.bookings().map((b: any) => ({
+        title: `Booking #${b._id?.slice(-6) || 'Unknown'}`,
+        subtitle: `${b.status} • ₹${b.cost}`,
+        path: '/bookings',
+        category: '📅 Bookings',
+        icon: 'calendar',
+        raw: b
+    }));
+
+    const payments: SearchItem[] = this.paymentStore.snapshot.payments.map((p: any) => ({
+        title: `Payment #${p._id?.slice(-6) || 'Unknown'}`,
+        subtitle: `${p.status} • ₹${p.amount}`,
+        path: '/payment',
+        category: '💳 Payments',
+        icon: 'creditCard',
+        raw: p
+    }));
+
+    const reviews: SearchItem[] = this.reviewStore.reviews().map((r: any) => ({
+        title: r.rating ? `${r.rating} Star Review` : 'User Review',
+        subtitle: `${r.reviewText?.slice(0, 50) || 'No text'}`,
+        path: '/user-review',
+        category: '⭐ Reviews',
+        icon: 'messageSquare',
+        raw: r
+    }));
+
+    const complaints: SearchItem[] = this.complaintStore.complaints().map((c: any) => ({
+        title: `Complaint: ${c.subject || 'No Subject'}`,
+        subtitle: `${c.status} • ${c.description?.slice(0, 50)}`,
+        path: '/complain',
+        category: '⚠️ Complaints',
+        icon: 'alertTriangle',
+        raw: c
+    }));
+
+    const blogs: SearchItem[] = this.blogStore.blogs().map((b: any) => ({
+        title: b.title,
+        subtitle: `By ${b.author || 'Unknown'}`,
+        path: '/blogs',
+        category: '📝 Blogs',
+        icon: 'fileText',
+        raw: b
+    }));
+
+    const partners: SearchItem[] = this.partnerStore.partners().map((p: any) => ({
+        title: p.companyName || p.name,
+        subtitle: `${p.email} • ${p.phone || 'No phone'}`,
+        path: '/partners',
+        category: '🤝 Partners',
+        icon: 'handshake',
+        raw: p
+    }));
+
+    const subscriptions: SearchItem[] = this.subscriptionStore.allSubscriptions().map((s: any) => ({
+        title: `Sub: ${s.planName || 'Plan'}`,
+        subtitle: `${s.status} • ${s.billingCycle}`,
+        path: '/admin/vendor-subscriptions',
+        category: '🔄 Subscriptions',
+        icon: 'repeat',
+        raw: s
+    }));
+
+    const allItems: SearchItem[] = [
+      ...this.navLinks, ...venues, ...vendors, ...users,
+      ...bookings, ...payments, ...reviews, ...complaints,
+      ...blogs, ...partners, ...subscriptions
+    ];
 
     if (!q) {
       // If query is empty, show navigation shortcuts as default selection!
@@ -163,7 +245,14 @@ export class Header implements OnInit {
     listChecks: ListChecks,
     dollarSign: DollarSign,
     users: Users,
-    activity: Activity
+    activity: Activity,
+    messageSquare: MessageSquare,
+    alertTriangle: AlertTriangle,
+    fileText: FileText,
+    handshake: Handshake,
+    repeat: Repeat,
+    creditCard: CreditCard,
+    bookOpen: BookOpen
   };
 
   ngOnInit() {

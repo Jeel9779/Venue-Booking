@@ -4,57 +4,102 @@
 
 
   <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
-  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
-    <div class="header-left flex items-center gap-3.5">
+  <div class="page-header flex flex-row items-center justify-between gap-4 mb-6">
+    <div class="header-left flex items-center gap-3.5 min-w-0">
       <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
         <lucide-icon name="users" size="20"></lucide-icon>
       </div>
       <div class="flex-1 min-w-0">
         <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Vendor Management</h1>
-        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Review and moderate partner applications</p>
+        <p class="text-[0.75rem] sm:text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0 truncate">Review partner applications</p>
       </div>
     </div>
 
-    <app-button routerLink="/add-vendor" customClass="">
-      <lucide-icon name="plus" size="18" [strokeWidth]="2.5" class="mr-2"></lucide-icon>
-      Add New Vendor
+    <app-button routerLink="/add-vendor" customClass="shrink-0">
+      <div class="flex items-center gap-1">
+        <lucide-icon name="plus" size="16" [strokeWidth]="2.5"></lucide-icon>
+        <span class="hidden sm:inline">Add New Vendor</span>
+        <span class="sm:hidden">Add</span>
+      </div>
     </app-button>
   </div>
 
   <!-- ── FILTERS ────────────────────────────────────────────────────────── -->
-  <div class="flex items-center justify-between flex-wrap gap-4 mb-5">
-    <div class="flex items-center gap-2 flex-wrap">
-      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
-                  bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-indigo-300" [class.ring-2]="filter() === 'all'"
-        [class.ring-indigo-500]="filter() === 'all'" [class.border-indigo-500]="filter() === 'all'"
-        (click)="filter.set('all')">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+    <!-- DESKTOP CHIPS -->
+    <div class="hidden sm:flex items-center gap-2 flex-wrap">
+      <div class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
+                  bg-indigo-50 text-indigo-700 border-indigo-200 hover:ring-2 hover:ring-indigo-300 transition"
+           [class.ring-2]="filter() === 'all'" [class.ring-indigo-400]="filter() === 'all'"
+           (click)="filter.set('all')">
+        <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
         {{ counts().all }} All
       </div>
-      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
-                  bg-white dark:bg-slate-900 text-amber-600 border-slate-200 dark:border-slate-700 hover:border-amber-300"
-        [class.ring-2]="filter() === 'pending'" [class.ring-amber-500]="filter() === 'pending'"
-        [class.border-amber-500]="filter() === 'pending'" (click)="filter.set('pending')">
+      <div class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
+                  bg-amber-50 text-amber-700 border-amber-200 hover:ring-2 hover:ring-amber-300 transition"
+           [class.ring-2]="filter() === 'pending'" [class.ring-amber-400]="filter() === 'pending'"
+           (click)="filter.set('pending')">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
         {{ counts().pending }} Pending
       </div>
-      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
-                  bg-white dark:bg-slate-900 text-emerald-600 border-slate-200 dark:border-slate-700 hover:border-emerald-300"
-        [class.ring-2]="filter() === 'approved'" [class.ring-emerald-500]="filter() === 'approved'"
-        [class.border-emerald-500]="filter() === 'approved'" (click)="filter.set('approved')">
+      <div class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
+                  bg-emerald-50 text-emerald-700 border-emerald-200 hover:ring-2 hover:ring-emerald-300 transition"
+           [class.ring-2]="filter() === 'approved'" [class.ring-emerald-400]="filter() === 'approved'"
+           (click)="filter.set('approved')">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
         {{ counts().approved }} Approved
       </div>
-      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
-                  bg-white dark:bg-slate-900 text-rose-600 border-slate-200 dark:border-slate-700 hover:border-rose-300"
-        [class.border-rose-500]="filter() === 'rejected'" (click)="filter.set('rejected')">
+      <div class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
+                  bg-rose-50 text-rose-700 border-rose-200 hover:ring-2 hover:ring-rose-300 transition"
+           [class.ring-2]="filter() === 'rejected'" [class.ring-rose-400]="filter() === 'rejected'"
+           (click)="filter.set('rejected')">
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
         {{ counts().rejected }} Rejected
       </div>
-      <div class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all
-                  bg-white dark:bg-slate-900 text-violet-600 border-slate-200 dark:border-slate-700 hover:border-violet-300"
-        [class.ring-2]="filter() === 'suspended'" [class.ring-violet-500]="filter() === 'suspended'"
-        [class.border-violet-500]="filter() === 'suspended'" (click)="filter.set('suspended')">
+      <div class="stat-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer
+                  bg-violet-50 text-violet-700 border-violet-200 hover:ring-2 hover:ring-violet-300 transition"
+           [class.ring-2]="filter() === 'suspended'" [class.ring-violet-400]="filter() === 'suspended'"
+           (click)="filter.set('suspended')">
+        <span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>
         {{ counts().suspended }} Suspended
       </div>
     </div>
 
+    <!-- MOBILE SEGMENTED CONTROL -->
+    <div class="sm:hidden flex w-full bg-slate-100 dark:bg-slate-800/80 p-1 rounded-[16px]">
+      <button class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-[12px] text-[10px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="filter() === 'all' ? 'bg-white dark:bg-slate-700 shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="filter.set('all')">
+        <span class="text-md leading-none mb-0.5">{{ counts().all }}</span>
+        All
+      </button>
+      <button class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-[12px] text-[10px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="filter() === 'pending' ? 'bg-white dark:bg-slate-700 shadow-sm text-amber-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="filter.set('pending')">
+        <span class="text-md leading-none mb-0.5">{{ counts().pending }}</span>
+        Pend.
+      </button>
+      <button class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-[12px] text-[10px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="filter() === 'approved' ? 'bg-white dark:bg-slate-700 shadow-sm text-emerald-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="filter.set('approved')">
+        <span class="text-md leading-none mb-0.5">{{ counts().approved }}</span>
+        Appr.
+      </button>
+      <button class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-[12px] text-[10px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="filter() === 'rejected' ? 'bg-white dark:bg-slate-700 shadow-sm text-rose-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="filter.set('rejected')">
+        <span class="text-md leading-none mb-0.5">{{ counts().rejected }}</span>
+        Rej.
+      </button>
+      <button class="flex-1 flex flex-col items-center justify-center py-1.5 rounded-[12px] text-[10px] font-bold transition-all duration-200 border-none cursor-pointer"
+              [class]="filter() === 'suspended' ? 'bg-white dark:bg-slate-700 shadow-sm text-violet-600' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              (click)="filter.set('suspended')">
+        <span class="text-md leading-none mb-0.5">{{ counts().suspended }}</span>
+        Susp.
+      </button>
+    </div>
+
+    <!-- Search box -->
     <div class="relative w-full sm:w-80">
       <lucide-icon name="search" size="16"
         class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></lucide-icon>
@@ -157,7 +202,7 @@
             </div>
             <div class="min-w-0">
               <div class="font-bold text-slate-900 dark:text-slate-100 leading-snug truncate">{{ v.businessName }}</div>
-              <div class="text-[0.75rem] text-slate-400 mt-0.5 truncate">{{ v.fullName }} • {{ v.email }}</div>
+              <div class="text-[0.75rem] text-slate-400 mt-0.5 truncate">{{ v.fullName }}<span class="hidden sm:inline"> • {{ v.email }}</span></div>
             </div>
           </div>
           <span

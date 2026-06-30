@@ -104,6 +104,10 @@ export const routes: Routes = [
         loadComponent: () => import('@features/reports/reports').then(m => m.Reports)
       },
       {
+        path: 'contacts',
+        loadComponent: () => import('@features/contacts/contacts').then(m => m.Contacts)
+      },
+      {
         path: 'terms',
         loadComponent: () => import('@features/terms/terms').then(m => m.Terms)
       },

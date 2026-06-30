@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Moon, Sun, Monitor, Palette } from 'lucide-angular';
+import { LucideAngularModule, Moon, Sun, Monitor, Palette, Settings as SettingsIcon } from 'lucide-angular';
 
 @Component({
   selector: 'app-settings',
@@ -13,7 +13,8 @@ export class Settings implements OnInit {
     moon: Moon,
     sun: Sun,
     monitor: Monitor,
-    palette: Palette
+    palette: Palette,
+    settings: SettingsIcon
   };
 
   currentTheme = signal<string>('light');

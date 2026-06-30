@@ -9,6 +9,7 @@ import { Button } from '../../shared/components/button/button';
 import { Model } from '../../shared/components/model/model';
 import { Pagination } from '../../shared/components/pagination/pagination';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { forkJoin } from 'rxjs';
 
 import { BookingService } from '../../core/services/booking.service';
 import { BookingStore } from '../../core/store/booking.store';
@@ -51,17 +52,23 @@ export class Bookings {
   }
 
   loadStats() {
-    this.bookingService.getStats().subscribe({
-      next: (res) => {
+    forkJoin({
+      stats: this.bookingService.getStats(),
+      all: this.bookingApi.getAllBookings(1, 1, '', 'all'),
+      paid: this.bookingApi.getAllBookings(1, 1, '', 'paid'),
+      pending: this.bookingApi.getAllBookings(1, 1, '', 'pending'),
+      cancelled: this.bookingApi.getAllBookings(1, 1, '', 'cancelled')
+    }).subscribe({
+      next: ({ stats, all, paid, pending, cancelled }) => {
         this.backendStats.set({
-          totalRevenue: res.totalRevenue || 0,
-          collected: res.collected || 0,
-          outstanding: res.outstanding || 0,
-          totalCount: this.pagination().totalRecords || 0,
-          paidCount: 0, // Backend might not provide this yet, but we use what we have
-          pendingCount: 0,
-          failedCount: 0,
-          todayCount: res.todayCount || 0
+          totalRevenue: stats.totalRevenue || 0,
+          collected: stats.collected || 0,
+          outstanding: stats.outstanding || 0,
+          totalCount: all.totalRecords || 0,
+          paidCount: paid.totalRecords || 0,
+          pendingCount: pending.totalRecords || 0,
+          failedCount: cancelled.totalRecords || 0,
+          todayCount: stats.todayCount || 0
         });
       }
     });
@@ -137,7 +144,12 @@ export class Bookings {
   /**
    * Stats directly read from backend
    */
-  stats = this.backendStats.asReadonly();
+  stats = computed(() => {
+    return {
+      ...this.backendStats(),
+      totalCount: this.pagination()?.totalRecords || 0
+    };
+  });
 
   // ── Actions ────────────────────────────────────────────────────────────────
   

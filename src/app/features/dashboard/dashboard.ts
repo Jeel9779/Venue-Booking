@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DashboardService } from '@core/services/dashboard.service';
 
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, LayoutDashboard, Users, Briefcase, Zap, Building2, CalendarCheck, IndianRupee, Clock, CalendarX, TrendingUp, MapPin, CheckCircle } from 'lucide-angular';
 
 /**
  * Modern High-Fidelity Admin Overview Dashboard
@@ -27,6 +27,21 @@ import { LucideAngularModule } from 'lucide-angular';
 })
 // Defines the structure and behavior of this class
 export class Dashboard implements OnInit, OnDestroy {
+  icons = {
+    layoutDashboard: LayoutDashboard,
+    users: Users,
+    briefcase: Briefcase,
+    zap: Zap,
+    building2: Building2,
+    calendarCheck: CalendarCheck,
+    indianRupee: IndianRupee,
+    clock: Clock,
+    calendarX: CalendarX,
+    trendingUp: TrendingUp,
+    mapPin: MapPin,
+    checkCircle: CheckCircle
+  };
+
   // ── Dependency Injection ──────────────────────────────────────────────────
   private readonly dashboardService = inject(DashboardService);
 
@@ -42,81 +57,89 @@ export class Dashboard implements OnInit, OnDestroy {
       { 
         title: 'Total Users', 
         value: data.totalUsers, 
-        icon: 'users', 
+        icon: this.icons.users, 
         change: 'Registered',
         iconClass: 'bg-blue-50 text-blue-600 border border-blue-100', 
         accentClass: 'border-l-4 border-l-blue-500',
         progressClass: 'bg-blue-500',
+        link: '/users',
         isLoading: false
       },
       { 
         title: 'Total Vendors', 
         value: data.totalVendors, 
-        icon: 'briefcase', 
+        icon: this.icons.briefcase, 
         change: 'Partners',
         iconClass: 'bg-indigo-50 text-indigo-600 border border-indigo-100', 
         accentClass: 'border-l-4 border-l-indigo-500',
         progressClass: 'bg-indigo-500',
+        link: '/vendors',
         isLoading: false
       },
       { 
         title: 'Active Subs', 
         value: data.topSubscriptions?.reduce((acc, sub) => acc + sub.count, 0) || 0, 
-        icon: 'zap', 
+        icon: this.icons.zap, 
         change: 'Paid plans',
         iconClass: 'bg-emerald-50 text-emerald-600 border border-emerald-100', 
         accentClass: 'border-l-4 border-l-emerald-500',
         progressClass: 'bg-emerald-500',
+        link: '/admin/vendor-subscriptions',
         isLoading: false
       },
       { 
         title: 'Total Venues', 
         value: data.activeVenues, 
-        icon: 'building-2', 
+        icon: this.icons.building2, 
         change: 'Listed',
         iconClass: 'bg-purple-50 text-purple-600 border border-purple-100', 
         accentClass: 'border-l-4 border-l-purple-500',
         progressClass: 'bg-purple-500',
+        link: '/venues',
         isLoading: false
       },
       { 
         title: 'Total Bookings', 
         value: data.totalBookings, 
-        icon: 'calendar-check', 
+        icon: this.icons.calendarCheck, 
         change: 'Total Orders',
         iconClass: 'bg-orange-50 text-orange-600 border border-orange-100', 
         accentClass: 'border-l-4 border-l-orange-500',
         progressClass: 'bg-orange-500',
+        link: '/bookings',
         isLoading: false
       },
       { 
         title: 'Total Revenue', 
         value: `₹${data.netRevenue.toLocaleString()}`, 
-        icon: 'indian-rupee', 
+        icon: this.icons.indianRupee, 
         change: 'Platform Earn',
         iconClass: 'bg-green-50 text-green-600 border border-green-100', 
         accentClass: 'border-l-4 border-l-green-500',
         progressClass: 'bg-green-500',
+        link: '/bookings',
         isLoading: false
       },
       { 
         title: 'Pending Approvals', 
         value: data.pendingApprovalsCount, 
-        icon: 'clock', 
+        icon: this.icons.clock, 
         change: 'Action Required',
         iconClass: 'bg-amber-50 text-amber-600 border border-amber-100', 
         accentClass: 'border-l-4 border-l-amber-500',
         progressClass: 'bg-amber-500',
+        link: '/vendors',
         isLoading: false
       },
       { 
         title: 'Cancelled Bookings', 
         value: data.cancelledBookingsCount, 
-        icon: 'calendar-x', 
+        icon: this.icons.calendarX, 
         change: 'Failed / Cancelled',
         iconClass: 'bg-rose-50 text-rose-600 border border-rose-100', 
         accentClass: 'border-l-4 border-l-rose-500',
         progressClass: 'bg-rose-500',
+        link: '/bookings',
         isLoading: false
       },
     ];

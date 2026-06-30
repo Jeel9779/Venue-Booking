@@ -202,6 +202,16 @@ export class VendorSubscriptions implements OnInit {
     }
   }
 
+  getStatusCount(status: string): number {
+    if (status === 'all') return this.summary()?.total || 0;
+    if (status === 'active') return this.summary()?.active || 0;
+    if (status === 'grace') return this.summary()?.grace || 0;
+    
+    // Fallback for statuses that might not be in the summary object
+    const subs = this.subStore.allSubscriptions() || [];
+    return subs.filter((s: any) => (s.status || '').toLowerCase() === status).length;
+  }
+
   openDetails(sub: any) {
     this.selectedSubscription.set(sub);
     this.cd.detectChanges();

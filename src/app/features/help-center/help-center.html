@@ -1,4 +1,4 @@
-<div class="p-6 md:p-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+<div class="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500 w-full px-4 sm:px-6 py-6">
   
   <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
     <div class="header-left flex items-center gap-3.5">
@@ -25,9 +25,9 @@
         <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl overflow-hidden transition-all duration-200 hover:border-gray-300">
           <button 
             (click)="toggleFaq($index)"
-            class="w-full flex items-center justify-between p-5 text-left focus:outline-none">
-            <span class="font-semibold text-gray-900 dark:text-slate-100">{{ faq.question }}</span>
-            <div class="text-gray-400 shrink-0 ml-4">
+            class="w-full flex items-center justify-between p-4 sm:p-5 text-left focus:outline-none">
+            <span class="font-semibold text-[15px] sm:text-base text-gray-900 dark:text-slate-100">{{ faq.question }}</span>
+            <div class="text-gray-400 shrink-0 ml-3 sm:ml-4">
               @if (expandedFaq() === $index) {
                 <lucide-icon [img]="icons.chevronUp" size="20"></lucide-icon>
               } @else {
@@ -40,7 +40,7 @@
             class="overflow-hidden transition-all duration-300 ease-in-out"
             [class.max-h-0]="expandedFaq() !== $index"
             [class.max-h-[500px]]="expandedFaq() === $index">
-            <div class="p-5 pt-0 text-sm text-gray-600 dark:text-slate-400 leading-relaxed border-t border-gray-100 dark:border-slate-700 mt-1">
+            <div class="p-4 sm:p-5 pt-0 text-sm text-gray-600 dark:text-slate-400 leading-relaxed border-t border-gray-100 dark:border-slate-700 mt-1">
               {{ faq.answer }}
             </div>
           </div>
@@ -50,15 +50,15 @@
 
     <!-- Contact Support Card -->
     <div class="lg:col-span-1">
-      <div class="bg-gradient-to-b from-[#6C63FF] to-[#4E4CFF] rounded-3xl p-6 text-white-[#6C63FF]/20 sticky top-24">
+      <div class="bg-gradient-to-b from-[#6C63FF] to-[#4E4CFF] rounded-3xl p-5 sm:p-6 text-white shadow-xl shadow-[#6C63FF]/20 sticky top-24">
         <div class="w-12 h-12 bg-white dark:bg-slate-900/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
-          <lucide-icon [img]="icons.messageSquare" size="24" class="text-white"></lucide-icon>
+          <lucide-icon [img]="icons.messageSquare" size="24" class="text-[#6C63FF] dark:text-white"></lucide-icon>
         </div>
         <h3 class="text-xl font-bold mb-2">Need more help?</h3>
         <p class="text-white/80 text-sm mb-6 leading-relaxed">
           If you encounter a bug or need clarification on a platform feature, our technical team is here to support you.
         </p>
-        <button class="w-full py-2.5 px-4 bg-white dark:bg-slate-900 text-[#6C63FF] hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 font-bold rounded-xl transition-colors duration-200">
+        <button (click)="openSupport()" class="w-full py-2.5 px-4 bg-white dark:bg-slate-900 text-[#6C63FF] hover:bg-gray-50 dark:hover:bg-slate-800 font-bold rounded-xl transition-colors duration-200">
           Contact Support
         </button>
       </div>
@@ -66,3 +66,46 @@
 
   </div>
 </div>
+
+<!-- Support Modal -->
+@if (showSupportModal()) {
+  <app-model title="Contact Support" maxWidth="md" (onClose)="closeSupport()" [hasFooter]="true">
+    <div class="space-y-4">
+      <form [formGroup]="supportForm">
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-900 dark:text-slate-100 mb-1.5">Subject</label>
+          <input type="text" formControlName="subject" placeholder="What do you need help with?" 
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/50 transition-shadow"
+            [class.border-red-500]="supportForm.controls.subject.touched && supportForm.controls.subject.invalid">
+          @if (supportForm.controls.subject.touched && supportForm.controls.subject.invalid) {
+            <p class="text-[11px] text-red-500 mt-1.5 font-medium">Subject is required</p>
+          }
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-slate-100 mb-1.5">Message</label>
+          <textarea formControlName="message" rows="5" placeholder="Describe your issue in detail..." 
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/50 transition-shadow resize-none"
+            [class.border-red-500]="supportForm.controls.message.touched && supportForm.controls.message.invalid"></textarea>
+          @if (supportForm.controls.message.touched && supportForm.controls.message.invalid) {
+            <p class="text-[11px] text-red-500 mt-1.5 font-medium">Message is required (min 10 characters)</p>
+          }
+        </div>
+      </form>
+    </div>
+    <div footer class="flex justify-end w-full">
+      <button (click)="submitSupport()" [disabled]="isSubmitting() || supportForm.invalid" class="px-6 py-2 bg-[#6C63FF] hover:bg-[#5A52D5] text-white text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+        @if (isSubmitting()) {
+          <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+          </svg>
+          Submitting...
+        } @else {
+          Submit Ticket
+        }
+      </button>
+    </div>
+  </app-model>
+}
+

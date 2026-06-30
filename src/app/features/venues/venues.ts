@@ -12,7 +12,7 @@ import { initialPagination } from '../../core/models/pagination.model';
 import { Table } from '../../shared/components/table/table';
 import { Model } from '../../shared/components/model/model';
 import { FormInput } from '../../shared/components/form-input/form-input';
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, Building2, Search, X, MapPin, ChevronRight, ChevronLeft, ShieldCheck, ShieldOff, Calendar, Star, Tag, Users, IndianRupee, Utensils, Info, Package, Check, Building, Maximize2, ImageOff, AlertCircle, CheckCircle2, Ban, CalendarRange } from 'lucide-angular';
 import { API_BASE_URL } from '../../core/config/api.config';
 
 /**
@@ -39,6 +39,32 @@ import { API_BASE_URL } from '../../core/config/api.config';
 })
 // Defines the structure and behavior of this class
 export class Venues implements OnInit {
+  icons = {
+    building2: Building2,
+    search: Search,
+    x: X,
+    mapPin: MapPin,
+    chevronRight: ChevronRight,
+    chevronLeft: ChevronLeft,
+    shieldCheck: ShieldCheck,
+    shieldOff: ShieldOff,
+    calendar: Calendar,
+    star: Star,
+    tag: Tag,
+    users: Users,
+    indianRupee: IndianRupee,
+    utensils: Utensils,
+    info: Info,
+    package: Package,
+    check: Check,
+    building: Building,
+    maximize2: Maximize2,
+    imageOff: ImageOff,
+    alertCircle: AlertCircle,
+    checkCircle2: CheckCircle2,
+    ban: Ban,
+    calendarRange: CalendarRange
+  };
 
   // ── Dependency Injection ──────────────────────────────────────────────────
   /** 

@@ -1,9 +1,9 @@
 <!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700">
+<div class="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700 w-full px-4 sm:px-6 py-6">
   <!-- Header Section -->
   <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
     <div class="header-left flex items-center gap-3.5">
-      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0">
+      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
         <lucide-icon [img]="icons.penTool" size="20"></lucide-icon>
       </div>
       <div class="flex-1 min-w-0">
@@ -14,57 +14,69 @@
   </div>
 
   <!-- KPI Cards Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-10">
     <!-- Total Blogs Card -->
-    <div class="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-100 dark:hover:border-indigo-900 transition-all group relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-50/50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-      <div class="flex justify-between items-start mb-4 relative z-10">
-        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
-          <lucide-icon [img]="icons.fileText" size="24"></lucide-icon>
+    <div class="bg-white dark:bg-slate-900 p-2.5 xs:p-3.5 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-100 dark:hover:border-indigo-900 transition-all group relative overflow-hidden h-full border-l-[3px] sm:border-l-4 border-l-indigo-500 shadow-sm sm:shadow-none">
+      <div class="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-indigo-50/50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+      <div class="flex justify-between items-start mb-2 sm:mb-4 relative z-10">
+        <div class="p-1.5 sm:p-3 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-lg sm:rounded-xl">
+          <lucide-icon [img]="icons.fileText" size="14" class="sm:hidden"></lucide-icon>
+          <lucide-icon [img]="icons.fileText" size="24" class="hidden sm:block"></lucide-icon>
         </div>
       </div>
-      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest relative z-10">Total Blogs</p>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1 relative z-10">{{ totalBlogs() }}</h3>
-      <p class="text-indigo-500 text-[10px] mt-2 font-bold flex items-center gap-1 relative z-10">All platform blogs <lucide-icon [img]="icons.fileText" size="10"></lucide-icon></p>
+      <p class="text-slate-400 dark:text-slate-500 text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider relative z-10 truncate">Total Blogs</p>
+      <h3 class="text-base sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-0.5 sm:mt-1 relative z-10">{{ totalBlogs() }}</h3>
+      <p class="text-indigo-500 dark:text-indigo-400 text-[8px] xs:text-[9px] mt-1 sm:mt-2 font-bold flex items-center gap-1 relative z-10 truncate">
+        <span class="truncate">All platform blogs</span>
+      </p>
     </div>
 
     <!-- Pending Card -->
-    <div class="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-amber-100 dark:hover:border-amber-900 transition-all group border-l-4 border-l-amber-500">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
-          <lucide-icon [img]="icons.view" size="24"></lucide-icon>
+    <div class="bg-white dark:bg-slate-900 p-2.5 xs:p-3.5 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-amber-100 dark:hover:border-amber-900 transition-all group h-full border-l-[3px] sm:border-l-4 border-l-amber-500 shadow-sm sm:shadow-none">
+      <div class="flex justify-between items-center mb-2 sm:mb-4">
+        <div class="p-1.5 sm:p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-lg sm:rounded-xl">
+          <lucide-icon [img]="icons.view" size="14" class="sm:hidden"></lucide-icon>
+          <lucide-icon [img]="icons.view" size="24" class="hidden sm:block"></lucide-icon>
         </div>
-        <span class="text-amber-600 text-[10px] font-black bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full uppercase">Review</span>
+        <span class="text-amber-600 dark:text-amber-400 text-[7.5px] xs:text-[8.5px] sm:text-[10px] font-black bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900/50 px-1 sm:px-1.5 py-0.5 rounded-full uppercase shrink-0">Review</span>
       </div>
-      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Pending Approval</p>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1">{{ pendingBlogs() }}</h3>
-      <p class="text-amber-500 text-[10px] mt-2 font-bold flex items-center gap-1">Awaiting moderation <lucide-icon [img]="icons.view" size="10"></lucide-icon></p>
+      <p class="text-slate-400 dark:text-slate-500 text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider truncate">Pending Approval</p>
+      <h3 class="text-base sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-0.5 sm:mt-1">{{ pendingBlogs() }}</h3>
+      <p class="text-amber-500 dark:text-amber-400 text-[8px] xs:text-[9px] mt-1 sm:mt-2 font-bold flex items-center gap-1 truncate">
+        <span class="truncate">Awaiting moderation</span>
+      </p>
     </div>
 
     <!-- Approved Card -->
-    <div class="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-emerald-100 dark:hover:border-emerald-900 transition-all group border-l-4 border-l-emerald-500">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-          <lucide-icon [img]="icons.success" size="24"></lucide-icon>
+    <div class="bg-white dark:bg-slate-900 p-2.5 xs:p-3.5 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-emerald-100 dark:hover:border-emerald-900 transition-all group h-full border-l-[3px] sm:border-l-4 border-l-emerald-500 shadow-sm sm:shadow-none">
+      <div class="flex justify-between items-center mb-2 sm:mb-4">
+        <div class="p-1.5 sm:p-3 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg sm:rounded-xl">
+          <lucide-icon [img]="icons.success" size="14" class="sm:hidden"></lucide-icon>
+          <lucide-icon [img]="icons.success" size="24" class="hidden sm:block"></lucide-icon>
         </div>
-        <span class="text-emerald-600 text-[10px] font-black bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full uppercase">Live</span>
+        <span class="text-emerald-600 dark:text-emerald-400 text-[7.5px] xs:text-[8.5px] sm:text-[10px] font-black bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50 px-1 sm:px-1.5 py-0.5 rounded-full uppercase shrink-0">Live</span>
       </div>
-      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Approved Blogs</p>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1">{{ approvedBlogs() }}</h3>
-      <p class="text-emerald-500 text-[10px] mt-2 font-bold flex items-center gap-1">Published to platform <lucide-icon [img]="icons.success" size="10"></lucide-icon></p>
+      <p class="text-slate-400 dark:text-slate-500 text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider truncate">Approved Blogs</p>
+      <h3 class="text-base sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-0.5 sm:mt-1">{{ approvedBlogs() }}</h3>
+      <p class="text-emerald-500 dark:text-emerald-400 text-[8px] xs:text-[9px] mt-1 sm:mt-2 font-bold flex items-center gap-1 truncate">
+        <span class="truncate">Published to platform</span>
+      </p>
     </div>
 
     <!-- Rejected Card -->
-    <div class="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-rose-100 dark:hover:border-rose-900 transition-all group border-l-4 border-l-rose-500">
-      <div class="flex justify-between items-start mb-4">
-        <div class="p-3 bg-rose-50 text-rose-600 rounded-xl">
-          <lucide-icon [img]="icons.reject" size="24"></lucide-icon>
+    <div class="bg-white dark:bg-slate-900 p-2.5 xs:p-3.5 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-rose-100 dark:hover:border-rose-900 transition-all group h-full border-l-[3px] sm:border-l-4 border-l-rose-500 shadow-sm sm:shadow-none">
+      <div class="flex justify-between items-center mb-2 sm:mb-4">
+        <div class="p-1.5 sm:p-3 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-lg sm:rounded-xl">
+          <lucide-icon [img]="icons.reject" size="14" class="sm:hidden"></lucide-icon>
+          <lucide-icon [img]="icons.reject" size="24" class="hidden sm:block"></lucide-icon>
         </div>
-        <span class="text-rose-600 text-[10px] font-black bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-full uppercase">Action</span>
+        <span class="text-rose-600 dark:text-rose-400 text-[7.5px] xs:text-[8.5px] sm:text-[10px] font-black bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900/50 px-1 sm:px-1.5 py-0.5 rounded-full uppercase shrink-0">Action</span>
       </div>
-      <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Rejected / Suspended</p>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1">{{ rejectedBlogs() }}</h3>
-      <p class="text-rose-500 text-[10px] mt-2 font-bold flex items-center gap-1">Requires vendor update <lucide-icon [img]="icons.reject" size="10"></lucide-icon></p>
+      <p class="text-slate-400 dark:text-slate-500 text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider truncate">Rejected / Suspended</p>
+      <h3 class="text-base sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mt-0.5 sm:mt-1">{{ rejectedBlogs() }}</h3>
+      <p class="text-rose-500 dark:text-rose-400 text-[8px] xs:text-[9px] mt-1 sm:mt-2 font-bold flex items-center gap-1 truncate">
+        <span class="truncate">Requires vendor update</span>
+      </p>
     </div>
   </div>
 
@@ -119,7 +131,7 @@
 
   <!-- Data Table (Desktop) & Cards (Mobile) -->
   <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden">
-    <div class="overflow-x-auto">
+    <div class="hidden sm:block overflow-x-auto">
       <table class="w-full text-left border-collapse min-w-[800px]">
         <thead>
           <tr class="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700">
@@ -234,6 +246,101 @@
       </table>
     </div>
 
+    <!-- Mobile Cards View (Visible on Mobile only) -->
+    <div class="sm:hidden divide-y divide-slate-150 dark:divide-slate-800">
+      @if (isLoading()) {
+        @for (i of [1,2,3]; track i) {
+          <div class="p-4 space-y-3 animate-pulse">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 shrink-0"></div>
+              <div class="space-y-1.5 flex-1">
+                <div class="h-3 bg-slate-100 dark:bg-slate-800 rounded w-24"></div>
+                <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded w-16"></div>
+              </div>
+            </div>
+            <div class="h-8 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+          </div>
+        }
+      } @else {
+        @for (blog of blogs(); track blog._id) {
+          <div class="p-4 space-y-3" [class.opacity-50]="blog.deleted">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3 min-w-0 flex-1">
+                @if (blog.coverImage) {
+                  <img [src]="blog.coverImage" alt="Cover" class="w-10 h-10 rounded object-cover shrink-0">
+                } @else {
+                  <div class="w-10 h-10 rounded bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center shrink-0 text-indigo-200 dark:text-indigo-850">
+                    <lucide-icon [img]="icons.fileText" size="16"></lucide-icon>
+                  </div>
+                }
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-slate-900 dark:text-slate-100 text-xs truncate">{{ blog.title }}</h4>
+                  @if (blog.deleted) {
+                    <span class="text-[9px] font-bold text-rose-500 uppercase tracking-wider block mt-0.5">Deleted</span>
+                  } @else {
+                    <p class="text-[9px] text-slate-500 truncate mt-0.5">{{ blog.tags.join(', ') }}</p>
+                  }
+                </div>
+              </div>
+              <span [class]="getStatusClass(blog.status)" class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border shrink-0">
+                {{ blog.status }}
+              </span>
+            </div>
+            
+            <!-- Meta Details (Vendor & Likes) -->
+            <div class="flex justify-between items-center text-[10px] text-slate-500 bg-slate-50 dark:bg-slate-950/40 p-2.5 rounded-xl border border-slate-100/50 dark:border-slate-800/80 gap-3">
+              <div class="min-w-0 flex-1">
+                <span class="font-bold text-slate-850 dark:text-slate-200 block truncate">{{ blog.vendorId.businessName || blog.vendorId.fullName || 'Unknown' }}</span>
+                <span class="text-[9px] text-slate-400 block truncate mt-0.5">{{ blog.vendorId.email }}</span>
+              </div>
+              <div class="flex gap-2 shrink-0 text-[9.5px] items-center font-semibold bg-white dark:bg-slate-900 border border-slate-100/80 dark:border-slate-800 px-2 py-1 rounded-lg">
+                <span class="flex items-center gap-0.5">❤️ {{ blog.likes.length || 0 }}</span>
+                <span class="w-px h-3 bg-slate-200 dark:bg-slate-700"></span>
+                <span class="flex items-center gap-0.5">💬 {{ blog.comments.length || 0 }}</span>
+              </div>
+            </div>
+
+            <!-- Mobile Actions -->
+            <div class="flex justify-between items-center pt-1">
+              <span class="text-[10px] text-slate-400 font-medium">{{ blog.createdAt | date:'MMM d, y' }}</span>
+              <div class="flex items-center bg-slate-50 dark:bg-slate-800 rounded-xl p-1 border border-slate-200 dark:border-slate-700">
+                <button (click)="previewBlog(blog)" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-white dark:hover:bg-slate-900 rounded-lg transition-all" title="Preview">
+                  <lucide-icon [img]="icons.view" size="14"></lucide-icon>
+                </button>
+                @if (!blog.deleted) {
+                  <div class="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+                  @if (blog.status === 'pending') {
+                    <button (click)="approveBlog(blog._id)" class="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-white dark:hover:bg-slate-900 rounded-lg transition-all" title="Approve">
+                      <lucide-icon [img]="icons.success" size="14"></lucide-icon>
+                    </button>
+                    <button (click)="openReasonModal(blog, 'reject')" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-white dark:hover:bg-slate-900 rounded-lg transition-all" title="Reject">
+                      <lucide-icon [img]="icons.reject" size="14"></lucide-icon>
+                    </button>
+                  } @else if (blog.status === 'approved') {
+                    <button (click)="openReasonModal(blog, 'suspend')" class="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-white dark:hover:bg-slate-900 rounded-lg transition-all" title="Suspend">
+                      <lucide-icon [img]="icons.suspend" size="14"></lucide-icon>
+                    </button>
+                  } @else if (blog.status === 'rejected' || blog.status === 'suspended') {
+                    <button (click)="restoreBlog(blog._id)" class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-white dark:hover:bg-slate-900 rounded-lg transition-all" title="Restore to Pending">
+                      <lucide-icon [img]="icons.restore" size="14"></lucide-icon>
+                    </button>
+                  }
+                  <button (click)="confirmDelete(blog._id)" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-white dark:hover:bg-slate-900 rounded-lg transition-all" title="Delete">
+                    <lucide-icon [img]="icons.delete" size="14"></lucide-icon>
+                  </button>
+                } @else {
+                  <div class="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+                  <button (click)="undeleteBlog(blog._id)" class="px-2 py-1 text-[9px] font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-white dark:hover:bg-slate-900 rounded-lg transition-all uppercase">
+                    Undelete
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
     @if (pagination().totalPages > 0) {
       <div class="p-4 border-t border-slate-200 dark:border-slate-700">
         <app-pagination 
@@ -263,26 +370,26 @@
   @if (showPreviewModal() && selectedBlog()) {
     <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in" (click)="closePreviewModal()"></div>
-      <div class="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-3xl overflow-hidden relative z-10 flex flex-col max-h-[90vh] shadow-2xl">
-        <div class="p-6 border-b border-slate-100 flex justify-between items-start shrink-0">
-          <div>
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ selectedBlog()?.title }}</h2>
-            <p class="text-xs text-slate-500 mt-1">By {{ selectedBlog()?.vendorId?.businessName || selectedBlog()?.vendorId?.fullName }}</p>
+      <div class="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-2xl sm:rounded-3xl overflow-hidden relative z-10 flex flex-col max-h-[92vh] sm:max-h-[90vh] shadow-2xl">
+        <div class="p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-start shrink-0 gap-3">
+          <div class="min-w-0 flex-1">
+            <h2 class="text-base sm:text-xl font-bold text-slate-900 dark:text-white truncate">{{ selectedBlog()?.title }}</h2>
+            <p class="text-xs text-slate-500 mt-1 truncate">By {{ selectedBlog()?.vendorId?.businessName || selectedBlog()?.vendorId?.fullName }}</p>
           </div>
-          <button (click)="closePreviewModal()" class="p-2 hover:bg-slate-100 rounded-full transition-colors">
-            <lucide-icon [img]="icons.close" size="20"></lucide-icon>
+          <button (click)="closePreviewModal()" class="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 rounded-full transition-colors shrink-0">
+            <lucide-icon [img]="icons.close" size="18"></lucide-icon>
           </button>
         </div>
-        <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+        <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar flex-1">
           @if (selectedBlog()?.coverImage) {
-            <img [src]="selectedBlog()?.coverImage" class="w-full h-48 md:h-64 object-cover rounded-xl mb-6">
+            <img [src]="selectedBlog()?.coverImage" class="w-full h-40 sm:h-48 md:h-64 object-cover rounded-xl mb-4 sm:mb-6">
           }
-          <div class="prose dark:prose-invert max-w-none text-sm text-slate-700 dark:text-slate-300" [innerHTML]="selectedBlog()?.content"></div>
+          <div class="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300" [innerHTML]="selectedBlog()?.content"></div>
           
           @if (selectedBlog()?.adminNote) {
-            <div class="mt-8 p-4 bg-amber-50 rounded-xl border border-amber-100">
-              <p class="text-xs font-bold text-amber-800 uppercase mb-1">Admin Note / Reason</p>
-              <p class="text-sm text-amber-900">{{ selectedBlog()?.adminNote }}</p>
+            <div class="mt-4 sm:mt-8 p-3.5 sm:p-4 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-100 dark:border-amber-900/50">
+              <p class="text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase mb-1">Admin Note / Reason</p>
+              <p class="text-xs sm:text-sm text-amber-900 dark:text-amber-200">{{ selectedBlog()?.adminNote }}</p>
             </div>
           }
         </div>
@@ -294,23 +401,23 @@
   @if (showReasonModal() && selectedBlog()) {
     <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in" (click)="closeReasonModal()"></div>
-      <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl overflow-hidden relative z-10 p-6 shadow-2xl">
-        <h2 class="text-lg font-bold text-slate-900 dark:text-white capitalize mb-2">{{ reasonAction() }} Blog</h2>
-        <p class="text-sm text-slate-500 mb-4">Provide a reason for this action. The vendor will see this note.</p>
+      <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl sm:rounded-3xl overflow-hidden relative z-10 p-5 sm:p-6 shadow-2xl">
+        <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white capitalize mb-1 sm:mb-2">{{ reasonAction() }} Blog</h2>
+        <p class="text-xs sm:text-sm text-slate-500 mb-3 sm:mb-4">Provide a reason for this action. The vendor will see this note.</p>
         
         <textarea
           [ngModel]="reasonText()"
           (ngModelChange)="reasonText.set($event)"
-          rows="4"
-          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-sm outline-none transition-all focus:ring-2 focus:ring-indigo-500 text-slate-700 dark:text-slate-300 resize-none mb-4"
+          rows="3"
+          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 sm:p-4 text-xs sm:text-sm outline-none transition-all focus:ring-2 focus:ring-indigo-500 text-slate-700 dark:text-slate-300 resize-none mb-3 sm:mb-4"
           placeholder="Enter reason..."
         ></textarea>
         
-        <div class="flex gap-3 justify-end">
-          <button (click)="closeReasonModal()" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+        <div class="flex gap-2 sm:gap-3 justify-end">
+          <button (click)="closeReasonModal()" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 dark:text-slate-300 dark:bg-slate-800 transition-colors">
             Cancel
           </button>
-          <button (click)="submitReason()" class="px-4 py-2 rounded-xl text-sm font-bold text-white transition-colors"
+          <button (click)="submitReason()" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold text-white transition-colors"
                   [ngClass]="reasonAction() === 'reject' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-amber-600 hover:bg-amber-700'"
                   [disabled]="!reasonText().trim()">
             Submit
@@ -324,18 +431,18 @@
   @if (showDeleteModal()) {
     <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in" (click)="closeDeleteModal()"></div>
-      <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl overflow-hidden relative z-10 p-6 shadow-2xl text-center">
-        <div class="w-16 h-16 bg-rose-100 dark:bg-rose-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-rose-600 dark:text-rose-400">
-          <lucide-icon [img]="icons.delete" size="32"></lucide-icon>
+      <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl sm:rounded-3xl overflow-hidden relative z-10 p-5 sm:p-6 shadow-2xl text-center">
+        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-rose-100 dark:bg-rose-900/30 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 text-rose-600 dark:text-rose-400">
+          <lucide-icon [img]="icons.delete" size="24"></lucide-icon>
         </div>
-        <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">Delete Blog?</h2>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Are you sure you want to soft delete this blog? It will be removed from the main views.</p>
+        <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white mb-1 sm:mb-2">Delete Blog?</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4 sm:mb-6">Are you sure you want to soft delete this blog? It will be removed from the main views.</p>
         
-        <div class="flex gap-3 justify-center">
-          <button (click)="closeDeleteModal()" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+        <div class="flex gap-2 sm:gap-3 justify-center">
+          <button (click)="closeDeleteModal()" class="flex-1 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
             Cancel
           </button>
-          <button (click)="executeDelete()" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 transition-colors">
+          <button (click)="executeDelete()" class="flex-1 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 transition-colors">
             Yes, Delete
           </button>
         </div>
@@ -343,3 +450,4 @@
     </div>
   }
 </div>
+

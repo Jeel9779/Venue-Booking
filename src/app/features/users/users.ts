@@ -63,6 +63,18 @@ export class Users implements OnInit {
   filteredUsers = computed(() => {
     let list = this.users().filter(u => !u.deleted);
     
+    const currentFilter = this.filter();
+    if (currentFilter !== 'all') {
+      list = list.filter(u => {
+        if (currentFilter === 'suspended') return u.status === 'suspended';
+        
+        const isVerified = Boolean(u.profilePhoto && u.address && u.city && u.status !== 'suspended');
+        if (currentFilter === 'verified') return isVerified;
+        if (currentFilter === 'unverified') return !isVerified && u.status !== 'suspended';
+        return true;
+      });
+    }
+    
     // Add client-side pagination slice to ensure we never display more than 'limit' records on a single page
     const page = this.pagination()?.page || 1;
     const limit = this.pagination()?.limit || 10;
@@ -90,7 +102,11 @@ export class Users implements OnInit {
   }
 
   fetchData(page: number) {
-    this.userService.loadAll(page, this.pagination().limit, this.search(), this.filter(), this.sortBy(), this.sortOrder());
+    const isLocalFilter = this.filter() === 'verified' || this.filter() === 'unverified';
+    const backendStatus = isLocalFilter ? '' : this.filter();
+    const fetchLimit = isLocalFilter ? 100 : this.pagination().limit;
+    
+    this.userService.loadAll(page, fetchLimit, this.search(), backendStatus, this.sortBy(), this.sortOrder());
     this.loadStats();
   }
 

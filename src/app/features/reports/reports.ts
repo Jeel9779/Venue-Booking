@@ -1,5 +1,5 @@
 // Purpose: Component/Logic: Handles UI behavior and user interactions for report management.
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -63,6 +63,17 @@ export class Reports implements OnInit {
   resolvedCount = this.reportStore.resolvedCount;
   openCount = this.reportStore.openCount;
 
+  statusCounts = computed(() => {
+    const list = this.reports();
+    return {
+      All: list.length,
+      Open: list.filter(r => r.status === 'Open').length,
+      'In Progress': list.filter(r => r.status === 'In Progress').length,
+      Resolved: list.filter(r => r.status === 'Resolved').length,
+      Closed: list.filter(r => r.status === 'Closed').length
+    } as Record<string, number>;
+  });
+
   currentFilter = this.reportStore.statusFilter;
   searchQuery = signal<string>('');
 
@@ -101,9 +112,19 @@ export class Reports implements OnInit {
     }
   }
 
+
+
   openReviewCase(report: Report): void {
     this.reportService.loadReportById(report._id);
     this.isDrawerOpen.set(true);
+    setTimeout(() => {
+      const mainEl = document.querySelector('main');
+      if (mainEl) {
+        mainEl.scrollTop = 0;
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 50);
   }
 
   closeDrawer(): void {

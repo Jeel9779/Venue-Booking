@@ -1,41 +1,59 @@
-<!-- Purpose: Template: Defines the visual layout and structure for the component. -->
-<div class="w-full p-4 sm:p-6 bg-gray-300 dark:bg-slate-950 min-h-screen text-slate-700 dark:text-slate-200">
+<div class="w-full p-4 sm:p-6 bg-gray-300 dark:bg-slate-950 min-h-screen text-slate-700 dark:text-slate-200 w-full px-4 sm:px-6 py-6">
   
-  <!-- Header -->
-  <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
-    <div class="header-left flex items-center gap-3.5">
-      <div class="w-10 h-10 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
-        <lucide-icon [img]="icons.shieldAlert" size="20"></lucide-icon>
+  <div [class.hidden]="isDrawerOpen()" class="sm:block">
+    <!-- Header -->
+    <div class="page-header flex flex-col sm:flex-row sm:items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="header-left flex items-center gap-3">
+      <div class="w-9 h-9 sm:w-[46px] sm:h-[46px] rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+        <lucide-icon [img]="icons.shieldAlert" size="16" class="sm:hidden"></lucide-icon>
+        <lucide-icon [img]="icons.shieldAlert" size="20" class="hidden sm:block"></lucide-icon>
       </div>
       <div class="flex-1 min-w-0">
-        <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Complaint Resolution Center</h1>
-        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Monitor, investigate, and resolve customer complaints to maintain standard of excellence.</p>
+        <h1 class="text-base sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Complaint Resolution Center</h1>
+        <p class="text-[10px] sm:text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0">Monitor, investigate, and resolve customer complaints to maintain standard of excellence.</p>
       </div>
+    </div>
   </div>
 
-
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
     <!-- Left Column (Complaints List) -->
-    <div class="lg:col-span-2 space-y-6">
+    <div class="lg:col-span-2 space-y-6 order-2 lg:order-1">
       
       <!-- List Controls & Filter Tabs -->
-      <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
         
-        <!-- Filter Tabs -->
-        <div class="flex overflow-x-auto hide-scrollbar gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl w-full sm:w-auto -mx-1 sm:mx-0 px-2 sm:px-1">
+        <!-- Filter Tabs (Desktop/Tablet) -->
+        <div class="hidden sm:flex overflow-x-auto hide-scrollbar gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl w-full sm:w-auto">
           @for (filter of ['All', 'Open', 'In Progress', 'Resolved', 'Closed']; track filter) {
             <button
               (click)="setFilter(filter)"
               [class]="getFilterTabClass(filter, currentFilter() === filter)"
+              type="button"
             >
               {{ filter }}
             </button>
           }
         </div>
 
+        <!-- Filter Tabs (Mobile Segmented Control) -->
+        <div class="sm:hidden flex w-full bg-slate-100 dark:bg-slate-800/80 p-1 rounded-[16px] border border-slate-200/60 dark:border-slate-700/80">
+          @for (filter of ['All', 'Open', 'In Progress', 'Resolved', 'Closed']; track filter) {
+            <button
+              (click)="setFilter(filter)"
+              [class]="currentFilter() === filter ? 'bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 font-black' : 'text-slate-500 dark:text-slate-400 bg-transparent font-bold'"
+              class="flex-1 flex flex-col items-center justify-center py-2 rounded-[12px] text-[10px] transition-all duration-200 border-none cursor-pointer"
+              type="button"
+            >
+              <span class="text-sm leading-none mb-0.5" [ngClass]="currentFilter() === filter ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-700 dark:text-slate-300'">{{ filterCounts()[filter] }}</span>
+              <span class="truncate max-w-full text-[9px] uppercase tracking-wide">
+                {{ filter === 'In Progress' ? 'In Progr.' : (filter === 'Resolved' ? 'Resolv.' : filter) }}
+              </span>
+            </button>
+          }
+        </div>
+
         <!-- Search input -->
-        <div class="relative w-full sm:flex-1 sm:max-w-xs mt-3 sm:mt-0">
+        <div class="relative w-full sm:flex-1 sm:max-w-xs">
           <input
             type="text"
             [value]="searchQuery()"
@@ -75,7 +93,7 @@
         <!-- Complaints list cards -->
         <div class="space-y-4">
           @for (complaint of complaints(); track trackByComplaintId($index, complaint)) {
-            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/50 dark:border-slate-800/80 hover:border-indigo-500/30 hover:shadow-md dark:hover:shadow-none transition-all duration-300 flex flex-col md:flex-row gap-6 relative group overflow-hidden">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border border-slate-200/50 dark:border-slate-800/80 hover:border-indigo-500/30 hover:shadow-md dark:hover:shadow-none transition-all duration-300 flex flex-col md:flex-row gap-4 sm:gap-6 relative group overflow-hidden">
               
               <!-- Subtle status highlight bar -->
               <div 
@@ -89,7 +107,7 @@
               ></div>
 
               <!-- Visual identifier (First attachment or styled initial icon) -->
-              <div class="w-full h-40 md:w-36 md:h-28 shrink-0 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 flex items-center justify-center relative">
+              <div class="w-full h-36 md:w-36 md:h-28 shrink-0 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 flex items-center justify-center relative">
                 @if (complaint.attachments && complaint.attachments.length > 0) {
                   <img [src]="getImageUrl(complaint.attachments[0])" alt="Attachment preview" class="w-full h-full object-cover">
                 } @else {
@@ -107,32 +125,32 @@
                 <div>
                   <div class="flex flex-wrap justify-between items-start gap-2">
                     <div>
-                      <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 hover:text-indigo-600 transition-colors cursor-pointer" (click)="openReviewCase(complaint)">
+                      <h3 class="font-bold text-base sm:text-lg text-slate-800 dark:text-slate-100 hover:text-indigo-600 transition-colors cursor-pointer" (click)="openReviewCase(complaint)">
                         {{ complaint.venue?.name || 'General Platform Service' }}
                       </h3>
-                      <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-1.5">
-                        Ticket: #{{ complaint._id.substring(complaint._id.length - 6) | uppercase }} 
+                      <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-[10px] sm:text-xs font-semibold text-slate-400 dark:text-slate-500">
+                        <span>#{{ complaint._id.substring(complaint._id.length - 6) | uppercase }}</span>
                         <span class="text-slate-300 dark:text-slate-700">•</span>
-                        Client: {{ complaint.user?.name || 'Unknown Client' }}
+                        <span>Client: {{ complaint.user?.name || 'Unknown Client' }}</span>
                         <span class="text-slate-300 dark:text-slate-700">•</span>
-                        Created: {{ complaint.createdAt | date:'MMM d, h:mm a' }}
-                      </p>
+                        <span>{{ complaint.createdAt | date:'MMM d, h:mm a' }}</span>
+                      </div>
                     </div>
-                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider" [ngClass]="getStatusClass(complaint.status)">
+                    <span class="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider" [ngClass]="getStatusClass(complaint.status)">
                       {{ complaint.status }}
                     </span>
                   </div>
                   
-                  <h4 class="font-semibold text-sm text-slate-700 dark:text-slate-300 mt-3">{{ complaint.title }}</h4>
-                  <p class="text-slate-500 dark:text-slate-400 mt-1 text-xs line-clamp-2 leading-relaxed">
+                  <h4 class="font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-2 sm:mt-3">{{ complaint.title }}</h4>
+                  <p class="text-slate-500 dark:text-slate-400 mt-1 text-[11px] sm:text-xs line-clamp-2 leading-relaxed">
                     {{ complaint.description }}
                   </p>
                 </div>
 
-                <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-wrap items-center justify-between gap-4">
+                <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <!-- Resolution Status Bar -->
-                  <div class="flex-1 max-w-[200px]">
-                    <div class="flex justify-between text-[10px] font-semibold text-slate-400 uppercase mb-1">
+                  <div class="w-full sm:w-auto sm:flex-1 sm:max-w-[200px]">
+                    <div class="flex justify-between text-[9px] sm:text-[10px] font-semibold text-slate-400 uppercase mb-1">
                       <span>Resolution Phase</span>
                       <span>{{ getProgressPercentage(complaint.status) }}%</span>
                     </div>
@@ -150,23 +168,23 @@
                   </div>
 
                   <!-- Actions -->
-                  <div class="flex flex-wrap gap-2 w-full sm:w-auto mt-3 sm:mt-0">
+                  <div class="flex gap-2 w-full sm:w-auto mt-1 sm:mt-0">
                     <button 
                       (click)="openReviewCase(complaint)"
-                      class="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-950/30 dark:hover:text-indigo-400 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
+                      class="px-3 py-2 sm:px-3.5 sm:py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-950/30 dark:hover:text-indigo-400 rounded-xl sm:rounded-lg text-[11px] sm:text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
                     >
                       <lucide-icon [img]="icons.message" size="14"></lucide-icon>
                       Review Case & Chat
                     </button>
                     @if (complaint.vendor) {
-                      <span class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-400 text-xs font-medium flex items-center justify-center gap-1.5 flex-1 sm:flex-none">
+                      <span class="px-3 py-2 sm:px-3.5 sm:py-1.5 rounded-xl sm:rounded-lg border border-slate-200 dark:border-slate-800 text-slate-400 text-[11px] sm:text-xs font-medium flex items-center justify-center gap-1.5 flex-1 sm:flex-none">
                         <lucide-icon [img]="icons.store" size="14"></lucide-icon>
                         Assigned
                       </span>
                     } @else {
                       <button 
                         (click)="openReviewCase(complaint)"
-                        class="px-3.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 dark:text-indigo-400 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
+                        class="px-3 py-2 sm:px-3.5 sm:py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 dark:text-indigo-400 rounded-xl sm:rounded-lg text-[11px] sm:text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
                       >
                         Assign Vendor
                       </button>
@@ -184,8 +202,8 @@
             <app-pagination 
               [currentPage]="pagination().page"
               [totalPages]="pagination().totalPages"
-          [totalRecords]="pagination().totalRecords"
-          [limit]="pagination().limit"
+              [totalRecords]="pagination().totalRecords"
+              [limit]="pagination().limit"
               (onPageChange)="onPageChange($event)">
             </app-pagination>
           </div>
@@ -194,39 +212,39 @@
     </div>
 
     <!-- Right Column (Stats & Log) -->
-    <div class="space-y-6">
+    <div class="space-y-6 order-1 lg:order-2">
       
       <!-- Stats Overview Cards -->
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-2xl p-5 shadow-md shadow-indigo-500/10">
+        <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-2xl p-4 sm:p-5 shadow-md shadow-indigo-500/10">
           <lucide-icon [img]="icons.checkCircle" size="24" class="mb-4 text-indigo-200"></lucide-icon>
-          <div class="text-3xl font-extrabold mb-1 tracking-tight">{{ clearedCasesCount() }}</div>
-          <div class="text-indigo-100 font-semibold text-[11px] uppercase tracking-wider leading-snug">Cleared<br>Tickets</div>
+          <div class="text-2xl sm:text-3xl font-extrabold mb-1 tracking-tight">{{ clearedCasesCount() }}</div>
+          <div class="text-indigo-100 font-semibold text-[10px] sm:text-[11px] uppercase tracking-wider leading-snug">Cleared<br>Tickets</div>
         </div>
-        <div class="bg-[#8B5CF6] bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] text-white rounded-2xl p-5 shadow-md shadow-purple-500/10">
+        <div class="bg-[#8B5CF6] bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] text-white rounded-2xl p-4 sm:p-5 shadow-md shadow-purple-500/10">
           <lucide-icon [img]="icons.trendingUp" size="24" class="mb-4 text-purple-200"></lucide-icon>
-          <div class="text-3xl font-extrabold mb-1 tracking-tight">{{ activeCasesCount() }}</div>
-          <div class="text-purple-100 font-semibold text-[11px] uppercase tracking-wider leading-snug">Under Review<br>Cases</div>
+          <div class="text-2xl sm:text-3xl font-extrabold mb-1 tracking-tight">{{ activeCasesCount() }}</div>
+          <div class="text-purple-100 font-semibold text-[10px] sm:text-[11px] uppercase tracking-wider leading-snug">Under Review<br>Cases</div>
         </div>
       </div>
 
       <!-- Enforcement Activity Audit -->
-      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/60 dark:border-slate-800/80 shadow-sm">
-        <h3 class="font-bold text-slate-850 dark:text-slate-100 mb-6 flex items-center justify-between">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border border-slate-200/60 dark:border-slate-800/80 shadow-sm">
+        <h3 class="font-bold text-slate-855 dark:text-slate-100 mb-6 flex items-center justify-between">
           <span>Resolution Stream</span>
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
         </h3>
         
-        <div class="space-y-6 relative border-l-2 border-slate-100 dark:border-slate-800 ml-3.5 pl-6">
+        <div class="space-y-6 relative border-l-2 border-slate-100 dark:border-slate-800 ml-2.5 pl-4.5 sm:ml-3.5 sm:pl-6">
           @for (activity of activities(); track activity.id) {
             <div class="relative">
               <!-- Chronology timeline bullet -->
-              <span class="absolute -left-[35px] top-1 rounded-full p-1.5" [ngClass]="activity.iconClass">
+              <span class="absolute -left-[28px] sm:-left-[35px] top-1 rounded-full p-1.5" [ngClass]="activity.iconClass">
                 <lucide-icon [img]="icons.alertCircle" size="12"></lucide-icon>
               </span>
               <div>
                 <div class="font-bold text-slate-800 dark:text-slate-200 text-xs leading-none">{{ activity.action }}</div>
-                <div class="text-xs font-semibold text-slate-500 mt-1.5">{{ activity.venue }}</div>
+                <div class="text-[11px] sm:text-xs font-semibold text-slate-500 mt-1.5">{{ activity.venue }}</div>
                 <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 truncate" [title]="activity.violation">
                   "{{ activity.violation }}"
                 </div>
@@ -244,10 +262,10 @@
       </div>
 
       <!-- Concierge System Insight -->
-      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/50 dark:border-slate-800/80 shadow-sm relative overflow-hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border border-slate-200/50 dark:border-slate-800/80 shadow-sm relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1.5 h-full bg-indigo-500"></div>
         <h3 class="font-bold text-indigo-600 dark:text-indigo-400 mb-3 text-xs uppercase tracking-wider">System Diagnostic</h3>
-        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+        <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
           @if (activeCasesCount() > 5) {
             Warning: Escalated cases are currently high. Prioritize assignations to resolve delays.
           } @else {
@@ -258,89 +276,175 @@
 
     </div>
   </div>
-</div>
-
-<!-- Centered Modal (Case Review & Live Chat) -->
+  </div><!-- Centered Modal (Case Review & Live Chat) -->
 @if (isDrawerOpen()) {
-  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <!-- Backdrop with blur -->
-    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" (click)="closeDrawer()"></div>
+  <div class="w-full sm:fixed sm:inset-0 sm:z-[100] sm:flex sm:items-center sm:justify-center p-0 sm:p-6 bg-transparent" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Backdrop with blur (hidden on mobile, visible on desktop) -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity hidden sm:block" (click)="closeDrawer()"></div>
 
-    <!-- Modal Panel -->
-    <div class="relative w-full max-w-3xl max-h-[95vh] flex flex-col bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden transform transition-all animate-[scaleIn_0.2s_ease]">
+    <!-- Modal Panel (Transparent card stack on mobile, centered white card on desktop) -->
+    <div class="relative w-full h-full sm:h-auto sm:max-w-3xl sm:max-h-[95vh] flex flex-col bg-transparent sm:bg-white sm:dark:bg-slate-900 shadow-none sm:shadow-2xl rounded-none sm:rounded-3xl overflow-hidden transform transition-all animate-[scaleIn_0.2s_ease]">
       
-            
-            <!-- Drawer Header -->
-            <div class="px-6 py-5 bg-slate-50 dark:bg-slate-950 border-b border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+            <!-- Mobile Header (Visible on Mobile Only) -->
+            <div class="flex items-center gap-3 px-0 py-3 sm:hidden bg-transparent shrink-0">
+              <button 
+                (click)="closeDrawer()" 
+                class="w-9 h-9 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-slate-700 dark:text-slate-350 shadow-sm border border-slate-200/40 dark:border-slate-800 focus:outline-none"
+              >
+                <lucide-icon [img]="icons.chevronLeft" size="16"></lucide-icon>
+              </button>
+              <h2 class="text-base font-bold text-slate-900 dark:text-slate-100">Case Details</h2>
+            </div>
+
+            <!-- Desktop Header (Visible on Desktop Only) -->
+            <div class="hidden sm:flex px-6 py-5 bg-slate-50 dark:bg-slate-950 border-b border-slate-200/60 dark:border-slate-800 items-center justify-between shrink-0">
               <div>
-                <div class="flex items-center gap-2">
-                  <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide" [ngClass]="getStatusClass(activeComplaint()?.status || '')">
-                    {{ activeComplaint()?.status }}
-                  </span>
-                  <span class="text-xs font-semibold text-slate-400">#{{ activeComplaint()?._id }}</span>
-                </div>
-                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1">
+                <h2 class="text-sm sm:text-lg font-bold text-slate-900 dark:text-slate-100 break-words">
                   {{ activeComplaint()?.venue?.name || 'General Platform Complaint' }}
                 </h2>
+                <div class="flex items-center gap-1.5 sm:gap-2 mt-1">
+                  <span class="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide" [ngClass]="getStatusClass(activeComplaint()?.status || '')">
+                    {{ activeComplaint()?.status }}
+                  </span>
+                  <span class="text-[10px] sm:text-xs font-semibold text-slate-400 truncate max-w-[120px] sm:max-w-none">#{{ activeComplaint()?._id }}</span>
+                </div>
               </div>
               <button 
                 (click)="closeDrawer()" 
-                class="rounded-lg p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all focus:outline-none"
+                class="rounded-xl p-1.5 sm:p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all focus:outline-none"
               >
                 <lucide-icon [img]="icons.close" size="20"></lucide-icon>
               </button>
             </div>
 
             <!-- Modal Scrollable Body -->
-            <div class="flex-1 overflow-y-auto p-6 space-y-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div class="flex-1 overflow-y-auto py-2 px-0 sm:p-6 space-y-4 sm:space-y-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               
-              <!-- Admin Controls Panel -->
-              <div class="bg-indigo-50/50 dark:bg-indigo-950/10 p-5 rounded-2xl border border-indigo-100/60 dark:border-indigo-950/40 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Mobile Venue & Ticket Info Card (Visible on mobile only, matches mockup card layout) -->
+              <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-100/50 dark:border-slate-800 flex items-start gap-3.5 sm:hidden">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-base shrink-0 border border-indigo-100/30 dark:border-indigo-950/30">
+                  {{ (activeComplaint()?.venue?.name || 'G')[0] | uppercase }}
+                </div>
+                <div class="space-y-1 flex-1 min-w-0">
+                  <h3 class="font-bold text-slate-900 dark:text-slate-100 text-sm break-words leading-snug">
+                    {{ activeComplaint()?.venue?.name || 'General Platform Complaint' }}
+                  </h3>
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide" [ngClass]="getStatusClass(activeComplaint()?.status || '')">
+                      {{ activeComplaint()?.status }}
+                    </span>
+                    <span class="text-[10px] font-semibold text-slate-400 break-all">#{{ activeComplaint()?._id }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Admin Controls Panel (Change stage and assign vendor selectors) -->
+              <div class="p-4 sm:p-5 rounded-2xl border bg-white dark:bg-slate-900 sm:bg-indigo-50/50 sm:dark:bg-indigo-950/10 border-slate-100/50 dark:border-slate-800 sm:border-indigo-100/60 sm:dark:border-indigo-950/40 shadow-sm sm:shadow-none grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                 
-                <!-- Ticket Status Select -->
+                <!-- Ticket Stage -->
                 <div>
-                  <label class="block text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 mb-2">Change Stage</label>
+                  <label class="block text-[9px] sm:text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 mb-1.5">Change Stage</label>
                   <div class="relative">
-                    <select 
-                      [value]="activeComplaint()?.status"
-                      (change)="onStatusChange($event)"
-                      class="w-full text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-2.5 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    <button 
+                      (click)="toggleStatusDropdown()"
+                      class="w-full text-left text-[11px] sm:text-xs bg-slate-50 dark:bg-slate-950 sm:bg-white sm:dark:bg-slate-955 border border-slate-200 dark:border-slate-850 rounded-xl px-2.5 py-2 sm:px-4 sm:py-2.5 font-semibold flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                     >
-                      <option value="Open">Open (Pending Assignment)</option>
-                      <option value="In Progress">In Progress (Investigation)</option>
-                      <option value="Resolved">Resolved (Settled)</option>
-                      <option value="Closed">Closed (Archived)</option>
-                    </select>
+                      <span class="truncate text-slate-800 dark:text-slate-200">{{ getSelectedStatusName() }}</span>
+                      <lucide-icon [img]="icons.chevronDown" size="14" class="text-slate-400"></lucide-icon>
+                    </button>
+                    
+                    @if (isStatusDropdownOpen()) {
+                      <div class="fixed inset-0 z-[105]" (click)="isStatusDropdownOpen.set(false)"></div>
+                    }
+
+                    @if (isStatusDropdownOpen()) {
+                      <div class="absolute z-[110] left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl shadow-lg p-1.5 space-y-0.5 animate-[fadeIn_0.15s_ease]">
+                        <button 
+                          (click)="selectStatus('Open')"
+                          class="w-full text-left px-2.5 py-1.5 text-[10px] sm:text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-medium text-slate-800 dark:text-slate-200"
+                          [class.bg-indigo-50]="activeComplaint()?.status === 'Open'"
+                          [class.dark:bg-indigo-950\/30]="activeComplaint()?.status === 'Open'"
+                        >
+                          Open (Pending Assignment)
+                        </button>
+                        <button 
+                          (click)="selectStatus('In Progress')"
+                          class="w-full text-left px-2.5 py-1.5 text-[10px] sm:text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-medium text-slate-800 dark:text-slate-200"
+                          [class.bg-indigo-50]="activeComplaint()?.status === 'In Progress'"
+                          [class.dark:bg-indigo-950\/30]="activeComplaint()?.status === 'In Progress'"
+                        >
+                          In Progress (Investigation)
+                        </button>
+                        <button 
+                          (click)="selectStatus('Resolved')"
+                          class="w-full text-left px-2.5 py-1.5 text-[10px] sm:text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-medium text-slate-800 dark:text-slate-200"
+                          [class.bg-indigo-50]="activeComplaint()?.status === 'Resolved'"
+                          [class.dark:bg-indigo-950\/30]="activeComplaint()?.status === 'Resolved'"
+                        >
+                          Resolved (Settled)
+                        </button>
+                        <button 
+                          (click)="selectStatus('Closed')"
+                          class="w-full text-left px-2.5 py-1.5 text-[10px] sm:text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-medium text-slate-800 dark:text-slate-200"
+                          [class.bg-indigo-50]="activeComplaint()?.status === 'Closed'"
+                          [class.dark:bg-indigo-950\/30]="activeComplaint()?.status === 'Closed'"
+                        >
+                          Closed (Archived)
+                        </button>
+                      </div>
+                    }
                   </div>
                 </div>
 
-                <!-- Vendor Assign Select -->
+                <!-- Delegate Case Vendor -->
                 <div>
-                  <label class="block text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 mb-2">Delegate Case Vendor</label>
+                  <label class="block text-[9px] sm:text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 mb-1.5">Delegate Case Vendor</label>
                   <div class="relative">
-                    <select 
-                      [value]="selectedVendorId()"
-                      (change)="onVendorAssignChange($event)"
-                      class="w-full text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-2.5 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    <button 
+                      (click)="toggleVendorDropdown()"
+                      class="w-full text-left text-[11px] sm:text-xs bg-slate-50 dark:bg-slate-950 sm:bg-white sm:dark:bg-slate-955 border border-slate-200 dark:border-slate-850 rounded-xl px-2.5 py-2 sm:px-4 sm:py-2.5 font-semibold flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                     >
-                      <option value="">Unassigned (No Vendor Allocated)</option>
-                      @for (vendor of vendors(); track vendor._id) {
-                        <option [value]="vendor._id">
-                          {{ vendor.businessName || vendor.fullName }} ({{ vendor.email }})
-                        </option>
-                      }
-                    </select>
+                      <span class="truncate text-slate-800 dark:text-slate-200">{{ getSelectedVendorName() }}</span>
+                      <lucide-icon [img]="icons.chevronDown" size="14" class="text-slate-400"></lucide-icon>
+                    </button>
+                    
+                    @if (isVendorDropdownOpen()) {
+                      <div class="fixed inset-0 z-[105]" (click)="isVendorDropdownOpen.set(false)"></div>
+                    }
+
+                    @if (isVendorDropdownOpen()) {
+                      <div class="absolute z-[110] left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl shadow-lg p-1.5 space-y-0.5 animate-[fadeIn_0.15s_ease]">
+                        <button 
+                          (click)="selectVendor('')"
+                          class="w-full text-left px-2.5 py-1.5 text-[10px] sm:text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-medium text-slate-600 dark:text-slate-400"
+                          [class.bg-indigo-50]="selectedVendorId() === ''"
+                          [class.dark:bg-indigo-950\/30]="selectedVendorId() === ''"
+                        >
+                          Unassigned (No Vendor Allocated)
+                        </button>
+                        @for (vendor of vendors(); track vendor._id) {
+                          <button 
+                            (click)="selectVendor(vendor._id)"
+                            class="w-full text-left px-2.5 py-1.5 text-[10px] sm:text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-medium text-slate-800 dark:text-slate-200"
+                            [class.bg-indigo-50]="selectedVendorId() === vendor._id"
+                            [class.dark:bg-indigo-950\/30]="selectedVendorId() === vendor._id"
+                          >
+                            {{ formatVendorOption(vendor) }}
+                          </button>
+                        }
+                      </div>
+                    }
                   </div>
                 </div>
 
               </div>
 
-              <!-- Ticket Subject & Content -->
+              <!-- Ticket Subject & Content Card -->
               <div>
-                <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Subject Case</h3>
-                <div class="bg-slate-50 dark:bg-slate-950/40 border border-slate-200/50 dark:border-slate-800 p-5 rounded-2xl">
-                  <h4 class="font-bold text-slate-900 dark:text-slate-100 text-sm mb-2">{{ activeComplaint()?.title }}</h4>
-                  <p class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed whitespace-pre-wrap">{{ activeComplaint()?.description }}</p>
+                <h3 class="text-[9px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Subject Case</h3>
+                <div class="p-4 sm:p-5 rounded-2xl border bg-white dark:bg-slate-900 sm:bg-slate-50 sm:dark:bg-slate-950/40 border-slate-100/50 dark:border-slate-800 sm:border-slate-200/50 sm:dark:border-slate-800 shadow-sm sm:shadow-none">
+                  <h4 class="font-bold text-slate-900 dark:text-slate-100 text-xs sm:text-sm mb-1.5 break-words leading-snug">{{ activeComplaint()?.title }}</h4>
+                  <p class="text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs leading-relaxed whitespace-pre-wrap break-words">{{ activeComplaint()?.description }}</p>
                 </div>
               </div>
 
@@ -348,33 +452,35 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 <!-- Client Details -->
-                <div class="border border-slate-200/60 dark:border-slate-800 p-4 rounded-xl space-y-3">
-                  <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-                    <lucide-icon [img]="icons.user" size="14"></lucide-icon>
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm sm:shadow-none border border-slate-100/50 dark:border-slate-800 sm:border-slate-200/60 sm:dark:border-slate-800 space-y-2 sm:space-y-3">
+                  <h4 class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <lucide-icon [img]="icons.user" size="12" class="sm:hidden"></lucide-icon>
+                    <lucide-icon [img]="icons.user" size="14" class="hidden sm:block"></lucide-icon>
                     Plaintiff Client
                   </h4>
                   <div>
-                    <div class="font-bold text-slate-800 dark:text-slate-200 text-xs">{{ activeComplaint()?.user?.name }}</div>
-                    <div class="text-[11px] text-slate-500 mt-1">{{ activeComplaint()?.user?.email }}</div>
-                    <div class="text-[11px] text-slate-500 mt-0.5">{{ activeComplaint()?.user?.phone || 'No phone number' }}</div>
+                    <div class="font-bold text-slate-800 dark:text-slate-200 text-[11px] sm:text-xs break-words">{{ activeComplaint()?.user?.name }}</div>
+                    <div class="text-[9px] sm:text-[11px] text-slate-500 mt-1 break-all">{{ activeComplaint()?.user?.email }}</div>
+                    <div class="text-[9px] sm:text-[11px] text-slate-500 mt-0.5 break-words">{{ activeComplaint()?.user?.phone || 'No phone number' }}</div>
                   </div>
                 </div>
 
                 <!-- Vendor Assigned Details -->
-                <div class="border border-slate-200/60 dark:border-slate-800 p-4 rounded-xl space-y-3">
-                  <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-                    <lucide-icon [img]="icons.store" size="14"></lucide-icon>
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm sm:shadow-none border border-slate-100/50 dark:border-slate-800 sm:border-slate-200/60 sm:dark:border-slate-800 space-y-2 sm:space-y-3">
+                  <h4 class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <lucide-icon [img]="icons.store" size="12" class="sm:hidden"></lucide-icon>
+                    <lucide-icon [img]="icons.store" size="14" class="hidden sm:block"></lucide-icon>
                     Assigned Vendor
                   </h4>
                   <div>
                     @if (activeComplaint()?.vendor; as vendor) {
-                      <div class="font-bold text-slate-800 dark:text-slate-200 text-xs">
+                      <div class="font-bold text-slate-800 dark:text-slate-200 text-[11px] sm:text-xs break-words">
                         {{ vendor.businessName || vendor.fullName }}
                       </div>
-                      <div class="text-[11px] text-slate-500 mt-1">{{ vendor.email }}</div>
-                      <div class="text-[11px] text-slate-500 mt-0.5">{{ vendor.fullName }}</div>
+                      <div class="text-[9px] sm:text-[11px] text-slate-500 mt-1 break-all">{{ vendor.email }}</div>
+                      <div class="text-[9px] sm:text-[11px] text-slate-500 mt-0.5 break-words">{{ vendor.fullName }}</div>
                     } @else {
-                      <div class="text-slate-400 text-xs italic font-medium pt-1">
+                      <div class="text-slate-400 text-[10px] sm:text-xs italic font-medium pt-1">
                         No vendor assigned to this ticket. Use controls above to delegate.
                       </div>
                     }
@@ -386,15 +492,16 @@
               <!-- Attachments Gallery -->
               @if (activeComplaint()?.attachments && activeComplaint()!.attachments.length > 0) {
                 <div>
-                  <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-1">
-                    <lucide-icon [img]="icons.image" size="14"></lucide-icon>
+                  <h3 class="text-[9px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 ml-1 flex items-center gap-1.5">
+                    <lucide-icon [img]="icons.image" size="12" class="sm:hidden"></lucide-icon>
+                    <lucide-icon [img]="icons.image" size="14" class="hidden sm:block"></lucide-icon>
                     Evidence Files ({{ activeComplaint()?.attachments?.length }})
                   </h3>
-                  <div class="flex flex-wrap gap-3">
+                  <div class="bg-white dark:bg-slate-900 sm:bg-transparent p-4 sm:p-0 rounded-2xl shadow-sm sm:shadow-none border border-slate-100/50 dark:border-slate-800 sm:border-none flex flex-wrap gap-2.5 sm:gap-3">
                     @for (img of activeComplaint()?.attachments; track img) {
                       <button 
                         (click)="openImageViewer(img); $event.stopPropagation()"
-                        class="w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 dark:border-slate-800 block hover:ring-2 hover:ring-indigo-500 hover:scale-[1.05] transition-all"
+                        class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 dark:border-slate-800 block hover:ring-2 hover:ring-indigo-500 hover:scale-[1.02] transition-all"
                       >
                         <img [src]="getImageUrl(img)" alt="Evidence" class="w-full h-full object-cover">
                       </button>
@@ -404,20 +511,21 @@
               }
 
               <!-- Conversation Feed (Thread messages) -->
-              <div class="border-t border-slate-100 dark:border-slate-800 pt-6">
-                <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-1.5">
-                  <lucide-icon [img]="icons.message" size="14"></lucide-icon>
+              <div class="border-t-0 sm:border-t border-slate-100 dark:border-slate-800 pt-0 sm:pt-6">
+                <h3 class="text-[9px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 sm:mb-4 flex items-center gap-1.5 ml-1">
+                  <lucide-icon [img]="icons.message" size="12" class="sm:hidden"></lucide-icon>
+                  <lucide-icon [img]="icons.message" size="14" class="hidden sm:block"></lucide-icon>
                   Investigation Logs & Replies
                 </h3>
                 
-                <!-- Chat Container -->
+                <!-- Chat Container (White card on mobile, off-white container on desktop) -->
                 <div 
                   id="chat-messages-container"
-                  class="bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 h-[320px] overflow-y-auto space-y-4 flex flex-col"
+                  class="bg-white dark:bg-slate-900 sm:bg-slate-50 sm:dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800 sm:border-slate-200 sm:dark:border-slate-800/80 rounded-2xl p-3 sm:p-5 h-[220px] sm:h-[320px] overflow-y-auto space-y-2.5 sm:space-y-4 flex flex-col shadow-sm sm:shadow-none"
                 >
                   @for (msg of messages(); track msg._id) {
                     <div 
-                      class="flex flex-col max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 text-sm shadow-sm"
+                      class="flex flex-col max-w-[90%] sm:max-w-[75%] rounded-2xl px-3 py-2 sm:px-4 sm:py-3 text-[11px] sm:text-[13px] md:text-sm shadow-sm"
                       [ngClass]="{
                         'self-end bg-indigo-600 text-white rounded-tr-sm': msg.senderModel === 'Admin',
                         'self-start bg-emerald-100 dark:bg-emerald-900/30 text-emerald-900 dark:text-emerald-100 rounded-tl-sm': msg.senderModel === 'User' || !msg.senderModel,
@@ -425,7 +533,7 @@
                       }"
                     >
                       <!-- Sender info -->
-                      <div class="flex justify-between items-center gap-4 mb-1.5 font-bold text-[10px] uppercase tracking-wider" 
+                      <div class="flex justify-between items-center gap-4 mb-1 font-bold text-[8px] sm:text-[10px] uppercase tracking-wider" 
                            [ngClass]="{
                              'text-indigo-200': msg.senderModel === 'Admin',
                              'text-emerald-700 dark:text-emerald-400': msg.senderModel === 'User',
@@ -441,7 +549,7 @@
                   
                   @if (messages().length === 0) {
                     <div class="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400 dark:text-slate-600">
-                      <lucide-icon [img]="icons.message" size="32" class="mb-2 opacity-50"></lucide-icon>
+                      <lucide-icon [img]="icons.message" size="28" class="mb-2 opacity-50"></lucide-icon>
                       <p class="text-xs font-semibold">No discussions recorded.</p>
                       <p class="text-[10px] mt-0.5">Post an advisory warning or comment below.</p>
                     </div>
@@ -449,20 +557,20 @@
                 </div>
 
                 <!-- Chat Reply Box -->
-                <div class="mt-3 flex gap-2">
+                <div class="mt-2.5 flex gap-2 items-stretch">
                   <textarea
                     [(ngModel)]="replyText"
                     placeholder="Provide investigation details or warn parties..."
-                    rows="2"
-                    class="flex-1 text-xs px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:text-slate-100 resize-none"
+                    class="flex-1 text-[11px] sm:text-xs px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 sm:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:text-slate-100 resize-none h-10 sm:h-12 shadow-sm sm:shadow-none"
                   ></textarea>
                   <button
                     (click)="onSendMessage()"
                     [disabled]="!replyText().trim()"
-                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl disabled:opacity-50 disabled:hover:bg-indigo-600 transition-colors flex items-center justify-center shrink-0 self-end focus:outline-none"
+                    class="p-2.5 sm:px-4 sm:py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl disabled:opacity-50 disabled:hover:bg-indigo-600 transition-colors flex items-center justify-center shrink-0 focus:outline-none shadow-sm sm:shadow-none"
                     title="Send message"
                   >
-                    <lucide-icon [img]="icons.send" size="16"></lucide-icon>
+                    <lucide-icon [img]="icons.send" size="14" class="sm:hidden"></lucide-icon>
+                    <lucide-icon [img]="icons.send" size="16" class="hidden sm:block"></lucide-icon>
                   </button>
                 </div>
               </div>
@@ -485,3 +593,4 @@
     (click)="$event.stopPropagation()" alt="Full screen preview" />
 </div>
 }
+

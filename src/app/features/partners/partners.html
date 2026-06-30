@@ -33,7 +33,7 @@
       </div>
       <div class="flex-1 min-w-0">
         <h1 class="text-xl sm:text-2xl font-bold tracking-tight m-0 leading-tight text-slate-900 dark:text-slate-100 truncate">Partners Directory</h1>
-        <p class="text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0 flex items-center gap-1.5">
+        <p class="text-[0.75rem] sm:text-[0.8125rem] text-slate-500 dark:text-slate-400 mt-0.5 mb-0 flex flex-wrap items-center gap-1.5">
           Analytics & Venue Management
           <span class="w-1 h-1 rounded-full bg-emerald-400 inline-block"></span>
           <span class="text-emerald-600 font-bold">{{ kpi().venues }} Total Venues</span>
@@ -43,58 +43,58 @@
   </div>
 
   <!-- KPI SECTION -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-10">
 
     <!-- Vendors KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover: hover:-translate-y-0.5 transition-all duration-300">
-      <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 dark:text-slate-400 dark:">
-          <lucide-icon name="users" class="w-5 h-5"></lucide-icon>
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-3 sm:p-5 hover:-translate-y-0.5 transition-all duration-300 h-full border-l-4 border-l-slate-500">
+      <div class="flex items-center justify-between mb-2 sm:mb-4">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 dark:text-slate-400">
+          <lucide-icon name="users" class="w-4 h-4 sm:w-5 sm:h-5"></lucide-icon>
         </div>
-        <span class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Vendors</span>
+        <span class="text-[8px] sm:text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Vendors</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().vendors }}</p>
-      <p class="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase mt-2 tracking-wider">Active Affiliates</p>
+      <p class="text-xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().vendors }}</p>
+      <p class="text-[9px] sm:text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mt-2 tracking-wider">Active Affiliates</p>
     </div>
 
     <!-- Venues KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover: hover:-translate-y-0.5 transition-all duration-300">
-      <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-emerald-600 dark:">
-          <lucide-icon name="map-pin" class="w-5 h-5"></lucide-icon>
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-3 sm:p-5 hover:-translate-y-0.5 transition-all duration-300 h-full border-l-4 border-l-emerald-500">
+      <div class="flex items-center justify-between mb-2 sm:mb-4">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-200 flex items-center justify-center text-emerald-600">
+          <lucide-icon name="map-pin" class="w-4 h-4 sm:w-5 sm:h-5"></lucide-icon>
         </div>
-        <span class="text-[10px] font-extrabold text-emerald-500 uppercase tracking-widest">Venues</span>
+        <span class="text-[8px] sm:text-[10px] font-extrabold text-emerald-500 uppercase tracking-widest">Venues</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().venues }}</p>
-      <p class="text-sm font-semibold text-emerald-500 uppercase mt-2 tracking-wider">{{ kpi().active }} Live Spaces</p>
+      <p class="text-xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().venues }}</p>
+      <p class="text-[9px] sm:text-xs font-semibold text-emerald-500 uppercase mt-2 tracking-wider">{{ kpi().active }} Live Spaces</p>
     </div>
 
     <!-- Pending Approvals KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover:-translate-y-0.5 transition-all duration-300">
-      <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-          <lucide-icon name="clock" class="w-5 h-5"></lucide-icon>
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-3 sm:p-5 hover:-translate-y-0.5 transition-all duration-300 h-full border-l-4 border-l-amber-500">
+      <div class="flex items-center justify-between mb-2 sm:mb-4">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+          <lucide-icon name="clock" class="w-4 h-4 sm:w-5 sm:h-5"></lucide-icon>
         </div>
-        <span class="text-[10px] font-extrabold text-amber-500 uppercase tracking-widest">Pending</span>
+        <span class="text-[8px] sm:text-[10px] font-extrabold text-amber-500 uppercase tracking-widest">Pending</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().pending }}</p>
-      <p class="text-sm font-semibold text-amber-500 uppercase mt-2 tracking-wider">Awaiting Action</p>
+      <p class="text-xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().pending }}</p>
+      <p class="text-[9px] sm:text-xs font-semibold text-amber-500 uppercase mt-2 tracking-wider">Awaiting Action</p>
     </div>
 
     <!-- Quality KPI -->
     <div
-      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover: hover:-translate-y-0.5 transition-all duration-300">
-      <div class="flex items-center justify-between mb-4">
-        <div class="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-purple-600 dark:">
-          <lucide-icon name="star" class="w-5 h-5"></lucide-icon>
+      class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-3 sm:p-5 hover:-translate-y-0.5 transition-all duration-300 h-full border-l-4 border-l-purple-500">
+      <div class="flex items-center justify-between mb-2 sm:mb-4">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-200 flex items-center justify-center text-purple-600">
+          <lucide-icon name="star" class="w-4 h-4 sm:w-5 sm:h-5"></lucide-icon>
         </div>
-        <span class="text-[10px] font-extrabold text-purple-500 uppercase tracking-widest">Quality</span>
+        <span class="text-[8px] sm:text-[10px] font-extrabold text-purple-500 uppercase tracking-widest">Quality</span>
       </div>
-      <p class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().avgRating }}</p>
-      <p class="text-sm font-semibold text-purple-500 uppercase mt-2 tracking-wider">Average Rating</p>
+      <p class="text-xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-none">{{ kpi().avgRating }}</p>
+      <p class="text-[9px] sm:text-xs font-semibold text-purple-500 uppercase mt-2 tracking-wider">Average Rating</p>
     </div>
 
   </div>
@@ -158,7 +158,7 @@
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4">
     <div>
       <h2 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Partner Ecosystem</h2>
-      <p class="text-base text-slate-500 dark:text-slate-400 mt-0.5">Manage vendor permissions and venue visibility</p>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Manage vendor permissions and venue visibility</p>
     </div>
     <div class="relative group max-w-sm w-full">
       <div
@@ -337,11 +337,12 @@
 <!-- VENUE PROFILE MODAL -->
 @if (selectedVenue() && !previewImage()) {
 <app-model title="Venue Profile" maxWidth="2xl" (onClose)="closeModal()" [hasFooter]="true">
-  <div class="space-y-6 modal-content-container scrollbar-hide py-2">
+  <div class="space-y-4 sm:space-y-6 modal-content-container scrollbar-hide py-2">
 
-    <!-- HEADER -->
-    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-slate-100 pb-6">
-      <div class="flex-1">
+    <!-- DESKTOP HEADER (Visible on screens >= sm) -->
+    <div class="hidden sm:flex flex-row justify-between items-start gap-4 border-b border-slate-100 pb-6">
+      <div class="flex-1 min-w-0">
+        <!-- Category & Subscription Badges -->
         <div class="flex items-center gap-2 mb-2">
           <span class="badge-premium border border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">{{ selectedVenue()!.type ||
             'VENUE' }}</span>
@@ -355,7 +356,8 @@
           {{ selectedVenue()!.city }}, {{ selectedVenue()!.state }}
         </p>
       </div>
-      <div class="flex flex-col sm:items-end gap-2 shrink-0">
+      <div class="flex flex-col items-end gap-2 shrink-0">
+        <!-- Status & Rating -->
         <span [class]="'badge-premium text-[10px] px-4 py-1.5 rounded-full border font-extrabold uppercase tracking-widest ' + 
               (selectedVenue()!.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
                selectedVenue()!.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
@@ -369,6 +371,42 @@
           <span class="text-sm font-extrabold text-slate-700 dark:text-slate-300">{{ selectedVenue()!.averageRating }}</span>
           <span class="text-[10px] font-bold text-slate-300">/ 5.0</span>
         </div>
+        }
+      </div>
+    </div>
+
+    <!-- MOBILE HEADER (Visible on screens < sm) -->
+    <div class="sm:hidden flex flex-col gap-3 border-b border-slate-100 pb-5">
+      <div>
+        <h4 class="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">{{ selectedVenue()!.name }}</h4>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
+          <lucide-icon name="map-pin" class="w-3.5 h-3.5 text-emerald-500"></lucide-icon>
+          {{ selectedVenue()!.city }}, {{ selectedVenue()!.state }}
+        </p>
+      </div>
+      <!-- Badges Row (All side-by-side: Status, Rating, Category, Subscription status) -->
+      <div class="flex flex-wrap items-center gap-2">
+        <span [class]="'badge-premium text-[9px] px-3.5 py-1.5 rounded-full border font-extrabold uppercase tracking-widest ' + 
+              (selectedVenue()!.status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
+               selectedVenue()!.status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
+               selectedVenue()!.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-200' : 
+               'bg-gray-200 text-slate-700 border-gray-300')">
+          {{ getStatus(selectedVenue()!.status) }}
+        </span>
+        @if (selectedVenue()!.averageRating > 0) {
+        <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
+          <span class="text-amber-500 text-xs">★</span>
+          <span class="text-xs font-extrabold text-slate-700 dark:text-slate-300">{{ selectedVenue()!.averageRating }}</span>
+          <span class="text-[9px] font-bold text-slate-300">/ 5.0</span>
+        </div>
+        }
+        <span class="badge-premium text-[9px] px-3.5 py-1.5 rounded-full border font-extrabold uppercase tracking-widest border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">
+          {{ selectedVenue()!.type || 'VENUE' }}
+        </span>
+        @if (selectedPartner()?.isSubscriptionActive) {
+        <span class="badge-premium text-[9px] px-3.5 py-1.5 rounded-full border font-extrabold uppercase tracking-widest border-gray-300 bg-gray-200 text-slate-700 dark:text-slate-300">
+          Premium Partner
+        </span>
         }
       </div>
     </div>
@@ -413,7 +451,7 @@
         <lucide-icon name="info" class="w-4 h-4 text-emerald-500"></lucide-icon>
         Description
       </p>
-      <p class="text-base text-slate-700 dark:text-slate-300 leading-relaxed">{{ selectedVenue()!.description || 'No description provided.'
+      <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">{{ selectedVenue()!.description || 'No description provided.'
         }}
       </p>
     </div>
@@ -447,7 +485,7 @@
             <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{{ rev.createdAt |
               date:'mediumDate' }}</span>
           </div>
-          <p class="text-sm text-slate-600 dark:text-slate-400 italic leading-relaxed">"{{ rev.feedback }}"</p>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 italic leading-relaxed">"{{ rev.feedback }}"</p>
         </div>
         }
       </div>
@@ -458,7 +496,7 @@
     @if (selectedVenue()!.status === 'rejected' && selectedVenue()!.adminDescription) {
     <div class="p-4 rounded-2xl bg-red-50 border border-red-100">
       <p class="text-[10px] font-extrabold text-red-500 uppercase tracking-widest mb-1.5">Rejection Reason</p>
-      <p class="text-sm text-red-700 italic leading-relaxed">"{{ selectedVenue()!.adminDescription }}"</p>
+      <p class="text-xs sm:text-sm text-red-700 italic leading-relaxed font-medium">"{{ selectedVenue()!.adminDescription }}"</p>
     </div>
     }
 
@@ -502,7 +540,7 @@
       </div>
       <div>
         <h5 class="text-lg font-extrabold text-slate-900 dark:text-slate-100">Rejection Notice</h5>
-        <p class="text-base text-red-600 font-medium mt-1 leading-relaxed">
+        <p class="text-xs sm:text-sm text-red-600 font-medium mt-1 leading-relaxed">
           Provide a reason for rejecting <span class="text-slate-900 dark:text-slate-100 font-extrabold">"{{ selectedVenue()?.name
             }}"</span>.
           This will be sent to the vendor.
@@ -528,7 +566,7 @@
 
   <div footer class="flex justify-end gap-3 w-full pt-3">
     <button (click)="submitReject()" [disabled]="rejectReason().trim().length < 10 || actionLoading()"
-      class="bg-red-600 text-white px-8 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
+      class="w-full sm:w-auto justify-center bg-red-600 text-white px-8 py-2.5 rounded-xl text-[11px] font-extrabold uppercase tracking-widest hover:bg-red-700 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2">
       @if (actionLoading()) {
       <ng-container *ngTemplateOutlet="spinner"></ng-container>
       }
