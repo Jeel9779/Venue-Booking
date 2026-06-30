@@ -82,12 +82,7 @@ export class Bookings {
   readonly rawBookings = this.bookingStore.bookings;
   
   readonly bookings = computed(() => {
-    let list = this.rawBookings();
-    
-    // Add client-side pagination slice to ensure we never display more than 'limit' records on a single page
-    const page = this.pagination()?.page || 1;
-    const limit = this.pagination()?.limit || 10;
-    return list.length > limit ? list.slice((page - 1) * limit, page * limit) : list;
+    return this.rawBookings();
   });
   // Use store signals for loading and error states
   readonly isLoading = this.bookingStore.isLoading;
@@ -188,6 +183,7 @@ export class Bookings {
   
   setFilter(f: string) {
     this.filter.set(f);
+    this.bookingStore.setPagination({ ...this.pagination(), page: 1 });
     this.fetchData(1);
   }
 
@@ -198,6 +194,7 @@ export class Bookings {
       this.sortBy.set(field);
       this.sortOrder.set('desc');
     }
+    this.bookingStore.setPagination({ ...this.pagination(), page: 1 });
     this.fetchData(1);
   }
 
@@ -207,17 +204,20 @@ export class Bookings {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.search.set(input.value);
+      this.bookingStore.setPagination({ ...this.pagination(), page: 1 });
       this.fetchData(1);
     }, 400); // 400ms debounce
   }
 
   clearSearch() {
     this.search.set('');
+    this.bookingStore.setPagination({ ...this.pagination(), page: 1 });
     this.fetchData(1);
   }
 
   setDateFilter(range: string) {
     this.dateFilter.set(range);
+    this.bookingStore.setPagination({ ...this.pagination(), page: 1 });
     this.fetchData(1);
   }
 
